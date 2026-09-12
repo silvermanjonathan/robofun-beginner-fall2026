@@ -51,6 +51,39 @@ which one a given page uses.
 If an earlier build was already uploaded, delete `session05_turtle_and_angles.html`
 from the live repo. It no longer exists here and the hub no longer links to it.
 
+## Look and behaviour
+
+**Palette: Lecture Light.** Built for a projector in a room with the lights on, which
+is why it is a light theme. A projector adds light rather than removing it, so a dark
+background becomes muddy grey on a wall under ambient light and low-contrast dark-on-dark
+text disappears. Light ground, near-black text, three accents.
+
+| Token | Hex | Used for |
+|---|---|---|
+| paper | `#F4F0E6` | page background, warm rather than glaring white |
+| card | `#FFFDF7` | section panels |
+| ink | `#17181B` | body text |
+| ink-soft | `#4A4D53` | secondary text, kept dark enough to project |
+| teal | `#0E4D52` | header band, headings, buttons, links |
+| clay | `#9C2B22` | hinge question, teacher panel, stretch exit, warnings |
+| ochre | `#8A5A00` / `#D99B12` | chunk labels, predict boxes, middle exit |
+| green | `#1D5B39` | verified output boxes, opener, floor exit |
+
+Every text and background pair clears WCAG AA for body text. The lowest ratio on any
+page is 5.83 (ochre chunk labels on a card); most sit between 9 and 17. Base font is
+18px with 15.5px code, sized to be read from the back of a room. No hairline borders:
+rules are 2px and accent edges 6 to 8px, because 1px light-grey lines vanish when
+projected. Nothing relies on colour alone; every coloured element also carries a text
+label or a border-width cue.
+
+**Reveals hide the real output.** Each chunk shows the code, then the prediction
+question, then a button reading "Run it first, then check here". The button reveals
+the verified terminal output *and* the explanation together. Nothing about what the
+program prints is visible until the button is clicked, so a projected page cannot
+give the answer away before students commit to a prediction. `validate.py` does not
+check this; a separate check confirms no `<pre class="out">` block renders outside a
+hidden `.ans` container.
+
 ## Repo conventions
 
 - Flat repo. No subdirectories, no `index.html`. The hub is the homepage.
@@ -58,7 +91,7 @@ from the live repo. It no longer exists here and the hub no longer links to it.
   dependency.
 - No `localStorage`, no `sessionStorage`, no `indexedDB`. These pages are embedded
   in Google Sites by full-page URL and storage is blocked inside the iframe.
-- Internal links carry a version pin: `?v=2`. Bump the pin on every page whose
+- Internal links carry a version pin: `?v=3`. Bump the pin on every page whose
   content changes, so the embed does not serve a cached copy.
 - Re-upload the hub whenever a page is added, renamed, or removed, or the
   navigation will have gaps.
