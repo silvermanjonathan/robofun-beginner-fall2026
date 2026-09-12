@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Commission and demo day | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 12 of 12</p><h1>Commission and demo day</h1><p class="sub">Two changes I ask for, one you choose, and sixty seconds in front of the room</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Dec 14</span><span class="pill"><b>Friday section</b> Fri Dec 18</span><span class="pill"><b>Length</b> 90 minutes</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>No new syntax. Everything today uses what is already on your ledger card.</p><p><b>Deliberately re-used:</b> Everything. No new syntax today..</p><p class="note">Parents are in the room. The commission is deliberately small so that the demo is about explaining a program the student understands, not about finishing one they do not.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: the ledger card, out loud</h2><p>Cards on the desk. Find the stamp for the thing you are about to change in your engine, and read it to the person next to you. If you cannot find it, that is the first thing to fix today.</p><div class="predict"><p class="q">Question: Which stamp covers the numbers at the top of your engine?</p><button class="rev" data-target="s12-op0" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s12-op0"><p>Stamp 10, the knob block. Every number you are about to change lives there.</p></div></div><div class="predict"><p class="q">Question: Which stamp tells you what to do when your change makes the program worse?</p><button class="rev" data-target="s12-op1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s12-op1"><p>Stamp 7. One change per run, and undo the last one before trying the next.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 4</p><h2>The commission: two required changes</h2><p>You are handed a working engine. You do not rewrite it. You change its behaviour through the knob block and through one named function, and you keep it working the whole time. This is what most programming work actually looks like.</p><pre># CHANGE 1: through the knob block only.
+#   Make the game harder without touching any line below the block.
+#   Acceptable: speed, spawn interval, lives, tile size, colours.
+
+# CHANGE 2: through one function only.
+#   Add a rule the engine does not have yet. One function, one gate.
+#   Examples: a tile that costs a life, a coin worth five,
+#   a wall that opens once the score passes ten.</pre><div class="predict"><p class="q">Predict: Change 1 forbids editing anything below the knob block. What does that tell you about how the engine was written?</p><button class="rev" data-target="s12-c1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s12-c1"><p>That every number the behaviour depends on was given a name at the top. If you find a raw number buried in the loop that you need to change, that is a fault in the engine, and naming it is a legitimate third change.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 2 of 4</p><h2>The expected and got sheet</h2><p>Before you run a change, write what you expect. After you run it, write what you got. When the two columns differ, you have found something, and you have it in writing. This is the artifact, not the code.</p><pre># CHANGE: SPAWN_EVERY from 90 to 45
+# EXPECTED: coins appear twice as often, roughly every 0.75 seconds
+# GOT:      ?
+#
+# CHANGE: lives from 3 to 1
+# EXPECTED: game over on the first hit
+# GOT:      ?</pre><div class="predict"><p class="q">Predict: Why write the expectation before running rather than after?</p><button class="rev" data-target="s12-c2" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s12-c2"><p>Because afterwards you will believe you expected whatever happened. Writing it first is the only way to catch the times you were wrong, which are the times you learn something.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 3 of 4</p><h2>The sixty-second demo: run, point, tell</h2><p>Three beats, twenty seconds each. Run the program. Point at the thing you changed. Tell us what it does and why you chose it. You are not explaining all of Python. You are explaining one decision.</p><pre>RUN   (20s): start it, let it play, say what the game is in one sentence.
+POINT (20s): show the line or the number you changed. Read it out.
+TELL  (20s): say what it does now that it did not do before,
+             and name one thing that broke on the way there.</pre><div class="predict"><p class="q">Predict: Which of the three beats is hardest to do in twenty seconds?</p><button class="rev" data-target="s12-c3" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s12-c3"><p>Tell. Most people describe what the code says instead of what it does. Rehearse the sentence out loud twice before the room fills up. Naming the thing that broke is not a confession, it is the interesting part.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 4 of 4</p><h2>One honest name</h2><p>One exit criterion today is naming. If a function is called <code>check</code> and it removes a life, rename it. The summer example in this program is the function once called <code>create_fox</code> that made any animal; it is <code>create_animal</code> now.</p><pre># Before
+def check(row, col):
+    return level[row][col] == 0
+
+# After
+def is_open(row, col):
+    return level[row][col] == 0</pre><div class="predict"><p class="q">Predict: Both versions run identically. Why is the rename worth a minute on demo day?</p><button class="rev" data-target="s12-c4" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s12-c4"><p>Because the person reading it next is you, in three months, with no memory of what <code>check</code> checked. A name is the shortest comment you can write, and it cannot fall out of date the way a comment can.</p></div></div></section><section class="hinge"><p class="chunk-no">Hinge question &middot; reaches back two weeks</p><h2>Before you build</h2><div class="predict"><p class="q">Question: Pick any stamp on your ledger card from before session 7 and state the bug it was written to prevent.</p><button class="rev" data-target="s12-hinge" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s12-hinge"><p>Accept any correct pairing. The common strong answers: stamp 1 and the int() trap, stamp 3 and the accumulator reset inside the loop, stamp 4 and a function that prints instead of returning, stamp 6 and a strip whose result was never stored.</p></div></div></section><section class="brief"><p class="chunk-no">Build &middot; 45 minutes</p><h2>The commission</h2><ol><li>Make change 1 through the knob block. Fill in the expected and got sheet before and after.</li><li>Make change 2 through one function. Fill in the sheet again.</li><li>Make one change of your own choosing, and write it on the sheet the same way.</li><li>Rename one thing in the program so the name matches what it does.</li><li>Rehearse run, point, tell twice. Time yourself.</li></ol><h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p><table><tr><th>Expected</th><th>Got</th></tr><tr><td>Change 1 touched nothing below the knob block</td><td class="fill"></td></tr><tr><td>Change 2 touched exactly one function</td><td class="fill"></td></tr><tr><td>The program still runs and the window still closes properly</td><td class="fill"></td></tr><tr><td>The expected column was filled in before each run</td><td class="fill"></td></tr><tr><td>One name in the program was changed to be more honest</td><td class="fill"></td></tr></table></section><section><h2>Where you can stop</h2><p>All three are real landings. Nobody is behind for finishing at the floor.</p><div class="exits"><div class="exit floor"><p class="tag">Floor</p><p>One knob change, working, and a sixty-second demo that runs the program and points at the change.</p></div><div class="exit middle"><p class="tag">Middle</p><p>Both required changes plus one of the student's own, with a completed sheet and a rehearsed demo.</p></div><div class="exit stretch"><p class="tag">Stretch</p><p>Write four lines at the top of the file explaining what the program does and what you changed, in the shape of the README entry it would need if you published it.</p></div></div></section><section><h2>Ledger card</h2><p>Stamp 12: signed off. Write one sentence on the back of the card naming the single hardest bug you fixed this term and how you found it.</p><p><a href="semester_ledger_card.html?v=2">Open the semester ledger card</a></p></section><details class="teacher"><summary>Teacher panel</summary><h3>Timing, 90 minutes</h3><ul><li>0:00 ledger retrieval, out loud, 10 min</li><li>0:10 the commission brief read together, 10 min</li><li>0:20 commission work, 45 min (circulate; do not fix anything for them)</li><li>1:05 rehearsal in pairs, 10 min</li><li>1:15 demos, 15 min (sixty seconds each, timed out loud)</li></ul><p class="note">Honest pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping is a landing rather than a failure.</p><h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr><tr><td>Starts a new program from scratch because the engine feels like someone else's.</td><td>Redirect immediately. Working inside code you did not write is the skill being assessed today.</td></tr><tr><td>Makes six changes and cannot say which produced the improvement.</td><td>Stamp 7. Revert to the last working version and go one at a time. Better a small demo that is understood.</td></tr><tr><td>Explains syntax during the tell beat.</td><td>Ask what the player experiences differently. That is the answer, in one sentence.</td></tr></table><h3>Mapped to</h3><table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>5SL4</code></td><td>New York</td><td>NY Next Generation ELA Learning Standards</td><td>5</td><td>Report on a topic or text, sequencing ideas logically and using appropriate facts and relevant, descriptive details to support central ideas or themes; speak clearly at an understandable pace and volume appropriate for audience.</td></tr><tr><td><code>5W2</code></td><td>New York</td><td>NY Next Generation ELA Learning Standards</td><td>5</td><td>Write informative/explanatory texts to explore a topic and convey ideas and information relevant to the subject.</td></tr><tr><td><code>MP1</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Make sense of problems and persevere in solving them.</td></tr></table><h3>If time runs out</h3><p>If session 11's brief is unfinished, the first thirty minutes of the commission window go to finishing it, and change 2 becomes optional. A student demoing a working room with one knob change has met the floor and should be told so plainly.</p></details></div></main><nav class="pager"><a href="session11_grids_keys_game_state.html?v=2">&larr; Grids, keys, and game state</a><a href="beginner_semester_hub.html?v=2">Course home</a><a href="friday_bonus_distance_and_bumpers.html?v=2">Friday bonus: distance and bumpers &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. 110 West End Avenue. Monday and Friday sections run the same spine.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-09-12. <a href="standards_map.html?v=2">Full standards map</a> &middot; <a href="beginner_constraints.html?v=2">Code constraints, published 2026-09-12</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

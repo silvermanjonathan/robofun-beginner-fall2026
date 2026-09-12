@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beyond Vibe Coding: Python, beginner | Robofun Fall 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Robofun &middot; Fall 2026 &middot; 110 West End Avenue</p><h1>Beyond Vibe Coding: Python, beginner</h1><p class="sub">Twelve sessions of ninety minutes. You read the code, trace it out loud, and then run it. Monday and Friday are separate classes working through the same twelve sessions.</p><div class="dates"><span class="pill"><b>Monday</b> Sep 14 to Dec 14, 12 sessions</span><span class="pill"><b>Friday</b> Sep 18 to Dec 18, 12 sessions plus 1 bonus</span><span class="pill"><b>Grades</b> 5 to 8</span><span class="pill"><b>Demo day</b> the last session of each section</span></div></div></header><main><div class="wrap"><section><h2>How a session runs</h2><p>Every week has the same shape, because a week between classes is long enough to forget things and the first ten minutes are for getting them back.</p><ol><li><b>Retrieval opener, 10 minutes.</b> Two questions on paper about work from one and two sessions ago. No editor until both are written down.</li><li><b>Chunks, about 45 minutes.</b> One idea each. You predict what the code will do before you run it, then you run it and read what actually happened.</li><li><b>Hinge question.</b> One question that reaches back two weeks, answered before the build starts.</li><li><b>Build, 25 minutes.</b> A brief with an expected and got sheet. The expected column gets filled in first.</li><li><b>Exit and ledger stamp, 10 minutes.</b> Floor, middle, and stretch are all real landings. One stamp goes on the semester card.</li></ol></section><section><h2>The twelve sessions</h2><ul class="sessionlist"><li><span class="n">1</span><div><a href="session01_printing_names_input.html?v=2">Printing, names, and input</a><span class="meta">Mon Sep 14 &middot; Fri Sep 18</span><span class="meta">Your first six lines, and the one trap in them</span></div></li><li><span class="n">2</span><div><a href="session02_comparisons_and_gates.html?v=2">Comparisons and gates</a><span class="meta">Mon Sep 28 &middot; Fri Sep 25</span><span class="meta">True and False, three-way gates, and two conditions at once</span></div></li><li><span class="n">3</span><div><a href="session03_loops_counters_lists.html?v=2">Loops, counters, and lists</a><span class="meta">Mon Oct 5 &middot; Fri Oct 2</span><span class="meta">Repeat a block, keep a running total, and hold many values under one name</span></div></li><li><span class="n">4</span><div><a href="session04_functions_that_return.html?v=2">Functions that return a value</a><span class="meta">Mon Oct 19 &middot; Fri Oct 9</span><span class="meta">The gap in every program you wrote this summer</span></div></li><li><span class="n">5</span><div><a href="session05_angles_and_shapes.html?v=2">Angles and shapes on screen</a><span class="meta">Mon Oct 26 &middot; Fri Oct 16</span><span class="meta">360 divided by the number of sides, drawn with pygame lines</span></div></li><li><span class="n">6</span><div><a href="session06_strings_as_data.html?v=2">Strings as data</a><span class="meta">Mon Nov 2 &middot; Fri Oct 23</span><span class="meta">Text you can index, slice, clean, and rebuild</span></div></li><li><span class="n">7</span><div><a href="session07_debugging_clinic.html?v=2">Debugging clinic</a><span class="meta">Mon Nov 9 &middot; Fri Oct 30</span><span class="meta">Read the last line first, and one change per run</span></div></li><li><span class="n">8</span><div><a href="session08_remainders_cipher_wheel.html?v=2">Remainders and the cipher wheel</a><span class="meta">Mon Nov 16 &middot; Fri Nov 6</span><span class="meta">Clock arithmetic, a 26-slot rack, and a message that comes back</span></div></li><li><span class="n">9</span><div><a href="session09_dictionaries.html?v=2">Dictionaries</a><span class="meta">Mon Nov 23 &middot; Fri Nov 13</span><span class="meta">The fix for the problem you have had since session 3</span></div></li><li><span class="n">10</span><div><a href="session10_the_pygame_window.html?v=2">The pygame window</a><span class="meta">Mon Nov 30 &middot; Fri Nov 20</span><span class="meta">One frame loop, coordinates that run downward, and a ball that bounces</span></div></li><li><span class="n">11</span><div><a href="session11_grids_keys_game_state.html?v=2">Grids, keys, and game state</a><span class="meta">Mon Dec 7 &middot; Fri Dec 4</span><span class="meta">A list of lists, a wall you cannot walk through, and a game that can end</span></div></li><li><span class="n">12</span><div><a href="session12_commission_and_demo.html?v=2">Commission and demo day</a><span class="meta">Mon Dec 14 &middot; Fri Dec 18</span><span class="meta">Two changes I ask for, one you choose, and sixty seconds in front of the room</span></div></li><li class="bonus"><span class="n">B</span><div><a href="friday_bonus_distance_and_bumpers.html?v=2">Friday bonus: distance and bumpers</a><span class="meta">Not scheduled &middot; Fri Dec 11</span><span class="meta">Pythagoras in a game loop, and a collision that is not a rectangle</span></div></li></ul></section><section><h2>Course pages</h2><div class="grid2"><div class="card"><h3><a href="beginner_constraints.html?v=2">Code constraints</a></h3><p>What is in this course and what is left out, published 2026-09-12 with one frame loop and one list of exclusions. Read this before writing any lesson material.</p></div><div class="card"><h3><a href="semester_ledger_card.html?v=2">Semester ledger card</a></h3><p>One printed page that grows by one stamp a week. It is the only thing that survives between sessions, so it carries the syntax students cannot look up at home.</p></div><div class="card"><h3><a href="standards_map.html?v=2">Standards map</a></h3><p>Every code used in the course, with its jurisdiction, framework, and full statement, resolved through the Learning Commons Knowledge Graph (CASE Network).</p></div><div class="card"><h3>Float topics</h3><p>Not built. Held for cancellations and for a section that runs ahead: file input and output for a high score that survives a restart, sine waves and circular motion, coaster energy, and one session of buttons and labels in tkinter.</p></div></div></section><section><h2>Calendar, by section</h2><div class="flag"><b>Verify before you commit.</b> The dates below assume Robofun is closed Mon Sep 21 for Yom Kippur, Mon Oct 12 for Columbus and Indigenous Peoples Day, and Fri Nov 27 for the day after Thanksgiving. Fri Oct 2 falls in the intermediate days of Sukkot, which some Upper West Side programs skip. Check the published closure list and adjust.</div><div class="grid2"><div class="card"><h3>Monday, 12 sessions</h3><table><tr><th>Date</th><th>Session</th></tr><tr><td>Mon Sep 14</td><td>1. Printing, names, and input</td></tr><tr><td>Mon Sep 28</td><td>2. Comparisons and gates</td></tr><tr><td>Mon Oct 5</td><td>3. Loops, counters, and lists</td></tr><tr><td>Mon Oct 19</td><td>4. Functions that return a value</td></tr><tr><td>Mon Oct 26</td><td>5. Angles and shapes on screen</td></tr><tr><td>Mon Nov 2</td><td>6. Strings as data</td></tr><tr><td>Mon Nov 9</td><td>7. Debugging clinic</td></tr><tr><td>Mon Nov 16</td><td>8. Remainders and the cipher wheel</td></tr><tr><td>Mon Nov 23</td><td>9. Dictionaries</td></tr><tr><td>Mon Nov 30</td><td>10. The pygame window</td></tr><tr><td>Mon Dec 7</td><td>11. Grids, keys, and game state</td></tr><tr><td>Mon Dec 14</td><td>12. Commission and demo day</td></tr></table></div><div class="card"><h3>Friday, 12 sessions plus a bonus</h3><table><tr><th>Date</th><th>Session</th></tr><tr><td>Fri Sep 18</td><td>1. Printing, names, and input</td></tr><tr><td>Fri Sep 25</td><td>2. Comparisons and gates</td></tr><tr><td>Fri Oct 2</td><td>3. Loops, counters, and lists</td></tr><tr><td>Fri Oct 9</td><td>4. Functions that return a value</td></tr><tr><td>Fri Oct 16</td><td>5. Angles and shapes on screen</td></tr><tr><td>Fri Oct 23</td><td>6. Strings as data</td></tr><tr><td>Fri Oct 30</td><td>7. Debugging clinic</td></tr><tr><td>Fri Nov 6</td><td>8. Remainders and the cipher wheel</td></tr><tr><td>Fri Nov 13</td><td>9. Dictionaries</td></tr><tr><td>Fri Nov 20</td><td>10. The pygame window</td></tr><tr><td>Fri Dec 4</td><td>11. Grids, keys, and game state</td></tr><tr><td>Fri Dec 11</td><td>Bonus. Friday bonus: distance and bumpers</td></tr><tr><td>Fri Dec 18</td><td>12. Commission and demo day</td></tr></table></div></div><p class="note">Monday is the short section, so the spine is twelve sessions and Friday spends its extra date on a bonus that nothing later depends on. If a parent compares the two classes, the required content is identical.</p></section><section><h2>Machines and libraries</h2><p>VS Code on the desktop, throughout. One graphics library, pygame, from session 5 onward, installed with <code>pip install pygame</code>. There is no turtle session and no second graphics library, because turtle does not run in our VS Code setup.</p></section><section><h2>What students cannot do at home</h2><p>Assume no working Python between sessions. Nothing in this course is assigned as homework and nothing depends on work done outside the room. What travels home is the ledger card, on paper.</p></section><section><h2>Standards, in short</h2><p>Every session maps to at most three standards, and every code on this site was resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-09-12 rather than written from memory. The mathematics codes come from the New York Next Generation Mathematics Learning Standards and the Standards for Mathematical Practice. The reading, writing, and speaking codes come from the New York Next Generation ELA Learning Standards.</p><div class="flag"><b>Not claimed here:</b> computer science standards. The New York Computer Science and Digital Fluency standards and the CSTA standards are not in the connector, so no CS code appears anywhere on this site. Add them by hand when you have the codes in front of you, at no more than three per session, footered as mapped to.</div><p><a href="standards_map.html?v=2">Open the full standards map</a></p></section></div></main><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. Built 2026-09-12. Version pin <code>?v=2</code> on every internal link.</p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

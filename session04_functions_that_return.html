@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Functions that return a value | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 4 of 12</p><h1>Functions that return a value</h1><p class="sub">The gap in every program you wrote this summer</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 19</span><span class="pill"><b>Friday section</b> Fri Oct 9</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 6 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>def with no parameters, parameters, return, the value None, a function calling a function, several returns behind flat gates.</p><p><b>Deliberately re-used:</b> Session 3: the accumulator becomes a function you can reuse.</p><p class="note">This is the highest-value session in the semester and it has no summer asset behind it. Everything downstream, including dictionaries in session 9 and the grid in session 11, gets easier once return exists.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: two patterns from two weeks back</h2><p>Paper. No editor until both are written.</p><div class="predict"><p class="q">Question: Write the accumulator that adds up a list called <code>scores</code>. Four lines.</p><button class="rev" data-target="s4-op0" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-op0"><p><code>total = 0</code>, then <code>for s in scores:</code>, then <code>total = total + s</code>, then <code>print(total)</code>.</p></div></div><div class="predict"><p class="q">Question: Where does <code>total = 0</code> go, and what happens if it goes one line lower?</p><button class="rev" data-target="s4-op1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-op1"><p>Above the loop. One line lower puts it inside the loop, which resets it every pass and prints the last item instead of the sum.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 7</p><h2>What you already do: name a block</h2><p><code>def</code> gives a name to a block of lines. Calling the name runs the block. This is the version you used all summer. Nothing new yet.</p><pre>def greet():
+    print(&quot;Welcome to the park.&quot;)
+
+greet()
+greet()</pre><div class="predict"><p class="q">Predict: How many lines of output, and does the def line itself print anything?</p><button class="rev" data-target="s4-c1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-c1"><p>Two lines. Defining a function does not run it. The block sits there until something calls it.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Welcome to the park.
+Welcome to the park.</pre></section><section class="chunk"><p class="chunk-no">Chunk 2 of 7</p><h2>Parameters let the caller fill in a blank</h2><p>A name inside the parentheses is a blank the caller fills. Inside the block it behaves like any other name.</p><pre>def greet(name):
+    print(f&quot;Welcome, {name}.&quot;)
+
+greet(&quot;Ada&quot;)
+greet(&quot;Grace&quot;)</pre><div class="predict"><p class="q">Predict: Where does the value of <code>name</code> come from?</p><button class="rev" data-target="s4-c2" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-c2"><p>From the call. It is different on each of the two calls, and it does not exist outside the function at all.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Welcome, Ada.
+Welcome, Grace.</pre></section><section class="chunk"><p class="chunk-no">Chunk 3 of 7</p><h2>return hands a value back to the caller</h2><p>This is the new idea. <code>return</code> stops the function and hands a value back to whoever called it. The call itself becomes that value, which means you can store it, print it, or do arithmetic with it.</p><pre>def double(n):
+    return n * 2
+
+answer = double(21)
+print(answer)
+print(double(5) + double(5))</pre><div class="predict"><p class="q">Predict: Line 6 calls double twice and adds the results. Does that work?</p><button class="rev" data-target="s4-c3" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-c3"><p>Yes. 42 and 20. Each call turns into its value, then the plus sign adds two ordinary numbers. A function that prints cannot do this, which is the next chunk.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">42
+20</pre></section><section class="chunk"><p class="chunk-no">Chunk 4 of 7</p><h2>print and return are not the same thing</h2><p>Two functions that look alike. One prints, one returns. Store the result of each and look at what you get.</p><pre>def double_return(n):
+    return n * 2
+
+def double_print(n):
+    print(n * 2)
+
+a = double_return(21)
+b = double_print(21)
+print(&quot;a is&quot;, a)
+print(&quot;b is&quot;, b)</pre><div class="predict"><p class="q">Predict: Both functions do the same arithmetic. Will <code>a</code> and <code>b</code> hold the same value?</p><button class="rev" data-target="s4-c4" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-c4"><p>No. <code>a</code> holds 42. <code>b</code> holds <code>None</code>, which is Python's word for no value at all. A function with no return hands back None, every time. Your summer programs were full of these, and it is why their output could be looked at but never used.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">42
+a is 42
+b is None</pre></section><section class="chunk"><p class="chunk-no">Chunk 5 of 7</p><h2>One function calling another</h2><p>Once a function hands back a value, another function can use it. Build small pieces and stack them. This is what people mean when they say a program is made of parts.</p><pre>def area(w, h):
+    return w * h
+
+def floor_cost(w, h):
+    return area(w, h) * 12
+
+print(area(3, 4))
+print(floor_cost(3, 4))</pre><div class="predict"><p class="q">Predict: <code>floor_cost</code> never multiplies width by height itself. Does it still work?</p><button class="rev" data-target="s4-c5" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-c5"><p>Yes. 12 and 144. <code>floor_cost</code> asks <code>area</code> for a number and then multiplies it by 12. Neither function knows or cares what the other one does inside.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">12
+144</pre></section><section class="chunk"><p class="chunk-no">Chunk 6 of 7</p><h2>Several returns, gates still flat</h2><p>A function can have more than one <code>return</code>. The first one reached wins and the function stops there, so a gate with three exits needs no else at the end.</p><pre>def fare(age):
+    if age &lt; 5:
+        return 0
+    if age &lt; 13:
+        return 8
+    return 12
+
+print(fare(3))
+print(fare(10))
+print(fare(30))</pre><div class="predict"><p class="q">Predict: <code>fare(10)</code> passes the second gate. Why does it not also reach the last line and come back as 12?</p><button class="rev" data-target="s4-c6" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-c6"><p>Because <code>return</code> ends the function immediately. Nothing below it runs. 0, 8, 12. Three gates, no nesting, no else.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">0
+8
+12</pre></section><section class="chunk"><p class="chunk-no">Chunk 7 of 7</p><h2>Your accumulator, as a tool</h2><p>Last session's four lines, wrapped in a name. Now it works on any list, and the answer comes back as a number you can use.</p><pre>def total_of(numbers):
+    total = 0
+    for n in numbers:
+        total = total + n
+    return total
+
+print(total_of([52, 47, 61]))
+print(total_of([1, 2, 3, 4]))
+print(total_of([52, 47, 61]) + total_of([1, 2, 3, 4]))</pre><div class="predict"><p class="q">Predict: Where does <code>return total</code> have to sit, inside the loop or after it?</p><button class="rev" data-target="s4-c7" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-c7"><p>After it, lined up with the <code>for</code>. Put it inside the loop and the function returns on the first pass with only the first number, which is a silent bug that gives you 52 instead of 160.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">160
+10
+170</pre></section><section class="hinge"><p class="chunk-no">Hinge question &middot; reaches back two weeks</p><h2>Before you build</h2><div class="predict"><p class="q">Question: From session 2: write a function called <code>can_ride</code> that takes a height and a ticket answer and hands back True or False. Use <code>and</code>. Then write the one line that uses it in a gate.</p><button class="rev" data-target="s4-hinge" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s4-hinge"><p><code>def can_ride(height, ticket):</code> then <code>return height &gt; 48 and ticket == "yes"</code>. Used as <code>if can_ride(52, "yes"):</code>. Note that the comparison itself is already True or False, so it can be returned directly with no gate inside the function.</p></div></div></section><section class="brief"><p class="chunk-no">Build &middot; 25 minutes</p><h2>Build: three tools and one program that uses them</h2><ol><li>Write <code>total_of(numbers)</code> that returns a sum.</li><li>Write <code>tallest_of(numbers)</code> that returns the largest value, using best so far.</li><li>Write <code>average_of(numbers)</code> that returns the mean, and make it call <code>total_of</code> rather than adding again.</li><li>Make a list of heights and print all three results in one f-string.</li><li>Check every one of your three tools against <code>sum</code>, <code>max</code>, and your own arithmetic.</li></ol><h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p><table><tr><th>Expected</th><th>Got</th></tr><tr><td>total_of matches sum()</td><td class="fill"></td></tr><tr><td>tallest_of matches max()</td><td class="fill"></td></tr><tr><td>average_of calls total_of rather than looping again</td><td class="fill"></td></tr><tr><td>Each function returns rather than prints</td><td class="fill"></td></tr></table></section><section><h2>Where you can stop</h2><p>All three are real landings. Nobody is behind for finishing at the floor.</p><div class="exits"><div class="exit floor"><p class="tag">Floor</p><p><code>double(n)</code> written, called, and its result stored in a name and printed.</p></div><div class="exit middle"><p class="tag">Middle</p><p>All three tools returning correctly, plus the f-string summary.</p></div><div class="exit stretch"><p class="tag">Stretch</p><p>Write <code>count_over(numbers, limit)</code> that returns how many items beat the limit. Two parameters, one counter, one return. This is the pattern the built-in library does not cover for you.</p></div></div></section><section><h2>Ledger card</h2><p>Stamp 4: <code>def name(parameter):</code>, <code>return</code> hands a value back, no return means <code>None</code>, a function may call another function, several returns are fine with flat gates. Write the None line from chunk 4 on the card.</p><p><a href="semester_ledger_card.html?v=2">Open the semester ledger card</a></p></section><details class="teacher"><summary>Teacher panel</summary><h3>Timing, 90 minutes</h3><ul><li>0:00 retrieval opener, 10 min</li><li>0:10 chunks 1 and 2, 12 min (revision, keep it moving)</li><li>0:22 chunk 3, return, 15 min</li><li>0:37 chunk 4, print against return, 15 min (the hinge of the whole semester; do not compress)</li><li>0:52 chunks 5 and 6, 15 min</li><li>1:07 chunk 7, 8 min</li><li>1:15 build brief, 15 min (most rooms get two of the three tools done)</li></ul><p class="note">Honest pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping is a landing rather than a failure.</p><h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr><tr><td>Writes <code>return</code> and <code>print</code> on consecutive lines and cannot say which one the caller sees.</td><td>Delete the print. Ask where the number went. Then put it back and ask who it was for.</td></tr><tr><td>Calls the function but does not store or print the result, then says nothing happened.</td><td>Correct. The value came back and nobody caught it. Compare to <code>int(age)</code> with no assignment from session 1.</td></tr><tr><td>Puts <code>return</code> inside the loop in chunk 7.</td><td>It returns 52 instead of 160. Trace one pass out loud. Indentation is the whole bug.</td></tr><tr><td>Assumes a parameter name and an outside variable with the same name are the same thing.</td><td>Name the parameter something absurd and show the function still works. Worth doing once, in front of everyone.</td></tr></table><h3>Mapped to</h3><table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>NY-8.F.1</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>8</td><td>Understand that a function is a rule that assigns to each input exactly one output. The graph of a function is the set of ordered pairs consisting of an input and the corresponding output.</td></tr><tr><td><code>NY-6.EE.9</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Use variables to represent two quantities in a real-world problem that change in relationship to one another. Given a verbal context and an equation, identify the dependent variable, in terms of the other quantity, thought of as the independent variable. Analyze the relationship between the dependent and independent variables using graphs and tables, and relate these to the equation.</td></tr><tr><td><code>MP7</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Look for and make use of structure.</td></tr></table><h3>Learning components behind those codes</h3><ul><li><code>NY-8.F.1</code> Identify a relationship as a function if it assigns exactly one output to every input</li><li><code>NY-8.F.1</code> Identify a relationship as a function if its graph is the set of ordered pairs, (x, y), consisting of an input, x, and its corresponding output, y</li></ul><h3>If time runs out</h3><p>If half the room is still on chunk 4 at the hour mark, stop there and make chunk 4 the whole session. Sessions 5 and 7 can absorb a week of slip; session 9 cannot be taught without this.</p></details></div></main><nav class="pager"><a href="session03_loops_counters_lists.html?v=2">&larr; Loops, counters, and lists</a><a href="beginner_semester_hub.html?v=2">Course home</a><a href="session05_angles_and_shapes.html?v=2">Angles and shapes on screen &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. 110 West End Avenue. Monday and Friday sections run the same spine.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-09-12. <a href="standards_map.html?v=2">Full standards map</a> &middot; <a href="beginner_constraints.html?v=2">Code constraints, published 2026-09-12</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

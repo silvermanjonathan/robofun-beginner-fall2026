@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remainders and the cipher wheel | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 8 of 12</p><h1>Remainders and the cipher wheel</h1><p class="sub">Clock arithmetic, a 26-slot rack, and a message that comes back</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Nov 16</span><span class="pill"><b>Friday section</b> Fri Nov 6</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 6 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>the remainder operator, wrapping a counter with %, scanning a rack with a loop, find as the reveal, encode then decode, negative numbers under %.</p><p><b>Deliberately re-used:</b> Session 6: the string index, and session 3: the loop scan.</p><p class="note">The rack scan is a loop over a string looking for a slot. It is session 3's pattern applied to session 6's data type, which makes this session mostly assembly rather than new material.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: two weeks back</h2><p>Paper first.</p><div class="predict"><p class="q">Question: What does <code>"SPYGLASS"[2:5]</code> give you?</p><button class="rev" data-target="s8-op0" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s8-op0"><p><code>YGL</code>. Slots 2, 3, 4. Stops before 5.</p></div></div><div class="predict"><p class="q">Question: Name the two bug types from last session, and which one needs a probe.</p><button class="rev" data-target="s8-op1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s8-op1"><p>Loud and silent. The silent one needs the probe, because there is no traceback to read.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 8</p><h2>The remainder operator</h2><p>The percent sign hands back what is left over after division. It never hands back more than one less than the number you divided by, which is exactly the behaviour a clock has.</p><pre>print(14 % 12)
+print(26 % 26)
+print(29 % 26)
+print(3 % 26)</pre><div class="predict"><p class="q">Predict: Four answers. Which one is 0, and which one is unchanged by the operation?</p><button class="rev" data-target="s8-c1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s8-c1"><p>26 % 26 is 0, and 3 % 26 is still 3. Anything smaller than the divisor comes through untouched. Anything equal to it lands on zero and starts again.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">2
+0
+3
+3</pre></section><section class="chunk"><p class="chunk-no">Chunk 2 of 8</p><h2>Clock arithmetic</h2><p>Nine hours after 8 o'clock is 5 o'clock, not 17. The clock has 12 slots, so the count wraps. The remainder operator is that wrap, written down.</p><pre>start = 8
+for add in range(1, 13):
+    print(start, &quot;+&quot;, add, &quot;=&quot;, (start + add) % 12)</pre><div class="predict"><p class="q">Predict: Where in the list does the answer drop back to a small number?</p><button class="rev" data-target="s8-c2" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s8-c2"><p>After 11 o'clock. Note the 0 where you would expect 12: a 12-slot clock numbered from zero has no 12 on it, which is a real annoyance for clocks and a convenience for programs.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">8 + 1 = 9
+8 + 2 = 10
+8 + 3 = 11
+8 + 4 = 0
+8 + 5 = 1
+8 + 6 = 2
+8 + 7 = 3
+8 + 8 = 4
+8 + 9 = 5
+8 + 10 = 6
+8 + 11 = 7
+8 + 12 = 8</pre></section><section class="chunk"><p class="chunk-no">Chunk 3 of 8</p><h2>A 26-slot rack</h2><p>Line up the alphabet in a string. Now every letter has a slot number, and moving along the alphabet becomes adding to a number.</p><pre>rack = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+print(len(rack))
+print(rack[0])
+print(rack[25])
+print(rack[12])</pre><div class="predict"><p class="q">Predict: Twenty-six letters. What is A's slot number, and what is M's?</p><button class="rev" data-target="s8-c3" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s8-c3"><p>A is 0 and M is 12. The rack starts at zero like every other row of slots this term.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">26
+A
+Z
+M</pre></section><section class="chunk"><p class="chunk-no">Chunk 4 of 8</p><h2>Find a letter&#x27;s slot with a loop</h2><p>To go from a letter to its number, walk the rack and stop when you see a match. This is the loop scan, and it is worth writing by hand once because it shows what searching actually costs.</p><pre>rack = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+letter = &quot;M&quot;
+slot = 0
+found = 0
+for i in range(26):
+    if rack[i] == letter:
+        slot = i
+        found = 1
+print(&quot;slot:&quot;, slot, &quot;found:&quot;, found)</pre><div class="predict"><p class="q">Predict: The loop keeps going after it finds M. Does that change the answer?</p><button class="rev" data-target="s8-c4" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s8-c4"><p>No, because nothing later matches. It does waste thirteen passes, and with <code>break</code> off the table this term that waste is the honest cost of the pattern.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">slot: 12 found: 1</pre></section><section class="chunk"><p class="chunk-no">Chunk 5 of 8</p><h2>Shift with a wrap</h2><p>Add the key to the slot number, wrap with the remainder, and look up the new slot. The wrap is what keeps Z from falling off the end.</p><pre>rack = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+key = 3
+for letter in [&quot;A&quot;, &quot;M&quot;, &quot;X&quot;, &quot;Z&quot;]:
+    slot = rack.find(letter)
+    print(letter, &quot;-&gt;&quot;, rack[(slot + key) % 26])</pre><div class="predict"><p class="q">Predict: X is at slot 23. Adding 3 gives 26. What letter comes out?</p><button class="rev" data-target="s8-c5" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s8-c5"><p>A. Slot 26 does not exist, and the remainder sends it round to 0. Without the wrap this line raises an IndexError on X, Y, and Z.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">A -&gt; D
+M -&gt; P
+X -&gt; A
+Z -&gt; C</pre></section><section class="chunk"><p class="chunk-no">Chunk 6 of 8</p><h2>The reveal: find does the scan for you</h2><p>The previous chunk quietly used <code>find</code>. It walks the string looking for a match and hands back the slot, which is your loop scan in one call. It hands back a negative number when there is no match, and that is the case you have to handle yourself.</p><pre>rack = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+print(rack.find(&quot;A&quot;))
+print(rack.find(&quot;M&quot;))
+print(rack.find(&quot;Z&quot;))
+print(rack.find(&quot;!&quot;))
+print(rack.find(&quot; &quot;))</pre><div class="predict"><p class="q">Predict: What does <code>find</code> hand back for a character that is not in the rack?</p><button class="rev" data-target="s8-c6" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s8-c6"><p>Negative one. That is not a slot, it is a signal, and it is the one thing you must gate on before you use the result. Your loop-scan version used a <code>found</code> flag for the same reason.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">0
+12
+25
+-1
+-1</pre></section><section class="chunk"><p class="chunk-no">Chunk 7 of 8</p><h2>Encode a whole message</h2><p>Walk the message, shift the letters, and pass anything else through untouched. The gate on the negative result from <code>find</code> is what protects the spaces.</p><pre>rack = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+
+def shift(text, key):
+    out = &quot;&quot;
+    for ch in text:
+        slot = rack.find(ch)
+        if slot &lt; 0:
+            out = out + ch
+        else:
+            out = out + rack[(slot + key) % 26]
+    return out
+
+secret = shift(&quot;MEET AT NOON&quot;, 3)
+print(secret)</pre><div class="predict"><p class="q">Predict: The space is not in the rack. Which branch of the gate handles it?</p><button class="rev" data-target="s8-c7" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s8-c7"><p>The first one, because <code>find</code> hands back negative one for a space. The space comes through unchanged, which is why word shapes still show in the output. Hiding them is the pair-swap trick from session 6.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">PHHW DW QRRQ</pre></section><section class="chunk"><p class="chunk-no">Chunk 8 of 8</p><h2>Decoding is a negative key</h2><p>To undo a shift of 3, shift by 3 in the other direction. Python's remainder operator handles negative numbers the way a clock does, so the same function decodes with no changes at all.</p><pre>print((2 - 5) % 26)
+print((0 - 1) % 26)
+
+rack = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+
+def shift(text, key):
+    out = &quot;&quot;
+    for ch in text:
+        slot = rack.find(ch)
+        if slot &lt; 0:
+            out = out + ch
+        else:
+            out = out + rack[(slot + key) % 26]
+    return out
+
+secret = shift(&quot;MEET AT NOON&quot;, 3)
+print(secret)
+print(shift(secret, -3))
+print(shift(secret, 23))</pre><div class="predict"><p class="q">Predict: Shifting back by 3 and forward by 23 should give the same result. Why?</p><button class="rev" data-target="s8-c8" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s8-c8"><p>Because 23 and negative 3 land on the same slot once you wrap at 26. Both decode the message. Python computes a remainder that is never negative, which is what makes the negative key work at all, and it is not true of every programming language.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">23
+25
+PHHW DW QRRQ
+MEET AT NOON
+MEET AT NOON</pre></section><section class="hinge"><p class="chunk-no">Hinge question &middot; reaches back two weeks</p><h2>Before you build</h2><div class="predict"><p class="q">Question: From session 4: <code>shift</code> returns a string. Write one line that encodes a message twice with a key of 3, and say what single key does the same job.</p><button class="rev" data-target="s8-hinge" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s8-hinge"><p><code>shift(shift("MEET", 3), 3)</code>, which is the same as <code>shift("MEET", 6)</code>. Shifts add. That is the reason a shift cipher is weak: there are only 25 useful keys, and a program can try all of them in a loop.</p></div></div></section><section class="brief"><p class="chunk-no">Build &middot; 25 minutes</p><h2>Build: the cipher wheel</h2><ol><li>Write <code>shift(text, key)</code> from the chunks above, returning rather than printing.</li><li>Ask for a message and a key, and print the secret.</li><li>Decode it in the same program using a negative key, and confirm you get the message back.</li><li>Add a line that prints all 25 possible decodings of a secret you did not choose the key for.</li><li>Write down which of the 25 lines is readable, and how you knew.</li></ol><h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p><table><tr><th>Expected</th><th>Got</th></tr><tr><td>A key of 3 then a key of -3 returns the original</td><td class="fill"></td></tr><tr><td>Z with a key of 3 comes out as C, not an IndexError</td><td class="fill"></td></tr><tr><td>Spaces survive the trip unchanged</td><td class="fill"></td></tr><tr><td>The 25-line brute force includes the original message exactly once</td><td class="fill"></td></tr></table></section><section><h2>Where you can stop</h2><p>All three are real landings. Nobody is behind for finishing at the floor.</p><div class="exits"><div class="exit floor"><p class="tag">Floor</p><p>A loop that prints each letter of the rack with its slot number.</p></div><div class="exit middle"><p class="tag">Middle</p><p><code>shift</code> working both ways on a typed message, with spaces preserved.</p></div><div class="exit stretch"><p class="tag">Stretch</p><p>Make the key a word instead of a number: shift the first letter by the first letter of the key, the second by the second, and wrap the key with a remainder when it runs out.</p></div></div></section><section><h2>Ledger card</h2><p>Stamp 8: <code>a % b</code> is the remainder, <code>(slot + key) % 26</code> wraps the rack, <code>rack.find(ch)</code> hands back a slot or negative one, a negative key decodes, shifts add.</p><p><a href="semester_ledger_card.html?v=2">Open the semester ledger card</a></p></section><details class="teacher"><summary>Teacher panel</summary><h3>Timing, 90 minutes</h3><ul><li>0:00 retrieval opener, 10 min</li><li>0:10 chunks 1 to 3, 18 min</li><li>0:28 chunk 4, the loop scan, 12 min</li><li>0:40 chunks 5 and 6, the wrap and find, 15 min</li><li>0:55 chunks 7 and 8, 20 min</li><li>1:15 build brief, 15 min (the brute-force step usually slips to the exits)</li></ul><p class="note">Honest pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping is a landing rather than a failure.</p><h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr><tr><td>Drops the gate on <code>find</code> returning negative one, then reports that spaces turn into letters.</td><td>Print the slot for a space. Negative one is a valid index in Python, and it points at the last letter, which is why the bug is silent rather than loud.</td></tr><tr><td>Believes a negative key must be wrong because the slot goes negative.</td><td>Print <code>(2 - 5) % 26</code>. Python's answer is 23, and that is the whole trick.</td></tr><tr><td>Adds 26 by hand to avoid negatives, which works and hides the idea.</td><td>Accept it, then ask what happens with a key of 60. The remainder handles any key; adding 26 handles one case.</td></tr></table><h3>Mapped to</h3><table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>NY-4.OA.3</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>4</td><td>Solve multistep word problems posed with whole numbers and having whole-number answers using the four operations, including problems in which remainders must be interpreted.</td></tr><tr><td><code>MP7</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Look for and make use of structure.</td></tr><tr><td><code>MP8</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Look for and express regularity in repeated reasoning.</td></tr></table><h3>If time runs out</h3><p>The Vigenère stretch is a float in its own right if the room wants it. Do not start it with less than twenty minutes left.</p></details></div></main><nav class="pager"><a href="session07_debugging_clinic.html?v=2">&larr; Debugging clinic</a><a href="beginner_semester_hub.html?v=2">Course home</a><a href="session09_dictionaries.html?v=2">Dictionaries &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. 110 West End Avenue. Monday and Friday sections run the same spine.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-09-12. <a href="standards_map.html?v=2">Full standards map</a> &middot; <a href="beginner_constraints.html?v=2">Code constraints, published 2026-09-12</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

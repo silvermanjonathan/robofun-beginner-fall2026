@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strings as data | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 6 of 12</p><h1>Strings as data</h1><p class="sub">Text you can index, slice, clean, and rebuild</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Nov 2</span><span class="pill"><b>Friday section</b> Fri Oct 23</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 8 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>indexing a string, slicing, upper and lower, strip, in as a membership test, replace, building a string in a loop, a pair-swap cipher.</p><p><b>Deliberately re-used:</b> Session 3: a string indexes exactly like a list.</p><p class="note">Everything they learned about list slots transfers to strings with no changes. Make the transfer explicit in the opener and the session runs twenty minutes faster.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: slots and off-by-one</h2><p>Paper first.</p><div class="predict"><p class="q">Question: <code>riders</code> has four names. What is the largest index you can use, and what error do you get one past it?</p><button class="rev" data-target="s6-op0" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s6-op0"><p>3, and an IndexError past that. Length four means slots 0 through 3.</p></div></div><div class="predict"><p class="q">Question: Write the loop that adds up a list called <code>nums</code> and hands the total back from a function.</p><button class="rev" data-target="s6-op1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s6-op1"><p><code>def total_of(nums):</code>, <code>total = 0</code>, <code>for n in nums:</code>, <code>total = total + n</code>, then <code>return total</code> lined up with the for.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 8</p><h2>A string is a row of slots</h2><p>Text is indexed exactly like a list. Slot 0 is the first character. <code>len</code> counts the characters, spaces included.</p><pre>word = &quot;SPYGLASS&quot;
+print(word[0])
+print(word[7])
+print(len(word))</pre><div class="predict"><p class="q">Predict: Eight letters. What is in slot 7?</p><button class="rev" data-target="s6-c1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s6-c1"><p>The last S. Same rule as lists: the last slot is one less than the length.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">S
+S
+8</pre></section><section class="chunk"><p class="chunk-no">Chunk 2 of 8</p><h2>Slicing takes a run of slots</h2><p>Two numbers in the brackets with a colon between them take everything from the first up to, but not including, the second. Leave a side blank and Python uses the end.</p><pre>word = &quot;SPYGLASS&quot;
+print(word[0:3])
+print(word[3:])
+print(word[:3])
+print(word[2:5])</pre><div class="predict"><p class="q">Predict: <code>word[0:3]</code> gives three letters or four?</p><button class="rev" data-target="s6-c2" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s6-c2"><p>Three: slots 0, 1, 2. The same stop-before rule as <code>range</code>. You have now met it three times, which is why it is on the ledger card.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">SPY
+GLASS
+SPY
+YGL</pre></section><section class="chunk"><p class="chunk-no">Chunk 3 of 8</p><h2>Cleaning text you did not type</h2><p>Input from a person is messy. <code>strip</code> removes spaces from both ends. <code>upper</code> and <code>lower</code> change the case. None of them change the original; each one hands back a new string, which is why the result has to be stored.</p><pre>raw = &quot;   ada lovelace   &quot;
+clean = raw.strip()
+print(len(raw), len(clean))
+print(clean.upper())
+print(raw.upper())
+print(len(raw))</pre><div class="predict"><p class="q">Predict: After <code>raw.strip()</code>, how long is <code>raw</code>?</p><button class="rev" data-target="s6-c3" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s6-c3"><p>Still 18. <code>strip</code> handed back a shorter string and left the original alone. Forgetting to store the result is the same mistake as calling <code>int(age)</code> without assigning it, back in session 1.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">18 12
+ADA LOVELACE
+   ADA LOVELACE   
+18</pre></section><section class="chunk"><p class="chunk-no">Chunk 4 of 8</p><h2>in asks whether something is inside</h2><p>The word <code>in</code> hands back True or False. It works on strings and on lists, and it saves you the loop you would otherwise write to go looking.</p><pre>word = &quot;SPYGLASS&quot;
+print(&quot;GLA&quot; in word)
+print(&quot;Z&quot; in word)
+print(&quot;S&quot; in word)
+riders = [&quot;Ada&quot;, &quot;Grace&quot;]
+print(&quot;Ada&quot; in riders)</pre><div class="predict"><p class="q">Predict: Does <code>in</code> look for a single letter only, or a whole run of letters?</p><button class="rev" data-target="s6-c4" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s6-c4"><p>A whole run, in order, with nothing between. GLA is in SPYGLASS; GAL is not. On a list it looks for one whole item, not part of one.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">True
+False
+True
+True</pre></section><section class="chunk"><p class="chunk-no">Chunk 5 of 8</p><h2>replace swaps every copy</h2><p><code>replace</code> hands back a new string with every occurrence swapped. Every one, not just the first. Store the result.</p><pre>message = &quot;MEET AT NOON&quot;
+no_spaces = message.replace(&quot; &quot;, &quot;*&quot;)
+print(no_spaces)
+print(message.replace(&quot;O&quot;, &quot;0&quot;))
+print(message)</pre><div class="predict"><p class="q">Predict: NOON has two Os. How many get replaced?</p><button class="rev" data-target="s6-c5" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s6-c5"><p>Both. And the original is unchanged on the last line, because replace hands back a copy.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">MEET*AT*NOON
+MEET AT N00N
+MEET AT NOON</pre></section><section class="chunk"><p class="chunk-no">Chunk 6 of 8</p><h2>Building a string one character at a time</h2><p>Start with an empty string, then add to it inside a loop. This is the accumulator from session 3 with text instead of numbers. Putting the new character in front instead of behind reverses the message.</p><pre>word = &quot;SPYGLASS&quot;
+forward = &quot;&quot;
+backward = &quot;&quot;
+for ch in word:
+    forward = forward + ch
+    backward = ch + backward
+print(forward)
+print(backward)</pre><div class="predict"><p class="q">Predict: Two accumulators, one loop. Which line reverses the word, and why?</p><button class="rev" data-target="s6-c6" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s6-c6"><p>The one that puts <code>ch</code> first. Each new character shoves the growing string to the right, so the last character read ends up at the front.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">SPYGLASS
+SSALGYPS</pre></section><section class="chunk"><p class="chunk-no">Chunk 7 of 8</p><h2>A pair-swap cipher</h2><p>Swap every pair of characters. Spaces get turned into stars first so the word breaks do not give the message away, and an odd-length message gets one star added so the last pair is complete. The step of 2 in <code>range</code> hands out 0, 2, 4 and skips the odd slots, because each pass handles two characters.</p><pre>message = &quot;MEET AT NOON&quot;
+message = message.replace(&quot; &quot;, &quot;*&quot;)
+if len(message) % 2 == 1:
+    message = message + &quot;*&quot;
+
+out = &quot;&quot;
+for i in range(0, len(message), 2):
+    out = out + message[i + 1] + message[i]
+print(out)</pre><div class="predict"><p class="q">Predict: Twelve characters, six pairs. What does the first pair, ME, become?</p><button class="rev" data-target="s6-c7" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s6-c7"><p>EM. Each pair comes out in the other order. The padding gate matters: without it, <code>message[i + 1]</code> reaches past the end on the last pass and you get an IndexError.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">EMTEA**TONNO</pre></section><section class="chunk"><p class="chunk-no">Chunk 8 of 8</p><h2>The same code decodes it</h2><p>Swapping a pair twice puts it back. Feed the output of the encoder into the encoder again and the original returns. Ciphers that behave this way need only one piece of code.</p><pre>def pair_swap(text):
+    text = text.replace(&quot; &quot;, &quot;*&quot;)
+    if len(text) % 2 == 1:
+        text = text + &quot;*&quot;
+    out = &quot;&quot;
+    for i in range(0, len(text), 2):
+        out = out + text[i + 1] + text[i]
+    return out
+
+secret = pair_swap(&quot;MEET AT NOON&quot;)
+print(secret)
+print(pair_swap(secret))
+print(pair_swap(secret).replace(&quot;*&quot;, &quot; &quot;))</pre><div class="predict"><p class="q">Predict: Run it twice on the same message. Do you get the message back exactly?</p><button class="rev" data-target="s6-c8" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s6-c8"><p>Yes, with stars where the spaces were. Turning the stars back into spaces is one more <code>replace</code>. Note that the function returns rather than prints, which is what lets the second call take the first one's output.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">EMTEA**TONNO
+MEET*AT*NOON
+MEET AT NOON</pre></section><section class="hinge"><p class="chunk-no">Hinge question &middot; reaches back two weeks</p><h2>Before you build</h2><div class="predict"><p class="q">Question: From session 4: the encoder is a function that returns. Explain in one sentence why <code>pair_swap(pair_swap("HELLO"))</code> works, and what it would do if <code>pair_swap</code> ended in <code>print</code> instead of <code>return</code>.</p><button class="rev" data-target="s6-hinge" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s6-hinge"><p>The inner call becomes a string, and the outer call takes that string as its argument. With <code>print</code> the inner call would hand back None, and the outer call would crash trying to call <code>replace</code> on None.</p></div></div></section><section class="brief"><p class="chunk-no">Build &middot; 25 minutes</p><h2>Build: a message cleaner and a cipher</h2><ol><li>Write <code>clean(text)</code> that strips the ends, raises the case, and returns the result.</li><li>Write <code>pair_swap(text)</code> from the chunk above, without looking at it if you can.</li><li>Ask for a message, clean it, encode it, and print the secret.</li><li>Decode your own secret by calling the encoder a second time.</li><li>Test it on a message with an odd number of characters and confirm the padding gate fires.</li></ol><h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p><table><tr><th>Expected</th><th>Got</th></tr><tr><td>Encoding then encoding again returns the original</td><td class="fill"></td></tr><tr><td>An odd-length message does not raise IndexError</td><td class="fill"></td></tr><tr><td>clean() returns rather than prints</td><td class="fill"></td></tr><tr><td>Lowercase input comes out uppercase</td><td class="fill"></td></tr></table></section><section><h2>Where you can stop</h2><p>All three are real landings. Nobody is behind for finishing at the floor.</p><div class="exits"><div class="exit floor"><p class="tag">Floor</p><p>A program that asks for a message and prints it cleaned, reversed, and with spaces removed.</p></div><div class="exit middle"><p class="tag">Middle</p><p>The cleaner and the pair-swap cipher, both as functions that return, with a round trip proven.</p></div><div class="exit stretch"><p class="tag">Stretch</p><p>Swap every three characters instead of two. Work out what the padding rule becomes, and what happens to a message whose length leaves a remainder of one.</p></div></div></section><section><h2>Ledger card</h2><p>Stamp 6: <code>text[0]</code>, <code>text[0:3]</code> stops before 3, <code>strip</code>, <code>upper</code>, <code>lower</code>, <code>in</code>, <code>replace</code>, build a string with an accumulator, <code>range(0, n, 2)</code>.</p><p><a href="semester_ledger_card.html?v=2">Open the semester ledger card</a></p></section><details class="teacher"><summary>Teacher panel</summary><h3>Timing, 90 minutes</h3><ul><li>0:00 retrieval opener, 10 min</li><li>0:10 chunks 1 and 2, 15 min</li><li>0:25 chunks 3 to 5, 20 min</li><li>0:45 chunk 6, string accumulator, 12 min</li><li>0:57 chunks 7 and 8, the cipher, 18 min</li><li>1:15 build brief, 15 min (honest note: the cipher build often spills into session 7&#x27;s opener)</li></ul><p class="note">Honest pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping is a landing rather than a failure.</p><h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr><tr><td>Writes <code>raw.strip()</code> with no assignment and reports that it did nothing.</td><td>It worked and the result was discarded. Same shape as the session 1 int() mistake; name the pattern out loud.</td></tr><tr><td>Expects <code>word[0:3]</code> to include slot 3.</td><td>Print all four slices from chunk 2 side by side. The stop-before rule is now the third appearance.</td></tr><tr><td>Drops the padding gate and gets an IndexError only on some messages.</td><td>Ask which messages. A bug that appears half the time is still a bug, and the length tells you which half.</td></tr></table><h3>Mapped to</h3><table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>MP6</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Attend to precision.</td></tr><tr><td><code>MP7</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Look for and make use of structure.</td></tr><tr><td><code>5R3</code></td><td>New York</td><td>NY Next Generation ELA Learning Standards</td><td>5</td><td>In informational texts, explain the relationships or interactions between two or more individuals, events, ideas, or concepts based on specific evidence from the text. (RI)</td></tr></table><h3>If time runs out</h3><p>This is a new-build session with no summer asset. If it runs long, the cipher chunks move to session 8, which already owns crypto and can carry them.</p></details></div></main><nav class="pager"><a href="session05_angles_and_shapes.html?v=2">&larr; Angles and shapes on screen</a><a href="beginner_semester_hub.html?v=2">Course home</a><a href="session07_debugging_clinic.html?v=2">Debugging clinic &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. 110 West End Avenue. Monday and Friday sections run the same spine.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-09-12. <a href="standards_map.html?v=2">Full standards map</a> &middot; <a href="beginner_constraints.html?v=2">Code constraints, published 2026-09-12</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

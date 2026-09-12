@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code constraints | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Beginner course &middot; published 2026-09-12</p><h1>Code constraints</h1><p class="sub">What this course uses, what it leaves out, and the one frame loop. Every page on this site obeys this list. Changing the list means republishing it with a new date.</p></div></header><main><div class="wrap"><section><h2>Lifted for the semester</h2><p>These were excluded from the five-day summer camps. Eighteen hours of instruction is a different problem, and each of these is now taught in a named session.</p><table><tr><th>Now allowed</th><th>First taught</th><th>Why</th></tr><tr><td><code>return</code></td><td>Session 4</td><td>Without it a function cannot be composed, tested, or reused, and every function hands back <code>None</code>.</td></tr><tr><td><code>and</code>, <code>or</code></td><td>Session 2</td><td>With nesting banned there was no way to write two conditions at once.</td></tr><tr><td><code>len</code>, <code>sum</code>, <code>max</code>, <code>min</code></td><td>Session 3</td><td>Taught as the reveal after the hand-written version, never before it.</td></tr><tr><td>String methods and slicing</td><td>Session 6</td><td>Students could not clean their own input, which forced capitals-and-spaces workarounds.</td></tr><tr><td>Dictionaries</td><td>Session 9</td><td>The parallel-list failure is taught first, then the fix.</td></tr><tr><td><code>.find()</code></td><td>Session 8</td><td>Revealed after the hand-written rack scan.</td></tr><tr><td>pygame from session 5 onward</td><td>Session 5</td><td>The only graphics library in the course. It replaces the turtle drawing session, which does not run in VS Code.</td></tr><tr><td>KEYDOWN, mouse, frame timers</td><td>Session 11</td><td>Without them a game reads as a demo. A held key and a single press are different questions.</td></tr><tr><td><code>random.seed</code>, <code>randint</code></td><td>Session 3</td><td>A seed is how you test a program that is supposed to be unpredictable.</td></tr></table></section><section><h2>Still excluded, all twelve sessions</h2><ul><li><b>Nested gates.</b> Flat <code>if</code>, <code>elif</code>, <code>else</code> only. If a student reaches for an if inside an if, hand them <code>and</code>.</li><li><b><code>break</code> and <code>continue</code>.</b> Every <code>while</code> names its exit condition in the condition itself.</li><li><b><code>while True</code>.</b> Same reason.</li><li><b><code>try</code> and <code>except</code>.</b> Ask-until-valid loops cover the same ground at this level.</li><li><b><code>//</code>.</b> A single slash and <code>%</code> are enough.</li><li><b><code>class</code>.</b> Advanced course material.</li><li><b>Recursion, list comprehensions, lambda, <code>global</code>.</b></li><li><b>Multi-file programs and importing your own module.</b> Advanced course.</li><li><b>File input and output.</b> Held as a float, not in the spine.</li><li><b><code>pygame.font</code>.</b> Words go in the terminal and visuals go in the window. That split holds all term.</li><li><b>turtle.</b> Not used anywhere in this course. It needs a library our VS Code setup does not have, so pygame does all of the drawing, starting in session 5. Any summer turtle asset stays out of this repo.</li></ul></section><section><h2>The frame loop, and only this one</h2><p>Two idioms were in circulation across the summer projects. One used a frame counter with <code>break</code>, which is excluded here and silently capped runs at sixty seconds. This course uses the other one, everywhere, with no exceptions. Students first copy it in session 5 as a harness holding a finished drawing on screen, and session 10 takes it apart.</p><pre>running = 1
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = 0
+    screen.fill(BG)
+    # draw here
+    pygame.display.flip()
+    clock.tick(60)
+pygame.quit()</pre><p>A window never closes itself. It closes when the person closes it. Any summer asset brought into this course gets normalised to this shape before it is handed out.</p><p>Two placements of the drawing, both legitimate, and students meet them in this order. In session 5 the drawing is done once onto a <code>pygame.Surface</code> above the loop, and the loop only blits it, because the picture never changes. From session 10 on, the <code>fill</code> and the drawing sit inside the loop, because the picture changes every frame.</p></section><section><h2>Standing rules</h2><ul><li><b>One change per run.</b> Change one thing, run it, write down what happened.</li><li><b>Predict before you run.</b> Out loud or on paper, every chunk.</li><li><b>Expected and got.</b> The expected column is filled in before the run, not after.</li><li><b>Honest names.</b> A function called <code>check</code> that removes a life gets renamed. This is an exit criterion, not a style preference.</li><li><b>Words in the terminal, visuals in the window.</b></li><li><b>Knob block at the top.</b> Every number the behaviour depends on gets a capitalised name above the code that uses it.</li></ul></section><section><h2>Verification</h2><p>Every output box on every session page was produced by running that exact snippet, not typed from expectation. Terminal snippets were run with real input where they ask for it. The pygame snippets were run without a screen, with a quit event injected after a set number of frames, and the printed probe lines on those pages are the real ones. Every snippet on this site was run. Where a snippet continues a program from an earlier chunk, the page says so and the whole file was run together.</p></section></div></main><nav class="pager"><a href="beginner_semester_hub.html?v=2">Course home</a><a href="standards_map.html?v=2">Standards map &rarr;</a></nav><footer><div class="wrap"><p>Published 2026-09-12. Supersedes the per-project exclusion lists used in the summer camp units.</p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

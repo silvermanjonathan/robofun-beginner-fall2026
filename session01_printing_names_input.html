@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Printing, names, and input | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 1 of 12</p><h1>Printing, names, and input</h1><p class="sub">Your first six lines, and the one trap in them</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Sep 14</span><span class="pill"><b>Friday section</b> Fri Sep 18</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 7 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>print, naming a value, reassignment, input, int(), f-string, reading a NameError.</p><p class="note">First session. Nothing to retrieve yet, so the ten minutes go to machine setup and one shared rule: read it, trace it, then run it.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Setup and the house rule</h2><p>Open the editor, make a file called <code>session01.py</code>, and write your name in a comment on line 1. Then, before anyone runs anything, the rule for the whole semester: you say out loud what a line will do before you press run. Being wrong out loud is the point. It is how you find out what you actually believe.</p></section><section class="chunk"><p class="chunk-no">Chunk 1 of 7</p><h2>One line, one job</h2><p>A program is a list of instructions. Python does them top to bottom, one at a time, and then stops. <code>print</code> puts words on the terminal.</p><pre>print(&quot;Robofun terminal is live.&quot;)</pre><div class="predict"><p class="q">Predict: The quote marks are in the code. Will they be in the output?</p><button class="rev" data-target="s1-c1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s1-c1"><p>No. The quotes tell Python where the text starts and stops. They are punctuation for Python, not part of your message.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Robofun terminal is live.</pre></section><section class="chunk"><p class="chunk-no">Chunk 2 of 7</p><h2>The misfire, on purpose</h2><p>Now break it. Type <code>pritn</code> instead of <code>print</code> and run it. You are going to read errors all semester, so you may as well meet one you built yourself.</p><pre>pritn(&quot;Robofun terminal is live.&quot;)</pre><div class="predict"><p class="q">Predict: Python is going to complain. Which word will it complain about?</p><button class="rev" data-target="s1-c2" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s1-c2"><p>It names <code>pritn</code>, not the message. Python does not know that word. Read the last line of an error first. It tells you the category and the word involved.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Traceback (most recent call last):
+  File &quot;session01.py&quot;, line 1, in &lt;module&gt;
+    pritn(&quot;Robofun terminal is live.&quot;)
+    ^^^^^
+NameError: name &#x27;pritn&#x27; is not defined. Did you mean: &#x27;print&#x27;?</pre></section><section class="chunk"><p class="chunk-no">Chunk 3 of 7</p><h2>A name for a value</h2><p>The equals sign does not mean equals here. It means <em>put this value under this name</em>. After that line, the name works anywhere you would have written the value.</p><pre>player = &quot;Ada&quot;
+print(player)
+print(&quot;player&quot;)</pre><div class="predict"><p class="q">Predict: Two print lines, one with quotes and one without. Do they print the same thing?</p><button class="rev" data-target="s1-c3" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s1-c3"><p>No. Without quotes, Python looks up the name and finds Ada. With quotes, it just prints the six letters you typed. This is the most common first-week mix-up in the room.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Ada
+player</pre></section><section class="chunk"><p class="chunk-no">Chunk 4 of 7</p><h2>Reassignment reads right to left</h2><p>A name can be pointed at a new value. When the old name appears on both sides, work out the right side first, then store the answer back under the name.</p><pre>score = 10
+print(score)
+score = score + 5
+print(score)</pre><div class="predict"><p class="q">Predict: Line 3 has score on both sides. What does the second print show?</p><button class="rev" data-target="s1-c4" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s1-c4"><p>15. Python computes <code>10 + 5</code> first, then stores 15 under <code>score</code>. The old 10 is gone.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">10
+15</pre></section><section class="chunk"><p class="chunk-no">Chunk 5 of 7</p><h2>input always hands back text</h2><p><code>input</code> stops the program, waits for typing, and hands back what was typed. It hands back <em>text</em>, always, even when the person typed digits. Run this with 3 as the answer.</p><pre>age = input(&quot;Robot age in years: &quot;)
+print(age + 1)</pre><div class="predict"><p class="q">Predict: You typed the number 3. Does <code>age + 1</code> give you 4?</p><button class="rev" data-target="s1-c5" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s1-c5"><p>No. You get a TypeError. The 3 you typed is the text <code>"3"</code>, and Python will not add 1 to text. Text plus text is allowed; text plus number is not.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Robot age in years:
+Traceback (most recent call last):
+  File &quot;session01.py&quot;, line 2, in &lt;module&gt;
+    print(age + 1)
+          ~~~~^~~
+TypeError: can only concatenate str (not &quot;int&quot;) to str</pre></section><section class="chunk"><p class="chunk-no">Chunk 6 of 7</p><h2>int() converts, on one line of its own</h2><p><code>int()</code> takes text that looks like a whole number and hands back the number. Do the conversion on its own line while you are learning. You will see it folded into one line in other people's code later.</p><pre>age = input(&quot;Robot age in years: &quot;)
+age = int(age)
+print(age + 1)</pre><div class="predict"><p class="q">Predict: Same program with one line added. What changes?</p><button class="rev" data-target="s1-c6" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s1-c6"><p>Now <code>age</code> holds the number 3 rather than the text 3, so adding 1 works. This trap comes back every time a program asks for a number, so it goes on your ledger card today.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Robot age in years: 4</pre></section><section class="chunk"><p class="chunk-no">Chunk 7 of 7</p><h2>f-strings put values inside a sentence</h2><p>Putting an <code>f</code> in front of the opening quote lets you drop a name into the middle of a sentence using curly braces. It is shorter than gluing pieces together with plus signs, and it does not care whether the value is text or a number.</p><pre>player = &quot;Ada&quot;
+score = 15
+print(f&quot;{player} has {score} points.&quot;)</pre><div class="predict"><p class="q">Predict: What lands in the braces, the name or the value?</p><button class="rev" data-target="s1-c7" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s1-c7"><p>The value. Python looks up each name inside the braces and drops the value in. Forget the <code>f</code> and you print the braces themselves, which is a good bug to see once.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Ada has 15 points.</pre></section><section class="hinge"><p class="chunk-no">Hinge question &middot; reaches back two weeks</p><h2>Before you build</h2><div class="predict"><p class="q">Question: Someone writes <code>total = input("How many tickets? ")</code> and then <code>print(total + 2)</code>. The program crashes. Name the fix in one line of code.</p><button class="rev" data-target="s1-hinge" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s1-hinge"><p><code>total = int(total)</code> before the print. Or convert inside the print with <code>int(total) + 2</code>. Either answer is correct; the first is the one we write this term.</p></div></div></section><section class="brief"><p class="chunk-no">Build &middot; 25 minutes</p><h2>Build: the rider card</h2><ol><li>Ask for a rider name and store it.</li><li>Ask for a height in inches, and convert it to a number on its own line.</li><li>Ask for a number of tickets, and convert it.</li><li>Print one f-string sentence that uses all three values.</li><li>Add 1 to the ticket count and print a second sentence showing the new total.</li></ol><h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p><table><tr><th>Expected</th><th>Got</th></tr><tr><td>Line 4 prints all three values in one sentence</td><td class="fill"></td></tr><tr><td>Line 6 shows the ticket count one higher than typed</td><td class="fill"></td></tr><tr><td>No quote marks appear in the output</td><td class="fill"></td></tr></table></section><section><h2>Where you can stop</h2><p>All three are real landings. Nobody is behind for finishing at the floor.</p><div class="exits"><div class="exit floor"><p class="tag">Floor</p><p>A program that asks for a name and prints it back inside an f-string.</p></div><div class="exit middle"><p class="tag">Middle</p><p>The full rider card: three questions, two conversions, two printed sentences.</p></div><div class="exit stretch"><p class="tag">Stretch</p><p>Add a fourth question asking for a group size, then print the total tickets for the group without using a calculator, letting Python do the multiplication inside the print.</p></div></div></section><section><h2>Ledger card</h2><p>Stamp 1: <code>print</code>, <code>name = value</code>, <code>input</code> hands back text, <code>int()</code> converts, <code>f"{name}"</code>. Write the TypeError message from chunk 5 on the card in your own handwriting.</p><p><a href="semester_ledger_card.html?v=2">Open the semester ledger card</a></p></section><details class="teacher"><summary>Teacher panel</summary><h3>Timing, 90 minutes</h3><ul><li>0:00 setup and house rule, 10 min</li><li>0:10 chunks 1 to 4, 20 min (fast; most students have seen print)</li><li>0:30 chunks 5 and 6, the int() trap, 15 min (slow down here)</li><li>0:45 chunk 7 f-strings, 10 min</li><li>0:55 build brief, 25 min</li><li>1:20 exits, ledger stamp, 10 min</li></ul><p class="note">Honest pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping is a landing rather than a failure.</p><h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr><tr><td>Prints the name instead of the value, or the reverse.</td><td>Point at the quote marks and ask what they tell Python. Do not explain; make them run both lines.</td></tr><tr><td>Reads <code>score = score + 5</code> as an equation and objects that it cannot be true.</td><td>Rename the operation out loud: store the right side under the name on the left. Trace it with two boxes on the whiteboard.</td></tr><tr><td>Writes <code>int(age)</code> but does not store it, then wonders why nothing changed.</td><td>Run their line. The conversion happened and was thrown away. This is worth a full minute of silence.</td></tr></table><h3>Mapped to</h3><table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>NY-5.OA.2</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>5</td><td>Write simple expressions that record calculations with numbers, and interpret numerical expressions without evaluating them.</td></tr><tr><td><code>NY-6.EE.2</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Write, read, and evaluate expressions in which letters stand for numbers.</td></tr><tr><td><code>MP6</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Attend to precision.</td></tr></table><h3>Learning components behind those codes</h3><ul><li><code>NY-6.EE.2</code> Write numerical expressions in which letters stand for numbers</li><li><code>NY-6.EE.2</code> Evaluate numerical expressions in which letters stand for numbers</li></ul><h3>If time runs out</h3><p>If the room finishes early, do not start gates. Send them to the stretch exit and let them ask for four values. Gates need a clean 90 minutes.</p></details></div></main><nav class="pager"><span></span><a href="beginner_semester_hub.html?v=2">Course home</a><a href="session02_comparisons_and_gates.html?v=2">Comparisons and gates &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. 110 West End Avenue. Monday and Friday sections run the same spine.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-09-12. <a href="standards_map.html?v=2">Full standards map</a> &middot; <a href="beginner_constraints.html?v=2">Code constraints, published 2026-09-12</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

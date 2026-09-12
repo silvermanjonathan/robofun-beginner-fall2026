@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semester ledger card | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">One page &middot; print it &middot; it grows weekly</p><h1>Semester ledger card</h1><p class="sub">Nothing about this course survives at home except this card. One stamp a week, written by hand, in the student's own words. Print it on card stock at the start of term and keep the stack in the room.</p></div></header><main><div class="wrap"><section class="noprint"><h2>How to use it</h2><ul><li>Ten minutes at the end of each session. The student writes, not the teacher.</li><li>One stamp per session, in the box for that session number.</li><li>At least one error message per term, copied out by hand.</li><li>The card comes out again in the retrieval opener the following week.</li><li>Session 12 reads the card out loud. If a stamp is unreadable, that is the first thing fixed that day.</li></ul></section><section><h2>Stamps</h2><div class="stampgrid"><div class="stamp"><span class="no">Stamp 1 &middot; Printing, names, and input</span></div><div class="stamp"><span class="no">Stamp 2 &middot; Comparisons and gates</span></div><div class="stamp"><span class="no">Stamp 3 &middot; Loops, counters, and lists</span></div><div class="stamp"><span class="no">Stamp 4 &middot; Functions that return a value</span></div><div class="stamp"><span class="no">Stamp 5 &middot; Angles and shapes on screen</span></div><div class="stamp"><span class="no">Stamp 6 &middot; Strings as data</span></div><div class="stamp"><span class="no">Stamp 7 &middot; Debugging clinic</span></div><div class="stamp"><span class="no">Stamp 8 &middot; Remainders and the cipher wheel</span></div><div class="stamp"><span class="no">Stamp 9 &middot; Dictionaries</span></div><div class="stamp"><span class="no">Stamp 10 &middot; The pygame window</span></div><div class="stamp"><span class="no">Stamp 11 &middot; Grids, keys, and game state</span></div><div class="stamp"><span class="no">Stamp 12 &middot; Commission and demo day</span></div><div class="stamp"><span class="no">Bonus &middot; distance and bumpers</span></div></div></section><section><h2>Reference strip</h2><p>The syntax that is hardest to remember after a week away. Everything else goes in a stamp, in the student's handwriting.</p><pre>name = value            store a value under a name
+int(text)               text to number, on its own line
+f&quot;{name} has {n}&quot;       drop values into a sentence
+if / elif / else        flat gates, never nested
+==  !=  &lt;  &gt;  &lt;=  &gt;=    comparisons, hand back True or False
+and / or                two conditions at once
+while condition:        names its own exit
+for i in range(5):      0 1 2 3 4, stops before 5
+list[0]                 first slot; last is len - 1
+text[0:3]               slots 0 1 2, stops before 3
+def f(x):               ...    return x * 2
+no return               hands back None
+d = {&quot;key&quot;: value}      look up with d[&quot;key&quot;]
+key in d                True or False, checks keys
+a % b                   remainder; wraps a counter
+rack.find(ch)           a slot, or -1 for not found
+360 / sides             the turn that closes a shape
+math.radians(deg)       convert before cos and sin
+cos is across, sin down the far end of a step
+draw.line(c, col, a, b, 3)  canvas, colour, start, end, width
+while running:          pygame frame loop, QUIT sets running = 0
+x = x + vx              move once per frame
+v = -v                  bounce
+level[row][col]         row first, then column</pre><p class="note">Read the last line of an error first. One change per run.</p></section><section><h2>Error names met this term</h2><p>Write the real message next to each one, the first time you meet it.</p><table><tr><th>Name</th><th>What it usually means</th><th>Your message</th></tr><tr><td>NameError</td><td>A word Python does not know. Often a typo.</td><td class="fill"></td></tr><tr><td>SyntaxError</td><td>Punctuation. A bracket, a colon, one equals sign where two belong.</td><td class="fill"></td></tr><tr><td>IndentationError</td><td>A block is missing, or indented unevenly.</td><td class="fill"></td></tr><tr><td>TypeError</td><td>Two kinds that will not mix. Usually text and number.</td><td class="fill"></td></tr><tr><td>IndexError</td><td>A slot past the end. Length and last index are one apart.</td><td class="fill"></td></tr><tr><td>KeyError</td><td>A dictionary key that is not there. Gate with <code>in</code>.</td><td class="fill"></td></tr><tr><td>No error, wrong answer</td><td>A silent bug. Use a probe.</td><td class="fill"></td></tr></table></section></div></main><nav class="pager noprint"><a href="beginner_semester_hub.html?v=2">Course home</a><a href="session01_printing_names_input.html?v=2">Session 1 &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding beginner semester, Robofun Fall 2026.</p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

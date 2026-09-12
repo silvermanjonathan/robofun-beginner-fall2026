@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Angles and shapes on screen | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 5 of 12</p><h1>Angles and shapes on screen</h1><p class="sub">360 divided by the number of sides, drawn with pygame lines</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 26</span><span class="pill"><b>Friday section</b> Fri Oct 16</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 9 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>a canvas surface, the frame loop as a given harness, radians, cos and sin for the far end of a line, returning more than one value, the 360/n rule, a shape function with parameters, nested loops for a rosette, cycling a colour list with %.</p><p><b>Deliberately re-used:</b> Session 4: the drawing tool is a function with parameters.</p><p class="note">The shape function is the first time a function they wrote is called more than three times in one program. Say that out loud when it happens. This is also the first pygame window of the term, and the eight lines that open it are handed over as a working harness rather than taught. Session 10 takes them apart.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: return, one week on</h2><p>Paper first.</p><div class="predict"><p class="q">Question: What does a function hand back when it has no <code>return</code> line?</p><button class="rev" data-target="s5-op0" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s5-op0"><p><code>None</code>. Python's word for no value. It is why a printing function cannot be used in arithmetic.</p></div></div><div class="predict"><p class="q">Question: Write a function <code>turn_size(sides)</code> that hands back the angle you must turn to close a shape with that many sides.</p><button class="rev" data-target="s5-op1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s5-op1"><p><code>def turn_size(sides):</code> then <code>return 360 / sides</code>. That is the whole rule for today.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 8</p><h2>The rule behind every closed shape</h2><p>A full turn is 360 degrees. Walking a closed shape means you finish facing the way you started, so all your turns have to add to exactly 360. Divide 360 by the number of corners and you have the turn for each one.</p><pre>for sides in range(3, 9):
+    print(sides, &quot;sides -&gt;&quot;, 360 / sides, &quot;degrees per turn&quot;)</pre><div class="predict"><p class="q">Predict: A triangle has three corners. Is the turn at each corner 60 degrees or 120?</p><button class="rev" data-target="s5-c1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s5-c1"><p>120. The inside angle of an equilateral triangle is 60, but the turn you make walking around the outside is 120. This trips up nearly everyone once, and it is the reason we compute the turn rather than remember it.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">3 sides -&gt; 120.0 degrees per turn
+4 sides -&gt; 90.0 degrees per turn
+5 sides -&gt; 72.0 degrees per turn
+6 sides -&gt; 60.0 degrees per turn
+7 sides -&gt; 51.42857142857143 degrees per turn
+8 sides -&gt; 45.0 degrees per turn</pre></section><section class="chunk"><p class="chunk-no">Chunk 2 of 8</p><h2>Where a step lands</h2><p>A pygame line needs both ends. You know where you are and which way you are facing, so the far end has to be worked out. <code>cos</code> gives how far across the step goes and <code>sin</code> gives how far down. Both want the angle in radians, so <code>math.radians</code> converts first. The function hands back two values at once, separated by a comma.</p><pre>import math
+
+def step_end(x, y, heading, length):
+    end_x = x + length * math.cos(math.radians(heading))
+    end_y = y + length * math.sin(math.radians(heading))
+    return round(end_x, 1), round(end_y, 1)
+
+print(&quot;heading 0  &quot;, step_end(100, 100, 0, 50))
+print(&quot;heading 90 &quot;, step_end(100, 100, 90, 50))
+print(&quot;heading 180&quot;, step_end(100, 100, 180, 50))
+print(&quot;heading 45 &quot;, step_end(100, 100, 45, 50))</pre><div class="predict"><p class="q">Predict: A heading of 90 degrees. Does the step go up the screen or down it?</p><button class="rev" data-target="s5-c2" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s5-c2"><p>Down. The second coordinate grows downward in a window, so a positive turn goes clockwise and a heading of 90 points at the floor. Leave out <code>math.radians</code> and nothing crashes: <code>math.cos(90)</code> is a real number, about negative 0.45, and your shape comes out as a scribble. That is a silent bug with no error message.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">heading 0   (150.0, 100.0)
+heading 90  (100.0, 150.0)
+heading 180 (50.0, 100.0)
+heading 45  (135.4, 135.4)</pre></section><section class="chunk"><p class="chunk-no">Chunk 3 of 8</p><h2>A window you can draw on</h2><p>The drawing happens once, onto a canvas, above the loop. The loop below has one job: keep showing that canvas until you close the window. Copy the loop as it stands. Session 10 takes it apart line by line.</p><pre>import math
+import pygame
+
+WIDTH = 640
+HEIGHT = 480
+BG = (27, 41, 81)
+YELLOW = (252, 211, 77)
+
+def step_end(x, y, heading, length):
+    end_x = x + length * math.cos(math.radians(heading))
+    end_y = y + length * math.sin(math.radians(heading))
+    return end_x, end_y
+
+pygame.init()
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+clock = pygame.time.Clock()
+canvas = pygame.Surface((WIDTH, HEIGHT))
+canvas.fill(BG)
+
+# ---- your drawing, done once ----
+end_x, end_y = step_end(100, 100, 30, 200)
+print(&quot;line runs from (100, 100) to&quot;, (round(end_x, 1), round(end_y, 1)))
+pygame.draw.line(canvas, YELLOW, (100, 100), (end_x, end_y), 3)
+
+# ---- the harness: hold it on screen until the window closes ----
+running = 1
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = 0
+    screen.blit(canvas, (0, 0))
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()</pre><div class="predict"><p class="q">Predict: The drawing line sits above the loop. What would happen if you moved <code>canvas.fill(BG)</code> down inside the loop?</p><button class="rev" data-target="s5-c3" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s5-c3"><p>The canvas would be wiped sixty times a second and the screen would stay empty. Drawing once and showing it many times is the whole shape of this program. The third argument to <code>draw.line</code> is the thickness; leave it out and you get a hairline, with no error.</p></div></div><p class="outlabel">What actually happens (run without a screen, quit after 5 frames)</p><pre class="out">line runs from (100, 100) to (273.2, 200.0)</pre></section><section class="chunk"><p class="chunk-no">Chunk 4 of 8</p><h2>A function that draws any polygon</h2><p>Seven parameters, which is the longest list of the term, and every one of them is a real choice: where to draw, which way to start, how many sides, how long each side. The loop draws one side, moves the pen to the far end, and adds the turn. It hands back where the pen finished.</p><pre>def polygon(canvas, color, x, y, heading, sides, length):
+    turn = 360 / sides
+    for i in range(sides):
+        end_x, end_y = step_end(x, y, heading, length)
+        pygame.draw.line(canvas, color, (x, y), (end_x, end_y), 3)
+        x = end_x
+        y = end_y
+        heading = heading + turn
+    return x, y, heading
+
+x, y, heading = polygon(canvas, YELLOW, 320, 240, 0, 6, 80)
+print(&quot;pen finished at&quot;, (round(x, 1), round(y, 1)), &quot;facing&quot;, round(heading, 1))</pre><div class="predict"><p class="q">Predict: The hexagon started at 320, 240 facing 0. Where does the pen finish?</p><button class="rev" data-target="s5-c4" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s5-c4"><p>Back at 320, 240, facing 360. The turns added to 360 and the sides were all the same length, so the pen walked a closed loop. Facing 360 is the same direction as facing 0, which is the remainder idea from three weeks ahead arriving early.</p></div></div><p class="note">This sits in the same file as the program in chunk 3, underneath it. The output below came from running the whole file.</p><p class="outlabel">What actually happens (run without a screen)</p><pre class="out">pen finished at (320.0, 240.0) facing 360.0</pre></section><section class="chunk"><p class="chunk-no">Chunk 5 of 8</p><h2>Proof that it closes, for any number of sides</h2><p>Do not take the last claim on trust for one shape. Run the same function with three, six, and twelve sides and print where each one finishes.</p><pre>for sides in [3, 6, 12]:
+    x, y, heading = polygon(canvas, YELLOW, 320, 240, 0, sides, 60)
+    print(sides, &quot;sides finish at&quot;, (round(x, 1), round(y, 1)), &quot;facing&quot;, round(heading, 1))</pre><div class="predict"><p class="q">Predict: Three different shapes. How many different finishing positions?</p><button class="rev" data-target="s5-c5" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s5-c5"><p>One. All three come back to 320, 240 and all three finish facing 360. Change the length part way through and the shape stops closing, which is a good thing to break on purpose once.</p></div></div><p class="note">This sits in the same file as the program in chunk 3, underneath it. The output below came from running the whole file.</p><p class="outlabel">What actually happens (run without a screen)</p><pre class="out">3 sides finish at (320.0, 240.0) facing 360.0
+6 sides finish at (320.0, 240.0) facing 360.0
+12 sides finish at (320.0, 240.0) facing 360.0</pre></section><section class="chunk"><p class="chunk-no">Chunk 6 of 8</p><h2>Moving without drawing</h2><p>There is no pen to lift here. A line appears only where you call <code>draw.line</code>, so moving somewhere else is just choosing different numbers. That is simpler than it sounds and it is worth saying plainly.</p><pre>RED = (220, 38, 38)
+CREAM = (248, 250, 252)
+
+polygon(canvas, YELLOW, 150, 120, 0, 5, 60)
+polygon(canvas, RED, 470, 120, 0, 8, 40)
+polygon(canvas, CREAM, 150, 360, 0, 3, 90)
+print(&quot;three shapes drawn, no lines between them&quot;)</pre><div class="predict"><p class="q">Predict: Three shapes in three corners. What would you add to draw a line from the first shape to the second?</p><button class="rev" data-target="s5-c6" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s5-c6"><p>One more <code>pygame.draw.line</code> call between the two starting points. In a turtle program you have to lift the pen to avoid that line. Here you have to ask for it.</p></div></div><p class="note">This sits in the same file as the program in chunk 3, underneath it. The output below came from running the whole file.</p><p class="outlabel">What actually happens (run without a screen)</p><pre class="out">three shapes drawn, no lines between them</pre></section><section class="chunk"><p class="chunk-no">Chunk 7 of 8</p><h2>A rosette: a loop around a loop</h2><p>The inner loop lives inside <code>polygon</code> and draws one shape. The outer loop draws the shape again from the same point with a different starting heading. Twelve copies, thirty degrees apart, use the same 360 rule at a larger scale.</p><pre>count = 0
+for i in range(12):
+    polygon(canvas, YELLOW, 320, 240, i * 30, 6, 60)
+    count = count + 1
+print(count, &quot;hexagons drawn at headings 0 to&quot;, 11 * 30)
+print(&quot;lines drawn in total:&quot;, count * 6)</pre><div class="predict"><p class="q">Predict: Twelve copies, thirty degrees apart. What heading does the last one start on?</p><button class="rev" data-target="s5-c7" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s5-c7"><p>330 degrees. Twelve thirties make 360, so a thirteenth copy would land back on the first one. Change 12 to 10 and leave the 30 alone and the rosette no longer closes, which looks like a bug and is really just arithmetic.</p></div></div><p class="note">This sits in the same file as the program in chunk 3, underneath it. The output below came from running the whole file.</p><p class="outlabel">What actually happens (run without a screen)</p><pre class="out">12 hexagons drawn at headings 0 to 330
+lines drawn in total: 72</pre></section><section class="chunk"><p class="chunk-no">Chunk 8 of 8</p><h2>Cycling colours with a remainder</h2><p>Three colours and twelve shapes. The remainder operator wraps the counter around the list so shape 3 comes back to colour 0. This is a first look at an operator that gets a whole session of its own in three weeks.</p><pre>colors = [&quot;#DC2626&quot;, &quot;#FCD34D&quot;, &quot;#F8FAFC&quot;]
+for i in range(12):
+    print(i, &quot;uses colour slot&quot;, i % 3, colors[i % 3])</pre><div class="predict"><p class="q">Predict: Twelve shapes, three colours. What slot does shape number 11 use?</p><button class="rev" data-target="s5-c8" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s5-c8"><p>Slot 2. Eleven divided by three leaves a remainder of two. Without the remainder you get an IndexError on the fourth shape.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">0 uses colour slot 0 #DC2626
+1 uses colour slot 1 #FCD34D
+2 uses colour slot 2 #F8FAFC
+3 uses colour slot 0 #DC2626
+4 uses colour slot 1 #FCD34D
+5 uses colour slot 2 #F8FAFC
+6 uses colour slot 0 #DC2626
+7 uses colour slot 1 #FCD34D
+8 uses colour slot 2 #F8FAFC
+9 uses colour slot 0 #DC2626
+10 uses colour slot 1 #FCD34D
+11 uses colour slot 2 #F8FAFC</pre></section><section class="hinge"><p class="chunk-no">Hinge question &middot; reaches back two weeks</p><h2>Before you build</h2><div class="predict"><p class="q">Question: From session 3: the rosette calls <code>polygon</code> twelve times at the same size. Rewrite the outer loop so the shapes get steadily larger, starting at 20 and growing by 10 each time, without writing twelve separate calls.</p><button class="rev" data-target="s5-hinge" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s5-hinge"><p>Use the loop counter in the length argument: <code>for i in range(12):</code> then <code>polygon(canvas, YELLOW, 320, 240, i * 30, 6, 20 + i * 10)</code>. The counter is a value, so it can be used in arithmetic, not just counted with.</p></div></div></section><section class="brief"><p class="chunk-no">Build &middot; 15 minutes</p><h2>Build: a poster with four shapes</h2><ol><li>Start from the harness in chunk 3. Keep the loop at the bottom exactly as it is.</li><li>Write <code>step_end</code> and <code>polygon</code> above it, from memory if you can.</li><li>Draw four polygons in four corners, each with a different number of sides.</li><li>Give each one a colour from a list, chosen with a remainder.</li><li>Add one rosette in the centre with at least eight copies, then change one number, rerun, and write down what moved.</li></ol><h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p><table><tr><th>Expected</th><th>Got</th></tr><tr><td>Every polygon closes with no gap at the last corner</td><td class="fill"></td></tr><tr><td>No stray lines between the four shapes</td><td class="fill"></td></tr><tr><td>Changing the sides argument changes the turn automatically</td><td class="fill"></td></tr><tr><td>The window stays open until you close it</td><td class="fill"></td></tr></table></section><section><h2>Where you can stop</h2><p>All three are real landings. Nobody is behind for finishing at the floor.</p><div class="exits"><div class="exit floor"><p class="tag">Floor</p><p>One polygon function, called twice with different side counts, both shapes closing, shown in a window that waits for you to close it.</p></div><div class="exit middle"><p class="tag">Middle</p><p>The four-corner poster with colour cycling and a centre rosette.</p></div><div class="exit stretch"><p class="tag">Stretch</p><p>Collect the corners into a list instead of drawing each side, using <code>points.append((x, y))</code> inside the loop, then draw the whole shape with one call to <code>pygame.draw.polygon(canvas, color, points, 3)</code>. Same shape, one line instead of eight, and a filled version if you pass 0 for the width.</p></div></div></section><section><h2>Ledger card</h2><p>Stamp 5: <code>360 / sides</code> is the turn, <code>math.radians</code> before <code>cos</code> and <code>sin</code>, <code>cos</code> is across and <code>sin</code> is down, a function can return two values, <code>pygame.draw.line(canvas, color, start, end, 3)</code>, draw once above the loop, <code>i % 3</code> cycles a three-item list.</p><p><a href="semester_ledger_card.html?v=2">Open the semester ledger card</a></p></section><details class="teacher"><summary>Teacher panel</summary><h3>Timing, 90 minutes</h3><ul><li>0:00 retrieval opener, 10 min</li><li>0:10 chunks 1 and 2, 15 min (the radians point is the one to slow down on)</li><li>0:25 chunk 3, the harness, 10 min (hand it over, do not teach it)</li><li>0:35 chunk 4, the polygon function, 15 min</li><li>0:50 chunks 5 and 6, 10 min</li><li>1:00 chunk 7, the rosette, 10 min</li><li>1:10 chunk 8, colour cycling, 5 min</li><li>1:15 build brief, 15 min</li></ul><p class="note">Honest pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping is a landing rather than a failure.</p><h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr><tr><td>Passes degrees straight to <code>math.cos</code> and gets a scribble with no error.</td><td>Print <code>math.cos(90)</code> next to <code>math.cos(math.radians(90))</code>. One is about negative 0.45 and the other is close to zero. This is the session's silent bug.</td></tr><tr><td>Expects a heading of 90 to point up the screen.</td><td>Print the endpoint from chunk 2 and compare to the window corners. The second coordinate grows downward.</td></tr><tr><td>Uses the inside angle instead of the turn, then reports the shape will not close.</td><td>Have them walk it on the floor. Four steps and four quarter turns around a desk, out loud.</td></tr><tr><td>Hard-codes 60 for a hexagon, then changes the sides argument and gets a mess.</td><td>This is the argument for computing the turn from the parameter. Let the mess happen first.</td></tr><tr><td>Puts the drawing calls inside the frame loop, or moves <code>canvas.fill</code> in with them.</td><td>Both run without error. The first redraws the same picture sixty times a second, which costs nothing visible; the second wipes it. Ask which lines belong above the loop and why.</td></tr><tr><td>Cannot find the window after running it.</td><td>It opens behind VS Code. Check the taskbar. Close it with its own close button, not by stopping the terminal.</td></tr></table><h3>Mapped to</h3><table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>NY-4.MD.5</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>4</td><td>Recognize angles as geometric shapes that are formed wherever two rays share a common endpoint, and understand concepts of angle measurement.</td></tr><tr><td><code>NY-5.G.1</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>5</td><td>Use a pair of perpendicular number lines, called axes, to define a coordinate system, with the intersection of the lines (the origin) arranged to coincide with the 0 on each line and a given point in the plane located by using an ordered pair of numbers, called its coordinates. Understand that the first number indicates how far to travel from the origin in the direction of one axis, and the second number indicates how far to travel in the direction of the second axis, with the convention that the names of the two axes and the coordinates correspond.</td></tr><tr><td><code>MP7</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Look for and make use of structure.</td></tr></table><h3>If time runs out</h3><p>Chunks 1, 2, 5, 7 and 8 all run as plain terminal programs with the drawing lines removed, printing coordinates instead. If pygame is not working on a machine, that is the fallback and it is a real session: the numbers are the lesson and the picture is the reward.</p></details><section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install pygame</code>. Check it worked with <code>python -c "import pygame"</code>, which should print nothing at all. An error here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>The window often opens behind VS Code, so check the taskbar before deciding nothing happened. Close it with its own close button: these programs are written to end when the window closes, and stopping the terminal instead can leave the window stuck on screen. A window that will not close usually means the loop has no <code>pygame.event.get()</code> in it.</p></div></div><p class="note">There is no turtle anywhere in this course. Turtle needs a library our VS Code setup does not have, so pygame does all the drawing, starting in session 5.</p></section></div></main><nav class="pager"><a href="session04_functions_that_return.html?v=2">&larr; Functions that return a value</a><a href="beginner_semester_hub.html?v=2">Course home</a><a href="session06_strings_as_data.html?v=2">Strings as data &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. 110 West End Avenue. Monday and Friday sections run the same spine.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-09-12. <a href="standards_map.html?v=2">Full standards map</a> &middot; <a href="beginner_constraints.html?v=2">Code constraints, published 2026-09-12</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

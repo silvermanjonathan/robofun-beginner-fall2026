@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grids, keys, and game state | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 11 of 12</p><h1>Grids, keys, and game state</h1><p class="sub">A list of lists, a wall you cannot walk through, and a game that can end</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Dec 7</span><span class="pill"><b>Friday section</b> Fri Dec 4</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 9 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>a list of lists, row and column indexing, tile to pixel arithmetic, blocked movement, get_pressed against KEYDOWN, a spawn timer with %, lives, game over, restart.</p><p><b>Deliberately re-used:</b> Session 9&#x27;s lookups and session 10&#x27;s frame loop, in the same program.</p><p class="note">Everything in this session is assembly. No new syntax except the two event patterns. Name that at the start, because the program is the longest one they have read and the length is intimidating on its own.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: two weeks back</h2><p>Paper first.</p><div class="predict"><p class="q">Question: In a dictionary, what does <code>in</code> check, and what error do you get without that gate?</p><button class="rev" data-target="s11-op0" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-op0"><p>The keys. A KeyError without the gate.</p></div></div><div class="predict"><p class="q">Question: Which way does the second coordinate grow in a pygame window?</p><button class="rev" data-target="s11-op1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-op1"><p>Downward. 0 is the top edge.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 6</p><h2>A list of lists</h2><p>Each item in the outer list is itself a list, so it takes two indexes to reach a value. The first picks the row and the second picks the column, in that order, and both start at zero.</p><pre>level = [
+    [1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1],
+]
+print(len(level), &quot;rows&quot;)
+print(len(level[0]), &quot;columns&quot;)
+print(&quot;level[2][2] =&quot;, level[2][2])
+print(&quot;level[1][2] =&quot;, level[1][2])</pre><div class="predict"><p class="q">Predict: The single 1 in the middle of the open space is at which pair of indexes?</p><button class="rev" data-target="s11-c1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-c1"><p>Row 2, column 2. Row first. Reading <code>level[1][2]</code> as row 1, column 2 gives 0, which is open floor. Swapping the two indexes is the standard bug here, and on a square level it hides for a long time.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">5 rows
+5 columns
+level[2][2] = 1
+level[1][2] = 0</pre></section><section class="chunk"><p class="chunk-no">Chunk 2 of 6</p><h2>From tile to pixel</h2><p>The grid is small and the window is large. Multiply a column by the tile size to get a screen position, and a row likewise. This is the only arithmetic needed to draw the whole level.</p><pre>TILE = 64
+for row in range(3):
+    for col in range(3):
+        print(&quot;tile&quot;, row, col, &quot;draws at&quot;, (col * TILE, row * TILE))</pre><div class="predict"><p class="q">Predict: Column times tile size gives which screen coordinate, the first or the second?</p><button class="rev" data-target="s11-c2" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-c2"><p>The first. Columns run across, so they set the horizontal position. Rows run down, so they set the vertical one. Getting this backwards produces a level that is drawn sideways, which is a loud-looking bug with no error message.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">tile 0 0 draws at (0, 0)
+tile 0 1 draws at (64, 0)
+tile 0 2 draws at (128, 0)
+tile 1 0 draws at (0, 64)
+tile 1 1 draws at (64, 64)
+tile 1 2 draws at (128, 64)
+tile 2 0 draws at (0, 128)
+tile 2 1 draws at (64, 128)
+tile 2 2 draws at (128, 128)</pre></section><section class="chunk"><p class="chunk-no">Chunk 3 of 6</p><h2>A wall you cannot walk through</h2><p>Check the destination before you move. The function hands back True or False, and the gate that uses it does the moving. Two parts, each simple, tested separately.</p><pre>level = [
+    [1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1],
+]
+
+def is_open(row, col):
+    if row &lt; 0:
+        return False
+    if col &lt; 0:
+        return False
+    if row &gt; len(level) - 1:
+        return False
+    if col &gt; len(level[0]) - 1:
+        return False
+    return level[row][col] == 0
+
+print(is_open(1, 1))
+print(is_open(2, 2))
+print(is_open(0, 0))
+print(is_open(9, 9))</pre><div class="predict"><p class="q">Predict: Why do the first four gates check the edges before the last line looks anything up?</p><button class="rev" data-target="s11-c3" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-c3"><p>Because a negative index is legal in Python and points at the far end of the list, so without those gates walking off the left wall silently teleports you to the right one. The last gate is the only one that reads the level.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">True
+False
+False
+False</pre></section><section class="chunk"><p class="chunk-no">Chunk 4 of 6</p><h2>Held key against single press</h2><p>Two different questions. <code>get_pressed</code> asks what is held down right now, and it is True on every frame the key stays down, which is what you want for continuous motion. A KEYDOWN event happens once per press, which is what you want for a single step or a single shot.</p><pre>import pygame
+
+pygame.init()
+screen = pygame.display.set_mode((320, 240))
+clock = pygame.time.Clock()
+
+held_frames = 0
+press_events = 0
+frame = 0
+
+running = 1
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = 0
+        if event.type == pygame.KEYDOWN:
+            press_events = press_events + 1
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_RIGHT]:
+        held_frames = held_frames + 1
+    frame = frame + 1
+    clock.tick(60)
+
+print(&quot;frames the key was held:&quot;, held_frames)
+print(&quot;separate presses counted:&quot;, press_events)
+pygame.quit()</pre><div class="predict"><p class="q">Predict: The key is pressed twice, and held down for a few frames in between. Which counter ends up larger?</p><button class="rev" data-target="s11-c4" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-c4"><p>The held counter, because it adds one on every frame the key is down while the press counter adds one per press. Use the first for walking and the second for stepping one tile at a time.</p></div></div><p class="outlabel">What actually happens (run without a screen, quit after 30 frames)</p><pre class="out">frames the key was held: 5
+separate presses counted: 2</pre></section><section class="chunk"><p class="chunk-no">Chunk 5 of 6</p><h2>A timer, built from a frame counter and a remainder</h2><p>Sixty frames is one second. Count frames, and use the remainder to fire something on a schedule. This is session 8's operator doing a new job.</p><pre>FPS = 60
+SPAWN_EVERY = 90
+frame = 0
+spawns = 0
+for i in range(361):
+    frame = frame + 1
+    if frame % SPAWN_EVERY == 0:
+        spawns = spawns + 1
+        print(&quot;spawn&quot;, spawns, &quot;at frame&quot;, frame, &quot;=&quot;, frame / FPS, &quot;seconds&quot;)
+print(&quot;total spawns in&quot;, frame, &quot;frames:&quot;, spawns)</pre><div class="predict"><p class="q">Predict: Ninety frames between spawns, at sixty frames a second. How many spawns in six seconds?</p><button class="rev" data-target="s11-c5" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-c5"><p>Four, at one and a half second intervals. Lowering SPAWN_EVERY as the score rises is the whole of a difficulty ramp, and it is one number.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">spawn 1 at frame 90 = 1.5 seconds
+spawn 2 at frame 180 = 3.0 seconds
+spawn 3 at frame 270 = 4.5 seconds
+spawn 4 at frame 360 = 6.0 seconds
+total spawns in 361 frames: 4</pre></section><section class="chunk"><p class="chunk-no">Chunk 6 of 6</p><h2>Game state as one name with three values</h2><p>A game is not only playing. It is also waiting to start, and over. Keep that in one name and gate on it. Flat gates, one per state, and a restart is nothing more than putting the numbers back where they started.</p><pre>def new_game():
+    return &quot;play&quot;, 3, 0
+
+state, lives, score = new_game()
+print(state, lives, score)
+
+for hit in range(4):
+    if state == &quot;play&quot;:
+        lives = lives - 1
+        print(&quot;hit! lives now&quot;, lives)
+    if lives == 0:
+        state = &quot;over&quot;
+print(&quot;state is&quot;, state)
+
+if state == &quot;over&quot;:
+    state, lives, score = new_game()
+print(&quot;after restart:&quot;, state, lives, score)</pre><div class="predict"><p class="q">Predict: Four hits, three lives. What is the state after the loop, and what does the restart do to it?</p><button class="rev" data-target="s11-c6" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-c6"><p>Over, then back to play with three lives and no score. A function that returns three values at once is the cleanest restart you can write, and it works because <code>return</code> exists, which it did not in your summer code.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">play 3 0
+hit! lives now 2
+hit! lives now 1
+hit! lives now 0
+state is over
+after restart: play 3 0</pre></section><section class="hinge"><p class="chunk-no">Hinge question &middot; reaches back two weeks</p><h2>Before you build</h2><div class="predict"><p class="q">Question: From session 9: the level has coins on it. Would you store the coins in the list of lists, or in a separate dictionary keyed by row and column? Give one reason either way.</p><button class="rev" data-target="s11-hinge" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-hinge"><p>Either works. In the grid, a coin is a third tile value, so drawing and collecting are one lookup, but the level data now mixes walls with items. In a dictionary keyed by a pair, the coin list stays separate and can be emptied without touching the level, at the cost of a second lookup per frame. Naming the trade-off is the answer; picking a side is not.</p></div></div></section><section class="brief"><p class="chunk-no">Build &middot; 30 minutes</p><h2>Build: a room with walls, coins, and lives</h2><ol><li>Draw the level from a list of lists, using tile arithmetic and two nested loops.</li><li>Put a player on an open tile and move it one tile per KEYDOWN.</li><li>Block movement into walls using <code>is_open</code>.</li><li>Add coins, a score, and removal on collection.</li><li>Add three lives, a game-over state, and a restart on a key press.</li></ol><h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p><table><tr><th>Expected</th><th>Got</th></tr><tr><td>Walking into a wall does not move the player</td><td class="fill"></td></tr><tr><td>Walking off the edge does not appear on the far side</td><td class="fill"></td></tr><tr><td>One key press moves exactly one tile</td><td class="fill"></td></tr><tr><td>Collecting a coin raises the score once, not once per frame</td><td class="fill"></td></tr><tr><td>Game over stops movement, and restart resets lives and score</td><td class="fill"></td></tr></table></section><section><h2>Where you can stop</h2><p>All three are real landings. Nobody is behind for finishing at the floor.</p><div class="exits"><div class="exit floor"><p class="tag">Floor</p><p>The level drawn on screen from the list of lists, with walls in one colour and floor in another.</p></div><div class="exit middle"><p class="tag">Middle</p><p>Player movement blocked by walls, coins collected, score shown in the terminal.</p></div><div class="exit stretch"><p class="tag">Stretch</p><p>Add a spawn timer that drops a new coin on a random open tile every ninety frames, and lower that number by five each time the score rises.</p></div></div></section><section><h2>Ledger card</h2><p>Stamp 11: <code>level[row][col]</code>, row first, <code>col * TILE</code> is horizontal, edge gates before the lookup, <code>get_pressed</code> for held and KEYDOWN for a single press, <code>frame % n == 0</code> is a timer, one state name with flat gates.</p><p><a href="semester_ledger_card.html?v=2">Open the semester ledger card</a></p></section><details class="teacher"><summary>Teacher panel</summary><h3>Timing, 90 minutes</h3><ul><li>0:00 retrieval opener, 10 min</li><li>0:10 chunks 1 and 2, 18 min</li><li>0:28 chunk 3, is_open, 15 min (the negative-index gate is the teaching point)</li><li>0:43 chunk 4, the two event patterns, 15 min</li><li>0:58 chunks 5 and 6, 17 min</li><li>1:15 build brief, 15 min (nobody finishes; the brief carries into session 12)</li></ul><p class="note">Honest pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping is a landing rather than a failure.</p><h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr><tr><td>Indexes column first.</td><td>Have them print <code>level[1][2]</code> and <code>level[2][1]</code> on a level that is not symmetrical. Build one that is 3 rows by 5 columns so the error is loud.</td></tr><tr><td>Leaves out the negative-index gates and finds the player wrapping around the level.</td><td>Print <code>level[-1]</code>. A negative index is legal and that is the whole bug.</td></tr><tr><td>Uses <code>get_pressed</code> for tile movement and the player crosses the room in three frames.</td><td>Count the frames a key is down. Sixty per second is sixty moves.</td></tr><tr><td>Collects the same coin every frame and the score climbs forever.</td><td>The coin has to be removed when collected. This is the clearest reason to keep coins in their own structure.</td></tr></table><h3>Mapped to</h3><table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>NY-5.G.2</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>5</td><td>Represent real world and mathematical problems by graphing points in the first quadrant of the coordinate plane, and interpret coordinate values of points in the context of the situation.</td></tr><tr><td><code>NY-6.NS.8</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Solve real-world and mathematical problems by graphing points on a coordinate plane. Include use of coordinates and absolute value to find distances between points with the same first coordinate or the same second coordinate.</td></tr><tr><td><code>MP7</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Look for and make use of structure.</td></tr></table><h3>If time runs out</h3><p>This is the fullest session of the term and it will not finish. Plan for the brief to continue into session 12's first half, and treat the spawn timer as the float it really is.</p></details><section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install pygame</code>. Check it worked with <code>python -c "import pygame"</code>, which should print nothing at all. An error here is an install problem, not a problem with your program.</p></div><div class="card"><h3>Every run after that</h3><p>The window often opens behind VS Code, so check the taskbar before deciding nothing happened. Close it with its own close button: these programs are written to end when the window closes, and stopping the terminal instead can leave the window stuck on screen. A window that will not close usually means the loop has no <code>pygame.event.get()</code> in it.</p></div></div><p class="note">There is no turtle anywhere in this course. Turtle needs a library our VS Code setup does not have, so pygame does all the drawing, starting in session 5.</p></section></div></main><nav class="pager"><a href="session10_the_pygame_window.html?v=2">&larr; The pygame window</a><a href="beginner_semester_hub.html?v=2">Course home</a><a href="session12_commission_and_demo.html?v=2">Commission and demo day &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. 110 West End Avenue. Monday and Friday sections run the same spine.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-09-12. <a href="standards_map.html?v=2">Full standards map</a> &middot; <a href="beginner_constraints.html?v=2">Code constraints, published 2026-09-12</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

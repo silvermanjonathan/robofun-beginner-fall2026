@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Standards map | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Resolved 2026-09-12 through the Learning Commons Knowledge Graph (CASE Network)</p><h1>Standards map</h1><p class="sub">Every code used in this course, its full official statement, and the sessions it is mapped to. No code here was written from memory. Each one was returned by a lookup against the CASE Network, and the identifier is printed so it can be checked.</p></div></header><main><div class="wrap"><section><h2>By session</h2><p>At most three per session, footered as mapped to rather than aligned with.</p><table><tr><th>Session</th><th>Mapped to</th></tr><tr><td><a href="session01_printing_names_input.html?v=2">1. Printing, names, and input</a></td><td><code>NY-5.OA.2</code> <code>NY-6.EE.2</code> <code>MP6</code></td></tr><tr><td><a href="session02_comparisons_and_gates.html?v=2">2. Comparisons and gates</a></td><td><code>NY-6.EE.5</code> <code>NY-6.EE.2</code> <code>MP6</code></td></tr><tr><td><a href="session03_loops_counters_lists.html?v=2">3. Loops, counters, and lists</a></td><td><code>NY-5.OA.3</code> <code>NY-6.EE.2</code> <code>MP8</code></td></tr><tr><td><a href="session04_functions_that_return.html?v=2">4. Functions that return a value</a></td><td><code>NY-8.F.1</code> <code>NY-6.EE.9</code> <code>MP7</code></td></tr><tr><td><a href="session05_angles_and_shapes.html?v=2">5. Angles and shapes on screen</a></td><td><code>NY-4.MD.5</code> <code>NY-5.G.1</code> <code>MP7</code></td></tr><tr><td><a href="session06_strings_as_data.html?v=2">6. Strings as data</a></td><td><code>MP6</code> <code>MP7</code> <code>5R3</code></td></tr><tr><td><a href="session07_debugging_clinic.html?v=2">7. Debugging clinic</a></td><td><code>MP1</code> <code>MP6</code> <code>5R3</code></td></tr><tr><td><a href="session08_remainders_cipher_wheel.html?v=2">8. Remainders and the cipher wheel</a></td><td><code>NY-4.OA.3</code> <code>MP7</code> <code>MP8</code></td></tr><tr><td><a href="session09_dictionaries.html?v=2">9. Dictionaries</a></td><td><code>NY-8.F.1</code> <code>NY-6.SP.4</code> <code>MP7</code></td></tr><tr><td><a href="session10_the_pygame_window.html?v=2">10. The pygame window</a></td><td><code>NY-6.NS.6</code> <code>NY-5.G.1</code> <code>NY-6.EE.9</code></td></tr><tr><td><a href="session11_grids_keys_game_state.html?v=2">11. Grids, keys, and game state</a></td><td><code>NY-5.G.2</code> <code>NY-6.NS.8</code> <code>MP7</code></td></tr><tr><td><a href="session12_commission_and_demo.html?v=2">12. Commission and demo day</a></td><td><code>5SL4</code> <code>5W2</code> <code>MP1</code></td></tr><tr><td><a href="friday_bonus_distance_and_bumpers.html?v=2">Bonus. Friday bonus: distance and bumpers</a></td><td><code>NY-8.G.7</code> <code>NY-6.NS.8</code> <code>MP7</code></td></tr></table></section><section><h2>New York Next Generation Mathematics Learning Standards</h2><div class="card" style="margin-bottom:12px"><h3><code>NY-4.MD.5</code> &middot; grade 4</h3><p>Recognize angles as geometric shapes that are formed wherever two rays share a common endpoint, and understand concepts of angle measurement.</p><p class="note">Used in session 5. CASE identifier <code>70d727aa-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-4.OA.3</code> &middot; grade 4</h3><p>Solve multistep word problems posed with whole numbers and having whole-number answers using the four operations, including problems in which remainders must be interpreted.</p><p class="note">Used in session 8. CASE identifier <code>70d703fe-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-5.G.1</code> &middot; grade 5</h3><p>Use a pair of perpendicular number lines, called axes, to define a coordinate system, with the intersection of the lines (the origin) arranged to coincide with the 0 on each line and a given point in the plane located by using an ordered pair of numbers, called its coordinates. Understand that the first number indicates how far to travel from the origin in the direction of one axis, and the second number indicates how far to travel in the direction of the second axis, with the convention that the names of the two axes and the coordinates correspond.</p><p class="note">Used in session 5, 10. CASE identifier <code>70d7a534-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-5.G.2</code> &middot; grade 5</h3><p>Represent real world and mathematical problems by graphing points in the first quadrant of the coordinate plane, and interpret coordinate values of points in the context of the situation.</p><p class="note">Used in session 11. CASE identifier <code>70d7a8cc-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-5.OA.2</code> &middot; grade 5</h3><p>Write simple expressions that record calculations with numbers, and interpret numerical expressions without evaluating them.</p><p class="note">Used in session 1. CASE identifier <code>70d772f9-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-5.OA.3</code> &middot; grade 5</h3><p>Generate two numerical patterns using two given rules. Identify apparent relationships between corresponding terms. Form ordered pairs consisting of corresponding terms from the two patterns, and graph the ordered pairs on a coordinate plane.</p><p><b>Learning components:</b></p><ul><li>Generate two numerical patterns using two given rules</li><li>Identify apparent relationships between corresponding terms</li><li>Form ordered pairs consisting of corresponding terms from two patterns</li></ul><p class="note">Used in session 3. CASE identifier <code>70d776aa-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-6.EE.2</code> &middot; grade 6</h3><p>Write, read, and evaluate expressions in which letters stand for numbers.</p><p><b>Learning components:</b></p><ul><li>Write numerical expressions in which letters stand for numbers</li><li>Evaluate numerical expressions in which letters stand for numbers</li></ul><p class="note">Used in session 1, 2, 3. CASE identifier <code>70d83bda-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-6.EE.5</code> &middot; grade 6</h3><p>Understand solving an equation or inequality as a process of answering a question: which values from a specified set, if any, make the equation or inequality true? Use substitution to determine whether a given number in a specified set makes an equation or inequality true.</p><p><b>Learning components:</b></p><ul><li>Use substitution to determine whether a number or a set of numbers makes an equation true</li><li>Use substitution to determine whether a number or a set of numbers makes an inequality true</li><li>Demonstrate that the solution of an equation or inequality is the value of the variable that will make the equation or inequality true</li></ul><p class="note">Used in session 2. CASE identifier <code>70d84845-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-6.EE.9</code> &middot; grade 6</h3><p>Use variables to represent two quantities in a real-world problem that change in relationship to one another. Given a verbal context and an equation, identify the dependent variable, in terms of the other quantity, thought of as the independent variable. Analyze the relationship between the dependent and independent variables using graphs and tables, and relate these to the equation.</p><p class="note">Used in session 4, 10. CASE identifier <code>70d853df-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-6.NS.6</code> &middot; grade 6</h3><p>Understand a rational number as a point on the number line. Use number lines and coordinate axes to represent points on a number line and in the coordinate plane with negative number coordinates.</p><p class="note">Used in session 10. CASE identifier <code>70d81cfb-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-6.NS.8</code> &middot; grade 6</h3><p>Solve real-world and mathematical problems by graphing points on a coordinate plane. Include use of coordinates and absolute value to find distances between points with the same first coordinate or the same second coordinate.</p><p class="note">Used in session 11, Bonus. CASE identifier <code>70d83247-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-6.SP.4</code> &middot; grade 6</h3><p>Display quantitative data in plots on a number line, including dot plots, and histograms.</p><p class="note">Used in session 9. CASE identifier <code>70d869cb-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-8.F.1</code> &middot; grade 8</h3><p>Understand that a function is a rule that assigns to each input exactly one output. The graph of a function is the set of ordered pairs consisting of an input and the corresponding output.</p><p><b>Learning components:</b></p><ul><li>Identify a relationship as a function if it assigns exactly one output to every input</li><li>Identify a relationship as a function if its graph is the set of ordered pairs, (x, y), consisting of an input, x, and its corresponding output, y</li></ul><p class="note">Used in session 4, 9. CASE identifier <code>70d96c5a-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>NY-8.G.7</code> &middot; grade 8</h3><p>Apply the Pythagorean Theorem to determine unknown side lengths in right triangles in real-world and mathematical problems in two and three dimensions.</p><p class="note">Used in session Bonus. CASE identifier <code>70d91756-d7cc-11e8-824f-0242ac160002</code>.</p></div></section><section><h2>Standards for Mathematical Practice, Multi-State</h2><div class="card" style="margin-bottom:12px"><h3><code>MP1</code> &middot; grade K-12</h3><p>Make sense of problems and persevere in solving them.</p><p class="note">Used in session 7, 12. CASE identifier <code>6b9ca36a-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>MP6</code> &middot; grade K-12</h3><p>Attend to precision.</p><p class="note">Used in session 1, 2, 6, 7. CASE identifier <code>6ba033ff-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>MP7</code> &middot; grade K-12</h3><p>Look for and make use of structure.</p><p class="note">Used in session 4, 5, 6, 8, 9, 11, Bonus. CASE identifier <code>6ba09141-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>MP8</code> &middot; grade K-12</h3><p>Look for and express regularity in repeated reasoning.</p><p class="note">Used in session 3, 8. CASE identifier <code>6ba0d653-d7cc-11e8-824f-0242ac160002</code>.</p></div></section><section><h2>New York Next Generation ELA Learning Standards</h2><div class="card" style="margin-bottom:12px"><h3><code>5R3</code> &middot; grade 5</h3><p>In informational texts, explain the relationships or interactions between two or more individuals, events, ideas, or concepts based on specific evidence from the text. (RI)</p><p class="note">Used in session 6, 7. CASE identifier <code>70df1352-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>5SL4</code> &middot; grade 5</h3><p>Report on a topic or text, sequencing ideas logically and using appropriate facts and relevant, descriptive details to support central ideas or themes; speak clearly at an understandable pace and volume appropriate for audience.</p><p class="note">Used in session 12. CASE identifier <code>70df5a51-d7cc-11e8-824f-0242ac160002</code>.</p></div><div class="card" style="margin-bottom:12px"><h3><code>5W2</code> &middot; grade 5</h3><p>Write informative/explanatory texts to explore a topic and convey ideas and information relevant to the subject.</p><p class="note">Used in session 12. CASE identifier <code>70ded018-d7cc-11e8-824f-0242ac160002</code>.</p></div></section><section><h2>What is deliberately absent</h2><p>No computer science standard appears on this site. The connector resolves New York mathematics and ELA codes and the Multi-State practice standards. It returned nothing for the New York Computer Science and Digital Fluency codes or for CSTA codes, and this course does not print codes it cannot verify. When the CS codes are in front of you, add at most three per session and keep the mapped to wording.</p><p>The learning components listed above come from the same connector, for the standards that have them. They are the finer-grain skills behind a broad code and are useful for writing a single practice question that targets one thing.</p></section></div></main><nav class="pager"><a href="beginner_constraints.html?v=2">&larr; Code constraints</a><a href="beginner_semester_hub.html?v=2">Course home</a></nav><footer><div class="wrap"><p>Resolved 2026-09-12. Re-resolve before distributing to families, since frameworks are revised.</p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

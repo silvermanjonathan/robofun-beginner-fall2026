@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Debugging clinic | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 7 of 12</p><h1>Debugging clinic</h1><p class="sub">Read the last line first, and one change per run</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Nov 9</span><span class="pill"><b>Friday section</b> Fri Oct 30</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 6 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>the five error names, reading a traceback, the line number is where Python noticed, loud bugs against silent bugs, the print probe, one change per run.</p><p><b>Deliberately re-used:</b> Sessions 1, 3, 4, and 6: every broken card is a bug you have already written by accident.</p><p class="note">Midpoint session. No new syntax. This is the session that makes the second half possible, because from session 10 onward the programs are too long to fix by staring at them.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: name that error</h2><p>Five short broken lines are on the board. Write the error name next to each. No editor until all five are written.</p><div class="predict"><p class="q">Question: <code>pritn("hi")</code></p><button class="rev" data-target="s7-op0" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-op0"><p>NameError. Python does not know that word.</p></div></div><div class="predict"><p class="q">Question: <code>print("3" + 1)</code></p><button class="rev" data-target="s7-op1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-op1"><p>TypeError. Text and number cannot be added.</p></div></div><div class="predict"><p class="q">Question: <code>riders = ["a", "b"]</code> then <code>print(riders[2])</code></p><button class="rev" data-target="s7-op2" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-op2"><p>IndexError. Two slots, numbered 0 and 1.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 6</p><h2>The last line names the category</h2><p>A traceback reads bottom to top. The last line gives you the error name and usually the exact word involved. Read that first, every time, before you look at anything else.</p><pre>riders = [&quot;Ada&quot;, &quot;Grace&quot;, &quot;Alan&quot;]
+total = 0
+for r in riders:
+    total = total + r
+print(total)</pre><div class="predict"><p class="q">Predict: This loop adds names to a number. Which of the five error names do you expect?</p><button class="rev" data-target="s7-c1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-c1"><p>TypeError, and the message names both kinds involved. The bug is not the loop. It is that <code>total</code> holds a number and <code>r</code> holds text.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Traceback (most recent call last):
+  File &quot;session07.py&quot;, line 4, in &lt;module&gt;
+    total = total + r
+            ~~~~~~^~~
+TypeError: unsupported operand type(s) for +: &#x27;int&#x27; and &#x27;str&#x27;</pre></section><section class="chunk"><p class="chunk-no">Chunk 2 of 6</p><h2>The line number is where Python noticed</h2><p>Python names the line where it gave up, which is not always the line you got wrong. Here the accumulator is misspelled on line 1 and the program runs fine until line 3 asks for a name that was never created.</p><pre>totl = 0
+for n in [52, 47, 61]:
+    total = total + n
+print(total)</pre><div class="predict"><p class="q">Predict: The typo is on line 1. Which line number does Python name?</p><button class="rev" data-target="s7-c2" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-c2"><p>Line 3, where the missing name got used. The mistake is two lines above that. Read the suggestion at the end as well: Python offers <code>totl</code>, which is the typo itself, and that is the fastest pointer to the real line. When the named line looks correct, the bug is usually above it.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Traceback (most recent call last):
+  File &quot;session07.py&quot;, line 3, in &lt;module&gt;
+    total = total + n
+            ^^^^^
+NameError: name &#x27;total&#x27; is not defined. Did you mean: &#x27;totl&#x27;?</pre></section><section class="chunk"><p class="chunk-no">Chunk 3 of 6</p><h2>Indentation is a real error, with its own name</h2><p>Python uses indentation to decide what belongs to what. An extra space or a missing one is not a style issue here; it changes the program or stops it.</p><pre>for i in range(3):
+print(i)</pre><div class="predict"><p class="q">Predict: The print is not indented. Does Python guess what you meant?</p><button class="rev" data-target="s7-c3" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-c3"><p>No. It names the error and asks for the indented block. Python never guesses. This is a feature, though it takes a term to believe it.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">  File &quot;session07.py&quot;, line 2
+    print(i)
+    ^
+IndentationError: expected an indented block after &#x27;for&#x27; statement on line 1</pre></section><section class="chunk"><p class="chunk-no">Chunk 4 of 6</p><h2>Loud bug against silent bug</h2><p>A loud bug stops the program and tells you where. A silent bug runs to the end and hands you the wrong answer with no complaint at all. Silent bugs cost more, so learning to doubt a plausible answer is part of the job.</p><pre>heights = [52, 47, 61]
+for h in heights:
+    total = 0
+    total = total + h
+print(&quot;total:&quot;, total)</pre><div class="predict"><p class="q">Predict: No error appears. Is 160 what prints?</p><button class="rev" data-target="s7-c4" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-c4"><p>No, it prints 61. The reset sits inside the loop, so each pass throws away the last one. The answer looks like a total and is really just the last height. This exact bug was the hinge question in session 3.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">total: 61</pre></section><section class="chunk"><p class="chunk-no">Chunk 5 of 6</p><h2>The print probe</h2><p>When a program runs but lies to you, put a print inside the loop and watch the values move. Label it so you can find it and delete it later.</p><pre>heights = [52, 47, 61]
+total = 0
+for h in heights:
+    total = total + h
+    print(&quot;probe: h =&quot;, h, &quot;total =&quot;, total)
+print(&quot;final:&quot;, total)</pre><div class="predict"><p class="q">Predict: Three passes. How many probe lines appear, and what is the total after the second one?</p><button class="rev" data-target="s7-c5" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-c5"><p>Three probes, and 99 after the second. Once you can see the values change, the bug stops being a mystery and becomes a reading task.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">probe: h = 52 total = 52
+probe: h = 47 total = 99
+probe: h = 61 total = 160
+final: 160</pre></section><section class="chunk"><p class="chunk-no">Chunk 6 of 6</p><h2>One change per run</h2><p>Change one thing. Run it. Write down what happened. Change the next thing. Two changes at once means that when the program improves, you do not know which change did it, and when it breaks you do not know which one to undo.</p><pre>def fare(age):
+    if age &lt; 5:
+        return 0
+    if age &lt; 13:
+        return 8
+    return 12
+
+print(fare(4), fare(5), fare(12), fare(13))</pre><div class="predict"><p class="q">Predict: Which of the four calls sits exactly on a boundary, and does it return the value you want?</p><button class="rev" data-target="s7-c6" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-c6"><p>All four are boundary tests: 4 and 5 straddle the first gate, 12 and 13 the second. 0, 8, 8, 12. Testing the boundaries is how you find gate bugs, and it takes one line.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">0 8 8 12</pre></section><section class="hinge"><p class="chunk-no">Hinge question &middot; reaches back two weeks</p><h2>Before you build</h2><div class="predict"><p class="q">Question: From session 4: a function is supposed to return the sum of a list and always returns the first number instead. No error appears. Where is the bug, and which of the two bug types is it?</p><button class="rev" data-target="s7-hinge" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s7-hinge"><p><code>return</code> is indented inside the loop, so the function quits on the first pass. Silent bug. It hands back a number that looks reasonable, which is exactly what makes it expensive.</p></div></div></section><section class="brief"><p class="chunk-no">Build &middot; 30 minutes</p><h2>Build: five broken cards</h2><ol><li>For each card: write the error name before you run it.</li><li>Run it. Read the last line first.</li><li>Write the fix in one line, then apply it.</li><li>Run again. One change per run.</li><li>Card 5 has no error message at all. Find it with a probe.</li></ol><h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p><table><tr><th>Expected</th><th>Got</th></tr><tr><td>Card 1 predicted error name matched the real one</td><td class="fill"></td></tr><tr><td>Card 2 fixed with one change</td><td class="fill"></td></tr><tr><td>Card 3 error line number was not the line with the mistake</td><td class="fill"></td></tr><tr><td>Card 4 fixed without changing any other line</td><td class="fill"></td></tr><tr><td>Card 5 found with a probe, not by guessing</td><td class="fill"></td></tr></table></section><section><h2>Where you can stop</h2><p>All three are real landings. Nobody is behind for finishing at the floor.</p><div class="exits"><div class="exit floor"><p class="tag">Floor</p><p>Four of the five cards fixed, with the error name written down before each run.</p></div><div class="exit middle"><p class="tag">Middle</p><p>All five fixed, including the silent one, plus the rule card filled in.</p></div><div class="exit stretch"><p class="tag">Stretch</p><p>Break a working program of your own on purpose, three ways: one NameError, one TypeError, one silent bug. Trade with a partner and time each other.</p></div></div></section><section><h2>Ledger card</h2><p>Stamp 7: the five error names, read the last line first, the line number is where Python noticed, loud against silent, the labelled print probe, one change per run. This stamp is the one you will use most.</p><p><a href="semester_ledger_card.html?v=2">Open the semester ledger card</a></p></section><details class="teacher"><summary>Teacher panel</summary><h3>Timing, 90 minutes</h3><ul><li>0:00 retrieval opener, 10 min</li><li>0:10 chunks 1 to 3, 20 min</li><li>0:30 chunk 4, the silent bug, 12 min</li><li>0:42 chunks 5 and 6, 18 min</li><li>1:00 five broken cards, 25 min</li><li>1:25 rule card, 5 min</li></ul><p class="note">Honest pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping is a landing rather than a failure.</p><h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr><tr><td>Reads the traceback top down and gets lost in the file path.</td><td>Cover the top of the screen with a hand. Read the last line out loud. Then uncover.</td></tr><tr><td>Changes three things at once, gets a working program, and cannot say why.</td><td>Ask which change fixed it. When they cannot say, revert all three and go one at a time.</td></tr><tr><td>Trusts a plausible number.</td><td>Card 5 exists for this. Do not rescue them from it early.</td></tr></table><h3>Mapped to</h3><table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>MP1</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Make sense of problems and persevere in solving them.</td></tr><tr><td><code>MP6</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Attend to precision.</td></tr><tr><td><code>5R3</code></td><td>New York</td><td>NY Next Generation ELA Learning Standards</td><td>5</td><td>In informational texts, explain the relationships or interactions between two or more individuals, events, ideas, or concepts based on specific evidence from the text. (RI)</td></tr></table><h3>If time runs out</h3><p>This session compresses to 60 minutes if the room is behind, by cutting chunks 3 and 6 and running three cards instead of five. Do not cut chunk 4.</p></details></div></main><nav class="pager"><a href="session06_strings_as_data.html?v=2">&larr; Strings as data</a><a href="beginner_semester_hub.html?v=2">Course home</a><a href="session08_remainders_cipher_wheel.html?v=2">Remainders and the cipher wheel &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. 110 West End Avenue. Monday and Friday sections run the same spine.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-09-12. <a href="standards_map.html?v=2">Full standards map</a> &middot; <a href="beginner_constraints.html?v=2">Code constraints, published 2026-09-12</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparisons and gates | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1B2951; --navy-2:#16203F; --ink:#0E1729;
+  --cream:#F8FAFC; --paper:#FFFFFF;
+  --red:#DC2626; --yellow:#FCD34D; --sage:#7FA88A;
+  --line:rgba(248,250,252,.16); --muted:#A9B4CC;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--navy); color:var(--cream);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.62;
+}
+header.top{
+  background:var(--navy-2); border-bottom:3px solid var(--yellow);
+  padding:26px 22px 22px;
+}
+.wrap{max-width:880px; margin:0 auto}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 8px;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.4vw,40px); line-height:1.12; margin:0 0 8px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:22px; margin:0 0 10px;
+}
+h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700; font-size:18px; margin:0 0 8px}
+.sub{color:var(--muted); margin:0 0 14px; font-size:17px}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:14px;
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+}
+.pill{
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+  background:rgba(248,250,252,.05);
+}
+.pill b{color:var(--yellow); font-weight:700}
+main{padding:26px 22px 10px}
+section{
+  background:var(--navy-2); border:1px solid var(--line); border-radius:10px;
+  padding:20px 22px; margin:0 0 18px;
+}
+section.opener{border-left:4px solid var(--sage)}
+section.chunk{border-left:4px solid var(--yellow)}
+section.hinge{border-left:4px solid var(--red)}
+section.brief{border-left:4px solid var(--cream)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--yellow); margin:0 0 6px;
+}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 12px; padding-left:22px}
+li{margin:0 0 6px}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.88em;
+  background:rgba(252,211,77,.12); color:var(--yellow);
+  padding:1px 5px; border-radius:4px;
+}
+pre{
+  font-family:'JetBrains Mono',monospace; font-size:13.5px; line-height:1.55;
+  background:var(--ink); color:var(--cream); border:1px solid var(--line);
+  border-radius:8px; padding:14px 16px; overflow-x:auto; margin:0 0 14px;
+}
+pre.out{background:#0C1A12; border-color:rgba(127,168,138,.45); color:#D7EBDD}
+pre.out .lbl{color:var(--sage)}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--sage); margin:0 0 6px;
+}
+.predict{
+  border:1px dashed rgba(252,211,77,.55); border-radius:8px;
+  padding:12px 14px; margin:0 0 12px; background:rgba(252,211,77,.05);
+}
+.predict p{margin:0 0 10px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  background:var(--yellow); color:var(--ink); border:0; border-radius:6px;
+  padding:7px 14px; cursor:pointer;
+}
+button.rev:hover{background:#FFE08A}
+.ans{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 14px; font-size:15px}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{background:rgba(248,250,252,.06); font-weight:700; font-size:13.5px}
+td.fill{background:rgba(248,250,252,.02); min-width:90px}
+.exits{display:grid; gap:12px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:1px solid var(--line); border-radius:8px; padding:14px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 6px;
+}
+.exit.floor .tag{color:var(--sage)}
+.exit.middle .tag{color:var(--yellow)}
+.exit.stretch .tag{color:var(--red)}
+details.teacher{
+  background:#111C36; border:1px solid var(--line); border-left:4px solid var(--red);
+  border-radius:10px; padding:14px 18px; margin:0 0 18px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:18px; color:var(--cream);
+}
+details.teacher[open] summary{margin-bottom:12px}
+.note{
+  font-size:15px; color:var(--muted); border-left:3px solid var(--line);
+  padding-left:12px; margin:0 0 12px;
+}
+.pager{
+  max-width:880px; margin:0 auto; padding:6px 22px 30px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+}
+.pager a{color:var(--yellow); text-decoration:none; border:1px solid var(--line); border-radius:6px; padding:8px 12px}
+.pager a:hover{background:rgba(252,211,77,.1)}
+footer{
+  background:var(--ink); border-top:1px solid var(--line); padding:20px 22px 34px;
+  font-size:13px; color:var(--muted);
+}
+footer a{color:var(--yellow)}
+a{color:var(--yellow)}
+.grid2{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:1px solid var(--line); border-radius:8px; padding:14px}
+.card h3{margin-bottom:6px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:1px solid var(--line); border-radius:8px; margin:0 0 10px; padding:12px 14px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700;
+  color:var(--yellow); min-width:34px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:17px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  display:block; margin-top:3px;
+}
+.bonus{border-color:rgba(220,38,38,.5)}
+.flag{
+  background:rgba(220,38,38,.12); border:1px solid rgba(220,38,38,.5);
+  border-radius:8px; padding:12px 14px; margin:0 0 16px; font-size:15px;
+}
+.stamp{
+  border:1px dashed var(--line); border-radius:8px; padding:12px;
+  font-size:14px; min-height:92px;
+}
+.stampgrid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--yellow); font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:5px;
+}
+@media print{
+  body{background:#fff; color:#111; font-size:11pt}
+  header.top,footer,.pager,details.teacher{background:#fff; color:#111}
+  section,.stamp,.card{background:#fff; border:1px solid #999; break-inside:avoid}
+  code{background:#eee; color:#111}
+  pre{background:#f4f4f4; color:#111; border:1px solid #bbb}
+  .noprint{display:none}
+  a{color:#111}
+  h1,h2,h3,.eyebrow,.stamp .no,.pill b{color:#111}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 2 of 12</p><h1>Comparisons and gates</h1><p class="sub">True and False, three-way gates, and two conditions at once</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Sep 28</span><span class="pill"><b>Friday section</b> Fri Sep 25</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 7 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>comparison operators, True and False, if / elif / else, = against ==, and, or, ask-until-valid while.</p><p><b>Deliberately re-used:</b> Session 1: reassignment and f-strings.</p><p class="note">Two weeks off for Monday because of Yom Kippur. Assume the int() trap is gone and re-teach it inside the opener rather than mid-lesson.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: last session&#x27;s trap</h2><p>No notes, no editor. Answer both on paper, then open the editor and check yourself.</p><div class="predict"><p class="q">Question: Write the two lines that ask for a height and store it as a number.</p><button class="rev" data-target="s2-op0" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s2-op0"><p><code>height = input("Height in inches: ")</code> then <code>height = int(height)</code>.</p></div></div><div class="predict"><p class="q">Question: What does <code>print("player")</code> show if <code>player = "Ada"</code>?</p><button class="rev" data-target="s2-op1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s2-op1"><p>The six letters <code>player</code>. The quotes stop Python from looking up the name.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 6</p><h2>A comparison is a question with a yes or no answer</h2><p>Comparing two values hands back <code>True</code> or <code>False</code>. Those are values like any other. You can print them.</p><pre>height = 52
+print(height &gt; 48)
+print(height == 48)
+print(height != 48)</pre><div class="predict"><p class="q">Predict: Three comparisons on the same number. How many print True?</p><button class="rev" data-target="s2-c1" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s2-c1"><p>Two. 52 is greater than 48, so the first is True. It is not equal to 48, so the second is False and the third is True. Count them before you run, every time.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">True
+False
+True</pre></section><section class="chunk"><p class="chunk-no">Chunk 2 of 6</p><h2>The three-way gate</h2><p><code>if</code> runs its block when the comparison is True. <code>elif</code> gets checked only when everything above it was False. <code>else</code> catches whatever is left. Python checks top to bottom and stops at the first True.</p><pre>height = 48
+if height &gt; 48:
+    print(&quot;Cleared to ride.&quot;)
+elif height == 48:
+    print(&quot;Borderline. Ask staff.&quot;)
+else:
+    print(&quot;Not tall enough yet.&quot;)</pre><div class="predict"><p class="q">Predict: Height is exactly 48. Which of the three lines prints?</p><button class="rev" data-target="s2-c2" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s2-c2"><p>The middle one. The first test is False because 48 is not greater than 48, so Python moves down to the elif. Boundary values are where gate bugs live.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Borderline. Ask staff.</pre></section><section class="chunk"><p class="chunk-no">Chunk 3 of 6</p><h2>One equals sign is an order, two is a question</h2><p>This is the single most common typo in the room. Run it and read the error.</p><pre>height = 52
+if height = 48:
+    print(&quot;Borderline.&quot;)</pre><div class="predict"><p class="q">Predict: Does this print nothing, or does it crash?</p><button class="rev" data-target="s2-c3" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s2-c3"><p>It crashes before it runs a single line, and Python tells you what it wanted instead. One equals sign stores a value. Two equals signs ask a question.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">  File &quot;session02.py&quot;, line 2
+    if height = 48:
+       ^^^^^^^^^^^
+SyntaxError: invalid syntax. Maybe you meant &#x27;==&#x27; or &#x27;:=&#x27; instead of &#x27;=&#x27;?</pre></section><section class="chunk"><p class="chunk-no">Chunk 4 of 6</p><h2>and: both must be True</h2><p>Real gates check more than one thing. <code>and</code> hands back True only when both sides are True. Nothing is nested here; the two conditions sit side by side on one line.</p><pre>height = 52
+has_ticket = True
+if height &gt; 48 and has_ticket:
+    print(&quot;Board the coaster.&quot;)
+else:
+    print(&quot;Step aside.&quot;)</pre><div class="predict"><p class="q">Predict: Set has_ticket to False on paper. Which line prints then?</p><button class="rev" data-target="s2-c4" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s2-c4"><p>Step aside. With <code>and</code>, one False sinks the whole condition. Change the value and rerun to confirm, one change per run.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Board the coaster.</pre></section><section class="chunk"><p class="chunk-no">Chunk 5 of 6</p><h2>or: one is enough</h2><p><code>or</code> hands back True when either side is True. Read it out loud with the word or in it and it behaves the way English does.</p><pre>is_staff = False
+has_pass = True
+if is_staff or has_pass:
+    print(&quot;Gate opens.&quot;)
+else:
+    print(&quot;Gate stays shut.&quot;)</pre><div class="predict"><p class="q">Predict: Both names are on the screen. Does the gate open?</p><button class="rev" data-target="s2-c5" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s2-c5"><p>Yes. <code>has_pass</code> is True, and with <code>or</code> that is enough on its own.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Gate opens.</pre></section><section class="chunk"><p class="chunk-no">Chunk 6 of 6</p><h2>A while loop that names its own exit</h2><p>A <code>while</code> repeats as long as its condition stays True. Every while you write this semester has to say, in the condition, what will make it stop. This one stops when the answer is yes or no and nothing else.</p><pre>answer = &quot;&quot;
+while answer != &quot;yes&quot; and answer != &quot;no&quot;:
+    answer = input(&quot;Ready? Type yes or no: &quot;)
+print(&quot;Recorded:&quot;, answer)</pre><div class="predict"><p class="q">Predict: Someone types maybe, then soon, then yes. How many times does the question appear?</p><button class="rev" data-target="s2-c6" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s2-c6"><p>Three times. The condition is checked before each pass. Once the answer is yes, both halves of the condition can no longer both be True, so the loop lets go.</p></div></div><p class="outlabel">What actually happens</p><pre class="out">Ready? Type yes or no: Ready? Type yes or no: Ready? Type yes or no: Recorded: yes</pre></section><section class="hinge"><p class="chunk-no">Hinge question &middot; reaches back two weeks</p><h2>Before you build</h2><div class="predict"><p class="q">Question: From session 1: a rider types 52 at an input prompt and the program says the height is not tall enough, no matter what they type. The gate uses <code>height > 48</code>. What is wrong, and it is not the gate?</p><button class="rev" data-target="s2-hinge" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s2-hinge"><p><code>height</code> is still text. Comparing text to a number either crashes or compares the wrong thing. The missing line is <code>height = int(height)</code>. Session 1's trap, wearing a session 2 costume.</p></div></div></section><section class="brief"><p class="chunk-no">Build &middot; 25 minutes</p><h2>Build: the ride operator</h2><ol><li>Ask for a height, convert it to a number.</li><li>Ask whether the rider has a ticket, and keep asking until they type yes or no.</li><li>Open the ride only when the height clears 48 and the ticket answer is yes.</li><li>Add an elif for exactly 48 that sends them to staff.</li><li>Print a different sentence for each of the three outcomes.</li></ol><h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p><table><tr><th>Expected</th><th>Got</th></tr><tr><td>Typing 52 and yes opens the ride</td><td class="fill"></td></tr><tr><td>Typing 52 and no does not open the ride</td><td class="fill"></td></tr><tr><td>Typing maybe at the ticket question asks again</td><td class="fill"></td></tr><tr><td>Typing 48 and yes sends them to staff</td><td class="fill"></td></tr></table></section><section><h2>Where you can stop</h2><p>All three are real landings. Nobody is behind for finishing at the floor.</p><div class="exits"><div class="exit floor"><p class="tag">Floor</p><p>A two-way gate on height alone that answers correctly for 52, 48, and 40.</p></div><div class="exit middle"><p class="tag">Middle</p><p>The full operator: converted height, ask-until-valid ticket question, three outcomes.</p></div><div class="exit stretch"><p class="tag">Stretch</p><p>Add a staff override so that typing staff at the ticket question opens the ride regardless of height, using <code>or</code> and no nesting.</p></div></div></section><section><h2>Ledger card</h2><p>Stamp 2: the six comparisons, <code>if / elif / else</code>, <code>==</code> against <code>=</code>, <code>and</code>, <code>or</code>, and a while loop with its exit condition circled.</p><p><a href="semester_ledger_card.html?v=2">Open the semester ledger card</a></p></section><details class="teacher"><summary>Teacher panel</summary><h3>Timing, 90 minutes</h3><ul><li>0:00 retrieval opener, 10 min</li><li>0:10 chunks 1 to 3, 20 min</li><li>0:30 chunks 4 and 5, and / or, 15 min (new this term, do not rush)</li><li>0:45 chunk 6 while, 12 min</li><li>0:57 build brief, 23 min</li><li>1:20 exits, ledger stamp, 10 min</li></ul><p class="note">Honest pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping is a landing rather than a failure.</p><h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr><tr><td>Writes a second <code>if</code> where an <code>elif</code> belongs, then reports that two messages print.</td><td>Correct behaviour, wrong design. Have them trace both versions with height = 52 and name the difference.</td></tr><tr><td>Uses <code>and</code> where <code>or</code> belongs because the English sentence said and.</td><td>Read the requirement again slowly. Everyday and often means either.</td></tr><tr><td>Writes <code>while answer != "yes" or answer != "no"</code> and gets a loop that never ends.</td><td>Substitute yes into both halves out loud. One half stays True forever. This is the best forty seconds in the session; let them find it.</td></tr></table><h3>Mapped to</h3><table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>NY-6.EE.5</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Understand solving an equation or inequality as a process of answering a question: which values from a specified set, if any, make the equation or inequality true? Use substitution to determine whether a given number in a specified set makes an equation or inequality true.</td></tr><tr><td><code>NY-6.EE.2</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Write, read, and evaluate expressions in which letters stand for numbers.</td></tr><tr><td><code>MP6</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Attend to precision.</td></tr></table><h3>Learning components behind those codes</h3><ul><li><code>NY-6.EE.5</code> Use substitution to determine whether a number or a set of numbers makes an equation true</li><li><code>NY-6.EE.5</code> Use substitution to determine whether a number or a set of numbers makes an inequality true</li><li><code>NY-6.EE.5</code> Demonstrate that the solution of an equation or inequality is the value of the variable that will make the equation or inequality true</li><li><code>NY-6.EE.2</code> Write numerical expressions in which letters stand for numbers</li><li><code>NY-6.EE.2</code> Evaluate numerical expressions in which letters stand for numbers</li></ul><h3>If time runs out</h3><p>Nesting stays banned. If a student reaches for an if inside an if, hand them <code>and</code>. If the room is fast, the staff override stretch absorbs fifteen minutes.</p></details></div></main><nav class="pager"><a href="session01_printing_names_input.html?v=2">&larr; Printing, names, and input</a><a href="beginner_semester_hub.html?v=2">Course home</a><a href="session03_loops_counters_lists.html?v=2">Loops, counters, and lists &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. 110 West End Avenue. Monday and Friday sections run the same spine.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-09-12. <a href="standards_map.html?v=2">Full standards map</a> &middot; <a href="beginner_constraints.html?v=2">Code constraints, published 2026-09-12</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+});
+</script>
+</body>
+</html>
