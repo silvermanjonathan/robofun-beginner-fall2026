@@ -525,7 +525,10 @@ def render_session(s, prev_s, next_s):
 
     br = s["brief"]
     b.append('<section class="brief"><p class="chunk-no">Build &middot; '
-             + str(br["minutes"]) + ' minutes</p><h2>' + html.escape(br["title"]) + '</h2><ol>')
+             + str(br["minutes"]) + ' minutes</p><h2>' + html.escape(br["title"]) + '</h2>')
+    if br.get("intro"):
+        b.append('<p>' + br["intro"] + '</p>')
+    b.append('<ol>')
     for st in br["steps"]:
         b.append('<li>' + st + '</li>')
     b.append('</ol>')
@@ -994,6 +997,7 @@ def render_ledger():
              'goes in a stamp, in the student\'s handwriting.</p>')
     b.append(code_block(
         'name = value            store a value under a name\n'
+        'type(value)             str for text, int for a whole number\n'
         'int(text)               text to number, on its own line\n'
         'f"{name} has {n}"       drop values into a sentence\n'
         'if / elif / else        flat gates, never nested\n'
