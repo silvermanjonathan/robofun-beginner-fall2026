@@ -93,7 +93,7 @@ SESSIONS_B = [
    "reveal": "330 degrees. Twelve thirties make 360, so a thirteenth copy would land back on the first one. Change 12 to 10 and leave the 30 alone, and the rosette has a gap in it, because ten thirties only add up to 300."},
 
   {"title": "Cycling colours with a remainder",
-   "teach": "Three colours and twelve shapes, so the colours have to repeat. <code>%</code> gives the <b>remainder</b> after dividing: <code>7 % 3</code> is 1, because 3 goes into 7 twice with 1 left over. Dividing by 3 can only leave a remainder of 0, 1, or 2, and those are exactly the three indexes the list has. So <code>i % 3</code> turns any counter into an index that fits the list, and shape 3 comes back to colour 0. Session 8 spends a whole session on this operator.",
+   "teach": "Three colours and twelve shapes, so the colours have to repeat. <code>%</code> gives the <b>remainder</b> after dividing: <code>7 % 3</code> is 1, because 3 goes into 7 twice with 1 left over. Dividing by 3 can only leave a remainder of 0, 1, or 2, and those are exactly the three indexes the list has. So <code>i % 3</code> turns the loop variable, whatever it has reached, into an index that fits the list, and shape 3 comes back to colour 0. Session 8 spends a whole session on this operator.",
    "code": 'RED = (220, 38, 38)\nYELLOW = (252, 211, 77)\nCREAM = (248, 250, 252)\ncolors = [RED, YELLOW, CREAM]\nfor i in range(12):\n    print(f"shape {i} uses colour index {i % 3}, which is {colors[i % 3]}")',
    "run": "py",
    "predict": 'Twelve shapes, three colours. Which colour index does shape number 11 use?',
@@ -102,7 +102,7 @@ SESSIONS_B = [
  ],
  "hinge": {"q": "From session 3: the rosette calls <code>polygon</code> twelve times at the same size. Rewrite the outer loop so the shapes get steadily larger, starting at 20 and growing by 10 each time, without writing twelve separate calls.",
            "code_a": 'for i in range(12):\n    polygon(canvas, YELLOW, 320, 240, i * 30, 6, 20 + i * 10)',
-           "a": "Use the loop counter <code>i</code> in the length: <code>20 + i * 10</code> gives 20, 30, 40, and so on up to 130. The counter is a value like any other, so it can be used in arithmetic, not just counted with."},
+           "a": "Use the loop variable <code>i</code> in the length: <code>20 + i * 10</code> gives 20, 30, 40, and so on up to 130. The loop variable is a value like any other, so it can be used in arithmetic, not only for counting passes."},
  "brief": {
    "title": "Build: a poster with four shapes",
    "intro": "You are making a poster in the window: one shape in each corner and a rosette in the middle. The window is 640 wide and 480 tall, so good starting points for the corners are (100, 100), (540, 100), (100, 380), and (540, 380), and the middle is (320, 240). Everything you need is already in chunks 3 to 8; the work is putting it together in one file.",
