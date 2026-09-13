@@ -256,6 +256,17 @@ pre{
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
+pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
+pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
+pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
+pre.anatomy .lbl{color:var(--ink-soft); font-weight:700}
+pre.anatomy .lbl-c{color:var(--ochre)}
+pre.anatomy .lbl-b{color:var(--green)}
+.legend{display:flex; flex-wrap:wrap; gap:10px 22px; font-size:16px; margin:0 0 16px}
+.legend span{display:inline-flex; align-items:center; gap:8px; margin-right:18px}
+.legend i{display:inline-block; width:22px; height:16px; border-radius:2px; margin-right:8px}
+.legend i.c{background:#FBF2DC; border-bottom:3px solid var(--ochre-line)}
+.legend i.b{background:#E8F1E9; border-left:3px solid var(--green)}
 pre.out{
   background:var(--green-tint); border-color:#A9C6B2;
   border-left:6px solid var(--green); color:var(--green-ink);
@@ -478,7 +489,10 @@ def render_session(s, prev_s, next_s):
              + str(op["minutes"]) + ' minutes</p><h2>' + html.escape(op["title"]) + '</h2>')
     b.append('<p>' + op["body"] + '</p>')
     for i, q in enumerate(op["questions"]):
-        b.append(reveal("s%d-op%d" % (n, i), q["q"], q["a"], "Question"))
+        if q.get("code"):
+            b.append(code_block(q["code"]))
+        extra = code_block(q["code_a"]) if q.get("code_a") else ""
+        b.append(reveal("s%d-op%d" % (n, i), q["q"], q["a"], "Question", extra))
     b.append('</section>')
 
     for i, ch in enumerate(s["chunks"]):
@@ -488,6 +502,8 @@ def render_session(s, prev_s, next_s):
                  + ' of ' + str(len(s["chunks"])) + '</p>')
         b.append('<h2>' + html.escape(ch["title"]) + '</h2>')
         b.append('<p>' + ch["teach"] + '</p>')
+        if ch.get("figure"):
+            b.append(ch["figure"])
         b.append(code_block(ch["code"]))
         if ch.get("prefix"):
             b.append('<p class="note">This sits in the same file as the program in chunk 3, '
@@ -509,6 +525,10 @@ def render_session(s, prev_s, next_s):
                      'without a screen' + tail + ', and it printed nothing because the '
                      'window is the output. Words go in the terminal, visuals go in the '
                      'window.</p>')
+        if ch.get("code_a"):
+            extra = extra + code_block(ch["code_a"])
+        if ch.get("figure_a"):
+            extra = extra + ch["figure_a"]
         b.append(reveal(tag, ch["predict"], ch["reveal"], "Predict", extra,
                         "Run it first, then check here", "Hide"))
         if mode == "compile":
@@ -526,7 +546,15 @@ def render_session(s, prev_s, next_s):
         cap = "from today's chunks"
     b.append('<section class="hinge"><p class="chunk-no">Hinge question &middot; '
              + cap + '</p><h2>Before you build</h2>')
-    b.append(reveal("s%d-hinge" % n, h["q"], h["a"], "Question"))
+    extra = ""
+    if h.get("code"):
+        b.append(code_block(h["code"]))
+        out, mode = verify(h, "s%d-hinge" % n)
+        if out:
+            extra = out_block(out, "What it actually prints")
+    if h.get("code_a"):
+        extra = extra + code_block(h["code_a"])
+    b.append(reveal("s%d-hinge" % n, h["q"], h["a"], "Question", extra))
     b.append('</section>')
 
     br = s["brief"]
@@ -848,7 +876,7 @@ def render_constraints():
 
     b.append('<section><h2>The frame loop, and only this one</h2>'
              '<p>This course uses one frame loop, everywhere, with no exceptions. Students '
-             'first copy it in session 5 as a harness holding '
+             'first copy it in session 5 as a loop holding '
              'a finished drawing on screen, and session 10 takes it apart.</p>')
     b.append(code_block('running = 1\nwhile running:\n    for event in pygame.event.get():\n'
                         '        if event.type == pygame.QUIT:\n            running = 0\n'
@@ -1002,7 +1030,7 @@ def render_ledger():
              '<p>The syntax that is hardest to remember after a week away. Everything else '
              'goes in a stamp, in the student\'s handwriting.</p>')
     b.append(code_block(
-        'name = value            store a value under a name\n'
+        'name = value            a variable: store a value under a name\n'
         'type(value)             str for text, int for a whole number\n'
         'int(text)               text to number, on its own line\n'
         'f"{name} has {n}"       drop values into a sentence\n'

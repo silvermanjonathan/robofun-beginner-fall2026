@@ -80,6 +80,7 @@ SESSIONS_C = [
    "reveal": "They pass through untouched, which is why the output still looks like the original in places. A real codebook covers all 26, and building the reverse book to decode it is the stretch exit."},
  ],
  "hinge": {"q": "From session 4: write <code>tally(text)</code> as a function that returns a dictionary of counts. Then say what you would have to write instead if functions could not return values.",
+           "code_a": 'def tally(text):\n    counts = {}\n    for ch in text:\n        if ch in counts:\n            counts[ch] = counts[ch] + 1\n        else:\n            counts[ch] = 1\n    return counts\n\nresult = tally("MEET AT NOON")\nprint(result)',
            "a": "<code>def tally(text):</code> with the loop from chunk 6 and <code>return counts</code> at the end. Without return you would have to print the counts and read them yourself, or keep the dictionary as one shared name outside the function, which is the arrangement that makes a program impossible to test."},
  "brief": {
    "title": "Build: a message analyser",
@@ -135,7 +136,7 @@ SESSIONS_C = [
  "fri": "Fri Nov 20",
  "new": ["the frame loop taken apart", "draw order", "velocity as two numbers", "bouncing with flat gates", "clock.tick", "the knob block"],
  "reuse": "Session 5: the loop that held your drawing still, now doing work every frame",
- "reuse_note": "The window and the frame loop are not new. Students copied both in session 5 as a harness whose only job was to keep a finished picture on screen. Today the same eight lines get taken apart, and the drawing moves inside the loop so it can change. Say that this is the same code they already ran, because the page otherwise looks like a fresh start.",
+ "reuse_note": "The window and the frame loop are not new. Students copied both in session 5 as a loop whose only job was to keep a finished picture on screen. Today the same eight lines get taken apart, and the drawing moves inside the loop so it can change. Say that this is the same code they already ran, because the page otherwise looks like a fresh start.",
  "env_note": True,
  "opener": {
    "title": "Retrieval: gates and counters, in a new place",
@@ -174,7 +175,7 @@ SESSIONS_C = [
    "reveal": "The square covers the circle instead. Move the <code>fill</code> line below them and the screen goes blank, because the wipe happens last and erases your work. One change per run."},
 
   {"title": "Velocity is two numbers you add every frame",
-   "teach": "Position is where the ball is. Velocity is how far it moves in one frame. Adding the velocity to the position once per pass is the whole of animation. The probe prints the first few frames so you can watch the numbers rather than the pixels.",
+   "teach": "Position is where the ball is. Velocity is how far it moves in one frame. Adding the velocity to the position once per pass is what animation is. The probe prints the first few frames so you can watch the numbers rather than the pixels.",
    "code": 'import pygame\n\npygame.init()\nscreen = pygame.display.set_mode((640, 480))\nclock = pygame.time.Clock()\n\nx = 320\ny = 240\nvx = 4\nvy = 3\nframe = 0\n\nrunning = 1\nwhile running:\n    for event in pygame.event.get():\n        if event.type == pygame.QUIT:\n            running = 0\n    x = x + vx\n    y = y + vy\n    frame = frame + 1\n    if frame < 6:\n        print("frame", frame, "at", x, y)\n    screen.fill((27, 41, 81))\n    pygame.draw.circle(screen, (252, 211, 77), (x, y), 20)\n    pygame.display.flip()\n    clock.tick(60)\n\npygame.quit()',
    "run": "headless",
    "frames": 8,
@@ -197,6 +198,7 @@ SESSIONS_C = [
    "reveal": "So that changing the behaviour takes one visit to one place. A number buried in the middle of a loop is a number nobody will find in session 12, including you."},
  ],
  "hinge": {"q": "From session 4: rewrite the four bounce gates as a function <code>bounce(pos, vel, low, high)</code> that returns the new velocity. Then say why the function has to return rather than print.",
+           "code_a": 'def bounce(pos, vel, low, high):\n    if pos < low:\n        vel = -vel\n    if pos > high:\n        vel = -vel\n    return vel\n\nvx = bounce(x, vx, R, WIDTH - R)\nvy = bounce(y, vy, R, HEIGHT - R)',
            "a": "<code>def bounce(pos, vel, low, high):</code> with two flat gates and <code>return vel</code> at the end, called as <code>vx = bounce(x, vx, R, WIDTH - R)</code>. It must return because the caller needs the new velocity to store back. A printing version would show the number and change nothing."},
  "brief": {
    "title": "Build: a bouncing cabinet",
@@ -304,7 +306,7 @@ SESSIONS_C = [
    "code": 'FPS = 60\nSPAWN_EVERY = 90\nframe = 0\nspawns = 0\nfor i in range(361):\n    frame = frame + 1\n    if frame % SPAWN_EVERY == 0:\n        spawns = spawns + 1\n        print("spawn", spawns, "at frame", frame, "=", frame / FPS, "seconds")\nprint("total spawns in", frame, "frames:", spawns)',
    "run": "py",
    "predict": "Ninety frames between spawns, at sixty frames a second. How many spawns in six seconds?",
-   "reveal": "Four, at one and a half second intervals. Lowering SPAWN_EVERY as the score rises is the whole of a difficulty ramp, and it is one number."},
+   "reveal": "Four, at one and a half second intervals. Lowering SPAWN_EVERY as the score rises is a difficulty ramp, and it is one number."},
 
   {"title": "Game state as one name with three values",
    "teach": "A game is not only playing. It is also waiting to start, and over. Keep that in one name and gate on it. Flat gates, one per state, and a restart is nothing more than putting the numbers back where they started.",
@@ -351,7 +353,7 @@ SESSIONS_C = [
    ],
    "misconceptions": [
      ["Indexes column first.", "Have them print <code>level[1][2]</code> and <code>level[2][1]</code> on a level that is not symmetrical. Build one that is 3 rows by 5 columns so the error is loud."],
-     ["Leaves out the negative-index gates and finds the player wrapping around the level.", "Print <code>level[-1]</code>. A negative index is legal and that is the whole bug."],
+     ["Leaves out the negative-index gates and finds the player wrapping around the level.", "Print <code>level[-1]</code>. A negative index is legal, and that is the bug."],
      ["Uses <code>get_pressed</code> for tile movement and the player crosses the room in three frames.", "Count the frames a key is down. Sixty per second is sixty moves."],
      ["Collects the same coin every frame and the score climbs forever.", "The coin has to be removed when collected. This is the clearest reason to keep coins in their own structure."],
    ],
@@ -564,7 +566,7 @@ SESSIONS_C = [
    "misconceptions": [
      ["Forgets to square, and adds the two differences instead.", "Ask for the distance from 0,0 to 3,4. Their formula says 7. A ruler says 5."],
      ["Tests overlap against one radius instead of the sum.", "Draw two circles touching on the board and measure centre to centre. It is the sum, always."],
-     ["Scores every frame of contact and reports a score in the thousands.", "That is the whole reason <code>was_touching</code> exists. Let them see the number first."],
+     ["Scores every frame of contact and reports a score in the thousands.", "That is why <code>was_touching</code> exists. Let them see the number first."],
    ],
    "standards": ["NY-8.G.7", "NY-6.NS.8", "MP7"],
    "routing": "Bonus session. Nothing later depends on it. If Monday loses a date to a closure, this page is the one to drop, and Friday can drop it too with no consequence.",

@@ -8,7 +8,7 @@ SESSIONS_A = [
  "subtitle": "Your first six lines, and the one trap in them",
  "mon": "Mon Sep 14",
  "fri": "Fri Sep 18",
- "new": ["print", "naming a value", "reassignment", "input", "type()", "int()", "f-string", "reading a NameError"],
+ "new": ["print", "a variable: a name for a value", "reassignment", "input", "type()", "int()", "f-string", "reading a NameError"],
  "reuse": None,
  "reuse_note": "First session. Nothing to retrieve yet, so the ten minutes go to machine setup and one shared rule: read it, trace it, then run it.",
  "opener": {
@@ -33,7 +33,7 @@ SESSIONS_A = [
    "reveal": "It names <code>pritn</code>, not the message. Python does not know that word. Read the last line of an error first. It tells you the category and the word involved."},
 
   {"title": "A name for a value",
-   "teach": "The equals sign does not mean equals here. It means <em>put this value under this name</em>. After that line, the name works anywhere you would have written the value.",
+   "teach": "The equals sign does not mean equals here. It means <em>put this value under this name</em>. After that line, the name works anywhere you would have written the value. A name that holds a value is called a <b>variable</b>. That is the word every Python book uses, so this course uses it too: <code>player</code> is a variable, and its value right now is Ada.",
    "code": 'player = "Ada"\nprint(player)\nprint("player")',
    "run": "py",
    "predict": "Two print lines, one with quotes and one without. Do they print the same thing?",
@@ -78,6 +78,7 @@ SESSIONS_A = [
    "reveal": "The value. Python looks up each name inside the braces and drops the value in. Forget the <code>f</code> and you print the braces themselves, which is a good bug to see once."},
  ],
  "hinge": {"q": "Someone writes <code>total = input(\"How many tickets? \")</code> and then <code>print(total + 2)</code>. The program crashes. Name the fix in one line of code.",
+           "code_a": 'total = input("How many tickets? ")\ntotal = int(total)\nprint(total + 2)',
            "a": "<code>total = int(total)</code> before the print. Or convert inside the print with <code>int(total) + 2</code>. Either answer is correct; the first is the one we write this term."},
  "brief": {
    "title": "Build: the rider card",
@@ -101,7 +102,7 @@ SESSIONS_A = [
    "middle": "The full rider card: three questions, two type changes, two printed sentences.",
    "stretch": "Add a fourth question asking for a group size, then print the total tickets for the group without using a calculator, letting Python do the multiplication inside the print.",
  },
- "ledger": "Stamp 1: <code>print</code>, <code>name = value</code>, <code>input</code> hands back text, <code>type()</code>, <code>int()</code> changes the type, <code>f\"{name}\"</code>. Write the TypeError message from chunk 5 on the card in your own handwriting.",
+ "ledger": "Stamp 1: <code>print</code>, <code>name = value</code> makes a variable, <code>input</code> hands back text, <code>type()</code>, <code>int()</code> changes the type, <code>f\"{name}\"</code>. Write the TypeError message from chunk 5 on the card in your own handwriting.",
  "teacher": {
    "timing": [
      "0:00 setup and house rule, 10 min",
@@ -153,6 +154,7 @@ SESSIONS_A = [
 
   {"title": "The three-way gate",
    "teach": "The part after <code>if</code> is called the condition. A condition is a comparison, or anything else that comes out True or False. <code>if</code> runs its block when its condition is True. <code>elif</code> gets checked only when everything above it was False. <code>else</code> catches whatever is left. Python checks top to bottom and stops at the first True.",
+   "figure": '<h3>What a gate is</h3><p>A gate is an <code>if</code> line together with the indented lines under it. It has two parts. The <b>condition</b> is the test after the word <code>if</code>. It comes out True or False. The <b>block</b> is the indented lines under it. They run only when the condition is True, and are skipped when it is False. The condition decides whether the block runs.</p><pre class="anatomy">if <span class="cond">height &gt; 48</span>:                <span class="lbl lbl-c">&larr; condition</span>\n<span class="blk">    print("Cleared to ride.")</span>  <span class="lbl lbl-b">&larr; block</span>\nelif <span class="cond">height == 48</span>:             <span class="lbl lbl-c">&larr; next condition</span>\n<span class="blk">    print("Borderline. Ask staff.")</span>  <span class="lbl lbl-b">&larr; its block</span>\nelse:                            <span class="lbl">&larr; everything else</span>\n<span class="blk">    print("Not tall enough yet.")</span>  <span class="lbl lbl-b">&larr; its block</span>\n</pre><div class="legend"><span><i class="c"></i> condition: a True or False test</span><span><i class="b"></i> block: indented lines that run only when their condition is True</span></div><p>The three tests together are one gate with three ways through. Python reads it top to bottom, takes the first way whose condition is True, and skips the rest. One block runs, never two. <code>else</code> has no condition; it is the way through when every test above it was False. Think of the height gate at the coaster: one test, and you either go through or you do not.</p>',
    "code": 'height = 48\nif height > 48:\n    print("Cleared to ride.")\nelif height == 48:\n    print("Borderline. Ask staff.")\nelse:\n    print("Not tall enough yet.")',
    "run": "py",
    "predict": "Height is exactly 48. Which of the three lines prints?",
@@ -188,6 +190,8 @@ SESSIONS_A = [
    "reveal": "Three times. The condition is checked before each pass. Once the answer is yes, the stopping condition is no longer True, so the loop stops and the print runs."},
  ],
  "hinge": {"q": "From session 1: a rider types 52 at an input prompt and the program crashes on the line that says <code>if height > 48:</code>. The gate is written correctly. What is wrong?",
+           "code": 'height = input("Height in inches: ")\nif height > 48:\n    print("Cleared to ride.")\nelse:\n    print("Not tall enough yet.")',
+           "code_a": 'height = input("Height in inches: ")\nheight = int(height)\nif height > 48:\n    print("Cleared to ride.")\nelse:\n    print("Not tall enough yet.")',
            "a": "<code>height</code> is still text, and Python will not compare text with a number. The last line of the error says TypeError. The missing line is <code>height = int(height)</code>, before the gate. Session 1's trap, wearing a session 2 costume."},
  "brief": {
    "title": "Build: the ride operator",
@@ -241,35 +245,36 @@ SESSIONS_A = [
  "fri": "Fri Oct 2",
  "new": ["for and range", "accumulator", "counter with a gate", "best so far", "lists", "indexing", "IndexError", "len", "sum and max as a reveal", "random.choice"],
  "reuse": "Session 2: the gate goes inside the loop",
- "reuse_note": "The gate from last week now runs once per item. That is the whole idea of the counter pattern, so the retrieval opener has to land before chunk 4.",
+ "reuse_note": "The gate from last week now runs once per item. That is what the counter pattern is, so the retrieval opener has to land before chunk 4.",
  "opener": {
    "title": "Retrieval: gates",
    "minutes": 10,
    "body": "Paper first. Then check in the editor.",
    "questions": [
      {"q": "Write a three-way gate on a variable called <code>temp</code>: above 90 prints hot, exactly 90 prints warm, anything else prints fine.",
-      "a": "<code>if temp &gt; 90:</code> / <code>elif temp == 90:</code> / <code>else:</code>, each with its own print."},
-     {"q": "What is the one-word difference between <code>and</code> and <code>or</code> when both sides are False?",
-      "a": "No difference. Both hand back False. They differ only when the two sides disagree."},
+      "code_a": 'if temp > 90:\n    print("hot")\nelif temp == 90:\n    print("warm")\nelse:\n    print("fine")',
+      "a": "Three tests, top to bottom, each with its own indented print. Python stops at the first True."},
+     {"q": "Both sides are False. What does <code>False and False</code> evaluate to, and what does <code>False or False</code> evaluate to?",
+      "a": "Both evaluate to False. <code>and</code> and <code>or</code> give different answers only when the two sides disagree: <code>True and False</code> is False, <code>True or False</code> is True."},
    ],
  },
  "chunks": [
   {"title": "for and range repeat a block",
    "teach": "<code>range(5)</code> hands out the numbers 0, 1, 2, 3, 4. Five numbers, starting at zero, stopping before five. The indented block runs once per number.",
-   "code": 'for step in range(5):\n    print("step", step)',
+   "code": 'for step in range(5):\n    print(f"step {step}")',
    "run": "py",
    "predict": "Five numbers. Does the list include 5?",
    "reveal": "No. It starts at 0 and stops before 5. Counting from zero is going to matter again in ten minutes when we index a list."},
 
   {"title": "The accumulator",
    "teach": "A running total needs a name that exists before the loop starts, and a reassignment inside the loop. The name has to start at 0, outside the loop, or there is nothing to add to.",
-   "code": 'total = 0\nfor n in range(1, 6):\n    total = total + n\nprint("total:", total)',
+   "code": 'total = 0\nfor n in range(1, 6):\n    total = total + n\nprint(f"total: {total}")',
    "run": "py",
    "predict": "range(1, 6) hands out which numbers, and what do they add up to?",
    "reveal": "1 through 5, and they add to 15. Two arguments to range means start here, stop before there."},
 
   {"title": "A list holds many values under one name",
-   "teach": "Square brackets make a list. A number in brackets after the name pulls one value out. The first slot is 0, so the last slot of a three-item list is 2.",
+   "teach": "A <b>list</b> is one value that holds many values in order. Square brackets make one, with commas between the values. Store it under a name the same way as any other value: <code>riders = [...]</code> makes <code>riders</code> a variable whose value is the whole list. Each value inside the list is called an <b>item</b>. To pull one item out, write the name and then a number in brackets. That number is the item's <b>index</b>: its position in the list, counting from 0, not from 1. So the first item has index 0, and the last item of a three-item list has index 2. The word slot is used on these pages to mean the same thing as index.",
    "code": 'riders = ["Ada", "Grace", "Alan"]\nprint(riders[0])\nprint(riders[2])\nprint(len(riders))',
    "run": "py",
    "predict": "<code>len</code> says 3. So what is the biggest number you can put in the brackets?",
@@ -284,7 +289,7 @@ SESSIONS_A = [
 
   {"title": "Counter with a gate, and best so far",
    "teach": "Two patterns, one loop. The counter adds 1 only when the gate is True. Best so far keeps a name for the largest value seen and replaces it whenever something bigger turns up. Both names start before the loop.",
-   "code": 'heights = [52, 47, 61, 44, 58]\ncleared = 0\ntallest = 0\nfor h in heights:\n    if h > 48:\n        cleared = cleared + 1\n    if h > tallest:\n        tallest = h\nprint("cleared:", cleared)\nprint("tallest:", tallest)',
+   "code": 'heights = [52, 47, 61, 44, 58]\ncleared = 0\ntallest = 0\nfor h in heights:\n    if h > 48:\n        cleared = cleared + 1\n    if h > tallest:\n        tallest = h\nprint(f"cleared: {cleared}")\nprint(f"tallest: {tallest}")',
    "run": "py",
    "predict": "Trace it on paper. What are the two numbers?",
    "reveal": "3 cleared and 61 tallest. Note that <code>tallest</code> changes twice on the way through: to 52, then to 61, and never again."},
@@ -294,7 +299,7 @@ SESSIONS_A = [
    "code": 'heights = [52, 47, 61, 44, 58]\nprint(sum(heights))\nprint(max(heights))\nprint(min(heights))\nprint(len(heights))',
    "run": "py",
    "predict": "Which of your two hand-written patterns does <code>max</code> replace?",
-   "reveal": "Best so far. <code>sum</code> replaces the accumulator. Neither replaces the counter with a gate, because that one needs your condition. This is the shape of the whole library: it covers the common cases and leaves the specific ones to you."},
+   "reveal": "Best so far. <code>sum</code> replaces the accumulator. Neither replaces the counter with a gate, because that one needs your condition. This is how the rest of Python's library works too: it covers the common cases and leaves the specific ones to you."},
 
   {"title": "random.choice picks one for you",
    "teach": "<code>import random</code> brings in code someone else wrote. <code>random.choice</code> picks one item from a list. <code>random.seed</code> makes the picking repeatable, which is how you test a program that is supposed to be unpredictable.",
@@ -303,7 +308,10 @@ SESSIONS_A = [
    "predict": "The seed is fixed. If you run this twice, do you get the same two names?",
    "reveal": "Yes, the same two every time, in the same order. Remove the seed line and you get a fresh pair on every run. Seeds are a testing tool, not a game feature."},
  ],
- "hinge": {"q": "From chunk 2 today: a student writes <code>total = 0</code> <em>inside</em> the loop instead of above it. The program runs, no error, wrong answer. What does it print for the heights list above, and why?",
+ "hinge": {"q": "From chunk 2 today: this student wrote <code>total = 0</code> <em>inside</em> the loop instead of above it. The program runs, no error, wrong answer. What does it print for the heights list, and why?",
+           "code": 'heights = [52, 47, 61, 44, 58]\nfor h in heights:\n    total = 0\n    total = total + h\nprint(f"total: {total}")',
+           "run": "py",
+           "code_a": 'heights = [52, 47, 61, 44, 58]\ntotal = 0\nfor h in heights:\n    total = total + h\nprint(f"total: {total}")',
            "a": "58, the last height. Resetting to 0 each pass throws away everything before it, so the final answer is just the last item added to zero. An error that does not crash is worse than one that does. This is the silent bug we spend all of session 7 on."},
  "brief": {
    "title": "Build: the day's ride log",
@@ -421,6 +429,7 @@ SESSIONS_A = [
    "reveal": "After it, lined up with the <code>for</code>. Put it inside the loop and the function returns on the first pass with only the first number, which is a silent bug that gives you 52 instead of 160."},
  ],
  "hinge": {"q": "From session 2: write a function called <code>can_ride</code> that takes a height and a ticket answer and hands back True or False. Use <code>and</code>. Then write the one line that uses it in a gate.",
+           "code_a": 'def can_ride(height, ticket):\n    return height > 48 and ticket == "yes"\n\nif can_ride(52, "yes"):\n    print("Board the coaster.")',
            "a": "<code>def can_ride(height, ticket):</code> then <code>return height &gt; 48 and ticket == \"yes\"</code>. Used as <code>if can_ride(52, \"yes\"):</code>. Note that the comparison itself is already True or False, so it can be returned directly with no gate inside the function."},
  "brief": {
    "title": "Build: three tools and one program that uses them",
@@ -450,7 +459,7 @@ SESSIONS_A = [
      "0:00 retrieval opener, 10 min",
      "0:10 chunks 1 and 2, 12 min (new, but there is no trap in them; keep it moving)",
      "0:22 chunk 3, return, 15 min",
-     "0:37 chunk 4, print against return, 15 min (the hinge of the whole semester; do not compress)",
+     "0:37 chunk 4, print against return, 15 min (the most important chunk of the semester; do not compress)",
      "0:52 chunks 5 and 6, 15 min",
      "1:07 chunk 7, 8 min",
      "1:15 build brief, 10 min (most rooms get one tool done; two is the middle exit)",
@@ -459,7 +468,7 @@ SESSIONS_A = [
    "misconceptions": [
      ["Writes <code>return</code> and <code>print</code> on consecutive lines and cannot say which one the caller sees.", "Delete the print. Ask where the number went. Then put it back and ask who it was for."],
      ["Calls the function but does not store or print the result, then says nothing happened.", "Correct. The value came back and nobody caught it. Compare to <code>int(age)</code> with no assignment from session 1."],
-     ["Puts <code>return</code> inside the loop in chunk 7.", "It returns 52 instead of 160. Trace one pass out loud. Indentation is the whole bug."],
+     ["Puts <code>return</code> inside the loop in chunk 7.", "It returns 52 instead of 160. Trace one pass out loud. The indentation is the bug."],
      ["Assumes a parameter name and an outside variable with the same name are the same thing.", "Name the parameter something absurd and show the function still works. Worth doing once, in front of everyone."],
    ],
    "standards": ["NY-8.F.1", "NY-6.EE.9", "MP7"],
