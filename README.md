@@ -170,6 +170,10 @@ the piped answer after the prompt, so the output box reads the way a student's
 terminal does. The hook is installed on `builtins`, not prepended to the source, so
 traceback line numbers are unchanged.
 
+Chunks may carry a `hint` (a string or a list): each hint renders as its own
+"Show a hint" button inside the predict box, above the run-it-first button, and
+counts toward reveal parity.
+
 Build briefs may carry `cards`: verified code blocks inside the brief (session 7's
 five broken cards, session 12's engine). They run through the same harness as
 chunks and their output sits behind the same reveal.

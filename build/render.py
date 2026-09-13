@@ -293,6 +293,9 @@ button.rev{
   padding:10px 18px; cursor:pointer;
 }
 button.rev:hover{background:var(--teal-deep)}
+button.rev.hint{background:var(--card); color:var(--ochre); border:2px solid var(--ochre-line); margin:0 10px 10px 0}
+button.rev.hint:hover{background:var(--ochre-tint)}
+.hints .ans{margin:0 0 12px; padding-top:10px; border-top:2px solid var(--ochre-line)}
 .ans{display:none; margin-top:16px; padding-top:16px; border-top:2px solid var(--rule)}
 .ans.open{display:block}
 table{border-collapse:collapse; width:100%; margin:0 0 16px; font-size:16.5px}
@@ -437,10 +440,28 @@ def out_block(text, label="What actually happens"):
             + html.escape(text) + '</pre>')
 
 
+def hint_buttons(idx, hints):
+    """One 'Show hint' button per hint, each with its own hidden block."""
+    if not hints:
+        return ""
+    if isinstance(hints, str):
+        hints = [hints]
+    out = []
+    for k, h in enumerate(hints):
+        hid = idx + "-hint" + str(k + 1)
+        label = "Show a hint" if len(hints) == 1 else "Show hint " + str(k + 1)
+        out.append('<button class="rev hint" data-target="' + hid + '" aria-controls="' + hid + '" '
+                   'aria-expanded="false" data-show="' + label + '" '
+                   'data-hide="Hide the hint">' + label + '</button>'
+                   '<div class="ans" id="' + hid + '"><p>' + h + '</p></div>')
+    return '<div class="hints">' + "".join(out) + '</div>'
+
+
 def reveal(idx, question, answer, qlabel="Predict", extra="",
-           show="Show the answer", hide="Hide the answer"):
+           show="Show the answer", hide="Hide the answer", hints=None):
     return (
         '<div class="predict"><p class="q">' + qlabel + ': ' + question + '</p>'
+        + hint_buttons(idx, hints) +
         '<button class="rev" data-target="' + idx + '" aria-controls="' + idx + '" '
         'aria-expanded="false" data-show="' + show + '" '
         'data-hide="' + hide + '">' + show + '</button>'
@@ -512,8 +533,14 @@ def render_session(s, prev_s, next_s):
             b.append(ch["figure"])
         b.append(code_block(ch["code"]))
         if ch.get("prefix"):
-            b.append('<p class="note">This sits in the same file as the program in chunk 3, '
-                     'underneath it. Run the whole file.</p>')
+            b.append('<p class="note">' + ch.get("where",
+                     'This goes into the chunk 3 file, not at the bottom of it. '
+                     'Any <code>def</code> goes next to <code>step_end</code>, above '
+                     '<code>pygame.init()</code>. The calls go in the section marked '
+                     '<em>your drawing, done once</em>: after <code>canvas.fill(BG)</code>, '
+                     'because the canvas has to exist before anything draws on it, and '
+                     'above the window loop, because anything drawn after the loop is '
+                     'never shown. Then run the whole file.') + '</p>')
         loops = "while running" in ch["code"]
         extra = ""
         if out:
@@ -536,7 +563,7 @@ def render_session(s, prev_s, next_s):
         if ch.get("figure_a"):
             extra = extra + ch["figure_a"]
         b.append(reveal(tag, ch["predict"], ch["reveal"], "Predict", extra,
-                        "Run it first, then check here", "Hide"))
+                        "Run it first, then check here", "Hide", ch.get("hint")))
         if mode == "compile":
             b.append('<p class="note">Checked for syntax here, but it needs a real '
                      'screen to draw on. Run it on a machine with a display.</p>')

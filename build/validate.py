@@ -48,7 +48,7 @@ def check(name, text, all_names):
     if p.stack:
         fail.append("unclosed tags: " + ", ".join(t for t, _ in p.stack))
 
-    buttons = re.findall(r'<button class="rev" data-target="([^"]+)"', text)
+    buttons = re.findall(r'<button class="rev(?: hint)?" data-target="([^"]+)"', text)
     answers = re.findall(r'<div class="ans" id="([^"]+)">', text)
     if sorted(buttons) != sorted(answers):
         fail.append("reveal parity: %d buttons, %d answer blocks; unmatched %s"
@@ -57,7 +57,7 @@ def check(name, text, all_names):
     if len(set(buttons)) != len(buttons):
         fail.append("duplicate reveal ids")
     # every reveal button names the block it controls and starts collapsed
-    controls = re.findall(r'<button class="rev" data-target="([^"]+)" aria-controls="([^"]+)" '
+    controls = re.findall(r'<button class="rev(?: hint)?" data-target="([^"]+)" aria-controls="([^"]+)" '
                           r'aria-expanded="false"', text)
     if len(controls) != len(buttons) or any(a != b for a, b in controls):
         fail.append("reveal buttons missing aria-controls/aria-expanded or mismatched target")
@@ -121,7 +121,7 @@ def main():
             FAILURES.append(n + ": " + f)
 
     print("\nfiles: %d" % len(names))
-    revs = sum(len(re.findall(r'<button class="rev"', open(os.path.join(SITE, n)).read()))
+    revs = sum(len(re.findall(r'<button class="rev(?: hint)?"', open(os.path.join(SITE, n)).read()))
                for n in names)
     outs = sum(len(re.findall(r'<pre class="out">', open(os.path.join(SITE, n)).read()))
                for n in names)
