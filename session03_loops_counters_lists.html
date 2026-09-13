@@ -99,7 +99,13 @@ pre{
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
+pre.anatomy .nm{background:#E3EDEE; border-bottom:3px solid var(--teal); padding:1px 2px}
+pre.anatomy .arg{background:#F7E4E1; border-bottom:3px solid var(--clay); padding:1px 2px}
 pre.anatomy .lbl{color:var(--ink-soft); font-weight:700}
+pre.anatomy .lbl-n{color:var(--teal)}
+pre.anatomy .lbl-a{color:var(--clay)}
+.legend i.n{background:#E3EDEE; border-bottom:3px solid var(--teal)}
+.legend i.a{background:#F7E4E1; border-bottom:3px solid var(--clay)}
 pre.anatomy .lbl-c{color:var(--ochre)}
 pre.anatomy .lbl-b{color:var(--green)}
 .legend{display:flex; flex-wrap:wrap; gap:10px 22px; font-size:16px; margin:0 0 16px}
@@ -232,12 +238,20 @@ a{color:var(--teal)}
 elif temp == 90:
     print(&quot;warm&quot;)
 else:
-    print(&quot;fine&quot;)</pre><p>Three tests, top to bottom, each with its own indented print. Python stops at the first True.</p></div></div><div class="predict"><p class="q">Question: Both sides are False. What does <code>False and False</code> evaluate to, and what does <code>False or False</code> evaluate to?</p><button class="rev" data-target="s3-op1" aria-controls="s3-op1" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s3-op1"><p>Both evaluate to False. <code>and</code> and <code>or</code> give different answers only when the two sides disagree: <code>True and False</code> is False, <code>True or False</code> is True.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 7</p><h2>for and range repeat a block</h2><p><code>range(5)</code> hands out the numbers 0, 1, 2, 3, 4. Five numbers, starting at zero, stopping before five. The indented block runs once per number.</p><pre>for step in range(5):
+    print(&quot;fine&quot;)</pre><p>Three tests, top to bottom, each with its own indented print. Python stops at the first True.</p></div></div><div class="predict"><p class="q">Question: Both sides are False. What does <code>False and False</code> evaluate to, and what does <code>False or False</code> evaluate to?</p><button class="rev" data-target="s3-op1" aria-controls="s3-op1" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s3-op1"><p>Both evaluate to False. <code>and</code> and <code>or</code> give different answers only when the two sides disagree: <code>True and False</code> is False, <code>True or False</code> is True.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 7</p><h2>for and range repeat a block</h2><p><code>range(5)</code> hands out the numbers 0, 1, 2, 3, 4. Five numbers, starting at zero, stopping before five. The indented block runs once per number.</p><p><code>step</code> is a variable, and it is the loop that gives it its value. On the first pass <code>step</code> is 0. When the body finishes, the loop goes back to the top, gives <code>step</code> the next value, 1, and runs the body again. It keeps doing that until <code>range</code> has nothing left to hand out. So <code>step</code> is a different number every time the body runs, and you never write a line that changes it; the loop does that for you. This name is called the <b>loop variable</b>, and you can call it anything you like.</p><h3>The parts of a for loop</h3><pre class="anatomy">for <span class="cond">step</span> in <span class="nm">range(5)</span>:          <span class="lbl lbl-c">&larr; loop variable</span>  <span class="lbl lbl-n">&larr; the values</span>
+<span class="blk">    print(f"step {step}")</span>   <span class="lbl lbl-b">&larr; body: runs once per value</span>
+
+<span class="lbl">pass 1   step is 0   prints  step 0</span>
+<span class="lbl">pass 2   step is 1   prints  step 1</span>
+<span class="lbl">pass 3   step is 2   prints  step 2</span>
+<span class="lbl">pass 4   step is 3   prints  step 3</span>
+<span class="lbl">pass 5   step is 4   prints  step 4</span>
+<span class="lbl">no values left, so the loop ends</span></pre><div class="legend"><span><i class="c"></i> loop variable: a new value each pass</span><span><i class="n"></i> the values it works through, in order</span><span><i class="b"></i> body: the indented lines</span></div><pre>for step in range(5):
     print(f&quot;step {step}&quot;)</pre><div class="predict"><p class="q">Predict: Five numbers. Does the list include 5?</p><button class="rev" data-target="s3-c1" aria-controls="s3-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s3-c1"><p class="outlabel">What it actually prints</p><pre class="out">step 0
 step 1
 step 2
 step 3
-step 4</pre><p>No. It starts at 0 and stops before 5. Counting from zero is going to matter again in ten minutes when we index a list.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 2 of 7</p><h2>The accumulator</h2><p>A running total needs a name that exists before the loop starts, and a reassignment inside the loop. The name has to start at 0, outside the loop, or there is nothing to add to.</p><pre>total = 0
+step 4</pre><p>No. It starts at 0 and stops before 5. Counting from zero is going to matter again in ten minutes when we index a list.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 2 of 7</p><h2>The accumulator</h2><p>A running total needs a name that exists before the loop starts, and a reassignment inside the loop. The name has to start at 0, outside the loop, or there is nothing to add to. Two variables change here, in two different ways: the loop changes <code>n</code> for you on every pass, and your own line <code>total = total + n</code> changes <code>total</code>.</p><pre>total = 0
 for n in range(1, 6):
     total = total + n
 print(f&quot;total: {total}&quot;)</pre><div class="predict"><p class="q">Predict: range(1, 6) hands out which numbers, and what do they add up to?</p><button class="rev" data-target="s3-c2" aria-controls="s3-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s3-c2"><p class="outlabel">What it actually prints</p><pre class="out">total: 15</pre><p>1 through 5, and they add to 15. Two arguments to range means start here, stop before there.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 3 of 7</p><h2>A list holds many values under one name</h2><p>A <b>list</b> is one value that holds many values in order. Square brackets make one, with commas between the values. Store it under a name the same way as any other value: <code>riders = [...]</code> makes <code>riders</code> a variable whose value is the whole list. Each value inside the list is called an <b>item</b>. To pull one item out, write the name and then a number in brackets. That number is the item's <b>index</b>: its position in the list, counting from 0, not from 1. So the first item has index 0, and the last item of a three-item list has index 2. The word slot is used on these pages to mean the same thing as index.</p><pre>riders = [&quot;Ada&quot;, &quot;Grace&quot;, &quot;Alan&quot;]
@@ -250,7 +264,7 @@ print(riders[3])</pre><div class="predict"><p class="q">Predict: There are three
   File &quot;Jonathan_session03.py&quot;, line 2, in &lt;module&gt;
     print(riders[3])
           ~~~~~~^^^
-IndexError: list index out of range</pre><p>An error. Alan is at slot 2. Off-by-one errors are so common that Python has a dedicated name for this one.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 5 of 7</p><h2>Counter with a gate, and best so far</h2><p>Two patterns, one loop. The counter adds 1 only when the gate is True. Best so far keeps a name for the largest value seen and replaces it whenever something bigger turns up. Both names start before the loop.</p><pre>heights = [52, 47, 61, 44, 58]
+IndexError: list index out of range</pre><p>An error. Alan is at slot 2. Off-by-one errors are so common that Python has a dedicated name for this one.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 5 of 7</p><h2>Counter with a gate, and best so far</h2><p>A <code>for</code> loop can work through a list as well as a <code>range</code>. <code>for h in heights</code> gives <code>h</code> each item of the list in turn: 52 on the first pass, 47 on the second, and so on to 58. Nothing is counted; the loop hands you the items themselves.</p><p>Two patterns, one loop. The counter adds 1 only when the gate is True. Best so far keeps a name for the largest value seen and replaces it whenever something bigger turns up. Both names start before the loop.</p><pre>heights = [52, 47, 61, 44, 58]
 cleared = 0
 tallest = 0
 for h in heights:

@@ -260,14 +260,15 @@ SESSIONS_A = [
  },
  "chunks": [
   {"title": "for and range repeat a block",
-   "teach": "<code>range(5)</code> hands out the numbers 0, 1, 2, 3, 4. Five numbers, starting at zero, stopping before five. The indented block runs once per number.",
+   "teach": "<code>range(5)</code> hands out the numbers 0, 1, 2, 3, 4. Five numbers, starting at zero, stopping before five. The indented block runs once per number.</p><p><code>step</code> is a variable, and it is the loop that gives it its value. On the first pass <code>step</code> is 0. When the body finishes, the loop goes back to the top, gives <code>step</code> the next value, 1, and runs the body again. It keeps doing that until <code>range</code> has nothing left to hand out. So <code>step</code> is a different number every time the body runs, and you never write a line that changes it; the loop does that for you. This name is called the <b>loop variable</b>, and you can call it anything you like.",
+   "figure": '<h3>The parts of a for loop</h3><pre class="anatomy">for <span class="cond">step</span> in <span class="nm">range(5)</span>:          <span class="lbl lbl-c">&larr; loop variable</span>  <span class="lbl lbl-n">&larr; the values</span>\n<span class="blk">    print(f"step {step}")</span>   <span class="lbl lbl-b">&larr; body: runs once per value</span>\n\n<span class="lbl">pass 1   step is 0   prints  step 0</span>\n<span class="lbl">pass 2   step is 1   prints  step 1</span>\n<span class="lbl">pass 3   step is 2   prints  step 2</span>\n<span class="lbl">pass 4   step is 3   prints  step 3</span>\n<span class="lbl">pass 5   step is 4   prints  step 4</span>\n<span class="lbl">no values left, so the loop ends</span></pre><div class="legend"><span><i class="c"></i> loop variable: a new value each pass</span><span><i class="n"></i> the values it works through, in order</span><span><i class="b"></i> body: the indented lines</span></div>',
    "code": 'for step in range(5):\n    print(f"step {step}")',
    "run": "py",
    "predict": "Five numbers. Does the list include 5?",
    "reveal": "No. It starts at 0 and stops before 5. Counting from zero is going to matter again in ten minutes when we index a list."},
 
   {"title": "The accumulator",
-   "teach": "A running total needs a name that exists before the loop starts, and a reassignment inside the loop. The name has to start at 0, outside the loop, or there is nothing to add to.",
+   "teach": "A running total needs a name that exists before the loop starts, and a reassignment inside the loop. The name has to start at 0, outside the loop, or there is nothing to add to. Two variables change here, in two different ways: the loop changes <code>n</code> for you on every pass, and your own line <code>total = total + n</code> changes <code>total</code>.",
    "code": 'total = 0\nfor n in range(1, 6):\n    total = total + n\nprint(f"total: {total}")',
    "run": "py",
    "predict": "range(1, 6) hands out which numbers, and what do they add up to?",
@@ -288,7 +289,7 @@ SESSIONS_A = [
    "reveal": "An error. Alan is at slot 2. Off-by-one errors are so common that Python has a dedicated name for this one."},
 
   {"title": "Counter with a gate, and best so far",
-   "teach": "Two patterns, one loop. The counter adds 1 only when the gate is True. Best so far keeps a name for the largest value seen and replaces it whenever something bigger turns up. Both names start before the loop.",
+   "teach": "A <code>for</code> loop can work through a list as well as a <code>range</code>. <code>for h in heights</code> gives <code>h</code> each item of the list in turn: 52 on the first pass, 47 on the second, and so on to 58. Nothing is counted; the loop hands you the items themselves.</p><p>Two patterns, one loop. The counter adds 1 only when the gate is True. Best so far keeps a name for the largest value seen and replaces it whenever something bigger turns up. Both names start before the loop.",
    "code": 'heights = [52, 47, 61, 44, 58]\ncleared = 0\ntallest = 0\nfor h in heights:\n    if h > 48:\n        cleared = cleared + 1\n    if h > tallest:\n        tallest = h\nprint(f"cleared: {cleared}")\nprint(f"tallest: {tallest}")',
    "run": "py",
    "predict": "Trace it on paper. What are the two numbers?",
@@ -380,14 +381,15 @@ SESSIONS_A = [
  },
  "chunks": [
   {"title": "Naming a block",
-   "teach": "<code>def</code> gives a name to a block of lines. Writing the name with parentheses after it, anywhere below, runs the block. This is new, and it is the half of today that has no trap in it.",
+   "teach": "A <b>function</b> is a block of lines with a name. <code>def</code> makes one: the word <code>def</code>, then the name you choose, then parentheses, then a colon, and the block indented underneath. Writing the name with parentheses after it, anywhere below, runs the block. That is called <b>calling</b> the function. This is new, and it is the half of today that has no trap in it.",
    "code": 'def greet():\n    print("Welcome to the park.")\n\ngreet()\ngreet()',
    "run": "py",
    "predict": "How many lines of output, and does the def line itself print anything?",
    "reveal": "Two lines. Defining a function does not run it. The block sits there until something calls it."},
 
   {"title": "Parameters let the caller fill in a blank",
-   "teach": "A name inside the parentheses is a blank the caller fills. Inside the block it behaves like any other name.",
+   "teach": "A name inside the parentheses on the <code>def</code> line is a <b>parameter</b>: a blank that gets filled in each time the function is called. The value you put in the parentheses when you call it is the <b>argument</b>. Inside the body, the parameter behaves like any other variable.",
+   "figure": '<h3>The parts of a function</h3><pre class="anatomy">def <span class="nm">greet</span>(<span class="cond">name</span>):                <span class="lbl lbl-n">&larr; name</span>  <span class="lbl lbl-c">&larr; parameter</span>\n<span class="blk">    print(f"Welcome, {name}.")</span>   <span class="lbl lbl-b">&larr; body</span>\n\n<span class="nm">greet</span>(<span class="arg">"Ada"</span>)                     <span class="lbl lbl-a">&larr; a call, with the argument "Ada"</span>\n</pre><div class="legend"><span><i class="n"></i> name: what you write to call it</span><span><i class="c"></i> parameter: the blank inside the parentheses on the def line</span><span><i class="b"></i> body: the indented lines that run when it is called</span><span><i class="a"></i> argument: the value you pass in when you call it</span></div><p>The parameter and the argument go together. <code>name</code> is the parameter, written once on the <code>def</code> line. <code>"Ada"</code> and <code>"Grace"</code> are arguments, one per call. Each time the function is called, the argument becomes the value of the parameter for that run of the body.</p>',
    "code": 'def greet(name):\n    print(f"Welcome, {name}.")\n\ngreet("Ada")\ngreet("Grace")',
    "run": "py",
    "predict": "Where does the value of <code>name</code> come from?",
@@ -402,7 +404,7 @@ SESSIONS_A = [
 
   {"title": "print and return are not the same thing",
    "teach": "Two functions that look alike. One prints, one returns. Store the result of each and look at what you get.",
-   "code": 'def double_return(n):\n    return n * 2\n\ndef double_print(n):\n    print(n * 2)\n\na = double_return(21)\nb = double_print(21)\nprint("a is", a)\nprint("b is", b)',
+   "code": 'def double_return(n):\n    return n * 2\n\ndef double_print(n):\n    print(n * 2)\n\na = double_return(21)\nb = double_print(21)\nprint(f"a is {a}")\nprint(f"b is {b}")',
    "run": "py",
    "predict": "Both functions do the same arithmetic. Will <code>a</code> and <code>b</code> hold the same value?",
    "reveal": "No. <code>a</code> holds 42. <code>b</code> holds <code>None</code>, which is Python's word for no value at all. A function with no return hands back None, every time. A function like <code>double_print</code> shows you a number and hands you nothing, which is why its output can be looked at but never used."},
