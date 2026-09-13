@@ -91,7 +91,7 @@ hidden `.ans` container.
   dependency.
 - No `localStorage`, no `sessionStorage`, no `indexedDB`. These pages are embedded
   in Google Sites by full-page URL and storage is blocked inside the iframe.
-- Internal links carry a version pin: `?v=3`. Bump the pin on every page whose
+- Internal links carry a version pin: `?v=6`. Bump the pin on every page whose
   content changes, so the embed does not serve a cached copy.
 - Re-upload the hub whenever a page is added, renamed, or removed, or the
   navigation will have gaps.
@@ -155,18 +155,49 @@ the page. No output box on this site was typed from expectation.
 - Output labels only claim a frame quota when the snippet actually contains a loop.
 
 `validate.py` checks tag balance, reveal-button to answer-block parity, duplicate
-reveal ids, escaped angle brackets inside `<pre>` blocks, absence of storage APIs,
-dash characters, banned filler phrases, dead internal links, and the presence of a
-title and an h1 on every page.
+reveal ids, `aria-controls` and `aria-expanded` on every reveal button, escaped angle
+brackets inside `<pre>` blocks, absence of storage APIs, dash characters, banned
+filler phrases (including any mention of a summer camp or another course), dead
+internal links, the presence of a title and an h1 on every page, that every teacher
+panel's timing rows sum to 90 minutes and include a ledger stamp row, and that no
+captured `input()` prompt appears without the typed answer after it.
+
+Terminal snippets that call `input()` run with a `sitecustomize` hook that echoes
+the piped answer after the prompt, so the output box reads the way a student's
+terminal does. The hook is installed on `builtins`, not prepended to the source, so
+traceback line numbers are unchanged.
+
+Build briefs may carry `cards`: verified code blocks inside the brief (session 7's
+five broken cards, session 12's engine). They run through the same harness as
+chunks and their output sits behind the same reveal.
 
 ## Known gaps
 
 - Float topics are listed on the hub but not built: file input and output for a high
   score that survives a restart, sine waves and circular motion, coaster energy
-  stages, and one GUI session. The GUI float previously assumed tkinter and needs
-  rethinking, since tkinter is not available.
+  stages. A GUI float was removed: tkinter is not available, and a pygame version
+  would need on-screen labels, which `pygame.font` is excluded from providing.
 - The calendar assumes closures on Mon Sep 21, Mon Oct 12, and Fri Nov 27. Fri Oct 2
   falls in the intermediate days of Sukkot. Check the published Robofun closure list
   before committing a syllabus to families.
 - Session 11 is the fullest session of the term and will not finish in 90 minutes.
-  Its build brief is planned to continue into session 12.
+  Nothing carries over between sessions; session 12 hands out a finished version
+  of the session 11 room as its engine, printed on the page and verified at build
+  time. The teacher copies it onto every machine as `session12.py` before class.
+
+## Printing history
+
+- **2026-09-12, v5.** First build.
+- **2026-09-13, v6.** Review round. Faults found and fixed, all of the kind neither
+  guard could see: session 12 described an engine that existed nowhere; session 7's
+  build referred to five broken cards that were not on the page; session 4 presented
+  `def` as revision from a summer camp these students did not attend, and eleven
+  passages across six pages referred to that camp; session 2's hinge described a text
+  comparison that Python 3 does not perform (it raises TypeError); four pages said
+  `python -c "import pygame"` prints nothing (pygame 2 prints a two-line greeting);
+  sessions 6, 9, 11 and 12 planned for build work to carry over across a cold start;
+  ten teacher panels gave the ledger stamp no time; session 3 miscounted how often
+  `tallest` changes; `input()` output boxes showed prompts with no typed answer.
+  Open decisions resolved: the tkinter float is dropped (no labels without
+  `pygame.font`); if Fri Oct 2 is lost, the bonus date absorbs it. New checks added
+  to `validate.py` for the classes of fault that could be mechanised.
