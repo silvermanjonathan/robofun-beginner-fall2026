@@ -534,13 +534,17 @@ def render_session(s, prev_s, next_s):
         b.append(code_block(ch["code"]))
         if ch.get("prefix"):
             b.append('<p class="note">' + ch.get("where",
-                     'This goes into the chunk 3 file, not at the bottom of it. '
-                     'Any <code>def</code> goes next to <code>step_end</code>, above '
-                     '<code>pygame.init()</code>. The calls go in the section marked '
-                     '<em>your drawing, done once</em>: after <code>canvas.fill(BG)</code>, '
-                     'because the canvas has to exist before anything draws on it, and '
-                     'above the window loop, because anything drawn after the loop is '
-                     'never shown. Then run the whole file.') + '</p>')
+                     'Add this code to the file you made in chunk 3. Where it goes matters. '
+                     'Functions are defined near the top of a program, after the imports and '
+                     'before any line that does work. The new function is separate from '
+                     '<code>step_end</code>: it starts with its own <code>def</code> at the '
+                     'left edge, not indented. Put it after the <code>return</code> line that '
+                     'ends <code>step_end</code>, leave one blank line between them, and keep '
+                     'it before <code>pygame.init()</code>. Put the lines that call the function '
+                     'under the comment <code># ---- your drawing, done once ----</code>. '
+                     'That is after <code>canvas.fill(BG)</code>, so the canvas exists before '
+                     'you draw on it, and before <code>while running:</code>, because the loop '
+                     'only shows what was drawn before it started. Then run the whole file.') + '</p>')
         loops = "while running" in ch["code"]
         extra = ""
         if out:
@@ -933,6 +937,7 @@ def render_constraints():
              '<li><b>Honest names.</b> A function called <code>check</code> that removes a '
              'life gets renamed. This is an exit criterion, not a style preference.</li>'
              '<li><b>Words in the terminal, visuals in the window.</b></li>'
+             '<li><b>Functions at the top.</b> Every <code>def</code> goes together near the top of the file, after the imports and before any line that does work. Python must read a function before the line that calls it.</li>'
              '<li><b>Knob block at the top.</b> Every number the behaviour depends on gets a '
              'capitalised name above the code that uses it.</li>'
              '</ul></section>')

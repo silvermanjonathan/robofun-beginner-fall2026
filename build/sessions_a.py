@@ -381,7 +381,7 @@ SESSIONS_A = [
  },
  "chunks": [
   {"title": "Naming a block",
-   "teach": "A <b>function</b> is a block of lines with a name. <code>def</code> makes one: the word <code>def</code>, then the name you choose, then parentheses, then a colon, and the block indented underneath. Writing the name with parentheses after it, anywhere below, runs the block. That is called <b>calling</b> the function. This is new, and it is the half of today that has no trap in it.",
+   "teach": "A <b>function</b> is a block of lines with a name. <code>def</code> makes one: the word <code>def</code>, then the name you choose, then parentheses, then a colon, and the block indented underneath. Writing the name with parentheses after it, anywhere below, runs the block. That is called <b>calling</b> the function.</p><p>Where a <code>def</code> goes: at the top of the file, after any imports and before any line that does work. Python reads the file from the top, so it has to meet the <code>def</code> before it meets a call. When a program has several functions, they all sit together in that top section. This is new, and it is the half of today that has no trap in it.",
    "code": 'def greet():\n    print("Welcome to the park.")\n\ngreet()\ngreet()',
    "run": "py",
    "predict": "How many lines of output, and does the def line itself print anything?",
