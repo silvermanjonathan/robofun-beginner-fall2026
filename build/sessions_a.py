@@ -131,7 +131,7 @@ SESSIONS_A = [
  "fri": "Fri Sep 25",
  "new": ["comparison operators", "True and False", "if / elif / else", "= against ==", "and", "or", "ask-until-valid while"],
  "reuse": "Session 1: reassignment and f-strings",
- "reuse_note": "Two weeks off for Monday because of Yom Kippur. Assume the int() trap is gone and re-teach it inside the opener rather than mid-lesson.",
+ "reuse_note": "The Monday section did not meet the prior week, so it has been two weeks since session 1. Assume the int() trap is gone and re-teach it inside the opener rather than mid-lesson.",
  "opener": {
    "title": "Retrieval: last session's trap",
    "minutes": 10,
