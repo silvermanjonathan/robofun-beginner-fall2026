@@ -145,7 +145,7 @@ SESSIONS_A = [
  },
  "chunks": [
   {"title": "A comparison is a question with a yes or no answer",
-   "teach": "Comparing two values hands back <code>True</code> or <code>False</code>. Those are values like any other. You can print them.",
+   "teach": "Comparing two values hands back <code>True</code> or <code>False</code>. Those are values like any other. You can print them. Every comparison sign is typed as ordinary keys: <code>==</code> is two equals signs, <code>!=</code> is an exclamation mark then an equals sign, and <code>&lt;=</code> and <code>&gt;=</code> are two keys each. There is no single slashed-equals character in Python.",
    "code": 'height = 52\nprint(height > 48)\nprint(height == 48)\nprint(height != 48)',
    "run": "py",
    "predict": "Three comparisons on the same number. How many print True?",

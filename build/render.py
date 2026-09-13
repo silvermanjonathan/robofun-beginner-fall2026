@@ -239,6 +239,12 @@ section.brief{border-left:8px solid var(--teal)}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 14px; padding-left:24px}
 li{margin:0 0 8px}
+code,pre{
+  /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
+     glyph; students then type a character that does not exist. Keep every
+     operator as the keys that produce it. */
+  font-variant-ligatures:none; font-feature-settings:"liga" 0,"calt" 0,"dlig" 0;
+}
 code{
   font-family:'JetBrains Mono',monospace; font-size:.9em; font-weight:700;
   background:var(--code-bg); color:#1E2A2B;
