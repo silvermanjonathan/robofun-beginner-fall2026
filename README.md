@@ -5,7 +5,8 @@ Beyond Vibe Coding, beginner semester. Python for grades 5 to 8, Robofun Fall 20
 same twelve required sessions. Friday has one extra date and spends it on a bonus
 session that nothing later depends on.
 
-Homepage: `beginner_semester_hub.html`
+Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner_semester_hub.html
+(`beginner_semester_hub.html` at the repo root; there is no `index.html`)
 
 ## Pages
 
@@ -151,7 +152,9 @@ the page. No output box on this site was typed from expectation.
   continues a program from an earlier chunk, the page says so on the page itself and
   the whole file was run together, with the earlier program supplied as a run prefix.
 - Snippet files are named after their session, so tracebacks shown to students read
-  `File "session07.py", line 3` rather than a temporary path.
+  `File "Jonathan_session07.py", line 3` rather than a temporary path. The house
+  rule is that every student file starts with the student's first name, then an
+  underscore, then the session; Jonathan stands in for the name on the pages.
 - Output labels only claim a frame quota when the snippet actually contains a loop.
 
 `validate.py` checks tag balance, reveal-button to answer-block parity, duplicate
@@ -183,7 +186,8 @@ chunks and their output sits behind the same reveal.
 - Session 11 is the fullest session of the term and will not finish in 90 minutes.
   Nothing carries over between sessions; session 12 hands out a finished version
   of the session 11 room as its engine, printed on the page and verified at build
-  time. The teacher copies it onto every machine as `session12.py` before class.
+  time. The teacher copies it onto every machine, named in the house style
+  (`Ada_session12.py`), before class.
 
 ## Printing history
 

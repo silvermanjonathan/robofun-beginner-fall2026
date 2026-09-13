@@ -14,7 +14,7 @@ SESSIONS_A = [
  "opener": {
    "title": "Setup and the house rule",
    "minutes": 10,
-   "body": "Open the editor, make a file called <code>session01.py</code>, and write your name in a comment on line 1. Then, before anyone runs anything, the rule for the whole semester: you say out loud what a line will do before you press run. Being wrong out loud is the point. It is how you find out what you actually believe.",
+   "body": "Open the editor and make a file called <code>Jonathan_session01.py</code>, with your own first name in place of Jonathan. Every file you make this term starts with your first name, then an underscore, then the session. Write your name in a comment on line 1 as well. Then, before anyone runs anything, the rule for the whole semester: you say out loud what a line will do before you press run. Being wrong out loud is the point. It is how you find out what you actually believe.",
    "questions": [],
  },
  "chunks": [

@@ -130,9 +130,9 @@ def verify(chunk, tag):
         return None, None
     num = tag.split("-")[0].replace("s", "")
     if num == "13":
-        fname = "friday_bonus.py"
+        fname = "Jonathan_friday_bonus.py"
     else:
-        fname = "session%02d.py" % int(num)
+        fname = "Jonathan_session%02d.py" % int(num)
     if mode == "compile":
         path = os.path.join(TMP, "compile_check.py")
         with open(path, "w") as fh:

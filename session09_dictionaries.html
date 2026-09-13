@@ -225,7 +225,7 @@ scores[&quot;Katherine&quot;] = 30
 print(scores)
 print(scores[&quot;Nobody&quot;])</pre><div class="predict"><p class="q">Predict: Same line shape for changing Ada and for adding Katherine. How does Python know which one you meant?</p><button class="rev" data-target="s9-c3" aria-controls="s9-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s9-c3"><p class="outlabel">What it actually prints</p><pre class="out">{&#x27;Ada&#x27;: 16, &#x27;Grace&#x27;: 22, &#x27;Katherine&#x27;: 30}
 Traceback (most recent call last):
-  File &quot;session09.py&quot;, line 5, in &lt;module&gt;
+  File &quot;Jonathan_session09.py&quot;, line 5, in &lt;module&gt;
     print(scores[&quot;Nobody&quot;])
           ~~~~~~^^^^^^^^^^
 KeyError: &#x27;Nobody&#x27;</pre><p>It does not need to know. If the key is there it is replaced, and if it is not it is created. The last line is a KeyError, which is number six on your error list.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 4 of 8</p><h2>in checks the keys, and gates against KeyError</h2><p><code>in</code> on a dictionary asks about keys, not values. This is the gate that stops the error from the last chunk.</p><pre>scores = {&quot;Ada&quot;: 16, &quot;Grace&quot;: 22}
