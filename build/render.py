@@ -1,6 +1,7 @@
 import html
 import json
 import os
+import re
 import tempfile
 import subprocess
 import sys
@@ -510,8 +511,15 @@ def render_session(s, prev_s, next_s):
         b.append('</section>')
 
     h = s["hinge"]
+    m = re.match(r"From session (\d+)", h["q"])
+    if m:
+        cap = "reaches back to session " + m.group(1)
+    elif h["q"].startswith("Pick any stamp"):
+        cap = "reaches back across the ledger card"
+    else:
+        cap = "from today's chunks"
     b.append('<section class="hinge"><p class="chunk-no">Hinge question &middot; '
-             'reaches back two weeks</p><h2>Before you build</h2>')
+             + cap + '</p><h2>Before you build</h2>')
     b.append(reveal("s%d-hinge" % n, h["q"], h["a"], "Question"))
     b.append('</section>')
 
@@ -659,7 +667,7 @@ def render_hub():
              'one and two sessions ago. No editor until both are written down.</li>'
              '<li><b>Chunks, 45 to 65 minutes.</b> One idea each. You predict what the code '
              'will do before you run it, then you run it and read what actually happened.</li>'
-             '<li><b>Hinge question.</b> One question that reaches back two weeks, answered '
+             '<li><b>Hinge question.</b> One question that reaches back to an earlier session, or to today, answered '
              'before the build starts.</li>'
              '<li><b>Build, 10 to 25 minutes.</b> A brief with an expected and got sheet. The '
              'expected column gets filled in first.</li>'
