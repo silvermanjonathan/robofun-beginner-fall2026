@@ -638,7 +638,7 @@ def render_session(s, prev_s, next_s):
 
     b.append('<footer><div class="wrap">'
              '<p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. '
-             '110 West End Avenue. Monday and Friday sections run the same spine.</p>'
+             '110 West End Avenue. The Monday and Friday sections cover the same twelve sessions.</p>'
              '<p>Mapped to NY Next Generation Learning Standards and the Standards for '
              'Mathematical Practice. Codes resolved through the ' + CONNECTOR + ' on '
              + RESOLVED_ON + '. <a href="' + link("standards_map") + '">Full standards map</a> '
@@ -742,7 +742,7 @@ def render_hub():
         b.append('<tr><td>' + s["fri"] + '</td><td>' + tag + html.escape(s["title"])
                  + '</td></tr>')
     b.append('</table></div></div>')
-    b.append('<p class="note">Monday is the short section, so the spine is twelve sessions '
+    b.append('<p class="note">Monday has twelve dates, so the required course is twelve sessions, '
              'and Friday spends its extra date on a bonus that nothing later depends on. '
              'If a parent compares the two classes, the required content is identical.</p>'
              '<p class="note">From session 4 on, Friday runs one to two sessions ahead of '
@@ -829,7 +829,7 @@ def render_constraints():
              '<code>else</code> only. If a student reaches for an if inside an if, hand them '
              '<code>and</code>.</li>'
              '<li><b><code>break</code> and <code>continue</code>.</b> Every '
-             '<code>while</code> names its exit condition in the condition itself.</li>'
+             '<code>while</code> has a stopping condition you can point at.</li>'
              '<li><b><code>while True</code>.</b> Same reason.</li>'
              '<li><b><code>try</code> and <code>except</code>.</b> Ask-until-valid loops '
              'cover the same ground at this level.</li>'
@@ -838,7 +838,7 @@ def render_constraints():
              '<li><b>Recursion, list comprehensions, lambda, <code>global</code>.</b></li>'
              '<li><b>Multi-file programs and importing your own module.</b> Advanced '
              'course.</li>'
-             '<li><b>File input and output.</b> Held as a float, not in the spine.</li>'
+             '<li><b>File input and output.</b> Held as a float, not one of the twelve sessions.</li>'
              '<li><b><code>pygame.font</code>.</b> Words go in the terminal and visuals go '
              'in the window. That split holds all term.</li>'
              '<li><b>turtle.</b> Not used anywhere in this course. It needs a library our '
@@ -1009,7 +1009,7 @@ def render_ledger():
         'if / elif / else        flat gates, never nested\n'
         '==  !=  <  >  <=  >=    comparisons, hand back True or False\n'
         'and / or                two conditions at once\n'
-        'while condition:        names its own exit\n'
+        'while condition:        repeats while True; the condition is what stops it\n'
         'for i in range(5):      0 1 2 3 4, stops before 5\n'
         'list[0]                 first slot; last is len - 1\n'
         'text[0:3]               slots 0 1 2, stops before 3\n'

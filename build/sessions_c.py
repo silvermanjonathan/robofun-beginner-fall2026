@@ -163,7 +163,7 @@ SESSIONS_C = [
    "run": "headless",
    "frames": 5,
    "predict": "Name the one thing that can make this loop stop.",
-   "reveal": "Clicking the window's close button, which puts a QUIT event in the queue and sets <code>running</code> to 0. That is the exit condition, written in the loop, the way every while loop has had one since session 2. Compare this to session 5: there the <code>fill</code> and the drawing sat above the loop and ran once, and here they sit inside it and run sixty times a second."},
+   "reveal": "Clicking the window's close button, which puts a QUIT event in the queue and sets <code>running</code> to 0. That is the stopping condition, the way every while loop has had one since session 2. Compare this to session 5: there the <code>fill</code> and the drawing sat above the loop and ran once, and here they sit inside it and run sixty times a second."},
 
   {"title": "Draw order: last one wins",
    "teach": "Drawing paints over whatever is already there. The fill goes first because it wipes the previous frame. Whatever you draw last sits on top.",

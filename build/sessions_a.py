@@ -152,7 +152,7 @@ SESSIONS_A = [
    "reveal": "Two. 52 is greater than 48, so the first is True. It is not equal to 48, so the second is False and the third is True. Count them before you run, every time."},
 
   {"title": "The three-way gate",
-   "teach": "<code>if</code> runs its block when the comparison is True. <code>elif</code> gets checked only when everything above it was False. <code>else</code> catches whatever is left. Python checks top to bottom and stops at the first True.",
+   "teach": "The part after <code>if</code> is called the condition. A condition is a comparison, or anything else that comes out True or False. <code>if</code> runs its block when its condition is True. <code>elif</code> gets checked only when everything above it was False. <code>else</code> catches whatever is left. Python checks top to bottom and stops at the first True.",
    "code": 'height = 48\nif height > 48:\n    print("Cleared to ride.")\nelif height == 48:\n    print("Borderline. Ask staff.")\nelse:\n    print("Not tall enough yet.")',
    "run": "py",
    "predict": "Height is exactly 48. Which of the three lines prints?",
@@ -179,13 +179,13 @@ SESSIONS_A = [
    "predict": "Both names are on the screen. Does the gate open?",
    "reveal": "Yes. <code>has_pass</code> is True, and with <code>or</code> that is enough on its own."},
 
-  {"title": "A while loop that names its own exit",
-   "teach": "A <code>while</code> repeats as long as its condition stays True. Every while you write this semester has to say, in the condition, what will make it stop. This one stops when the answer is yes or no and nothing else.",
+  {"title": "A while loop and its stopping condition",
+   "teach": "A <code>while</code> loop has a condition too, the same kind of True or False test as an <code>if</code>. It repeats its block as long as the condition is True and stops the first time it is False. That makes it a stopping condition: read it and you know what will make the loop stop. Every while loop you write this semester has a stopping condition you can point at. This one stops when the answer is yes or no and nothing else.",
    "code": 'answer = ""\nwhile answer != "yes" and answer != "no":\n    answer = input("Ready? Type yes or no: ")\nprint("Recorded:", answer)',
    "stdin": "maybe\nsoon\nyes\n",
    "run": "py",
    "predict": "Someone types maybe, then soon, then yes. How many times does the question appear?",
-   "reveal": "Three times. The condition is checked before each pass. Once the answer is yes, both halves of the condition can no longer both be True, so the loop lets go."},
+   "reveal": "Three times. The condition is checked before each pass. Once the answer is yes, the stopping condition is no longer True, so the loop stops and the print runs."},
  ],
  "hinge": {"q": "From session 1: a rider types 52 at an input prompt and the program crashes on the line that says <code>if height > 48:</code>. The gate is written correctly. What is wrong?",
            "a": "<code>height</code> is still text, and Python will not compare text with a number. The last line of the error says TypeError. The missing line is <code>height = int(height)</code>, before the gate. Session 1's trap, wearing a session 2 costume."},
@@ -211,7 +211,7 @@ SESSIONS_A = [
    "middle": "The full operator: converted height, ask-until-valid ticket question, three outcomes.",
    "stretch": "Add a staff override so that typing staff at the ticket question opens the ride regardless of height, using <code>or</code> and no nesting.",
  },
- "ledger": "Stamp 2: the six comparisons, <code>if / elif / else</code>, <code>==</code> against <code>=</code>, <code>and</code>, <code>or</code>, and a while loop with its exit condition circled.",
+ "ledger": "Stamp 2: the six comparisons, <code>if / elif / else</code>, <code>==</code> against <code>=</code>, <code>and</code>, <code>or</code>, and a while loop with its stopping condition circled.",
  "teacher": {
    "timing": [
      "0:00 retrieval opener, 10 min",
