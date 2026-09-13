@@ -256,7 +256,7 @@ print(raw.upper())
 print(len(raw))</pre><div class="predict"><p class="q">Predict: After <code>raw.strip()</code>, how long is <code>raw</code>?</p><button class="rev" data-target="s6-c3" aria-controls="s6-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s6-c3"><p class="outlabel">What it actually prints</p><pre class="out">18 12
 ADA LOVELACE
    ADA LOVELACE   
-18</pre><p>Still 18. <code>strip</code> handed back a shorter string and left the original alone. Forgetting to store the result is the same mistake as calling <code>int(age)</code> without assigning it, back in session 1.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 4 of 8</p><h2>in asks whether something is inside</h2><p>The word <code>in</code> hands back True or False. It works on strings and on lists, and it saves you the loop you would otherwise write to go looking.</p><pre>word = &quot;SPYGLASS&quot;
+18</pre><p>Still 18. <code>strip</code> handed back a shorter string and left the original alone. Forgetting to store the result is the same mistake as calling <code>int(age)</code> without assigning it, back in session 1.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 4 of 8</p><h2>in checks whether one thing is located in another</h2><p><code>in</code> is a test, like <code>==</code> or <code>&gt;</code>. It checks whether the thing on its left is located in the thing on its right and hands back True or False. Because it hands back True or False, it can be a condition in a gate or a while loop, and it can be joined to other tests with <code>and</code> and <code>or</code>.</p><p>It works on strings and on lists. With a string it checks for a run of characters. With a list it checks for a whole item. Without it you would have to write a loop to go looking.</p><pre>word = &quot;SPYGLASS&quot;
 print(&quot;GLA&quot; in word)
 print(&quot;Z&quot; in word)
 print(&quot;S&quot; in word)
@@ -264,13 +264,13 @@ riders = [&quot;Ada&quot;, &quot;Grace&quot;]
 print(&quot;Ada&quot; in riders)</pre><div class="predict"><p class="q">Predict: Does <code>in</code> look for a single letter only, or a whole run of letters?</p><button class="rev" data-target="s6-c4" aria-controls="s6-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s6-c4"><p class="outlabel">What it actually prints</p><pre class="out">True
 False
 True
-True</pre><p>A whole run, in order, with nothing between. GLA is in SPYGLASS; GAL is not. On a list it looks for one whole item, not part of one.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 5 of 8</p><h2>replace swaps every copy</h2><p><code>replace</code> hands back a new string with every occurrence swapped. Every one, not just the first. Store the result.</p><pre>message = &quot;MEET AT NOON&quot;
+True</pre><p>A whole run, in order, with nothing between. GLA is in SPYGLASS; GAL is not. On a list it looks for one whole item, not part of one.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 5 of 8</p><h2>replace swaps every copy</h2><p><code>replace</code> hands back a new string with every occurrence swapped. Every one, not just the first.</p><p>It does not change the string it was called on. <code>message</code> is the same after line 4 as before it. So if you want to keep the changed version, you have to store what <code>replace</code> hands back under a name, the way line 2 does with <code>no_spaces</code>. Line 4 prints the changed version and then throws it away, because nothing stored it. This is the same rule as <code>return</code> in session 4: a value that is handed back has to land somewhere or it is lost.</p><pre>message = &quot;MEET AT NOON&quot;
 no_spaces = message.replace(&quot; &quot;, &quot;*&quot;)
 print(no_spaces)
-print(message.replace(&quot;O&quot;, &quot;0&quot;))
+print(message.replace(&quot;O&quot;, &quot;*&quot;))
 print(message)</pre><div class="predict"><p class="q">Predict: NOON has two Os. How many get replaced?</p><button class="rev" data-target="s6-c5" aria-controls="s6-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s6-c5"><p class="outlabel">What it actually prints</p><pre class="out">MEET*AT*NOON
-MEET AT N00N
-MEET AT NOON</pre><p>Both. And the original is unchanged on the last line, because replace hands back a copy.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 6 of 8</p><h2>Building a string one character at a time</h2><p>Start with an empty string, then add to it inside a loop. This is the accumulator from session 3 with text instead of numbers. Putting the new character in front instead of behind reverses the message.</p><pre>word = &quot;SPYGLASS&quot;
+MEET AT N**N
+MEET AT NOON</pre><p>Both. And the original is unchanged on the last line, because <code>replace</code> hands back a new string and leaves the old one alone. To keep the starred version you would write <code>message = message.replace("O", "*")</code>, storing the new string under the old name.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 6 of 8</p><h2>Building a string one character at a time</h2><p>Start with an empty string, then add to it inside a loop. This is the accumulator from session 3 with text instead of numbers. Putting the new character in front instead of behind reverses the message.</p><pre>word = &quot;SPYGLASS&quot;
 forward = &quot;&quot;
 backward = &quot;&quot;
 for ch in word:
@@ -278,15 +278,20 @@ for ch in word:
     backward = ch + backward
 print(forward)
 print(backward)</pre><div class="predict"><p class="q">Predict: Two accumulators, one loop. Which line reverses the word, and why?</p><button class="rev" data-target="s6-c6" aria-controls="s6-c6" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s6-c6"><p class="outlabel">What it actually prints</p><pre class="out">SPYGLASS
-SSALGYPS</pre><p>The one that puts <code>ch</code> first. Each new character shoves the growing string to the right, so the last character read ends up at the front.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 7 of 8</p><h2>A pair-swap cipher</h2><p>Swap every pair of characters. Spaces get turned into stars first so the word breaks do not give the message away, and an odd-length message gets one star added so the last pair is complete. The step of 2 in <code>range</code> hands out 0, 2, 4 and skips the odd slots, because each pass handles two characters.</p><pre>message = &quot;MEET AT NOON&quot;
-message = message.replace(&quot; &quot;, &quot;*&quot;)
-if len(message) % 2 == 1:
-    message = message + &quot;*&quot;
-
-out = &quot;&quot;
-for i in range(0, len(message), 2):
-    out = out + message[i + 1] + message[i]
-print(out)</pre><div class="predict"><p class="q">Predict: Twelve characters, six pairs. What does the first pair, ME, become?</p><button class="rev" data-target="s6-c7" aria-controls="s6-c7" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s6-c7"><p class="outlabel">What it actually prints</p><pre class="out">EMTEA**TONNO</pre><p>EM. Each pair comes out in the other order. The padding gate matters: without it, <code>message[i + 1]</code> reaches past the end on the last pass and you get an IndexError.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 8 of 8</p><h2>The same code decodes it</h2><p>Swapping a pair twice puts it back. Feed the output of the encoder into the encoder again and the original returns. Ciphers that behave this way need only one piece of code.</p><pre>def pair_swap(text):
+SSALGYPS</pre><p>The one that puts <code>ch</code> first. Each new character shoves the growing string to the right, so the last character read ends up at the front.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 7 of 8</p><h2>A pair-swap cipher</h2><p>Swap every pair of characters. Spaces get turned into stars first so the word breaks do not give the message away. The step of 2 in <code>range</code> hands out 0, 2, 4 and skips the odd indexes, because each pass handles two characters.</p><p>The gate in the middle is there for messages with an odd number of characters. The loop always reaches for <code>message[i + 1]</code>, and on an odd-length message the last pass would reach one past the end. So if the length leaves a remainder of 1, one star is added to make the last pair complete. The code runs on two messages so you can see the gate stay closed for one and open for the other.</p><pre>for message in [&quot;MEET AT NOON&quot;, &quot;SEE YOU&quot;]:
+    message = message.replace(&quot; &quot;, &quot;*&quot;)
+    print(f&quot;{message} has {len(message)} characters, remainder {len(message) % 2}&quot;)
+    if len(message) % 2 == 1:
+        message = message + &quot;*&quot;
+        print(f&quot;odd length, so a star is added: {message}&quot;)
+    out = &quot;&quot;
+    for i in range(0, len(message), 2):
+        out = out + message[i + 1] + message[i]
+    print(out)</pre><div class="predict"><p class="q">Predict: MEET AT NOON has 12 characters and SEE YOU has 7. Which message gets a star added, and what does the first pair of the first message, ME, become?</p><button class="rev" data-target="s6-c7" aria-controls="s6-c7" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s6-c7"><p class="outlabel">What it actually prints</p><pre class="out">MEET*AT*NOON has 12 characters, remainder 0
+EMTEA**TONNO
+SEE*YOU has 7 characters, remainder 1
+odd length, so a star is added: SEE*YOU*
+ES*EOY*U</pre><p>SEE YOU gets the star, because 7 leaves a remainder of 1; MEET AT NOON does not, because 12 leaves 0. ME becomes EM, and every pair comes out in the other order. Delete the gate and run again: the first message still works, and the second crashes with an IndexError on its last pass, because <code>message[7]</code> does not exist in a seven-character message.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 8 of 8</p><h2>The same code decodes it</h2><p>Swapping a pair twice puts it back. Feed the output of the encoder into the encoder again and the original returns. Ciphers that behave this way need only one piece of code.</p><pre>def pair_swap(text):
     text = text.replace(&quot; &quot;, &quot;*&quot;)
     if len(text) % 2 == 1:
         text = text + &quot;*&quot;
