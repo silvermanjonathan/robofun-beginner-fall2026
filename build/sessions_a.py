@@ -46,8 +46,8 @@ SESSIONS_A = [
    "predict": "Line 3 has score on both sides. What does the second print show?",
    "reveal": "15. Python computes <code>10 + 5</code> first, then stores 15 under <code>score</code>. The old 10 is gone."},
 
-  {"title": "input always hands back text",
-   "teach": "<code>input</code> stops the program, waits for typing, and hands back what was typed. It hands back <em>text</em>, always, even when the person typed digits. Run this with 3 as the answer.",
+  {"title": "input always gives you text",
+   "teach": "<code>input</code> stops the program, waits for typing, and gives you what was typed. It gives you <em>text</em>, always, even when the person typed digits. Run this with 3 as the answer.",
    "code": 'age = input("Robot age in years: ")\nprint(age + 1)',
    "stdin": "3\n",
    "run": "py",
@@ -63,7 +63,7 @@ SESSIONS_A = [
    "reveal": "The first is str, because the quotes make it text. The second is int. The third is str as well: you typed 3, but input handed it back as text, which is why chunk 5 crashed. Text and number are different types, and a plus sign will not mix them. The word <code>class</code> in the output is Python's way of saying kind: read <code>&lt;class 'str'&gt;</code> as text and <code>&lt;class 'int'&gt;</code> as whole number."},
 
   {"title": "int() changes the type, on one line of its own",
-   "teach": "<code>int()</code> takes text that looks like a whole number and hands back the same value as a number. It changes the type from str to int. Do the type change on its own line while you are learning. You will see it folded into one line in other people's code later.",
+   "teach": "<code>int()</code> takes text that looks like a whole number and gives back the same value as a number. It changes the type from str to int. Do the type change on its own line while you are learning. You will see it folded into one line in other people's code later.",
    "code": 'age = input("Robot age in years: ")\nage = int(age)\nprint(age + 1)',
    "stdin": "3\n",
    "run": "py",
@@ -102,7 +102,7 @@ SESSIONS_A = [
    "middle": "The full rider card: three questions, two type changes, two printed sentences.",
    "stretch": "Add a fourth question asking for a group size, then print the total tickets for the group without using a calculator, letting Python do the multiplication inside the print.",
  },
- "ledger": "Stamp 1: <code>print</code>, <code>name = value</code> makes a variable, <code>input</code> hands back text, <code>type()</code>, <code>int()</code> changes the type, <code>f\"{name}\"</code>. Write the TypeError message from chunk 5 on the card in your own handwriting.",
+ "ledger": "Stamp 1: <code>print</code>, <code>name = value</code> makes a variable, <code>input</code> gives text, <code>type()</code>, <code>int()</code> changes the type, <code>f\"{name}\"</code>. Write the TypeError message from chunk 5 on the card in your own handwriting.",
  "teacher": {
    "timing": [
      "0:00 setup and house rule, 10 min",
@@ -115,7 +115,7 @@ SESSIONS_A = [
    "misconceptions": [
      ["Prints the name instead of the value, or the reverse.", "Point at the quote marks and ask what they tell Python. Do not explain; make them run both lines."],
      ["Reads <code>score = score + 5</code> as an equation and objects that it cannot be true.", "Rename the operation out loud: store the right side under the name on the left. Trace it with two boxes on the whiteboard."],
-     ["Writes <code>int(age)</code> but does not store it, then wonders why nothing changed.", "Run their line. The conversion happened and was thrown away. This is worth a full minute of silence."],
+     ["Writes <code>int(age)</code> but does not store it, then wonders why nothing changed.", "Run their line. The conversion happened and was thrown away. Give this a full minute of silence."],
    ],
    "standards": ["NY-5.OA.2", "NY-6.EE.2", "MP6"],
    "routing": "If the room finishes early, do not start gates. Send them to the stretch exit and let them ask for four values. Gates need a clean 90 minutes.",
@@ -146,7 +146,7 @@ SESSIONS_A = [
  },
  "chunks": [
   {"title": "A comparison is a question with a yes or no answer",
-   "teach": "Comparing two values hands back <code>True</code> or <code>False</code>. Those are values like any other. You can print them. Every comparison sign is typed as ordinary keys: <code>==</code> is two equals signs, <code>!=</code> is an exclamation mark then an equals sign, and <code>&lt;=</code> and <code>&gt;=</code> are two keys each. There is no single slashed-equals character in Python.",
+   "teach": "Comparing two values gives <code>True</code> or <code>False</code>. Those are values like any other. You can print them. Every comparison sign is typed as ordinary keys: <code>==</code> is two equals signs, <code>!=</code> is an exclamation mark then an equals sign, and <code>&lt;=</code> and <code>&gt;=</code> are two keys each. There is no single slashed-equals character in Python.",
    "code": 'height = 52\nprint(height > 48)\nprint(height == 48)\nprint(height != 48)',
    "run": "py",
    "predict": "Three comparisons on the same number. How many print True?",
@@ -168,14 +168,14 @@ SESSIONS_A = [
    "reveal": "It crashes before it runs a single line, and Python tells you what it wanted instead. One equals sign stores a value. Two equals signs ask a question."},
 
   {"title": "and: both must be True",
-   "teach": "Real gates check more than one thing. <code>and</code> hands back True only when both sides are True. Nothing is nested here; the two conditions sit side by side on one line.",
+   "teach": "Real gates check more than one thing. <code>and</code> gives True only when both sides are True. Nothing is nested here; the two conditions sit side by side on one line.",
    "code": 'height = 52\nhas_ticket = True\nif height > 48 and has_ticket:\n    print("Board the coaster.")\nelse:\n    print("Step aside.")',
    "run": "py",
    "predict": "Set has_ticket to False on paper. Which line prints then?",
    "reveal": "Step aside. With <code>and</code>, one False sinks the whole condition. Change the value and rerun to confirm, one change per run."},
 
   {"title": "or: one is enough",
-   "teach": "<code>or</code> hands back True when either side is True. Read it out loud with the word or in it and it behaves the way English does.",
+   "teach": "<code>or</code> gives True when either side is True. Read it out loud with the word or in it and it behaves the way English does.",
    "code": 'is_staff = False\nhas_pass = True\nif is_staff or has_pass:\n    print("Gate opens.")\nelse:\n    print("Gate stays shut.")',
    "run": "py",
    "predict": "Both names are on the screen. Does the gate open?",
@@ -192,7 +192,7 @@ SESSIONS_A = [
  "hinge": {"q": "From session 1: a rider types 52 at an input prompt and the program crashes on the line that says <code>if height > 48:</code>. The gate is written correctly. What is wrong?",
            "code": 'height = input("Height in inches: ")\nif height > 48:\n    print("Cleared to ride.")\nelse:\n    print("Not tall enough yet.")',
            "code_a": 'height = input("Height in inches: ")\nheight = int(height)\nif height > 48:\n    print("Cleared to ride.")\nelse:\n    print("Not tall enough yet.")',
-           "a": "<code>height</code> is still text, and Python will not compare text with a number. The last line of the error says TypeError. The missing line is <code>height = int(height)</code>, before the gate. Session 1's trap, wearing a session 2 costume."},
+           "a": "<code>height</code> is still text, and Python will not compare text with a number. The last line of the error says TypeError. The missing line is <code>height = int(height)</code>, before the gate. It is the same trap as session 1, inside a gate this time."},
  "brief": {
    "title": "Build: the ride operator",
    "minutes": 25,
@@ -260,7 +260,7 @@ SESSIONS_A = [
  },
  "chunks": [
   {"title": "for and range repeat a block",
-   "teach": "<code>range(5)</code> hands out the numbers 0, 1, 2, 3, 4. Five numbers, starting at zero, stopping before five. The indented block runs once per number.</p><p><code>step</code> is a variable, and it is the loop that gives it its value. On the first pass <code>step</code> is 0. When the body finishes, the loop goes back to the top, gives <code>step</code> the next value, 1, and runs the body again. It keeps doing that until <code>range</code> has nothing left to hand out. So <code>step</code> is a different number every time the body runs, and you never write a line that changes it; the loop does that for you. This name is called the <b>loop variable</b>, and you can call it anything you like.",
+   "teach": "<code>range(5)</code> gives the numbers 0, 1, 2, 3, 4. Five numbers, starting at zero, stopping before five. The indented block runs once per number.</p><p><code>step</code> is a variable, and it is the loop that gives it its value. On the first pass <code>step</code> is 0. When the body finishes, the loop goes back to the top, gives <code>step</code> the next value, 1, and runs the body again. It keeps doing that until <code>range</code> has nothing left to hand out. So <code>step</code> is a different number every time the body runs, and you never write a line that changes it; the loop does that for you. This name is called the <b>loop variable</b>, and you can call it anything you like.",
    "figure": '<h3>The parts of a for loop</h3><pre class="anatomy">for <span class="cond">step</span> in <span class="nm">range(5)</span>:          <span class="lbl lbl-c">&larr; loop variable</span>  <span class="lbl lbl-n">&larr; the values</span>\n<span class="blk">    print(f"step {step}")</span>   <span class="lbl lbl-b">&larr; body: runs once per value</span>\n\n<span class="lbl">pass 1   step is 0   prints  step 0</span>\n<span class="lbl">pass 2   step is 1   prints  step 1</span>\n<span class="lbl">pass 3   step is 2   prints  step 2</span>\n<span class="lbl">pass 4   step is 3   prints  step 3</span>\n<span class="lbl">pass 5   step is 4   prints  step 4</span>\n<span class="lbl">no values left, so the loop ends</span></pre><div class="legend"><span><i class="c"></i> loop variable: a new value each pass</span><span><i class="n"></i> the values it works through, in order</span><span><i class="b"></i> body: the indented lines</span></div>',
    "code": 'for step in range(5):\n    print(f"step {step}")',
    "run": "py",
@@ -271,7 +271,7 @@ SESSIONS_A = [
    "teach": "A running total needs a name that exists before the loop starts, and a reassignment inside the loop. The name has to start at 0, outside the loop, or there is nothing to add to. Two variables change here, in two different ways: the loop changes <code>n</code> for you on every pass, and your own line <code>total = total + n</code> changes <code>total</code>.",
    "code": 'total = 0\nfor n in range(1, 6):\n    total = total + n\nprint(f"total: {total}")',
    "run": "py",
-   "predict": "range(1, 6) hands out which numbers, and what do they add up to?",
+   "predict": "range(1, 6) gives which numbers, and what do they add up to?",
    "reveal": "1 through 5, and they add to 15. Two arguments to range means start here, stop before there."},
 
   {"title": "A list holds many values under one name",
@@ -289,7 +289,7 @@ SESSIONS_A = [
    "reveal": "An error. Alan is at slot 2. Off-by-one errors are so common that Python has a dedicated name for this one."},
 
   {"title": "Counter with a gate, and best so far",
-   "teach": "A <code>for</code> loop can work through a list as well as a <code>range</code>. <code>for h in heights</code> gives <code>h</code> each item of the list in turn: 52 on the first pass, 47 on the second, and so on to 58. Nothing is counted; the loop hands you the items themselves.</p><p>Two patterns, one loop. The counter adds 1 only when the gate is True. Best so far keeps a name for the largest value seen and replaces it whenever something bigger turns up. Both names start before the loop.",
+   "teach": "A <code>for</code> loop can work through a list as well as a <code>range</code>. <code>for h in heights</code> gives <code>h</code> each item of the list in turn: 52 on the first pass, 47 on the second, and so on to 58. Nothing is counted; the loop gives you the items themselves.</p><p>Two patterns, one loop. The counter adds 1 only when the gate is True. Best so far keeps a name for the largest value seen and replaces it whenever something bigger turns up. Both names start before the loop.",
    "code": 'heights = [52, 47, 61, 44, 58]\ncleared = 0\ntallest = 0\nfor h in heights:\n    if h > 48:\n        cleared = cleared + 1\n    if h > tallest:\n        tallest = h\nprint(f"cleared: {cleared}")\nprint(f"tallest: {tallest}")',
    "run": "py",
    "predict": "Trace it on paper. What are the two numbers?",
@@ -334,7 +334,7 @@ SESSIONS_A = [
  "exits": {
    "floor": "A loop over a list that prints every height on its own line.",
    "middle": "The ride log: counter, two best-so-far names, f-string summary, four built-in checks.",
-   "stretch": "Add an average. You have <code>sum</code> and <code>len</code>, and division with a single slash hands back a decimal.",
+   "stretch": "Add an average. You have <code>sum</code> and <code>len</code>, and division with a single slash gives a decimal.",
  },
  "ledger": "Stamp 3: <code>for i in range(n)</code>, the accumulator, the counter with a gate, best so far, <code>list[0]</code> is the first, <code>len</code>, <code>sum</code>, <code>max</code>, <code>min</code>, <code>random.choice</code>, <code>random.seed</code>.",
  "teacher": {
@@ -344,12 +344,12 @@ SESSIONS_A = [
      "0:25 chunks 3 and 4, lists and IndexError, 15 min",
      "0:40 chunk 5, the two patterns, 15 min (the core of the session)",
      "0:55 chunks 6 and 7, 12 min",
-     "1:07 build brief, 18 min (honest note: many will not reach the built-in checks)",
+     "1:07 build brief, 18 min (note: many will not reach the built-in checks)",
      "1:25 exits, ledger stamp, 5 min",
    ],
    "misconceptions": [
      ["Starts the accumulator inside the loop.", "Do not correct it. Have them print the total inside the loop and watch it fail to grow."],
-     ["Sets <code>tallest = 100</code> to be safe, then nothing ever beats it.", "Ask what value is guaranteed to lose. Starting at 0 works for heights; it fails for temperatures below zero, which is worth naming now."],
+     ["Sets <code>tallest = 100</code> to be safe, then nothing ever beats it.", "Ask what value is guaranteed to lose. Starting at 0 works for heights; it fails for temperatures below zero, so say so now."],
      ["Believes <code>len</code> gives the last index.", "Print both. One is 3, one errors. Sixty seconds."],
    ],
    "standards": ["NY-5.OA.3", "NY-6.EE.2", "MP8"],
@@ -407,14 +407,14 @@ SESSIONS_A = [
    "code": 'def double_return(n):\n    return n * 2\n\ndef double_print(n):\n    print(n * 2)\n\na = double_return(21)\nb = double_print(21)\nprint(f"a is {a}")\nprint(f"b is {b}")',
    "run": "py",
    "predict": "Both functions do the same arithmetic. Will <code>a</code> and <code>b</code> hold the same value?",
-   "reveal": "No. <code>a</code> holds 42. <code>b</code> holds <code>None</code>, which is Python's word for no value at all. A function with no return hands back None, every time. A function like <code>double_print</code> shows you a number and hands you nothing, which is why its output can be looked at but never used."},
+   "reveal": "No. <code>a</code> holds 42. <code>b</code> holds <code>None</code>, which is Python's word for no value at all. A function with no return returns None, every time. A function like <code>double_print</code> shows you a number and gives you nothing, which is why its output can be looked at but never used."},
 
   {"title": "One function calling another",
-   "teach": "Once a function hands back a value, another function can use it. Build small pieces and stack them. This is what people mean when they say a program is made of parts.",
+   "teach": "Once a function returns a value, another function can use it. Build small pieces and stack them. This is what people mean when they say a program is made of parts.",
    "code": 'def area(w, h):\n    return w * h\n\ndef floor_cost(w, h):\n    return area(w, h) * 12\n\nprint(area(3, 4))\nprint(floor_cost(3, 4))',
    "run": "py",
    "predict": "<code>floor_cost</code> never multiplies width by height itself. Does it still work?",
-   "reveal": "Yes. 12 and 144. <code>floor_cost</code> asks <code>area</code> for a number and then multiplies it by 12. Neither function knows or cares what the other one does inside."},
+   "reveal": "Yes. 12 and 144. <code>floor_cost</code> asks <code>area</code> for a number and then multiplies it by 12. Neither function depends on what the other one does inside."},
 
   {"title": "Several returns, gates still flat",
    "teach": "A function can have more than one <code>return</code>. The first one reached wins and the function stops there, so a gate with three exits needs no else at the end.",
@@ -430,7 +430,7 @@ SESSIONS_A = [
    "predict": "Where does <code>return total</code> have to sit, inside the loop or after it?",
    "reveal": "After it, lined up with the <code>for</code>. Put it inside the loop and the function returns on the first pass with only the first number, which is a silent bug that gives you 52 instead of 160."},
  ],
- "hinge": {"q": "From session 2: write a function called <code>can_ride</code> that takes a height and a ticket answer and hands back True or False. Use <code>and</code>. Then write the one line that uses it in a gate.",
+ "hinge": {"q": "From session 2: write a function called <code>can_ride</code> that takes a height and a ticket answer and returns True or False. Use <code>and</code>. Then write the one line that uses it in a gate.",
            "code_a": 'def can_ride(height, ticket):\n    return height > 48 and ticket == "yes"\n\nif can_ride(52, "yes"):\n    print("Board the coaster.")',
            "a": "<code>def can_ride(height, ticket):</code> then <code>return height &gt; 48 and ticket == \"yes\"</code>. Used as <code>if can_ride(52, \"yes\"):</code>. Note that the comparison itself is already True or False, so it can be returned directly with no gate inside the function."},
  "brief": {
@@ -471,7 +471,7 @@ SESSIONS_A = [
      ["Writes <code>return</code> and <code>print</code> on consecutive lines and cannot say which one the caller sees.", "Delete the print. Ask where the number went. Then put it back and ask who it was for."],
      ["Calls the function but does not store or print the result, then says nothing happened.", "Correct. The value came back and nobody caught it. Compare to <code>int(age)</code> with no assignment from session 1."],
      ["Puts <code>return</code> inside the loop in chunk 7.", "It returns 52 instead of 160. Trace one pass out loud. The indentation is the bug."],
-     ["Assumes a parameter name and an outside variable with the same name are the same thing.", "Name the parameter something absurd and show the function still works. Worth doing once, in front of everyone."],
+     ["Assumes a parameter name and an outside variable with the same name are the same thing.", "Name the parameter something absurd and show the function still works. Do this once, in front of everyone."],
    ],
    "standards": ["NY-8.F.1", "NY-6.EE.9", "MP7"],
    "routing": "If half the room is still on chunk 4 at the hour mark, stop there and make chunk 4 the whole session. Sessions 5 and 7 can absorb a week of slip; session 9 cannot be taught without this.",

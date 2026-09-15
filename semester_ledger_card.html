@@ -241,14 +241,14 @@ type(value)             str for text, int for a whole number
 int(text)               text to number, on its own line
 f&quot;{name} has {n}&quot;       drop values into a sentence
 if / elif / else        flat gates, never nested
-==  !=  &lt;  &gt;  &lt;=  &gt;=    comparisons, hand back True or False
+==  !=  &lt;  &gt;  &lt;=  &gt;=    comparisons, give True or False
 and / or                two conditions at once
 while condition:        repeats while True; the condition is what stops it
 for i in range(5):      0 1 2 3 4, stops before 5
 list[0]                 first slot; last is len - 1
 text[0:3]               slots 0 1 2, stops before 3
 def f(x):               ...    return x * 2
-no return               hands back None
+no return               returns None
 d = {&quot;key&quot;: value}      look up with d[&quot;key&quot;]
 key in d                True or False, checks keys
 a % b                   remainder; wraps a counter

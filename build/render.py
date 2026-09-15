@@ -628,7 +628,7 @@ def render_session(s, prev_s, next_s):
 
     ex = s["exits"]
     b.append('<section><h2>Where you can stop</h2>'
-             '<p>All three are real landings. Nobody is behind for finishing at the floor.</p>'
+             '<p>All three are real places to stop. Nobody is behind for finishing at the floor.</p>'
              '<div class="exits">')
     b.append('<div class="exit floor"><p class="tag">Floor</p><p>' + ex["floor"] + '</p></div>')
     b.append('<div class="exit middle"><p class="tag">Middle</p><p>' + ex["middle"] + '</p></div>')
@@ -643,8 +643,8 @@ def render_session(s, prev_s, next_s):
     b.append('<h3>Timing, 90 minutes</h3><ul>')
     for x in t["timing"]:
         b.append('<li>' + html.escape(x) + '</li>')
-    b.append('</ul><p class="note">Honest pacing: most rooms will not reach the end of '
-             'the build brief. The exits exist so that stopping is a landing rather than a failure.</p>')
+    b.append('</ul><p class="note">Pacing: most rooms will not reach the end of '
+             'the build brief. The exits exist so that stopping there is a finish, not a failure.</p>')
     b.append('<h3>What you will see, and what to do</h3>'
              '<table><tr><th>In the room</th><th>Redirect</th></tr>')
     for m in t["misconceptions"]:
@@ -746,7 +746,7 @@ def render_hub():
              '<li><b>Build, 10 to 25 minutes.</b> A brief with an expected and got sheet. The '
              'expected column gets filled in first.</li>'
              '<li><b>Exit and ledger stamp, 5 to 10 minutes.</b> Floor, middle, and stretch are '
-             'all real landings. One stamp goes on the semester card.</li>'
+             'all real places to stop. One stamp goes on the semester card.</li>'
              '</ol></section>')
 
     b.append('<section><h2>The twelve sessions</h2><ul class="sessionlist">')
@@ -866,7 +866,7 @@ def render_constraints():
              '<table>'
              '<tr><th>Now allowed</th><th>First taught</th><th>Why</th></tr>'
              '<tr><td><code>return</code></td><td>Session 4</td><td>Without it a function '
-             'cannot be composed, tested, or reused, and every function hands back '
+             'cannot be composed, tested, or reused, and every function returns '
              '<code>None</code>.</td></tr>'
              '<tr><td><code>and</code>, <code>or</code></td><td>Session 2</td><td>With '
              'nesting banned there was no way to write two conditions at once.</td></tr>'
@@ -934,7 +934,7 @@ def render_constraints():
              '<li><b>Predict before you run.</b> Out loud or on paper, every chunk.</li>'
              '<li><b>Expected and got.</b> The expected column is filled in before the run, '
              'not after.</li>'
-             '<li><b>Honest names.</b> A function called <code>check</code> that removes a '
+             '<li><b>Names that say what they do.</b> A function called <code>check</code> that removes a '
              'life gets renamed. This is an exit criterion, not a style preference.</li>'
              '<li><b>Words in the terminal, visuals in the window.</b></li>'
              '<li><b>Functions at the top.</b> Every <code>def</code> goes together near the top of the file, after the imports and before any line that does work. Python must read a function before the line that calls it.</li>'
@@ -1073,14 +1073,14 @@ def render_ledger():
         'int(text)               text to number, on its own line\n'
         'f"{name} has {n}"       drop values into a sentence\n'
         'if / elif / else        flat gates, never nested\n'
-        '==  !=  <  >  <=  >=    comparisons, hand back True or False\n'
+        '==  !=  <  >  <=  >=    comparisons, give True or False\n'
         'and / or                two conditions at once\n'
         'while condition:        repeats while True; the condition is what stops it\n'
         'for i in range(5):      0 1 2 3 4, stops before 5\n'
         'list[0]                 first slot; last is len - 1\n'
         'text[0:3]               slots 0 1 2, stops before 3\n'
         'def f(x):               ...    return x * 2\n'
-        'no return               hands back None\n'
+        'no return               returns None\n'
         'd = {"key": value}      look up with d["key"]\n'
         'key in d                True or False, checks keys\n'
         'a % b                   remainder; wraps a counter\n'
