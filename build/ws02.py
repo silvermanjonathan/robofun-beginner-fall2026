@@ -1,7 +1,7 @@
 """Session 2 worksheet: work out True or False before you run it.
 
-Covers chunks 4 to 6 of session 2 (and, or, the while loop's stopping condition) and
-the lines of the ride-operator build that use them. The programs come straight from
+Covers chunks 4 to 6 of session 2: and, or, and the while loop's stopping condition.
+The programs come straight from
 the session 2 entry in sessions_a.py, so the sheet and the page cannot differ. Every
 True or False in a worked or key row is Python's own comparison, and every printed line
 in the key comes from running the program with render.run_snippet when the site is built.
@@ -9,7 +9,7 @@ The build stops if a run disagrees with a row, or if a sentence's numbers stop b
 """
 
 import render
-from worksheet import (KEY, brief_section, chunk_section, code, head, lines, run_table,
+from worksheet import (KEY, chunk_section, code, head, lines, run_table,
                        sheet, trace_table)
 
 SLUG = "session02_worksheet"
@@ -108,36 +108,6 @@ def loop_run(src, typed):
     return out.splitlines(), rc
 
 
-# The ride operator, written out only so the key's three lines are checked in a real
-# program. It is not printed anywhere.
-BUILD_CHECK = '''height = input("Height in inches: ")
-height = int(height)
-ticket = ""
-while ticket != "yes" and ticket != "no":
-    ticket = input("Ticket? Type yes or no: ")
-if height > 48 and ticket == "yes":
-    print("OPEN")
-elif height == 48:
-    print("STAFF")
-else:
-    print("CLOSED")'''
-
-
-def check_build():
-    """Run the build's expected-and-got cases through the key's lines; fail loudly if one is off."""
-    cases = [("52\nyes\n", "OPEN"), ("52\nno\n", "CLOSED"), ("48\nyes\n", "STAFF"),
-             ("52\nmaybe\nyes\n", "OPEN")]
-    for stdin, want in cases:
-        out, rc = run(BUILD_CHECK, stdin=stdin)
-        assert rc == 0 and out.splitlines()[-1] == want, (stdin, out)
-    # asked twice when maybe comes first
-    out, _ = run(BUILD_CHECK, stdin="52\nmaybe\nyes\n")
-    assert out.count("Ticket?") == 2, out
-    missing = BUILD_CHECK.replace('ticket = ""\n', "")
-    out, rc = run(missing, stdin="52\nyes\n")
-    assert rc != 0 and "NameError: name 'ticket' is not defined" in out, out
-
-
 def facts():
     """Compute everything the sheet's sentences depend on, and check it against real runs."""
     riders = rider_rows()
@@ -170,7 +140,6 @@ def facts():
     assert swapped[3][4] == "Gate opens." and swapped[4][4] == "Gate stays shut."
     assert not set(RIDER_DONE) & {2}, "rider 2 is the run question; keep it blank"
 
-    check_build()
     return {
         "riders": riders, "visitors": visitors, "and_checks": and_checks,
         "or_checks": or_checks, "and_out": and_out,
@@ -341,30 +310,6 @@ def chunk6(f):
     return chunk_section(S2, 6, b)
 
 
-def build():
-    b = ("<p>The build asks for a height and a ticket answer. Write three of its lines here before you type them. Use <code>height</code> "
-         "for the height, already changed to a whole number with <code>int()</code>, and "
-         "<code>ticket</code> for the ticket answer.</p>")
-    b += ('<div class="keep"><p>Step 2 keeps asking until the rider types yes or no. Write the '
-          "<code>while</code> line. It is the chunk 6 loop with <code>ticket</code> in place of "
-          "<code>answer</code>.</p>"
-          + lines(1, "<code>while ticket != \"yes\" and ticket != \"no\":</code>")
-          + "</div>")
-    b += ('<div class="keep"><p>In chunk 6, the line <code>answer = \"\"</code> comes before the '
-          "<code>while</code> line. Write the line that comes before your <code>while</code> "
-          "line. Then one sentence: what happens if it is missing?</p>"
-          + lines(2, "<code>ticket = \"\"</code>. Without it, Python checks the condition before "
-                  "the first question is asked, <code>ticket</code> does not exist yet, and the "
-                  "program crashes with a NameError.")
-          + "</div>")
-    b += ('<div class="keep"><p>Step 3 opens the ride only when the height clears 48 and the '
-          "ticket answer is yes. Clears 48 means more than 48; exactly 48 goes to staff in step "
-          "4. Write the <code>if</code> line.</p>"
-          + lines(1, "<code>if height &gt; 48 and ticket == \"yes\":</code>")
-          + "</div>")
-    return brief_section(S2, b)
-
-
 TITLE = "work out True or False before you run it"
 COVERS = S2["worksheet"]["covers"]
 # Page breaks for the printed sheet; checked against the PDF (see README).
@@ -376,7 +321,7 @@ def worksheet02():
     """Return the session 2 worksheet body."""
     f = get_facts()
     title = ("Answer key: " if KEY["on"] else "Worksheet: ") + TITLE
-    return sheet(S2, title, COVERS, SLUG, [chunk4(f), chunk5(f), chunk6(f), build()])
+    return sheet(S2, title, COVERS, SLUG, [chunk4(f), chunk5(f), chunk6(f)])
 
 
 def worksheet02_key():

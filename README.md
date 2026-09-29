@@ -18,8 +18,8 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | `semester_ledger_card.html` | The printable one-page card. Twelve stamp boxes, a reference strip, an error-name table. |
 | `session01_printing_names_input.html` | Printing, names, and input |
 | `session02_comparisons_and_gates.html` | Comparisons and gates |
-| `session02_worksheet.html` | Session 2 worksheet: and, or, and the stopping condition (chunks 4 to 6 and the build). Printed, and typed into on the projector. |
-| `session02_worksheet.pdf` | The same worksheet as a PDF for printing: six pages, US letter, double-sided. |
+| `session02_worksheet.html` | Session 2 worksheet: and, or, and the stopping condition (chunks 4 to 6). Printed, and typed into on the projector. |
+| `session02_worksheet.pdf` | The same worksheet as a PDF for printing: five pages, US letter, double-sided. |
 | `session02_worksheet_key.html` | The session 2 worksheet's answer key. Linked from the session 2 teacher panel only. |
 | `session03_loops_counters_lists.html` | Loops, counters, and lists |
 | `session04_functions_that_return.html` | Functions that return a value |
@@ -230,8 +230,7 @@ chunks and their output sits behind the same reveal.
   `pygame.font`); if Fri Oct 2 is lost, the bonus date absorbs it. New checks added
   to `validate.py` for the classes of fault that could be mechanised.
 - **2026-09-29, v7.** Session 2 worksheet added: and, or, and the while loop's stopping
-  condition (chunks 4 to 6), plus the three lines of the ride-operator build that use
-  them. Sheet, answer key, and a six-page PDF; each program faces or shares a page with
+  condition (chunks 4 to 6). Sheet, answer key, and a five-page PDF; each program faces or shares a page with
   its table when printed double-sided. The worksheet helpers from the Advanced course
   now live in `build/worksheet.py` for every beginner sheet. The session 2 page gets a
   worksheet toolbar and a Files note in its teacher panel. `validate.py` accepts links
