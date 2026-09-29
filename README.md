@@ -80,6 +80,16 @@ rules are 2px and accent edges 6 to 8px, because 1px light-grey lines vanish whe
 projected. Nothing relies on colour alone; every coloured element also carries a text
 label or a border-width cue.
 
+**Code colours.** Every code block is coloured by role, following VS Code's Light+
+theme, so the projected page and a student's editor look alike: control words purple,
+`def`, `and`, `or`, `True` blue, strings red, numbers green, comments green, called
+functions brown, modules and types teal, variables navy, operators ink. Four Light+
+colours are darkened within their hue to clear 4.5:1 on the code background. Colour
+only, never bold or italic. Output boxes stay plain, and so does code inside a
+sentence. `build/highlight.py` adds the colour when the page is built; stripping its
+spans gives back every snippet exactly (checked for all 113 on Python 3.11, 3.12, and
+3.13, with the same colour on every character).
+
 **Reveals hide the real output.** Each chunk shows the code, then the prediction
 question, then a button reading "Run it first, then check here". The button reveals
 the verified terminal output *and* the explanation together. Nothing about what the
@@ -132,6 +142,7 @@ build/sessions_b.py    sessions 5 to 8
 build/sessions_c.py    sessions 9 to 12 and the Friday bonus
 build/render.py        runs every snippet, then writes the site
 build/validate.py      checks the written site
+build/highlight.py     colours code blocks by role, the way VS Code's Light+ theme does
 build/worksheet.py     the worksheet CSS, blocks, and projector typing script, shared by every sheet
 build/ws02.py          the session 2 worksheet and its answer key
 build/pdf.py           renders the worksheets to PDF
@@ -234,4 +245,6 @@ chunks and their output sits behind the same reveal.
   its table when printed double-sided. The worksheet helpers from the Advanced course
   now live in `build/worksheet.py` for every beginner sheet. The session 2 page gets a
   worksheet toolbar and a Files note in its teacher panel. `validate.py` accepts links
-  to any file in the site (the PDF). Version pin bumped to `?v=7` on every page.
+  to any file in the site (the PDF). Code blocks on every page are now coloured by
+  role, VS Code Light+ style (`build/highlight.py`). Version pin bumped to `?v=7` on
+  every page.

@@ -96,6 +96,17 @@ pre{
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
+/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
+   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
+   italic, so every character keeps its width. */
+.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
+.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
+.tk-str{color:#A31515}  /* strings */
+.tk-num{color:#06704A}  /* numbers */
+.tk-com{color:#3B6E2A}  /* comments */
+.tk-fn{color:#795E26}   /* functions */
+.tk-cls{color:#1D6A80}  /* classes, types, modules */
+.tk-var{color:#001080}  /* variables */
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -245,122 +256,122 @@ a.btn.quiet:hover{background:#EFE9DA}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Bonus session</p><h1>Friday bonus: distance and bumpers</h1><p class="sub">Pythagoras in a game loop, and a collision that is not a rectangle</p><div class="dates"><span class="pill"><b>Monday section</b> Not scheduled</span><span class="pill"><b>Friday section</b> Fri Dec 11</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 5 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>the distance formula, a distance function that returns, circle overlap, comparing squares to avoid a square root, a bumper that scores.</p><p><b>Deliberately re-used:</b> Session 10&#x27;s frame loop and session 4&#x27;s functions.</p><p class="note">Friday has one more session than Monday. This is a bonus and it is not required anywhere later, so nothing in session 12 depends on it. Monday students who want it can read this page on their own.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: the frame loop</h2><p>Paper first.</p><div class="predict"><p class="q">Question: Write the four lines that make a window close when the close button is clicked.</p><button class="rev" data-target="s13-op0" aria-controls="s13-op0" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s13-op0"><pre>while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = 0</pre><p>The close button puts a QUIT event in the queue, the gate sees it, and setting <code>running</code> to 0 makes the stopping condition False.</p></div></div><div class="predict"><p class="q">Question: Why does a bounce test have to include the radius?</p><button class="rev" data-target="s13-op1" aria-controls="s13-op1" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s13-op1"><p>Because the position is the centre. Without the radius the circle is already half inside the wall when the test fires.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 5</p><h2>The straight-line distance between two points</h2><p>Take the difference across, take the difference down, square both, add them, and take the square root. That is the Pythagorean theorem. The two differences are the two short sides of a right triangle, and the distance is the long side.</p><pre>import math
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Bonus session</p><h1>Friday bonus: distance and bumpers</h1><p class="sub">Pythagoras in a game loop, and a collision that is not a rectangle</p><div class="dates"><span class="pill"><b>Monday section</b> Not scheduled</span><span class="pill"><b>Friday section</b> Fri Dec 11</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 5 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>the distance formula, a distance function that returns, circle overlap, comparing squares to avoid a square root, a bumper that scores.</p><p><b>Deliberately re-used:</b> Session 10&#x27;s frame loop and session 4&#x27;s functions.</p><p class="note">Friday has one more session than Monday. This is a bonus and it is not required anywhere later, so nothing in session 12 depends on it. Monday students who want it can read this page on their own.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: the frame loop</h2><p>Paper first.</p><div class="predict"><p class="q">Question: Write the four lines that make a window close when the close button is clicked.</p><button class="rev" data-target="s13-op0" aria-controls="s13-op0" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s13-op0"><pre><span class="tk-ctl">while</span> <span class="tk-var">running</span>:
+    <span class="tk-ctl">for</span> <span class="tk-var">event</span> <span class="tk-ctl">in</span> <span class="tk-var">pygame</span>.<span class="tk-var">event</span>.<span class="tk-fn">get</span>():
+        <span class="tk-ctl">if</span> <span class="tk-var">event</span>.<span class="tk-var">type</span> == <span class="tk-var">pygame</span>.<span class="tk-var">QUIT</span>:
+            <span class="tk-var">running</span> = <span class="tk-num">0</span></pre><p>The close button puts a QUIT event in the queue, the gate sees it, and setting <code>running</code> to 0 makes the stopping condition False.</p></div></div><div class="predict"><p class="q">Question: Why does a bounce test have to include the radius?</p><button class="rev" data-target="s13-op1" aria-controls="s13-op1" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s13-op1"><p>Because the position is the centre. Without the radius the circle is already half inside the wall when the test fires.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 5</p><h2>The straight-line distance between two points</h2><p>Take the difference across, take the difference down, square both, add them, and take the square root. That is the Pythagorean theorem. The two differences are the two short sides of a right triangle, and the distance is the long side.</p><pre><span class="tk-ctl">import</span> <span class="tk-cls">math</span>
 
-ax = 100
-ay = 100
-bx = 130
-by = 140
+<span class="tk-var">ax</span> = <span class="tk-num">100</span>
+<span class="tk-var">ay</span> = <span class="tk-num">100</span>
+<span class="tk-var">bx</span> = <span class="tk-num">130</span>
+<span class="tk-var">by</span> = <span class="tk-num">140</span>
 
-dx = bx - ax
-dy = by - ay
-print(&quot;dx =&quot;, dx, &quot; dy =&quot;, dy)
-print(&quot;distance =&quot;, math.sqrt(dx * dx + dy * dy))</pre><div class="predict"><p class="q">Predict: The differences are 30 and 40. What is the distance?</p><button class="rev" data-target="s13-c1" aria-controls="s13-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s13-c1"><p class="outlabel">What it actually prints</p><pre class="out">dx = 30  dy = 40
-distance = 50.0</pre><p>50, exactly. The three-four-five triangle, scaled by ten. Squaring removes the sign, which is why the order you subtract in does not matter.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 2 of 5</p><h2>A distance function</h2><p>Four parameters in, one number out. Most games call a function like this many times a frame.</p><pre>import math
+<span class="tk-var">dx</span> = <span class="tk-var">bx</span> - <span class="tk-var">ax</span>
+<span class="tk-var">dy</span> = <span class="tk-var">by</span> - <span class="tk-var">ay</span>
+<span class="tk-fn">print</span>(<span class="tk-str">"dx ="</span>, <span class="tk-var">dx</span>, <span class="tk-str">" dy ="</span>, <span class="tk-var">dy</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"distance ="</span>, <span class="tk-cls">math</span>.<span class="tk-fn">sqrt</span>(<span class="tk-var">dx</span> * <span class="tk-var">dx</span> + <span class="tk-var">dy</span> * <span class="tk-var">dy</span>))</pre><div class="predict"><p class="q">Predict: The differences are 30 and 40. What is the distance?</p><button class="rev" data-target="s13-c1" aria-controls="s13-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s13-c1"><p class="outlabel">What it actually prints</p><pre class="out">dx = 30  dy = 40
+distance = 50.0</pre><p>50, exactly. The three-four-five triangle, scaled by ten. Squaring removes the sign, which is why the order you subtract in does not matter.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 2 of 5</p><h2>A distance function</h2><p>Four parameters in, one number out. Most games call a function like this many times a frame.</p><pre><span class="tk-ctl">import</span> <span class="tk-cls">math</span>
 
-def distance(ax, ay, bx, by):
-    dx = bx - ax
-    dy = by - ay
-    return math.sqrt(dx * dx + dy * dy)
+<span class="tk-kw">def</span> <span class="tk-fn">distance</span>(<span class="tk-var">ax</span>, <span class="tk-var">ay</span>, <span class="tk-var">bx</span>, <span class="tk-var">by</span>):
+    <span class="tk-var">dx</span> = <span class="tk-var">bx</span> - <span class="tk-var">ax</span>
+    <span class="tk-var">dy</span> = <span class="tk-var">by</span> - <span class="tk-var">ay</span>
+    <span class="tk-ctl">return</span> <span class="tk-cls">math</span>.<span class="tk-fn">sqrt</span>(<span class="tk-var">dx</span> * <span class="tk-var">dx</span> + <span class="tk-var">dy</span> * <span class="tk-var">dy</span>)
 
-print(distance(0, 0, 3, 4))
-print(distance(3, 4, 0, 0))
-print(distance(100, 100, 100, 150))
-print(round(distance(0, 0, 1, 1), 4))</pre><div class="predict"><p class="q">Predict: The first two calls swap the points. Do they give the same answer?</p><button class="rev" data-target="s13-c2" aria-controls="s13-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s13-c2"><p class="outlabel">What it actually prints</p><pre class="out">5.0
+<span class="tk-fn">print</span>(<span class="tk-fn">distance</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">3</span>, <span class="tk-num">4</span>))
+<span class="tk-fn">print</span>(<span class="tk-fn">distance</span>(<span class="tk-num">3</span>, <span class="tk-num">4</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>))
+<span class="tk-fn">print</span>(<span class="tk-fn">distance</span>(<span class="tk-num">100</span>, <span class="tk-num">100</span>, <span class="tk-num">100</span>, <span class="tk-num">150</span>))
+<span class="tk-fn">print</span>(<span class="tk-fn">round</span>(<span class="tk-fn">distance</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>), <span class="tk-num">4</span>))</pre><div class="predict"><p class="q">Predict: The first two calls swap the points. Do they give the same answer?</p><button class="rev" data-target="s13-c2" aria-controls="s13-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s13-c2"><p class="outlabel">What it actually prints</p><pre class="out">5.0
 5.0
 50.0
-1.4142</pre><p>Yes. Squaring makes the direction irrelevant. The last one is the square root of two, which is the first answer today that is not a whole number.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 3 of 5</p><h2>Two circles overlap when the distance is small enough</h2><p>Two circles touch when the distance between their centres equals the sum of their radiuses. Less than that and they overlap. One comparison, no rectangles, and it works at any angle.</p><pre>import math
+1.4142</pre><p>Yes. Squaring makes the direction irrelevant. The last one is the square root of two, which is the first answer today that is not a whole number.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 3 of 5</p><h2>Two circles overlap when the distance is small enough</h2><p>Two circles touch when the distance between their centres equals the sum of their radiuses. Less than that and they overlap. One comparison, no rectangles, and it works at any angle.</p><pre><span class="tk-ctl">import</span> <span class="tk-cls">math</span>
 
-def distance(ax, ay, bx, by):
-    dx = bx - ax
-    dy = by - ay
-    return math.sqrt(dx * dx + dy * dy)
+<span class="tk-kw">def</span> <span class="tk-fn">distance</span>(<span class="tk-var">ax</span>, <span class="tk-var">ay</span>, <span class="tk-var">bx</span>, <span class="tk-var">by</span>):
+    <span class="tk-var">dx</span> = <span class="tk-var">bx</span> - <span class="tk-var">ax</span>
+    <span class="tk-var">dy</span> = <span class="tk-var">by</span> - <span class="tk-var">ay</span>
+    <span class="tk-ctl">return</span> <span class="tk-cls">math</span>.<span class="tk-fn">sqrt</span>(<span class="tk-var">dx</span> * <span class="tk-var">dx</span> + <span class="tk-var">dy</span> * <span class="tk-var">dy</span>)
 
-BALL_R = 20
-BUMPER_R = 30
+<span class="tk-var">BALL_R</span> = <span class="tk-num">20</span>
+<span class="tk-var">BUMPER_R</span> = <span class="tk-num">30</span>
 
-def hits(bx, by, px, py):
-    return distance(bx, by, px, py) &lt; BALL_R + BUMPER_R
+<span class="tk-kw">def</span> <span class="tk-fn">hits</span>(<span class="tk-var">bx</span>, <span class="tk-var">by</span>, <span class="tk-var">px</span>, <span class="tk-var">py</span>):
+    <span class="tk-ctl">return</span> <span class="tk-fn">distance</span>(<span class="tk-var">bx</span>, <span class="tk-var">by</span>, <span class="tk-var">px</span>, <span class="tk-var">py</span>) &lt; <span class="tk-var">BALL_R</span> + <span class="tk-var">BUMPER_R</span>
 
-print(hits(100, 100, 120, 115))
-print(hits(100, 100, 200, 200))
-print(hits(100, 100, 130, 140))</pre><div class="predict"><p class="q">Predict: The radiuses add to 50. The third call has centres exactly 50 apart. Does that count as a hit?</p><button class="rev" data-target="s13-c3" aria-controls="s13-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s13-c3"><p class="outlabel">What it actually prints</p><pre class="out">True
+<span class="tk-fn">print</span>(<span class="tk-fn">hits</span>(<span class="tk-num">100</span>, <span class="tk-num">100</span>, <span class="tk-num">120</span>, <span class="tk-num">115</span>))
+<span class="tk-fn">print</span>(<span class="tk-fn">hits</span>(<span class="tk-num">100</span>, <span class="tk-num">100</span>, <span class="tk-num">200</span>, <span class="tk-num">200</span>))
+<span class="tk-fn">print</span>(<span class="tk-fn">hits</span>(<span class="tk-num">100</span>, <span class="tk-num">100</span>, <span class="tk-num">130</span>, <span class="tk-num">140</span>))</pre><div class="predict"><p class="q">Predict: The radiuses add to 50. The third call has centres exactly 50 apart. Does that count as a hit?</p><button class="rev" data-target="s13-c3" aria-controls="s13-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s13-c3"><p class="outlabel">What it actually prints</p><pre class="out">True
 False
-False</pre><p>No. The first is a hit at 25 apart and the second is a clear miss, but the third comes back False because the test is strictly less than. Exactly touching is not overlapping. Whether exactly touching should count as a hit is your decision. Decide it on purpose, because if you do not, it shows up later as a confusing bug.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 4 of 5</p><h2>Skipping the square root</h2><p>Square roots are slower than multiplication, and here you do not need one. If you compare the squared distance to the squared sum of radiuses, the comparison gives the same answer with less work. Squaring both sides of a comparison between positive numbers does not change which side is larger.</p><pre>def hits_fast(bx, by, px, py, r_sum):
-    dx = px - bx
-    dy = py - by
-    return dx * dx + dy * dy &lt; r_sum * r_sum
+False</pre><p>No. The first is a hit at 25 apart and the second is a clear miss, but the third comes back False because the test is strictly less than. Exactly touching is not overlapping. Whether exactly touching should count as a hit is your decision. Decide it on purpose, because if you do not, it shows up later as a confusing bug.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 4 of 5</p><h2>Skipping the square root</h2><p>Square roots are slower than multiplication, and here you do not need one. If you compare the squared distance to the squared sum of radiuses, the comparison gives the same answer with less work. Squaring both sides of a comparison between positive numbers does not change which side is larger.</p><pre><span class="tk-kw">def</span> <span class="tk-fn">hits_fast</span>(<span class="tk-var">bx</span>, <span class="tk-var">by</span>, <span class="tk-var">px</span>, <span class="tk-var">py</span>, <span class="tk-var">r_sum</span>):
+    <span class="tk-var">dx</span> = <span class="tk-var">px</span> - <span class="tk-var">bx</span>
+    <span class="tk-var">dy</span> = <span class="tk-var">py</span> - <span class="tk-var">by</span>
+    <span class="tk-ctl">return</span> <span class="tk-var">dx</span> * <span class="tk-var">dx</span> + <span class="tk-var">dy</span> * <span class="tk-var">dy</span> &lt; <span class="tk-var">r_sum</span> * <span class="tk-var">r_sum</span>
 
-print(hits_fast(100, 100, 120, 115, 50))
-print(hits_fast(100, 100, 200, 200, 50))
-print(hits_fast(100, 100, 130, 140, 50))
-print(50 * 50, &quot;against&quot;, 30 * 30 + 40 * 40)</pre><div class="predict"><p class="q">Predict: Compare these three answers to the three from the last chunk. Any differences?</p><button class="rev" data-target="s13-c4" aria-controls="s13-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s13-c4"><p class="outlabel">What it actually prints</p><pre class="out">True
+<span class="tk-fn">print</span>(<span class="tk-fn">hits_fast</span>(<span class="tk-num">100</span>, <span class="tk-num">100</span>, <span class="tk-num">120</span>, <span class="tk-num">115</span>, <span class="tk-num">50</span>))
+<span class="tk-fn">print</span>(<span class="tk-fn">hits_fast</span>(<span class="tk-num">100</span>, <span class="tk-num">100</span>, <span class="tk-num">200</span>, <span class="tk-num">200</span>, <span class="tk-num">50</span>))
+<span class="tk-fn">print</span>(<span class="tk-fn">hits_fast</span>(<span class="tk-num">100</span>, <span class="tk-num">100</span>, <span class="tk-num">130</span>, <span class="tk-num">140</span>, <span class="tk-num">50</span>))
+<span class="tk-fn">print</span>(<span class="tk-num">50</span> * <span class="tk-num">50</span>, <span class="tk-str">"against"</span>, <span class="tk-num">30</span> * <span class="tk-num">30</span> + <span class="tk-num">40</span> * <span class="tk-num">40</span>)</pre><div class="predict"><p class="q">Predict: Compare these three answers to the three from the last chunk. Any differences?</p><button class="rev" data-target="s13-c4" aria-controls="s13-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s13-c4"><p class="outlabel">What it actually prints</p><pre class="out">True
 False
 False
-2500 against 2500</pre><p>None. Same three answers, no square root anywhere. The last line shows why the boundary case still lands in the same place: 2500 against 2500. Squaring both sides of a comparison between two positive numbers does not change which side is larger, so the square root was never doing any work. Game code does this everywhere.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 5 of 5</p><h2>A bumper that bounces and scores</h2><p>Put it together. When the ball hits the bumper, reverse both velocities and add to the score. The probe prints the frame of each hit so you can check the count instead of counting by eye.</p><pre>import math
-import pygame
+2500 against 2500</pre><p>None. Same three answers, no square root anywhere. The last line shows why the boundary case still lands in the same place: 2500 against 2500. Squaring both sides of a comparison between two positive numbers does not change which side is larger, so the square root was never doing any work. Game code does this everywhere.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 5 of 5</p><h2>A bumper that bounces and scores</h2><p>Put it together. When the ball hits the bumper, reverse both velocities and add to the score. The probe prints the frame of each hit so you can check the count instead of counting by eye.</p><pre><span class="tk-ctl">import</span> <span class="tk-cls">math</span>
+<span class="tk-ctl">import</span> <span class="tk-cls">pygame</span>
 
-pygame.init()
-WIDTH = 640
-HEIGHT = 480
-BALL_R = 20
-BUMPER_R = 30
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-clock = pygame.time.Clock()
+<span class="tk-cls">pygame</span>.<span class="tk-fn">init</span>()
+<span class="tk-var">WIDTH</span> = <span class="tk-num">640</span>
+<span class="tk-var">HEIGHT</span> = <span class="tk-num">480</span>
+<span class="tk-var">BALL_R</span> = <span class="tk-num">20</span>
+<span class="tk-var">BUMPER_R</span> = <span class="tk-num">30</span>
+<span class="tk-var">screen</span> = <span class="tk-cls">pygame</span>.<span class="tk-var">display</span>.<span class="tk-fn">set_mode</span>((<span class="tk-var">WIDTH</span>, <span class="tk-var">HEIGHT</span>))
+<span class="tk-var">clock</span> = <span class="tk-cls">pygame</span>.<span class="tk-var">time</span>.<span class="tk-fn">Clock</span>()
 
-def distance(ax, ay, bx, by):
-    dx = bx - ax
-    dy = by - ay
-    return math.sqrt(dx * dx + dy * dy)
+<span class="tk-kw">def</span> <span class="tk-fn">distance</span>(<span class="tk-var">ax</span>, <span class="tk-var">ay</span>, <span class="tk-var">bx</span>, <span class="tk-var">by</span>):
+    <span class="tk-var">dx</span> = <span class="tk-var">bx</span> - <span class="tk-var">ax</span>
+    <span class="tk-var">dy</span> = <span class="tk-var">by</span> - <span class="tk-var">ay</span>
+    <span class="tk-ctl">return</span> <span class="tk-cls">math</span>.<span class="tk-fn">sqrt</span>(<span class="tk-var">dx</span> * <span class="tk-var">dx</span> + <span class="tk-var">dy</span> * <span class="tk-var">dy</span>)
 
-x = 100
-y = 100
-vx = 6
-vy = 5
-bump_x = 320
-bump_y = 240
-score = 0
-frame = 0
-was_touching = 0
+<span class="tk-var">x</span> = <span class="tk-num">100</span>
+<span class="tk-var">y</span> = <span class="tk-num">100</span>
+<span class="tk-var">vx</span> = <span class="tk-num">6</span>
+<span class="tk-var">vy</span> = <span class="tk-num">5</span>
+<span class="tk-var">bump_x</span> = <span class="tk-num">320</span>
+<span class="tk-var">bump_y</span> = <span class="tk-num">240</span>
+<span class="tk-var">score</span> = <span class="tk-num">0</span>
+<span class="tk-var">frame</span> = <span class="tk-num">0</span>
+<span class="tk-var">was_touching</span> = <span class="tk-num">0</span>
 
-running = 1
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = 0
-    x = x + vx
-    y = y + vy
-    if x &lt; BALL_R:
-        vx = -vx
-    if x &gt; WIDTH - BALL_R:
-        vx = -vx
-    if y &lt; BALL_R:
-        vy = -vy
-    if y &gt; HEIGHT - BALL_R:
-        vy = -vy
+<span class="tk-var">running</span> = <span class="tk-num">1</span>
+<span class="tk-ctl">while</span> <span class="tk-var">running</span>:
+    <span class="tk-ctl">for</span> <span class="tk-var">event</span> <span class="tk-ctl">in</span> <span class="tk-cls">pygame</span>.<span class="tk-var">event</span>.<span class="tk-fn">get</span>():
+        <span class="tk-ctl">if</span> <span class="tk-var">event</span>.<span class="tk-var">type</span> == <span class="tk-cls">pygame</span>.<span class="tk-var">QUIT</span>:
+            <span class="tk-var">running</span> = <span class="tk-num">0</span>
+    <span class="tk-var">x</span> = <span class="tk-var">x</span> + <span class="tk-var">vx</span>
+    <span class="tk-var">y</span> = <span class="tk-var">y</span> + <span class="tk-var">vy</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">x</span> &lt; <span class="tk-var">BALL_R</span>:
+        <span class="tk-var">vx</span> = -<span class="tk-var">vx</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">x</span> &gt; <span class="tk-var">WIDTH</span> - <span class="tk-var">BALL_R</span>:
+        <span class="tk-var">vx</span> = -<span class="tk-var">vx</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">y</span> &lt; <span class="tk-var">BALL_R</span>:
+        <span class="tk-var">vy</span> = -<span class="tk-var">vy</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">y</span> &gt; <span class="tk-var">HEIGHT</span> - <span class="tk-var">BALL_R</span>:
+        <span class="tk-var">vy</span> = -<span class="tk-var">vy</span>
 
-    touching = 0
-    if distance(x, y, bump_x, bump_y) &lt; BALL_R + BUMPER_R:
-        touching = 1
-    if touching == 1 and was_touching == 0:
-        vx = -vx
-        vy = -vy
-        score = score + 100
-        print(&quot;hit on frame&quot;, frame, &quot;score&quot;, score)
-    was_touching = touching
+    <span class="tk-var">touching</span> = <span class="tk-num">0</span>
+    <span class="tk-ctl">if</span> <span class="tk-fn">distance</span>(<span class="tk-var">x</span>, <span class="tk-var">y</span>, <span class="tk-var">bump_x</span>, <span class="tk-var">bump_y</span>) &lt; <span class="tk-var">BALL_R</span> + <span class="tk-var">BUMPER_R</span>:
+        <span class="tk-var">touching</span> = <span class="tk-num">1</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">touching</span> == <span class="tk-num">1</span> <span class="tk-kw">and</span> <span class="tk-var">was_touching</span> == <span class="tk-num">0</span>:
+        <span class="tk-var">vx</span> = -<span class="tk-var">vx</span>
+        <span class="tk-var">vy</span> = -<span class="tk-var">vy</span>
+        <span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">100</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"hit on frame"</span>, <span class="tk-var">frame</span>, <span class="tk-str">"score"</span>, <span class="tk-var">score</span>)
+    <span class="tk-var">was_touching</span> = <span class="tk-var">touching</span>
 
-    frame = frame + 1
-    screen.fill((27, 41, 81))
-    pygame.draw.circle(screen, (220, 38, 38), (bump_x, bump_y), BUMPER_R)
-    pygame.draw.circle(screen, (252, 211, 77), (int(x), int(y)), BALL_R)
-    pygame.display.flip()
-    clock.tick(60)
+    <span class="tk-var">frame</span> = <span class="tk-var">frame</span> + <span class="tk-num">1</span>
+    <span class="tk-var">screen</span>.<span class="tk-fn">fill</span>((<span class="tk-num">27</span>, <span class="tk-num">41</span>, <span class="tk-num">81</span>))
+    <span class="tk-cls">pygame</span>.<span class="tk-var">draw</span>.<span class="tk-fn">circle</span>(<span class="tk-var">screen</span>, (<span class="tk-num">220</span>, <span class="tk-num">38</span>, <span class="tk-num">38</span>), (<span class="tk-var">bump_x</span>, <span class="tk-var">bump_y</span>), <span class="tk-var">BUMPER_R</span>)
+    <span class="tk-cls">pygame</span>.<span class="tk-var">draw</span>.<span class="tk-fn">circle</span>(<span class="tk-var">screen</span>, (<span class="tk-num">252</span>, <span class="tk-num">211</span>, <span class="tk-num">77</span>), (<span class="tk-cls">int</span>(<span class="tk-var">x</span>), <span class="tk-cls">int</span>(<span class="tk-var">y</span>)), <span class="tk-var">BALL_R</span>)
+    <span class="tk-cls">pygame</span>.<span class="tk-var">display</span>.<span class="tk-fn">flip</span>()
+    <span class="tk-var">clock</span>.<span class="tk-fn">tick</span>(<span class="tk-num">60</span>)
 
-print(&quot;final score&quot;, score, &quot;after&quot;, frame, &quot;frames&quot;)
-pygame.quit()</pre><div class="predict"><p class="q">Predict: Take out <code>was_touching</code> and the gate that uses it. What happens to the score on a single hit?</p><button class="rev" data-target="s13-c5" aria-controls="s13-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s13-c5"><p class="outlabel">What it actually prints (run without a screen, quit after 240 frames)</p><pre class="out">hit on frame 28 score 100
+<span class="tk-fn">print</span>(<span class="tk-str">"final score"</span>, <span class="tk-var">score</span>, <span class="tk-str">"after"</span>, <span class="tk-var">frame</span>, <span class="tk-str">"frames"</span>)
+<span class="tk-cls">pygame</span>.<span class="tk-fn">quit</span>()</pre><div class="predict"><p class="q">Predict: Take out <code>was_touching</code> and the gate that uses it. What happens to the score on a single hit?</p><button class="rev" data-target="s13-c5" aria-controls="s13-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s13-c5"><p class="outlabel">What it actually prints (run without a screen, quit after 240 frames)</p><pre class="out">hit on frame 28 score 100
 hit on frame 115 score 200
 hit on frame 202 score 300
 final score 300 after 241 frames</pre><p>It climbs every frame the ball is inside the bumper, which is several hundred points for one hit. The <code>was_touching</code> name is there so the score changes on the frame the contact begins and not again until contact ends. This is the same problem as a coin collected once per frame in session 11.</p></div></div></section><section class="hinge"><p class="chunk-no">Hinge question &middot; reaches back to session 10</p><h2>Before you build</h2><div class="predict"><p class="q">Question: From session 10: why does flipping both velocities look wrong when the ball hits the bumper straight on from the side?</p><button class="rev" data-target="s13-hinge" aria-controls="s13-hinge" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s13-hinge"><p>Because a real bounce only reverses the direction that ran into the surface. Flipping both sends the ball back along its exact incoming path, which looks like the bumper grabbed it. Doing it properly means working out the direction from the centre outward, which is why this page stops here.</p></div></div></section><section class="brief"><p class="chunk-no">Build &middot; 25 minutes</p><h2>Build: a three-bumper table</h2><ol><li>Write <code>distance</code> and <code>hits</code> as functions that return.</li><li>Put three bumpers on the table at different positions, using three pairs of names or a list of pairs.</li><li>Score 100 for a hit, and use <code>was_touching</code> so one contact scores once.</li><li>Give one bumper a larger radius and a different score value.</li><li>Print the final score when the window closes.</li></ol><h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p><table><tr><th>Expected</th><th>Got</th></tr><tr><td>distance(0, 0, 3, 4) returns exactly 5.0</td><td class="fill"></td></tr><tr><td>One contact adds one score amount, not one per frame</td><td class="fill"></td></tr><tr><td>A ball passing near but not touching does not score</td><td class="fill"></td></tr><tr><td>The larger bumper is hit more often</td><td class="fill"></td></tr></table></section><section><h2>Where you can stop</h2><p>All three are real places to stop. Nobody is behind for finishing at the floor.</p><div class="exits"><div class="exit floor"><p class="tag">Floor</p><p>A distance function that returns the right answer for the three-four-five triangle and for two points in a straight line.</p></div><div class="exit middle"><p class="tag">Middle</p><p>One bumper that bounces the ball and scores once per contact.</p></div><div class="exit stretch"><p class="tag">Stretch</p><p>Replace the double flip with a real bounce: work out the direction from the bumper's centre to the ball, and send the ball out along that line. Compare the two versions side by side and say which looks right.</p></div></div></section><section><h2>Ledger card</h2><p>Bonus stamp: <code>math.sqrt(dx * dx + dy * dy)</code>, circles overlap when the distance is under the sum of the radiuses, comparing squares avoids the square root, one flag stops one contact from scoring every frame.</p><p><a href="semester_ledger_card.html?v=7">Open the semester ledger card</a></p></section><details class="teacher"><summary>Teacher panel</summary><h3>Timing, 90 minutes</h3><ul><li>0:00 retrieval opener, 10 min</li><li>0:10 chunks 1 and 2, 18 min</li><li>0:28 chunk 3, overlap, 15 min</li><li>0:43 chunk 4, squares, 12 min (cut first if time is short)</li><li>0:55 chunk 5, the bumper engine, 20 min</li><li>1:15 build brief, 10 min</li><li>1:25 exits, ledger stamp, 5 min</li></ul><p class="note">Pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping there is a finish, not a failure.</p><h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr><tr><td>Forgets to square, and adds the two differences instead.</td><td>Ask for the distance from 0,0 to 3,4. Their formula says 7. A ruler says 5.</td></tr><tr><td>Tests overlap against one radius instead of the sum.</td><td>Draw two circles touching on the board and measure centre to centre. It is the sum, always.</td></tr><tr><td>Scores every frame of contact and reports a score in the thousands.</td><td>That is why <code>was_touching</code> exists. Let them see the number first.</td></tr></table><h3>Mapped to</h3><table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>NY-8.G.7</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>8</td><td>Apply the Pythagorean Theorem to determine unknown side lengths in right triangles in real-world and mathematical problems in two and three dimensions.</td></tr><tr><td><code>NY-6.NS.8</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Solve real-world and mathematical problems by graphing points on a coordinate plane. Include use of coordinates and absolute value to find distances between points with the same first coordinate or the same second coordinate.</td></tr><tr><td><code>MP7</code></td><td>Multi-State</td><td>Standards for Mathematical Practice</td><td>K-12</td><td>Look for and make use of structure.</td></tr></table><h3>If time runs out</h3><p>Bonus session. Nothing later depends on it. If Monday loses a date to a closure, this page is the one to drop, and Friday can drop it too with no consequence.</p></details><section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install pygame</code>. Check it worked with <code>python -c "import pygame"</code>. It should print two lines of greeting from pygame and nothing else. A traceback here is an install problem, not a problem with your program. Those same two greeting lines appear at the top of the terminal every time you run a pygame program; the output boxes on this site leave them out.</p></div><div class="card"><h3>Every run after that</h3><p>The window often opens behind VS Code, so check the taskbar before deciding nothing happened. Close it with its own close button: these programs are written to end when the window closes, and stopping the terminal instead can leave the window stuck on screen. A window that will not close usually means the loop has no <code>pygame.event.get()</code> in it.</p></div></div><p class="note">There is no turtle anywhere in this course. Turtle needs a library our VS Code setup does not have, so pygame does all the drawing, starting in session 5.</p></section></div></main><nav class="pager"><a href="session12_commission_and_demo.html?v=7">&larr; Commission and demo day</a><a href="beginner_semester_hub.html?v=7">Course home</a><span></span></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. 110 West End Avenue. The Monday and Friday sections cover the same twelve sessions.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-09-12. <a href="standards_map.html?v=7">Full standards map</a> &middot; <a href="beginner_constraints.html?v=7">Code constraints, published 2026-09-12</a></p></div></footer>

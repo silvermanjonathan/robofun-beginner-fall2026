@@ -10,6 +10,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from standards import STANDARDS, RESOLVED_ON, CONNECTOR
+from highlight import highlight
 from sessions_a import SESSIONS_A
 from sessions_b import SESSIONS_B
 from sessions_c import SESSIONS_C
@@ -257,6 +258,17 @@ pre{
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
+/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
+   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
+   italic, so every character keeps its width. */
+.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
+.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
+.tk-str{color:#A31515}  /* strings */
+.tk-num{color:#06704A}  /* numbers */
+.tk-com{color:#3B6E2A}  /* comments */
+.tk-fn{color:#795E26}   /* functions */
+.tk-cls{color:#1D6A80}  /* classes, types, modules */
+.tk-var{color:#001080}  /* variables */
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -442,7 +454,9 @@ def link(slug):
 
 
 def code_block(code):
-    return '<pre>' + html.escape(code) + '</pre>'
+    # Coloured by role, the way VS Code's Light+ theme colours Python. Output boxes
+    # (out_block) stay plain: they are output, not code.
+    return '<pre>' + highlight(code) + '</pre>'
 
 
 def out_block(text, label="What actually happens"):

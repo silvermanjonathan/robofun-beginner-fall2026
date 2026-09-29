@@ -96,6 +96,17 @@ pre{
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
+/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
+   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
+   italic, so every character keeps its width. */
+.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
+.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
+.tk-str{color:#A31515}  /* strings */
+.tk-num{color:#06704A}  /* numbers */
+.tk-com{color:#3B6E2A}  /* comments */
+.tk-fn{color:#795E26}   /* functions */
+.tk-cls{color:#1D6A80}  /* classes, types, modules */
+.tk-var{color:#001080}  /* variables */
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -245,23 +256,23 @@ a.btn.quiet:hover{background:#EFE9DA}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 11 of 12</p><h1>Grids, keys, and game state</h1><p class="sub">A list of lists, a wall you cannot walk through, and a game that can end</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Dec 7</span><span class="pill"><b>Friday section</b> Fri Dec 4</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 9 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>a list of lists, row and column indexing, tile to pixel arithmetic, blocked movement, get_pressed against KEYDOWN, a spawn timer with %, lives, game over, restart.</p><p><b>Deliberately re-used:</b> Session 9&#x27;s lookups and session 10&#x27;s frame loop, in the same program.</p><p class="note">Everything in this session is assembly. No new syntax except the two event patterns. Name that at the start, because the program is the longest one they have read and the length is intimidating on its own.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: keys and coordinates</h2><p>Paper first.</p><div class="predict"><p class="q">Question: In a dictionary, what does <code>in</code> check, and what error do you get without that gate?</p><button class="rev" data-target="s11-op0" aria-controls="s11-op0" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-op0"><p>The keys. A KeyError without the gate.</p></div></div><div class="predict"><p class="q">Question: Which way does the second coordinate grow in a pygame window?</p><button class="rev" data-target="s11-op1" aria-controls="s11-op1" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-op1"><p>Downward. 0 is the top edge.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 6</p><h2>A list of lists</h2><p>Each item in the outer list is itself a list, so it takes two indexes to reach a value. The first picks the row and the second picks the column, in that order, and both start at zero.</p><pre>level = [
-    [1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1],
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 11 of 12</p><h1>Grids, keys, and game state</h1><p class="sub">A list of lists, a wall you cannot walk through, and a game that can end</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Dec 7</span><span class="pill"><b>Friday section</b> Fri Dec 4</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 9 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>a list of lists, row and column indexing, tile to pixel arithmetic, blocked movement, get_pressed against KEYDOWN, a spawn timer with %, lives, game over, restart.</p><p><b>Deliberately re-used:</b> Session 9&#x27;s lookups and session 10&#x27;s frame loop, in the same program.</p><p class="note">Everything in this session is assembly. No new syntax except the two event patterns. Name that at the start, because the program is the longest one they have read and the length is intimidating on its own.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: keys and coordinates</h2><p>Paper first.</p><div class="predict"><p class="q">Question: In a dictionary, what does <code>in</code> check, and what error do you get without that gate?</p><button class="rev" data-target="s11-op0" aria-controls="s11-op0" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-op0"><p>The keys. A KeyError without the gate.</p></div></div><div class="predict"><p class="q">Question: Which way does the second coordinate grow in a pygame window?</p><button class="rev" data-target="s11-op1" aria-controls="s11-op1" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s11-op1"><p>Downward. 0 is the top edge.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 6</p><h2>A list of lists</h2><p>Each item in the outer list is itself a list, so it takes two indexes to reach a value. The first picks the row and the second picks the column, in that order, and both start at zero.</p><pre><span class="tk-var">level</span> = [
+    [<span class="tk-num">1</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>],
+    [<span class="tk-num">1</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>],
+    [<span class="tk-num">1</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>],
+    [<span class="tk-num">1</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>],
+    [<span class="tk-num">1</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>],
 ]
-print(len(level), &quot;rows&quot;)
-print(len(level[0]), &quot;columns&quot;)
-print(&quot;level[2][2] =&quot;, level[2][2])
-print(&quot;level[1][2] =&quot;, level[1][2])</pre><div class="predict"><p class="q">Predict: The single 1 in the middle of the open space is at which pair of indexes?</p><button class="rev" data-target="s11-c1" aria-controls="s11-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c1"><p class="outlabel">What it actually prints</p><pre class="out">5 rows
+<span class="tk-fn">print</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>), <span class="tk-str">"rows"</span>)
+<span class="tk-fn">print</span>(<span class="tk-fn">len</span>(<span class="tk-var">level</span>[<span class="tk-num">0</span>]), <span class="tk-str">"columns"</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"level[2][2] ="</span>, <span class="tk-var">level</span>[<span class="tk-num">2</span>][<span class="tk-num">2</span>])
+<span class="tk-fn">print</span>(<span class="tk-str">"level[1][2] ="</span>, <span class="tk-var">level</span>[<span class="tk-num">1</span>][<span class="tk-num">2</span>])</pre><div class="predict"><p class="q">Predict: The single 1 in the middle of the open space is at which pair of indexes?</p><button class="rev" data-target="s11-c1" aria-controls="s11-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c1"><p class="outlabel">What it actually prints</p><pre class="out">5 rows
 5 columns
 level[2][2] = 1
-level[1][2] = 0</pre><p>Row 2, column 2. Row first. Reading <code>level[1][2]</code> as row 1, column 2 gives 0, which is open floor. Swapping the two indexes is the common bug here. On a square level it can hide for a long time, because the level looks the same either way.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 2 of 6</p><h2>From tile to pixel</h2><p>The grid is small and the window is large. Multiply a column by the tile size to get a screen position, and a row likewise. This is the only arithmetic needed to draw the whole level.</p><pre>TILE = 64
-for row in range(3):
-    for col in range(3):
-        print(&quot;tile&quot;, row, col, &quot;draws at&quot;, (col * TILE, row * TILE))</pre><div class="predict"><p class="q">Predict: Column times tile size gives which screen coordinate, the first or the second?</p><button class="rev" data-target="s11-c2" aria-controls="s11-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c2"><p class="outlabel">What it actually prints</p><pre class="out">tile 0 0 draws at (0, 0)
+level[1][2] = 0</pre><p>Row 2, column 2. Row first. Reading <code>level[1][2]</code> as row 1, column 2 gives 0, which is open floor. Swapping the two indexes is the common bug here. On a square level it can hide for a long time, because the level looks the same either way.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 2 of 6</p><h2>From tile to pixel</h2><p>The grid is small and the window is large. Multiply a column by the tile size to get a screen position, and a row likewise. This is the only arithmetic needed to draw the whole level.</p><pre><span class="tk-var">TILE</span> = <span class="tk-num">64</span>
+<span class="tk-ctl">for</span> <span class="tk-var">row</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-num">3</span>):
+    <span class="tk-ctl">for</span> <span class="tk-var">col</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-num">3</span>):
+        <span class="tk-fn">print</span>(<span class="tk-str">"tile"</span>, <span class="tk-var">row</span>, <span class="tk-var">col</span>, <span class="tk-str">"draws at"</span>, (<span class="tk-var">col</span> * <span class="tk-var">TILE</span>, <span class="tk-var">row</span> * <span class="tk-var">TILE</span>))</pre><div class="predict"><p class="q">Predict: Column times tile size gives which screen coordinate, the first or the second?</p><button class="rev" data-target="s11-c2" aria-controls="s11-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c2"><p class="outlabel">What it actually prints</p><pre class="out">tile 0 0 draws at (0, 0)
 tile 0 1 draws at (64, 0)
 tile 0 2 draws at (128, 0)
 tile 1 0 draws at (0, 64)
@@ -269,91 +280,91 @@ tile 1 1 draws at (64, 64)
 tile 1 2 draws at (128, 64)
 tile 2 0 draws at (0, 128)
 tile 2 1 draws at (64, 128)
-tile 2 2 draws at (128, 128)</pre><p>The first. Columns run across, so they set the horizontal position. Rows run down, so they set the vertical one. Getting this backwards produces a level that is drawn sideways, which looks like a loud bug but gives no error message.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 3 of 6</p><h2>A wall you cannot walk through</h2><p>Check the destination before you move. The function returns True or False, and the gate that uses it does the moving. Two parts, each simple, tested separately.</p><pre>level = [
-    [1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1],
+tile 2 2 draws at (128, 128)</pre><p>The first. Columns run across, so they set the horizontal position. Rows run down, so they set the vertical one. Getting this backwards produces a level that is drawn sideways, which looks like a loud bug but gives no error message.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 3 of 6</p><h2>A wall you cannot walk through</h2><p>Check the destination before you move. The function returns True or False, and the gate that uses it does the moving. Two parts, each simple, tested separately.</p><pre><span class="tk-var">level</span> = [
+    [<span class="tk-num">1</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>],
+    [<span class="tk-num">1</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>],
+    [<span class="tk-num">1</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>],
+    [<span class="tk-num">1</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">0</span>, <span class="tk-num">1</span>],
+    [<span class="tk-num">1</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>, <span class="tk-num">1</span>],
 ]
 
-def is_open(row, col):
-    if row &lt; 0:
-        return False
-    if col &lt; 0:
-        return False
-    if row &gt; len(level) - 1:
-        return False
-    if col &gt; len(level[0]) - 1:
-        return False
-    return level[row][col] == 0
+<span class="tk-kw">def</span> <span class="tk-fn">is_open</span>(<span class="tk-var">row</span>, <span class="tk-var">col</span>):
+    <span class="tk-ctl">if</span> <span class="tk-var">row</span> &lt; <span class="tk-num">0</span>:
+        <span class="tk-ctl">return</span> <span class="tk-kw">False</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">col</span> &lt; <span class="tk-num">0</span>:
+        <span class="tk-ctl">return</span> <span class="tk-kw">False</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">row</span> &gt; <span class="tk-fn">len</span>(<span class="tk-var">level</span>) - <span class="tk-num">1</span>:
+        <span class="tk-ctl">return</span> <span class="tk-kw">False</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">col</span> &gt; <span class="tk-fn">len</span>(<span class="tk-var">level</span>[<span class="tk-num">0</span>]) - <span class="tk-num">1</span>:
+        <span class="tk-ctl">return</span> <span class="tk-kw">False</span>
+    <span class="tk-ctl">return</span> <span class="tk-var">level</span>[<span class="tk-var">row</span>][<span class="tk-var">col</span>] == <span class="tk-num">0</span>
 
-print(is_open(1, 1))
-print(is_open(2, 2))
-print(is_open(0, 0))
-print(is_open(9, 9))</pre><div class="predict"><p class="q">Predict: Why do the first four gates check the edges before the last line looks anything up?</p><button class="rev" data-target="s11-c3" aria-controls="s11-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c3"><p class="outlabel">What it actually prints</p><pre class="out">True
+<span class="tk-fn">print</span>(<span class="tk-fn">is_open</span>(<span class="tk-num">1</span>, <span class="tk-num">1</span>))
+<span class="tk-fn">print</span>(<span class="tk-fn">is_open</span>(<span class="tk-num">2</span>, <span class="tk-num">2</span>))
+<span class="tk-fn">print</span>(<span class="tk-fn">is_open</span>(<span class="tk-num">0</span>, <span class="tk-num">0</span>))
+<span class="tk-fn">print</span>(<span class="tk-fn">is_open</span>(<span class="tk-num">9</span>, <span class="tk-num">9</span>))</pre><div class="predict"><p class="q">Predict: Why do the first four gates check the edges before the last line looks anything up?</p><button class="rev" data-target="s11-c3" aria-controls="s11-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c3"><p class="outlabel">What it actually prints</p><pre class="out">True
 False
 False
-False</pre><p>Because a negative index is legal in Python and points at the far end of the list, so without those gates a player who walks off the left edge appears at the right edge, with no error. The last gate is the only one that reads the level.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 4 of 6</p><h2>Held key against single press</h2><p>Two different questions. <code>get_pressed</code> asks what is held down right now, and it is True on every frame the key stays down, which is what you want for continuous motion. A KEYDOWN event happens once per press, which is what you want for a single step or a single shot. Inside a KEYDOWN event, <code>event.key</code> says which key. Test it with <code>and</code> on the same line, never with a second <code>if</code> inside the first.</p><pre>import pygame
+False</pre><p>Because a negative index is legal in Python and points at the far end of the list, so without those gates a player who walks off the left edge appears at the right edge, with no error. The last gate is the only one that reads the level.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 4 of 6</p><h2>Held key against single press</h2><p>Two different questions. <code>get_pressed</code> asks what is held down right now, and it is True on every frame the key stays down, which is what you want for continuous motion. A KEYDOWN event happens once per press, which is what you want for a single step or a single shot. Inside a KEYDOWN event, <code>event.key</code> says which key. Test it with <code>and</code> on the same line, never with a second <code>if</code> inside the first.</p><pre><span class="tk-ctl">import</span> <span class="tk-cls">pygame</span>
 
-pygame.init()
-screen = pygame.display.set_mode((320, 240))
-clock = pygame.time.Clock()
+<span class="tk-cls">pygame</span>.<span class="tk-fn">init</span>()
+<span class="tk-var">screen</span> = <span class="tk-cls">pygame</span>.<span class="tk-var">display</span>.<span class="tk-fn">set_mode</span>((<span class="tk-num">320</span>, <span class="tk-num">240</span>))
+<span class="tk-var">clock</span> = <span class="tk-cls">pygame</span>.<span class="tk-var">time</span>.<span class="tk-fn">Clock</span>()
 
-held_frames = 0
-press_events = 0
-frame = 0
+<span class="tk-var">held_frames</span> = <span class="tk-num">0</span>
+<span class="tk-var">press_events</span> = <span class="tk-num">0</span>
+<span class="tk-var">frame</span> = <span class="tk-num">0</span>
 
-running = 1
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = 0
-        if event.type == pygame.KEYDOWN:
-            press_events = press_events + 1
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
-            print(&quot;right arrow pressed on frame&quot;, frame)
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_RIGHT]:
-        held_frames = held_frames + 1
-    frame = frame + 1
-    clock.tick(60)
+<span class="tk-var">running</span> = <span class="tk-num">1</span>
+<span class="tk-ctl">while</span> <span class="tk-var">running</span>:
+    <span class="tk-ctl">for</span> <span class="tk-var">event</span> <span class="tk-ctl">in</span> <span class="tk-cls">pygame</span>.<span class="tk-var">event</span>.<span class="tk-fn">get</span>():
+        <span class="tk-ctl">if</span> <span class="tk-var">event</span>.<span class="tk-var">type</span> == <span class="tk-cls">pygame</span>.<span class="tk-var">QUIT</span>:
+            <span class="tk-var">running</span> = <span class="tk-num">0</span>
+        <span class="tk-ctl">if</span> <span class="tk-var">event</span>.<span class="tk-var">type</span> == <span class="tk-cls">pygame</span>.<span class="tk-var">KEYDOWN</span>:
+            <span class="tk-var">press_events</span> = <span class="tk-var">press_events</span> + <span class="tk-num">1</span>
+        <span class="tk-ctl">if</span> <span class="tk-var">event</span>.<span class="tk-var">type</span> == <span class="tk-cls">pygame</span>.<span class="tk-var">KEYDOWN</span> <span class="tk-kw">and</span> <span class="tk-var">event</span>.<span class="tk-var">key</span> == <span class="tk-cls">pygame</span>.<span class="tk-var">K_RIGHT</span>:
+            <span class="tk-fn">print</span>(<span class="tk-str">"right arrow pressed on frame"</span>, <span class="tk-var">frame</span>)
+    <span class="tk-var">keys</span> = <span class="tk-cls">pygame</span>.<span class="tk-var">key</span>.<span class="tk-fn">get_pressed</span>()
+    <span class="tk-ctl">if</span> <span class="tk-var">keys</span>[<span class="tk-cls">pygame</span>.<span class="tk-var">K_RIGHT</span>]:
+        <span class="tk-var">held_frames</span> = <span class="tk-var">held_frames</span> + <span class="tk-num">1</span>
+    <span class="tk-var">frame</span> = <span class="tk-var">frame</span> + <span class="tk-num">1</span>
+    <span class="tk-var">clock</span>.<span class="tk-fn">tick</span>(<span class="tk-num">60</span>)
 
-print(&quot;frames the key was held:&quot;, held_frames)
-print(&quot;separate presses counted:&quot;, press_events)
-pygame.quit()</pre><div class="predict"><p class="q">Predict: The key is pressed twice, and held down for a few frames in between. Which counter ends up larger?</p><button class="rev" data-target="s11-c4" aria-controls="s11-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c4"><p class="outlabel">What it actually prints (run without a screen, quit after 30 frames)</p><pre class="out">right arrow pressed on frame 2
+<span class="tk-fn">print</span>(<span class="tk-str">"frames the key was held:"</span>, <span class="tk-var">held_frames</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"separate presses counted:"</span>, <span class="tk-var">press_events</span>)
+<span class="tk-cls">pygame</span>.<span class="tk-fn">quit</span>()</pre><div class="predict"><p class="q">Predict: The key is pressed twice, and held down for a few frames in between. Which counter ends up larger?</p><button class="rev" data-target="s11-c4" aria-controls="s11-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c4"><p class="outlabel">What it actually prints (run without a screen, quit after 30 frames)</p><pre class="out">right arrow pressed on frame 2
 right arrow pressed on frame 11
 frames the key was held: 5
-separate presses counted: 2</pre><p>The held counter, because it adds one on every frame the key is down while the press counter adds one per press. Use the first for walking and the second for stepping one tile at a time.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 5 of 6</p><h2>A timer, built from a frame counter and a remainder</h2><p>Sixty frames is one second. Count frames, and use the remainder to fire something on a schedule. This is session 8's operator doing a new job.</p><pre>FPS = 60
-SPAWN_EVERY = 90
-frame = 0
-spawns = 0
-for i in range(361):
-    frame = frame + 1
-    if frame % SPAWN_EVERY == 0:
-        spawns = spawns + 1
-        print(&quot;spawn&quot;, spawns, &quot;at frame&quot;, frame, &quot;=&quot;, frame / FPS, &quot;seconds&quot;)
-print(&quot;total spawns in&quot;, frame, &quot;frames:&quot;, spawns)</pre><div class="predict"><p class="q">Predict: Ninety frames between spawns, at sixty frames a second. How many spawns in six seconds?</p><button class="rev" data-target="s11-c5" aria-controls="s11-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c5"><p class="outlabel">What it actually prints</p><pre class="out">spawn 1 at frame 90 = 1.5 seconds
+separate presses counted: 2</pre><p>The held counter, because it adds one on every frame the key is down while the press counter adds one per press. Use the first for walking and the second for stepping one tile at a time.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 5 of 6</p><h2>A timer, built from a frame counter and a remainder</h2><p>Sixty frames is one second. Count frames, and use the remainder to fire something on a schedule. This is session 8's operator doing a new job.</p><pre><span class="tk-var">FPS</span> = <span class="tk-num">60</span>
+<span class="tk-var">SPAWN_EVERY</span> = <span class="tk-num">90</span>
+<span class="tk-var">frame</span> = <span class="tk-num">0</span>
+<span class="tk-var">spawns</span> = <span class="tk-num">0</span>
+<span class="tk-ctl">for</span> <span class="tk-var">i</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-num">361</span>):
+    <span class="tk-var">frame</span> = <span class="tk-var">frame</span> + <span class="tk-num">1</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">frame</span> % <span class="tk-var">SPAWN_EVERY</span> == <span class="tk-num">0</span>:
+        <span class="tk-var">spawns</span> = <span class="tk-var">spawns</span> + <span class="tk-num">1</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"spawn"</span>, <span class="tk-var">spawns</span>, <span class="tk-str">"at frame"</span>, <span class="tk-var">frame</span>, <span class="tk-str">"="</span>, <span class="tk-var">frame</span> / <span class="tk-var">FPS</span>, <span class="tk-str">"seconds"</span>)
+<span class="tk-fn">print</span>(<span class="tk-str">"total spawns in"</span>, <span class="tk-var">frame</span>, <span class="tk-str">"frames:"</span>, <span class="tk-var">spawns</span>)</pre><div class="predict"><p class="q">Predict: Ninety frames between spawns, at sixty frames a second. How many spawns in six seconds?</p><button class="rev" data-target="s11-c5" aria-controls="s11-c5" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c5"><p class="outlabel">What it actually prints</p><pre class="out">spawn 1 at frame 90 = 1.5 seconds
 spawn 2 at frame 180 = 3.0 seconds
 spawn 3 at frame 270 = 4.5 seconds
 spawn 4 at frame 360 = 6.0 seconds
-total spawns in 361 frames: 4</pre><p>Four, at one and a half second intervals. Lowering <code>SPAWN_EVERY</code> as the score rises makes the game harder as it goes, and it is one number.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 6 of 6</p><h2>Game state as one name with three values</h2><p>A game is not always being played. It can also be waiting to start, or over. Keep which one it is in a variable called <code>state</code>, and gate on it. Flat gates, one per state. A restart just puts the numbers back where they started.</p><pre>def new_game():
-    return &quot;play&quot;, 3, 0
+total spawns in 361 frames: 4</pre><p>Four, at one and a half second intervals. Lowering <code>SPAWN_EVERY</code> as the score rises makes the game harder as it goes, and it is one number.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 6 of 6</p><h2>Game state as one name with three values</h2><p>A game is not always being played. It can also be waiting to start, or over. Keep which one it is in a variable called <code>state</code>, and gate on it. Flat gates, one per state. A restart just puts the numbers back where they started.</p><pre><span class="tk-kw">def</span> <span class="tk-fn">new_game</span>():
+    <span class="tk-ctl">return</span> <span class="tk-str">"play"</span>, <span class="tk-num">3</span>, <span class="tk-num">0</span>
 
-state, lives, score = new_game()
-print(state, lives, score)
+<span class="tk-var">state</span>, <span class="tk-var">lives</span>, <span class="tk-var">score</span> = <span class="tk-fn">new_game</span>()
+<span class="tk-fn">print</span>(<span class="tk-var">state</span>, <span class="tk-var">lives</span>, <span class="tk-var">score</span>)
 
-for hit in range(4):
-    if state == &quot;play&quot;:
-        lives = lives - 1
-        print(&quot;hit! lives now&quot;, lives)
-    if lives == 0:
-        state = &quot;over&quot;
-print(&quot;state is&quot;, state)
+<span class="tk-ctl">for</span> <span class="tk-var">hit</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-num">4</span>):
+    <span class="tk-ctl">if</span> <span class="tk-var">state</span> == <span class="tk-str">"play"</span>:
+        <span class="tk-var">lives</span> = <span class="tk-var">lives</span> - <span class="tk-num">1</span>
+        <span class="tk-fn">print</span>(<span class="tk-str">"hit! lives now"</span>, <span class="tk-var">lives</span>)
+    <span class="tk-ctl">if</span> <span class="tk-var">lives</span> == <span class="tk-num">0</span>:
+        <span class="tk-var">state</span> = <span class="tk-str">"over"</span>
+<span class="tk-fn">print</span>(<span class="tk-str">"state is"</span>, <span class="tk-var">state</span>)
 
-if state == &quot;over&quot;:
-    state, lives, score = new_game()
-print(&quot;after restart:&quot;, state, lives, score)</pre><div class="predict"><p class="q">Predict: Four hits, three lives. What is the state after the loop, and what does the restart do to it?</p><button class="rev" data-target="s11-c6" aria-controls="s11-c6" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c6"><p class="outlabel">What it actually prints</p><pre class="out">play 3 0
+<span class="tk-ctl">if</span> <span class="tk-var">state</span> == <span class="tk-str">"over"</span>:
+    <span class="tk-var">state</span>, <span class="tk-var">lives</span>, <span class="tk-var">score</span> = <span class="tk-fn">new_game</span>()
+<span class="tk-fn">print</span>(<span class="tk-str">"after restart:"</span>, <span class="tk-var">state</span>, <span class="tk-var">lives</span>, <span class="tk-var">score</span>)</pre><div class="predict"><p class="q">Predict: Four hits, three lives. What is the state after the loop, and what does the restart do to it?</p><button class="rev" data-target="s11-c6" aria-controls="s11-c6" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s11-c6"><p class="outlabel">What it actually prints</p><pre class="out">play 3 0
 hit! lives now 2
 hit! lives now 1
 hit! lives now 0

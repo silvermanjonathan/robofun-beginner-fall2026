@@ -165,14 +165,9 @@ def done_rows(rows, worked):
 
 
 def chunk4(f):
-    b = ("<p><code>and</code> joins two conditions into one condition. The whole condition is "
-         "True only when both sides are True. This is the chunk 4 program.</p>")
-    b += '<div class="two-up">' + code(CH4, "chunk 4, as on the session 2 page")
-    b += ("<p>Each row of the table is one rider, as if lines 1 and 2 held that rider's values. "
-          "In the two columns whose headings end in a question mark, write True or False. In "
-          "the last column, write the line the program prints for that rider. Three rows are "
-          "done for you, shaded, so you can check your working against them as you go. The "
-          "rows in between are yours.</p>")
+    b = "<p><code>and</code> is True only when both sides are True.</p>"
+    b += '<div class="two-up">' + code(CH4, "chunk 4")
+    b += "<p>Each row is one rider. Fill in the blanks. Shaded rows are done for you.</p>"
     b += trace_table(
         ["rider", "height", "has_ticket", "height > 48?", "height > 48 and has_ticket?",
          "what it prints"],
@@ -184,30 +179,20 @@ def chunk4(f):
         index="rider",
         widths=[8, 11, 14, 14, 21, 32],
     ) + "</div>"
-    b += ('<div class="keep"><p>Look down your last column. Which riders board the coaster? '
-          "Write their numbers, then one sentence: what do their rows have that no other row "
-          "has?</p>"
-          + lines(2, "Riders 1 and 8. Theirs are the only rows where <code>height &gt; 48</code> "
-                  "is True and <code>has_ticket</code> is True. <code>and</code> gives True only "
-                  "when both sides are True, so every other rider gets Step aside.")
+    b += ('<div class="keep"><p>Which riders board the coaster? Why?</p>'
+          + lines(2, "Riders 1 and 8. Theirs are the only rows where both sides are True.")
           + "</div>")
-    b += "<h3>Run it</h3>"
-    b += ("<p>Start from the program as written each time, and change one line per run. For "
-          "rider 2, change line 2 to <code>has_ticket = False</code>. For rider 8, change line 1 "
-          "to <code>height = 49</code>. Copy what it printed next to your prediction, and mark "
-          "it right or wrong. Do not erase a wrong prediction.</p>")
-    b += run_table(f["run4"], label="Run")
+    b += ('<div class="keep"><h3>Run it</h3>'
+          "<p>Put rider 2's values in lines 1 and 2, then run. Do the same for rider 8. "
+          "Do not erase a wrong prediction.</p>"
+          + run_table(f["run4"], label="Run") + "</div>")
     return chunk_section(S2, 4, b)
 
 
 def chunk5(f):
-    b = ("<p><code>or</code> joins two conditions too. The whole condition is True when "
-         "either side is True. This is the chunk 5 program.</p>")
-    b += '<div class="two-up">' + code(CH5, "chunk 5, as on the session 2 page")
-    b += ("<p>Each row is one visitor at the gate, as if lines 1 and 2 held that visitor's "
-          "values. In the column whose heading ends in a question mark, write True or False. "
-          "In the last column, write the line the program prints for that visitor. Visitor 1 "
-          "is the program as written, done for you, shaded. Visitors 2, 3, and 4 are yours.</p>")
+    b = "<p><code>or</code> is True when either side is True.</p>"
+    b += '<div class="two-up">' + code(CH5, "chunk 5")
+    b += "<p>Each row is one visitor. Fill in the blanks. The shaded row is done for you.</p>"
     b += trace_table(
         ["visitor", "is_staff", "has_pass", "is_staff or has_pass?", "what it prints"],
         None,
@@ -218,24 +203,19 @@ def chunk5(f):
         index="visitor",
         widths=[11, 16, 16, 27, 30],
     ) + "</div>"
-    b += ('<div class="keep"><p>Which visitor does the gate keep out? Write the number, then '
-          "one sentence: why does the gate stay shut for that visitor?</p>"
-          + lines(2, "Visitor 4. <code>is_staff</code> and <code>has_pass</code> are both False. "
-                  "<code>or</code> needs at least one True side, so the whole condition is False "
-                  "and the <code>else</code> block runs: Gate stays shut.")
+    b += ('<div class="keep"><p>Which visitor is kept out? Why?</p>'
+          + lines(2, "Visitor 4. Both sides are False, and <code>or</code> needs at least one "
+                  "True side.")
           + "</div>")
-    b += "<h3>Run it</h3>"
-    b += ("<p>Start from the program as written. For visitor 4, change line 2 to "
-          "<code>has_pass = False</code> and run it. Do not erase a wrong prediction.</p>")
-    b += run_table(f["run5"], label="Run")
-    b += ('<div class="keep"><h3>If you have time: and in place of or</h3>'
-          "<p>On paper, change <code>or</code> to <code>and</code> on line 3. Which visitors "
-          "would now get a different line printed? Write their numbers, then one sentence "
-          "saying why.</p>"
-          + lines(2, "Visitors 1 and 2. Each has one True side and one False side. With "
-                  "<code>or</code>, one True side opens the gate. With <code>and</code>, both "
-                  "sides must be True, so visitors 1 and 2 would get Gate stays shut. Visitor 3 "
-                  "still gets Gate opens and visitor 4 still gets Gate stays shut.")
+    b += ('<div class="keep"><h3>Run it</h3>'
+          "<p>Put visitor 4's values in lines 1 and 2, then run. Do not erase a wrong "
+          "prediction.</p>"
+          + run_table(f["run5"], label="Run") + "</div>")
+    b += ('<div class="keep"><h3>If you have time</h3>'
+          "<p>Change <code>or</code> to <code>and</code> on line 3. Which visitors now get a "
+          "different line?</p>"
+          + lines(2, "Visitors 1 and 2. Each has one True side: enough for <code>or</code>, not "
+                  "for <code>and</code>. They now get Gate stays shut.")
           + "</div>")
     return chunk_section(S2, 5, b)
 
@@ -248,17 +228,10 @@ LOOP_HEADERS_OR = ["check", "answer", 'answer != "yes"?', 'answer != "no"?',
 
 
 def chunk6(f):
-    b = ("<p>A <code>while</code> loop checks its condition before every pass. When the "
-         "condition is True, the block runs. The first time it is False, the loop stops "
-         "and the line after the block runs.</p>"
-         "<p><code>!=</code> means is not equal to. <code>\"\"</code> is empty text: two quote "
-         "marks with nothing between them.</p>")
-    b += '<div class="two-up">' + code(CH6, "chunk 6, as on the session 2 page")
-    b += ("<p>Someone types maybe, then soon, then yes. Each row of the table is one check "
-          "of the condition, in order. The answer column shows what <code>answer</code> holds "
-          "at that check. In the three columns whose headings end in a question mark, write "
-          "True or False. The last of them is the whole condition. Check 1 is done for you, "
-          "shaded. Checks 2, 3, and 4 are yours.</p>")
+    b = "<p><code>!=</code> means is not equal to. <code>\"\"</code> is empty text.</p>"
+    b += '<div class="two-up">' + code(CH6, "chunk 6")
+    b += ("<p>Someone types maybe, then soon, then yes. Each row is one check of the "
+          "condition. Fill in the blanks. The shaded row is done for you.</p>")
     ac = f["and_checks"]
     b += trace_table(
         LOOP_HEADERS_AND, None, list(ac),
@@ -268,26 +241,23 @@ def chunk6(f):
         index="check",
         widths=LOOP_WIDTHS,
     ) + "</div>"
-    b += ('<div class="keep"><p>At every check where the whole condition is True, the block '
-          "runs and the question appears. How many times does the question appear? Which check "
-          "stops the loop, and which side of the <code>and</code> is False there?</p>"
-          + lines(2, "The question appears 3 times, at checks 1, 2, and 3. Check 4 stops the "
-                  "loop. There <code>answer</code> is \"yes\", so <code>answer != \"yes\"</code> "
-                  "is False. <code>and</code> needs both sides True, so the whole condition is "
-                  "False, the loop stops, and the print line runs.")
+    b += ('<div class="keep"><p>How many times is the question asked? Which check stops the '
+          "loop?</p>"
+          + lines(2, "3 times. Check 4 stops it: <code>answer</code> is \"yes\", so "
+                  "<code>answer != \"yes\"</code> is False, and <code>and</code> needs both "
+                  "sides True.")
           + "</div>")
-    b += "<h3>Run it</h3>"
-    b += ("<p>Before you run it, write the lines you expect to see in the terminal, including "
-          "what is typed after each question. Then run it, type maybe, soon, and yes, "
-          "and copy each line. Do not erase a wrong prediction.</p>")
-    b += run_table([("line " + str(k + 1), ln) for k, ln in enumerate(f["and_out"])])
+    b += ('<div class="keep"><h3>Run it</h3>'
+          "<p>Predict each line, then run it and type maybe, soon, yes. Do not erase a wrong "
+          "prediction.</p>"
+          + run_table([("line " + str(k + 1), ln) for k, ln in enumerate(f["and_out"])])
+          + "</div>")
 
     oc = f["or_checks"]
     b += "<h3>The same loop with or</h3>"
     b += '<div class="two-up">'
-    b += ("<p>Here is line 2 of the chunk 6 program with <code>or</code> in place of "
-          "<code>and</code>. Every other line stays the same. Trace it on paper only. Someone "
-          "types maybe, then yes, then no. Check 1 is done for you, shaded.</p>")
+    b += ("<p>Line 2 now says <code>or</code>. Someone types maybe, then yes, then no. Trace "
+          "it on paper only.</p>")
     b += code(CH6_OR.split("\n")[1], "chunk 6, line 2 with or")
     b += trace_table(
         LOOP_HEADERS_OR, None, list(oc),
@@ -297,15 +267,11 @@ def chunk6(f):
         index="check",
         widths=LOOP_WIDTHS,
     ) + "</div>"
-    b += ('<div class="keep"><p>Does the loop stop at check 3 or at check 4? Is there any '
-          "answer that would make the whole condition False? One sentence for each question.</p>"
-          + lines(2, "No, the loop does not stop at check 3 or check 4. At check 3, "
-                  "<code>answer != \"no\"</code> is True. At check 4, <code>answer != \"yes\"</code> "
-                  "is True. With <code>or</code>, one True side is enough. No answer makes the "
-                  "whole condition False: both sides would have to be False, so "
-                  "<code>answer</code> would have to be yes and no at the same time. This loop "
-                  "never stops. When it is run and maybe, yes, and no are typed, it asks the question "
-                  "a fourth time.")
+    b += ('<div class="keep"><p>Does this loop ever stop? Why?</p>'
+          + lines(2, "No. Every answer makes at least one side True: yes makes "
+                  "<code>answer != \"no\"</code> True, and anything else makes "
+                  "<code>answer != \"yes\"</code> True. <code>or</code> needs only one True "
+                  "side. Run with maybe, yes, and no typed, it asks a fourth time.")
           + "</div>")
     return chunk_section(S2, 6, b)
 
