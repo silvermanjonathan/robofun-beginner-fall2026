@@ -9,8 +9,7 @@ The build stops if a run disagrees with a row, or if a sentence's numbers stop b
 """
 
 import render
-from worksheet import (KEY, chunk_section, code, head, lines, run_table,
-                       sheet, trace_table)
+from worksheet import KEY, chunk_section, code, head, lines, sheet, trace_table
 
 SLUG = "session02_worksheet"
 S2 = [s for s in render.SESSIONS if s["num"] == 2][0]
@@ -20,7 +19,6 @@ assert [S2["chunks"][n]["title"] for n in (3, 4, 5)] == [
 ], "session 2's chunks moved; point the worksheet at the right ones"
 
 CH6_OR = CH6.replace(' and answer != "no"', ' or answer != "no"')
-assert CH6_OR.split("\n")[1].startswith("while ")
 assert CH6_OR.count(" or answer") == 1 and CH6_OR.count(" and ") == CH6.count(" and ") - 1
 
 # Every rider and visitor is a pair of values for lines 1 and 2 of the program.
@@ -142,10 +140,7 @@ def facts():
 
     return {
         "riders": riders, "visitors": visitors, "and_checks": and_checks,
-        "or_checks": or_checks, "and_out": and_out,
-        "run4": [("rider 2", printed(with_values(CH4, has_ticket=False))),
-                 ("rider 8", printed(with_values(CH4, height=49)))],
-        "run5": [("visitor 4", printed(with_values(CH5, has_pass=False)))],
+        "or_checks": or_checks,
     }
 
 
@@ -166,7 +161,7 @@ def done_rows(rows, worked):
 
 def chunk4(f):
     b = "<p><code>and</code> is True only when both sides are True.</p>"
-    b += '<div class="two-up">' + code(CH4, "chunk 4")
+    b += '<div class="two-up">' + code(CH4)
     b += "<p>Each row is one rider. Fill in the blanks. Shaded rows are done for you.</p>"
     b += trace_table(
         ["rider", "height", "has_ticket", "height > 48?", "height > 48 and has_ticket?",
@@ -182,16 +177,12 @@ def chunk4(f):
     b += ('<div class="keep"><p>Which riders board the coaster? Why?</p>'
           + lines(2, "Riders 1 and 8. Theirs are the only rows where both sides are True.")
           + "</div>")
-    b += ('<div class="keep"><h3>Run it</h3>'
-          "<p>Put rider 2's values in lines 1 and 2, then run. Do the same for rider 8. "
-          "Do not erase a wrong prediction.</p>"
-          + run_table(f["run4"], label="Run") + "</div>")
     return chunk_section(S2, 4, b)
 
 
 def chunk5(f):
     b = "<p><code>or</code> is True when either side is True.</p>"
-    b += '<div class="two-up">' + code(CH5, "chunk 5")
+    b += '<div class="two-up">' + code(CH5)
     b += "<p>Each row is one visitor. Fill in the blanks. The shaded row is done for you.</p>"
     b += trace_table(
         ["visitor", "is_staff", "has_pass", "is_staff or has_pass?", "what it prints"],
@@ -207,10 +198,6 @@ def chunk5(f):
           + lines(2, "Visitor 4. Both sides are False, and <code>or</code> needs at least one "
                   "True side.")
           + "</div>")
-    b += ('<div class="keep"><h3>Run it</h3>'
-          "<p>Put visitor 4's values in lines 1 and 2, then run. Do not erase a wrong "
-          "prediction.</p>"
-          + run_table(f["run5"], label="Run") + "</div>")
     b += ('<div class="keep"><h3>If you have time</h3>'
           "<p>Change <code>or</code> to <code>and</code> on line 3. Which visitors now get a "
           "different line?</p>"
@@ -229,9 +216,9 @@ LOOP_HEADERS_OR = ["check", "answer", 'answer != "yes"?', 'answer != "no"?',
 
 def chunk6(f):
     b = "<p><code>!=</code> means is not equal to. <code>\"\"</code> is empty text.</p>"
-    b += '<div class="two-up">' + code(CH6, "chunk 6")
-    b += ("<p>Someone types maybe, then soon, then yes. Each row is one check of the "
-          "condition. Fill in the blanks. The shaded row is done for you.</p>")
+    b += '<div class="two-up">' + code(CH6)
+    b += ("<p>Each row is one check of the condition. Fill in the blanks. The shaded row is "
+          "done for you.</p>")
     ac = f["and_checks"]
     b += trace_table(
         LOOP_HEADERS_AND, None, list(ac),
@@ -247,18 +234,12 @@ def chunk6(f):
                   "<code>answer != \"yes\"</code> is False, and <code>and</code> needs both "
                   "sides True.")
           + "</div>")
-    b += ('<div class="keep"><h3>Run it</h3>'
-          "<p>Predict each line, then run it and type maybe, soon, yes. Do not erase a wrong "
-          "prediction.</p>"
-          + run_table([("line " + str(k + 1), ln) for k, ln in enumerate(f["and_out"])])
-          + "</div>")
 
     oc = f["or_checks"]
-    b += "<h3>The same loop with or</h3>"
+    b += '<div class="orpart"><h3>The same loop with or</h3>'
     b += '<div class="two-up">'
-    b += ("<p>Line 2 now says <code>or</code>. Someone types maybe, then yes, then no. Trace "
-          "it on paper only.</p>")
-    b += code(CH6_OR.split("\n")[1], "chunk 6, line 2 with or")
+    b += "<p>Line 2 now says <code>or</code>. Trace it on paper only.</p>"
+    b += code(CH6_OR)
     b += trace_table(
         LOOP_HEADERS_OR, None, list(oc),
         {"answer": lambda n: oc[n][1]},
@@ -272,14 +253,15 @@ def chunk6(f):
                   "<code>answer != \"no\"</code> True, and anything else makes "
                   "<code>answer != \"yes\"</code> True. <code>or</code> needs only one True "
                   "side. Run with maybe, yes, and no typed, it asks a fourth time.")
-          + "</div>")
+          + "</div></div>")
     return chunk_section(S2, 6, b)
 
 
 TITLE = "work out True or False before you run it"
 COVERS = S2["worksheet"]["covers"]
 # Page breaks for the printed sheet; checked against the PDF (see README).
-PRINT_CSS = "main section:nth-of-type(3){break-before:page}"
+PRINT_CSS = ("main section:nth-of-type(2),main section:nth-of-type(3),.orpart"
+             "{break-before:page}")
 HEAD = head(PRINT_CSS)
 
 

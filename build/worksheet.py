@@ -82,13 +82,13 @@ table.rename td.old{font-family:'JetBrains Mono',monospace; font-weight:700; wid
   pre,tr,p,.lines p{break-inside:avoid} h2,h3,.chunk-no{break-after:avoid}
   pre{white-space:pre-wrap; overflow-wrap:anywhere}
   thead{display:table-header-group} .keep{break-inside:avoid} table.trace,table.rename{break-inside:avoid}
-  .two-up{grid-template-columns:minmax(0,1fr); gap:12px}
+  .two-up{grid-template-columns:minmax(0,1fr); gap:8px}
   .chunk-no{margin:0 0 4px; font-size:9.5pt} h2{font-size:19pt; margin:0 0 8px} h3{font-size:14pt}
   table{font-size:12pt} table.trace th{font-size:10.5pt; padding:4px 3px}
   table.trace td{height:34px; font-size:12pt; padding:3px 6px}
   table.rename td{height:42px} .lines p{min-height:32px; margin:0 0 12px}
   .nb{font-size:11.5pt} code{font-size:.92em}
-  .two-up pre{font-size:10.5pt; line-height:1.5; border:1px solid #999}
+  .two-up pre{font-size:10.5pt; line-height:1.5; border:1px solid #999; padding:10px 14px}
   .ws-name span{border-bottom-color:#111}
 }
 </style>
