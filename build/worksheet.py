@@ -236,19 +236,27 @@ def masthead(s, title, covers):
         + str(s["num"]) + ' of 12</p>'
         '<h1>' + esc(title) + '</h1>'
         '<div class="dates">'
-        '<span class="pill"><b>Monday section</b> ' + s["mon"] + '</span>'
-        '<span class="pill"><b>Friday section</b> ' + s["fri"] + '</span>'
-        '<span class="pill"><b>Covers</b> ' + esc(covers) + '</span>'
+        + ('<span class="pill"><b>Date</b> ' + sheet_date(s) + '</span>'
+           if s["worksheet"].get("date") else
+           '<span class="pill"><b>Monday section</b> ' + s["mon"] + '</span>'
+           '<span class="pill"><b>Friday section</b> ' + s["fri"] + '</span>')
+        + '<span class="pill"><b>Covers</b> ' + esc(covers) + '</span>'
         '</div></div></header>'
     )
 
 
+def sheet_date(s):
+    """Return the date printed on the sheet: the day it is used if the session names one,
+    otherwise both sections' session dates."""
+    return s["worksheet"].get("date") or (s["mon"] + " or " + s["fri"])
+
+
 def name_line(s):
     """Return the name and date fields, or the teacher-copy line in the key."""
-    date = s["mon"] + " or " + s["fri"]
+    date = sheet_date(s)
     if KEY["on"]:
-        return ('<div class="ws-name"><span><b>Teacher copy</b> every slot filled; worked rows '
-                'the students get are the same values</span><span><b>Date</b> ' + date
+        return ('<div class="ws-name"><span><b>Teacher copy</b> every blank filled</span>'
+                '<span><b>Date</b> ' + date
                 + '</span></div>')
     return ('<div class="ws-name"><span><b>Name</b></span><span><b>Date</b> ' + date
             + '</span></div>')

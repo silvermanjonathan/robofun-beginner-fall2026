@@ -126,7 +126,7 @@ SESSIONS_A = [
 {
  "num": 2,
  "slug": "session02_comparisons_and_gates",
- "worksheet": {"slug": "session02_worksheet", "covers": "chunks 4 to 6"},
+ "worksheet": {"slug": "session02_worksheet", "covers": "chunks 4 to 6", "date": "Mon Oct 5"},
  "title": "Comparisons and gates",
  "subtitle": "True and False, three-way gates, and two conditions at once",
  "mon": "Mon Sep 28",

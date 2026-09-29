@@ -242,7 +242,7 @@ def chunk6(f):
           + lines(2, "No. Every answer makes at least one side True: yes makes "
                   "<code>answer != \"no\"</code> True, and anything else makes "
                   "<code>answer != \"yes\"</code> True. <code>or</code> needs only one True "
-                  "side. Run with maybe, yes, and no typed, it asks a fourth time.")
+                  "side. When maybe, yes, and no are typed, it asks a fourth time.")
           + "</div></div>")
     return chunk_section(S2, 6, b)
 
