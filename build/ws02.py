@@ -110,7 +110,6 @@ def facts():
     """Compute everything the sheet's sentences depend on, and check it against real runs."""
     riders = rider_rows()
     visitors = visitor_rows()
-    swapped = visitor_rows(CH5.replace("is_staff or has_pass", "is_staff and has_pass"))
     and_checks = check_rows("and", TYPED_AND)
     or_checks = check_rows("or", TYPED_OR)
 
@@ -131,11 +130,8 @@ def facts():
 
     boarders = [n for n, r in riders.items() if r[4]]
     shut = [n for n, r in visitors.items() if r[4] == "Gate stays shut."]
-    changed = [n for n in visitors if visitors[n][4] != swapped[n][4]]
     assert boarders == [1, 8], boarders
     assert shut == [4], shut
-    assert changed == [1, 2], changed
-    assert swapped[3][4] == "Gate opens." and swapped[4][4] == "Gate stays shut."
     assert not set(RIDER_DONE) & {2}, "rider 2 is the run question; keep it blank"
 
     return {
@@ -197,12 +193,6 @@ def chunk5(f):
     b += ('<div class="keep"><p>Which visitor is kept out? Why?</p>'
           + lines(2, "Visitor 4. Both sides are False, and <code>or</code> needs at least one "
                   "True side.")
-          + "</div>")
-    b += ('<div class="keep"><h3>If you have time</h3>'
-          "<p>Change <code>or</code> to <code>and</code> on line 3. Which visitors now get a "
-          "different line?</p>"
-          + lines(2, "Visitors 1 and 2. Each has one True side: enough for <code>or</code>, not "
-                  "for <code>and</code>. They now get Gate stays shut.")
           + "</div>")
     return chunk_section(S2, 5, b)
 
