@@ -247,4 +247,6 @@ chunks and their output sits behind the same reveal.
   worksheet toolbar and a Files note in its teacher panel. `validate.py` accepts links
   to any file in the site (the PDF). Code blocks on every page are now coloured by
   role, VS Code Light+ style (`build/highlight.py`). Version pin bumped to `?v=7` on
-  every page.
+  every page. `build/standards.py` added: the original was never committed, so it was
+  rebuilt from the published standards map and session pages; the build reproduces
+  every page byte for byte from it.
