@@ -186,6 +186,15 @@ footer{
 }
 footer a{color:var(--teal); font-weight:700}
 a{color:var(--teal)}
+.toolbar{display:flex; gap:12px; flex-wrap:wrap; margin:0 0 20px}
+a.btn{
+  display:inline-block; font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; text-decoration:none; border-radius:4px;
+  padding:12px 20px; border:2px solid var(--teal);
+}
+a.btn:hover{background:var(--teal-deep)}
+a.btn.quiet{background:var(--card); color:var(--teal)}
+a.btn.quiet:hover{background:#EFE9DA}
 .grid2{display:grid; gap:16px; grid-template-columns:1fr}
 @media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
 .card{border:2px solid var(--rule); border-radius:5px; padding:16px; background:#FFFDF7}
@@ -230,7 +239,7 @@ a{color:var(--teal)}
   .pill{border-color:#666}
   footer,.pager,details.teacher{background:#fff}
   section,.stamp,.card{background:#fff; break-inside:avoid}
-  .noprint{display:none}
+  .noprint,.toolbar{display:none}
   a{color:#111}
 }
 </style>
@@ -260,7 +269,7 @@ draw.line(c, col, a, b, 3)  canvas, colour, start, end, width
 while running:          pygame frame loop, QUIT sets running = 0
 x = x + vx              move once per frame
 v = -v                  bounce
-level[row][col]         row first, then column</pre><p class="note">Read the last line of an error first. One change per run.</p></section><section><h2>Error names met this term</h2><p>Write the real message next to each one, the first time you meet it.</p><table><tr><th>Name</th><th>What it usually means</th><th>Your message</th></tr><tr><td>NameError</td><td>A word Python does not know. Often a typo.</td><td class="fill"></td></tr><tr><td>SyntaxError</td><td>Punctuation. A bracket, a colon, one equals sign where two belong.</td><td class="fill"></td></tr><tr><td>IndentationError</td><td>A block is missing, or indented unevenly.</td><td class="fill"></td></tr><tr><td>TypeError</td><td>Two kinds that will not mix. Usually text and number.</td><td class="fill"></td></tr><tr><td>IndexError</td><td>A slot past the end. Length and last index are one apart.</td><td class="fill"></td></tr><tr><td>KeyError</td><td>A dictionary key that is not there. Gate with <code>in</code>.</td><td class="fill"></td></tr><tr><td>No error, wrong answer</td><td>A silent bug. Use a probe.</td><td class="fill"></td></tr></table></section></div></main><nav class="pager noprint"><a href="beginner_semester_hub.html?v=6">Course home</a><a href="session01_printing_names_input.html?v=6">Session 1 &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding beginner semester, Robofun Fall 2026.</p></div></footer>
+level[row][col]         row first, then column</pre><p class="note">Read the last line of an error first. One change per run.</p></section><section><h2>Error names met this term</h2><p>Write the real message next to each one, the first time you meet it.</p><table><tr><th>Name</th><th>What it usually means</th><th>Your message</th></tr><tr><td>NameError</td><td>A word Python does not know. Often a typo.</td><td class="fill"></td></tr><tr><td>SyntaxError</td><td>Punctuation. A bracket, a colon, one equals sign where two belong.</td><td class="fill"></td></tr><tr><td>IndentationError</td><td>A block is missing, or indented unevenly.</td><td class="fill"></td></tr><tr><td>TypeError</td><td>Two kinds that will not mix. Usually text and number.</td><td class="fill"></td></tr><tr><td>IndexError</td><td>A slot past the end. Length and last index are one apart.</td><td class="fill"></td></tr><tr><td>KeyError</td><td>A dictionary key that is not there. Gate with <code>in</code>.</td><td class="fill"></td></tr><tr><td>No error, wrong answer</td><td>A silent bug. Use a probe.</td><td class="fill"></td></tr></table></section></div></main><nav class="pager noprint"><a href="beginner_semester_hub.html?v=7">Course home</a><a href="session01_printing_names_input.html?v=7">Session 1 &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding beginner semester, Robofun Fall 2026.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

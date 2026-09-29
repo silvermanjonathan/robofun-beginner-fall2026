@@ -1,4 +1,5 @@
 import html
+import importlib
 import json
 import os
 import re
@@ -19,7 +20,7 @@ SESSIONS = SESSIONS_A + SESSIONS_B + SESSIONS_C
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "6"
+VERSION = "7"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -346,6 +347,15 @@ footer{
 }
 footer a{color:var(--teal); font-weight:700}
 a{color:var(--teal)}
+.toolbar{display:flex; gap:12px; flex-wrap:wrap; margin:0 0 20px}
+a.btn{
+  display:inline-block; font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; text-decoration:none; border-radius:4px;
+  padding:12px 20px; border:2px solid var(--teal);
+}
+a.btn:hover{background:var(--teal-deep)}
+a.btn.quiet{background:var(--card); color:var(--teal)}
+a.btn.quiet:hover{background:#EFE9DA}
 .grid2{display:grid; gap:16px; grid-template-columns:1fr}
 @media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
 .card{border:2px solid var(--rule); border-radius:5px; padding:16px; background:#FFFDF7}
@@ -390,7 +400,7 @@ a{color:var(--teal)}
   .pill{border-color:#666}
   footer,.pager,details.teacher{background:#fff}
   section,.stamp,.card{background:#fff; break-inside:avoid}
-  .noprint{display:none}
+  .noprint,.toolbar{display:none}
   a{color:#111}
 }
 """
@@ -415,13 +425,13 @@ FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
          'family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">')
 
 
-def page(title, body, hub_label="Course home"):
+def page(title, body, hub_label="Course home", head_extra=""):
     return (
         '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
         '<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
         '<title>' + html.escape(title) + '</title>\n'
-        + FONTS + '\n<style>' + CSS + '</style>\n</head>\n<body>\n'
+        + FONTS + '\n<style>' + CSS + '</style>\n' + head_extra + '</head>\n<body>\n'
         + body +
         '\n<script>' + JS + '</script>\n</body>\n</html>\n'
     )
@@ -500,6 +510,12 @@ def render_session(s, prev_s, next_s):
     b.append('</div></div></header>')
 
     b.append('<main><div class="wrap">')
+
+    ws = s.get("worksheet")
+    if ws:
+        b.append('<div class="toolbar"><a class="btn" href="' + link(ws["slug"])
+                 + '">Open the worksheet</a><a class="btn quiet" href="' + ws["slug"]
+                 + '.pdf?v=' + VERSION + '" download>Download the worksheet (PDF)</a></div>')
 
     if s["new"]:
         b.append('<section><h2>What is new today</h2><p>'
@@ -662,6 +678,12 @@ def render_session(s, prev_s, next_s):
             b.append('<li><code>' + c + '</code> ' + html.escape(l) + '</li>')
         b.append('</ul>')
     b.append('<h3>If time runs out</h3><p>' + t["routing"] + '</p>')
+    if ws:
+        b.append('<h3>Files</h3><p>The worksheet covers ' + ws["covers"] + '. Print one per '
+                 'student from the PDF, double-sided, US letter. <a href="' + link(ws["slug"])
+                 + '">Worksheet</a> &middot; <a href="' + ws["slug"] + '.pdf?v=' + VERSION
+                 + '" download>PDF</a> &middot; <a href="' + link(ws["slug"] + "_key")
+                 + '">Answer key</a>. The key is linked from this panel only.</p>')
     b.append('</details>')
 
     if s.get("env_note"):
@@ -1137,6 +1159,24 @@ def main():
     files["beginner_constraints.html"] = render_constraints()
     files["standards_map.html"] = render_standards()
     files["semester_ledger_card.html"] = render_ledger()
+
+    # Worksheets live in wsNN.py and import this module as render. Point that name at
+    # the running script, so they share its sessions and run log rather than loading a
+    # second copy of it.
+    sys.modules.setdefault("render", sys.modules[__name__])
+    for s in SESSIONS:
+        ws = s.get("worksheet")
+        if not ws:
+            continue
+        mod = importlib.import_module("ws%02d" % s["num"])
+        sheet_fn = getattr(mod, "worksheet%02d" % s["num"])
+        key_fn = getattr(mod, "worksheet%02d_key" % s["num"])
+        label = "Session " + str(s["num"]) + " worksheet"
+        files[ws["slug"] + ".html"] = page(label + ": " + mod.TITLE + " | Beyond Vibe Coding beginner",
+                                          sheet_fn(), head_extra=mod.HEAD)
+        files[ws["slug"] + "_key.html"] = page(label + ", answer key | Beyond Vibe Coding beginner",
+                                              key_fn(), head_extra=mod.HEAD)
+        print("rendered", ws["slug"], "and its key")
 
     for name, text in files.items():
         with open(os.path.join(OUT, name), "w") as fh:

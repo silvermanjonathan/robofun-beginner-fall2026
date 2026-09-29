@@ -18,6 +18,9 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | `semester_ledger_card.html` | The printable one-page card. Twelve stamp boxes, a reference strip, an error-name table. |
 | `session01_printing_names_input.html` | Printing, names, and input |
 | `session02_comparisons_and_gates.html` | Comparisons and gates |
+| `session02_worksheet.html` | Session 2 worksheet: and, or, and the stopping condition (chunks 4 to 6 and the build). Printed, and typed into on the projector. |
+| `session02_worksheet.pdf` | The same worksheet as a PDF for printing: six pages, US letter, double-sided. |
+| `session02_worksheet_key.html` | The session 2 worksheet's answer key. Linked from the session 2 teacher panel only. |
 | `session03_loops_counters_lists.html` | Loops, counters, and lists |
 | `session04_functions_that_return.html` | Functions that return a value |
 | `session05_angles_and_shapes.html` | Angles and shapes on screen |
@@ -129,13 +132,22 @@ build/sessions_b.py    sessions 5 to 8
 build/sessions_c.py    sessions 9 to 12 and the Friday bonus
 build/render.py        runs every snippet, then writes the site
 build/validate.py      checks the written site
+build/worksheet.py     the worksheet CSS, blocks, and projector typing script, shared by every sheet
+build/ws02.py          the session 2 worksheet and its answer key
+build/pdf.py           renders the worksheets to PDF
 ```
 
 ```
 pip install pygame --break-system-packages
 python3 build/render.py
+python3 build/pdf.py
 python3 build/validate.py
 ```
+
+`pdf.py` needs WeasyPrint (`brew install weasyprint` on a Mac). Run it after
+`render.py` whenever a worksheet changes, then check the PDF's fonts are DM Sans,
+JetBrains Mono, and Bricolage Grotesque; a machine that cannot reach Google Fonts and
+does not have them installed falls back to its own fonts.
 
 ## Verification
 
@@ -174,6 +186,14 @@ Chunks may carry a `hint` (a string or a list): each hint renders as its own
 "Show a hint" button inside the predict box, above the run-it-first button, and
 counts toward reveal parity.
 
+A session with a `worksheet` entry gets a toolbar under its masthead (open the
+worksheet, download the PDF) and a Files note in its teacher panel with the key.
+`render.py` writes the sheet and key from `build/wsNN.py`. The sheet's programs are
+read from the session's own chunks, so they cannot differ from the page. Every True or
+False on the sheet and key is Python's own comparison, and every printed line in the
+key comes from running the program at build time; the build stops if a run disagrees
+with a row or with a number in a sentence.
+
 Build briefs may carry `cards`: verified code blocks inside the brief (session 7's
 five broken cards, session 12's engine). They run through the same harness as
 chunks and their output sits behind the same reveal.
@@ -209,3 +229,10 @@ chunks and their output sits behind the same reveal.
   Open decisions resolved: the tkinter float is dropped (no labels without
   `pygame.font`); if Fri Oct 2 is lost, the bonus date absorbs it. New checks added
   to `validate.py` for the classes of fault that could be mechanised.
+- **2026-09-29, v7.** Session 2 worksheet added: and, or, and the while loop's stopping
+  condition (chunks 4 to 6), plus the three lines of the ride-operator build that use
+  them. Sheet, answer key, and a six-page PDF; each program faces or shares a page with
+  its table when printed double-sided. The worksheet helpers from the Advanced course
+  now live in `build/worksheet.py` for every beginner sheet. The session 2 page gets a
+  worksheet toolbar and a Files note in its teacher panel. `validate.py` accepts links
+  to any file in the site (the PDF). Version pin bumped to `?v=7` on every page.

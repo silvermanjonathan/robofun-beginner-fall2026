@@ -110,9 +110,11 @@ def check(name, text, all_names):
 
 def main():
     names = sorted(f for f in os.listdir(SITE) if f.endswith(".html"))
+    # links may point at any file in the site, such as a worksheet's PDF
+    targets = set(os.listdir(SITE))
     for n in names:
         text = open(os.path.join(SITE, n)).read()
-        fails = check(n, text, set(names))
+        fails = check(n, text, targets)
         status = "PASS" if not fails else "FAIL"
         kb = len(text) / 1024.0
         print("%-44s %s  %6.1f kB" % (n, status, kb))
