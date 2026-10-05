@@ -21,7 +21,7 @@ SESSIONS = SESSIONS_A + SESSIONS_B + SESSIONS_C
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "7"
+VERSION = "8"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -665,6 +665,17 @@ def render_session(s, prev_s, next_s):
     b.append('<div class="exit stretch"><p class="tag">Stretch</p><p>' + ex["stretch"] + '</p></div>')
     b.append('</div></section>')
 
+    xc = s.get("extras")
+    if xc:
+        names = xc["cards"]
+        b.append('<section><h2>Finished with time left?</h2>'
+                 '<p>There are three extra cards for this session: ' + html.escape(names[0])
+                 + ', ' + html.escape(names[1]) + ', and ' + html.escape(names[2])
+                 + '. Each card is a new program that uses only what is on this page. '
+                 'Pick any one.</p>'
+                 '<div class="toolbar"><a class="btn" href="' + link(xc["slug"])
+                 + '">Open the extra cards</a></div></section>')
+
     b.append('<section><h2>Ledger card</h2><p>' + s["ledger"] + '</p>'
              '<p><a href="' + link("semester_ledger_card") + '">Open the semester ledger card</a></p></section>')
 
@@ -698,6 +709,16 @@ def render_session(s, prev_s, next_s):
                  + '">Worksheet</a> &middot; <a href="' + ws["slug"] + '.pdf?v=' + VERSION
                  + '" download>PDF</a> &middot; <a href="' + link(ws["slug"] + "_key")
                  + '">Answer key</a>. The key is linked from this panel only.</p>')
+    if xc:
+        if not ws:
+            b.append('<h3>Files</h3>')
+        b.append('<p>The extra cards are for a student who finishes the build while you are '
+                 'working with someone else: three programs, 15 to 20 minutes each, that use '
+                 'only what this session has taught. Every card shows a finished run, so the '
+                 'student can check the work without you. The bug hunt needs the least help. '
+                 + xc.get("note", "") + '<a href="' + link(xc["slug"]) + '">Extra cards</a> '
+                 '&middot; <a href="' + link(xc["slug"] + "_key") + '">Answer key</a>. The key '
+                 'is linked from this panel only.</p>')
     b.append('</details>')
 
     if s.get("env_note"):
@@ -1191,6 +1212,19 @@ def main():
         files[ws["slug"] + "_key.html"] = page(label + ", answer key | Beyond Vibe Coding beginner",
                                               key_fn(), head_extra=mod.HEAD)
         print("rendered", ws["slug"], "and its key")
+
+    # Extra cards live in extras.py, which imports this module the same way.
+    for s in SESSIONS:
+        xc = s.get("extras")
+        if not xc:
+            continue
+        extras = importlib.import_module("extras")
+        label = "Session " + str(s["num"]) + " extra cards"
+        files[xc["slug"] + ".html"] = page(label + " | Beyond Vibe Coding beginner",
+                                          extras.cards_page(s), head_extra=extras.HEAD)
+        files[xc["slug"] + "_key.html"] = page(label + ", answer key | Beyond Vibe Coding beginner",
+                                              extras.key_page(s), head_extra=extras.HEAD)
+        print("rendered", xc["slug"], "and its key")
 
     for name, text in files.items():
         with open(os.path.join(OUT, name), "w") as fh:

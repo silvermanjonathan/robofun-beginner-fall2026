@@ -4,6 +4,8 @@ SESSIONS_A = [
 {
  "num": 1,
  "slug": "session01_printing_names_input",
+ "extras": {"slug": "session01_extra_cards",
+            "cards": ["Silly story", "Age calculator", "Bug hunt: the snack machine"]},
  "title": "Printing, names, and input",
  "subtitle": "Your first six lines, and the one trap in them",
  "mon": "Mon Sep 14",
@@ -127,6 +129,9 @@ SESSIONS_A = [
  "num": 2,
  "slug": "session02_comparisons_and_gates",
  "worksheet": {"slug": "session02_worksheet", "covers": "chunks 4 to 6", "date": "Mon Oct 5"},
+ "extras": {"slug": "session02_extra_cards",
+            "cards": ["Three-question quiz", "Guess my number", "Bug hunt: the door"],
+            "note": "Card B puts a gate inside a while loop, which session 3 teaches; the starter shows it already written, so the student copies the pattern. "},
  "title": "Comparisons and gates",
  "subtitle": "True and False, three-way gates, and two conditions at once",
  "mon": "Mon Sep 28",
@@ -240,6 +245,9 @@ SESSIONS_A = [
 {
  "num": 3,
  "slug": "session03_loops_counters_lists",
+ "extras": {"slug": "session03_extra_cards",
+            "cards": ["Times table", "Rock paper scissors", "Bug hunt: the score report"],
+            "note": "Card B uses <code>random.choice</code> from chunk 7, so if you cut chunk 7, hand out card A or card C. "},
  "title": "Loops, counters, and lists",
  "subtitle": "Repeat a block, keep a running total, and hold many values under one name",
  "mon": "Mon Oct 5",
@@ -362,6 +370,9 @@ SESSIONS_A = [
 {
  "num": 4,
  "slug": "session04_functions_that_return",
+ "extras": {"slug": "session04_extra_cards",
+            "cards": ["Letter grades", "Dice game", "Bug hunt: the average"],
+            "note": "The cards use chunks 5 to 7: card A needs several returns, card B needs one function calling another, and card C is built on <code>total_of</code>. If the session stops at chunk 4, keep them for the following week. "},
  "title": "Functions that return a value",
  "subtitle": "The line that lets one function hand an answer to another",
  "mon": "Mon Oct 19",

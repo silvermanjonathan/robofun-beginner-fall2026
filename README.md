@@ -17,12 +17,20 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | `standards_map.html` | Every standard code used, with its full statement and CASE identifier. |
 | `semester_ledger_card.html` | The printable one-page card. Twelve stamp boxes, a reference strip, an error-name table. |
 | `session01_printing_names_input.html` | Printing, names, and input |
+| `session01_extra_cards.html` | Session 1 extra cards: silly story, age calculator, bug hunt. For a student who finishes the build early. |
+| `session01_extra_cards_key.html` | The session 1 extra cards' answer key. Linked from the session 1 teacher panel only. |
 | `session02_comparisons_and_gates.html` | Comparisons and gates |
 | `session02_worksheet.html` | Session 2 worksheet: and, or, and the stopping condition (chunks 4 to 6). Printed, and typed into on the projector. |
 | `session02_worksheet.pdf` | The same worksheet as a PDF for printing: four pages, US letter, one part per page. |
 | `session02_worksheet_key.html` | The session 2 worksheet's answer key. Linked from the session 2 teacher panel only. |
+| `session02_extra_cards.html` | Session 2 extra cards: three-question quiz, guess my number, bug hunt. |
+| `session02_extra_cards_key.html` | The session 2 extra cards' answer key. Linked from the session 2 teacher panel only. |
 | `session03_loops_counters_lists.html` | Loops, counters, and lists |
+| `session03_extra_cards.html` | Session 3 extra cards: times table, rock paper scissors, bug hunt. |
+| `session03_extra_cards_key.html` | The session 3 extra cards' answer key. Linked from the session 3 teacher panel only. |
 | `session04_functions_that_return.html` | Functions that return a value |
+| `session04_extra_cards.html` | Session 4 extra cards: letter grades, dice game, bug hunt. |
+| `session04_extra_cards_key.html` | The session 4 extra cards' answer key. Linked from the session 4 teacher panel only. |
 | `session05_angles_and_shapes.html` | Angles and shapes on screen |
 | `session06_strings_as_data.html` | Strings as data |
 | `session07_debugging_clinic.html` | Debugging clinic |
@@ -145,6 +153,7 @@ build/validate.py      checks the written site
 build/highlight.py     colours code blocks by role, the way VS Code's Light+ theme does
 build/worksheet.py     the worksheet CSS, blocks, and projector typing script, shared by every sheet
 build/ws02.py          the session 2 worksheet and its answer key
+build/extras.py        the extra cards and their answer keys, sessions 1 to 4
 build/pdf.py           renders the worksheets to PDF
 ```
 
@@ -209,6 +218,20 @@ Build briefs may carry `cards`: verified code blocks inside the brief (session 7
 five broken cards, session 12's engine). They run through the same harness as
 chunks and their output sits behind the same reveal.
 
+A session with an `extras` entry gets a section under "Where you can stop" that links
+to its extra cards, and a Files note in its teacher panel with the answer key.
+`render.py` writes both pages from `build/extras.py`. The cards are for a student who
+finishes the build while the teacher is working with someone else: three programs per
+session, two to write or finish and one short broken program to fix. A card uses only
+what the course has taught by the end of its session. Every program on a card, every
+stage of every bug hunt, and each Go further version is run at build time; the
+finished runs, the error messages in the key, and the numbers the sentences quote come
+from those runs, and the build stops if a run disagrees with a sentence, a clue, or a
+table. A finished run on a card is shown openly, because it is the thing to aim for;
+it uses the class `want`, not `out`, so the rule that no `out` block shows outside a
+reveal still holds. Clues sit behind one button each. The card pages print from the
+browser, one card to a sheet, with the clues printed and the answers left off.
+
 ## Known gaps
 
 - Float topics are listed on the hub but not built: file input and output for a high
@@ -250,3 +273,10 @@ chunks and their output sits behind the same reveal.
   every page. `build/standards.py` added: the original was never committed, so it was
   rebuilt from the published standards map and session pages; the build reproduces
   every page byte for byte from it.
+- **2026-10-05, v8.** Extra cards added for sessions 1 to 4 (`build/extras.py`): a card
+  page and an answer key per session, twelve cards in all. Each session page links its
+  cards under "Where you can stop", and each teacher panel links the key. Sessions 5
+  onward have none yet. Version pin bumped to `?v=8` on every page. Built with Python
+  3.11, which reproduces the v7 pages byte for byte; under 3.12 and 3.13 the same
+  sources give the same colours but split f-string quote marks into their own spans,
+  and one traceback on the session 7 page draws its caret line differently.
