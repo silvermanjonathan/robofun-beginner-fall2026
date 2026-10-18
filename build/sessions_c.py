@@ -9,7 +9,7 @@ SESSIONS_C = [
  "mon": "Mon Nov 23",
  "fri": "Fri Nov 13",
  "new": ["the parallel-list failure", "dict literals", "lookup by key", "adding and changing keys", "KeyError", "in on a dict", "looping over keys", "a tally dict", "a codebook"],
- "reuse": "Session 3: lists, and session 6: building up a result in a loop",
+ "reuse": "Session 3: lists, and session 7: building up a result in a loop",
  "reuse_note": "Do not skip the parallel-list chunk. The pain has to be felt before the fix means anything.",
  "opener": {
    "title": "Retrieval: find, and the counter",
@@ -36,7 +36,7 @@ SESSIONS_C = [
    "code": 'scores = {"Ada": 15, "Grace": 22, "Alan": 9}\nprint(scores["Grace"])\nprint(len(scores))',
    "run": "py",
    "predict": "You look up Grace by name rather than by number. What happens to the pairing problem from chunk 1?",
-   "reveal": "It is gone. The name and the score are stored together, so there is no second list to keep lined up. Each key holds exactly one value, which is the same rule as a function from session 4: one input, one output."},
+   "reveal": "It is gone. The name and the score are stored together, so there is no second list to keep lined up. Each key holds exactly one value, which is the same rule as a function from session 5: one input, one output."},
 
   {"title": "Add, change, and ask for something that is not there",
    "teach": "Assigning to a key that exists changes it. Assigning to a key that does not exist creates it. Looking up a key that does not exist is an error with its own name.",
@@ -80,7 +80,7 @@ SESSIONS_C = [
    "predict": "The book has six letters in it. What happens to the others?",
    "reveal": "They pass through untouched, which is why the output still looks like the original in places. A real codebook covers all 26, and building the reverse book to decode it is the stretch exit."},
  ],
- "hinge": {"q": "From session 4: write <code>tally(text)</code> as a function that returns a dictionary of counts. Then say what you would have to write instead if functions could not return values.",
+ "hinge": {"q": "From session 5: write <code>tally(text)</code> as a function that returns a dictionary of counts. Then say what you would have to write instead if functions could not return values.",
            "code_a": 'def tally(text):\n    counts = {}\n    for ch in text:\n        if ch in counts:\n            counts[ch] = counts[ch] + 1\n        else:\n            counts[ch] = 1\n    return counts\n\nresult = tally("MEET AT NOON")\nprint(result)',
            "a": "<code>def tally(text):</code> with the loop from chunk 6 and <code>return counts</code> at the end. Without return you would have to print the counts and read them yourself, or keep the dictionary as one shared name outside the function, which is the arrangement that makes a program impossible to test."},
  "brief": {
@@ -123,7 +123,7 @@ SESSIONS_C = [
      ["Uses a number as a key and thinks it is an index.", "<code>{0: \"a\"}</code> is a dictionary with a key of zero, not a list. Print both and compare what <code>len</code> says after adding key 5."],
    ],
    "standards": ["NY-8.F.1", "NY-6.SP.4", "MP7"],
-   "routing": "The codebook chunk is cuttable; the tally is not. If the room is thin on session 6 string work, replace the message with a list of words and tally those instead.",
+   "routing": "The codebook chunk is cuttable; the tally is not. If the room is thin on session 7 string work, replace the message with a list of words and tally those instead.",
  },
 },
 
@@ -136,8 +136,8 @@ SESSIONS_C = [
  "mon": "Mon Nov 30",
  "fri": "Fri Nov 20",
  "new": ["the frame loop taken apart", "draw order", "velocity as two numbers", "bouncing with flat gates", "clock.tick", "the knob block"],
- "reuse": "Session 5: the loop that held your drawing still, now doing work every frame",
- "reuse_note": "The window and the frame loop are not new. Students copied both in session 5 as a loop whose only job was to keep a finished picture on screen. Today the same eight lines get taken apart, and the drawing moves inside the loop so it can change. Say that this is the same code they already ran, because the page otherwise looks like a fresh start.",
+ "reuse": "Session 6: the loop that held your drawing still, now doing work every frame",
+ "reuse_note": "The window and the frame loop are not new. Students copied both in session 6 as a loop whose only job was to keep a finished picture on screen. Today the same eight lines get taken apart, and the drawing moves inside the loop so it can change. Say that this is the same code they already ran, because the page otherwise looks like a fresh start.",
  "env_note": True,
  "opener": {
    "title": "Retrieval: gates and counters, in a new place",
@@ -147,13 +147,13 @@ SESSIONS_C = [
      {"q": "Write a gate that flips a variable called <code>vx</code> from positive to negative.",
       "code_a": 'if x > WIDTH - R:\n    vx = -vx',
       "a": "Putting a minus sign in front flips the sign: 4 becomes negative 4. Flip it again and it is 4 once more, which is why the same line works for both walls."},
-     {"q": "In session 5 you copied a loop that held a drawing on screen. Name the one thing that could make that loop stop, and the name of the variable it changed.",
-      "a": "Clicking the window's close button. That puts a QUIT event in the queue and the gate sets <code>running</code> to 0. You copied those lines five weeks ago; today you find out why each one is there."},
+     {"q": "In session 6 you copied a loop that held a drawing on screen. Name the one thing that could make that loop stop, and the name of the variable it changed.",
+      "a": "Clicking the window's close button. That puts a QUIT event in the queue and the gate sets <code>running</code> to 0. You copied those lines four weeks ago; today you find out why each one is there."},
    ],
  },
  "chunks": [
   {"title": "The window has its own coordinates",
-   "teach": "A callback to session 5, where a heading of 90 degrees pointed at the floor. The top left corner is 0, 0. The first number moves right and the second moves <em>down</em>, which is upside down from the graph paper you use in maths class. Everything else about ordered pairs is the same.",
+   "teach": "A callback to session 6, where a heading of 90 degrees pointed at the floor. The top left corner is 0, 0. The first number moves right and the second moves <em>down</em>, which is upside down from the graph paper you use in maths class. Everything else about ordered pairs is the same.",
    "code": 'import pygame\n\npygame.init()\nWIDTH = 640\nHEIGHT = 480\nscreen = pygame.display.set_mode((WIDTH, HEIGHT))\n\nprint("top left    ", (0, 0))\nprint("top right   ", (WIDTH, 0))\nprint("bottom left ", (0, HEIGHT))\nprint("centre      ", (WIDTH / 2, HEIGHT / 2))\npygame.quit()',
    "run": "headless",
    "frames": 0,
@@ -161,12 +161,12 @@ SESSIONS_C = [
    "reveal": "The bottom left. Larger second numbers are lower on the screen. Write this on the ledger card. Most position bugs in sessions 10 to 12 come from getting this backwards."},
 
   {"title": "The frame loop, taken apart",
-   "teach": "You have run this before. In session 5 it sat under your drawing and you were told to copy it. Here is what each line does. The loop runs until <code>running</code> becomes 0, nothing else ends it, and the window never closes itself. <code>clock.tick(60)</code> holds the speed steady at sixty passes a second. The difference from session 5 is that the drawing now happens inside the loop, which is what lets it change.",
+   "teach": "You have run this before. In session 6 it sat under your drawing and you were told to copy it. Here is what each line does. The loop runs until <code>running</code> becomes 0, nothing else ends it, and the window never closes itself. <code>clock.tick(60)</code> holds the speed steady at sixty passes a second. The difference from session 6 is that the drawing now happens inside the loop, which is what lets it change.",
    "code": 'import pygame\n\npygame.init()\nscreen = pygame.display.set_mode((640, 480))\nclock = pygame.time.Clock()\n\nrunning = 1\nwhile running:\n    for event in pygame.event.get():\n        if event.type == pygame.QUIT:\n            running = 0\n    screen.fill((27, 41, 81))\n    pygame.draw.circle(screen, (252, 211, 77), (320, 240), 30)\n    pygame.display.flip()\n    clock.tick(60)\n\npygame.quit()',
    "run": "headless",
    "frames": 5,
    "predict": "Name the one thing that can make this loop stop.",
-   "reveal": "Clicking the window's close button, which puts a QUIT event in the queue and sets <code>running</code> to 0. That is the stopping condition, the way every while loop has had one since session 2. Compare this to session 5: there the <code>fill</code> and the drawing sat above the loop and ran once, and here they sit inside it and run sixty times a second."},
+   "reveal": "Clicking the window's close button, which puts a QUIT event in the queue and sets <code>running</code> to 0. That is the stopping condition, the way every while loop has had one since session 2. Compare this to session 6: there the <code>fill</code> and the drawing sat above the loop and ran once, and here they sit inside it and run sixty times a second."},
 
   {"title": "Draw order: last one wins",
    "teach": "Drawing paints over whatever is already there. The fill goes first because it wipes the previous frame. Whatever you draw last sits on top.",
@@ -199,7 +199,7 @@ SESSIONS_C = [
    "predict": "Nothing runs here. Why put the block at the top rather than next to the code that uses each number?",
    "reveal": "So that changing the behaviour takes one visit to one place. A number written in the middle of a loop is a number nobody will find in session 12, including you."},
  ],
- "hinge": {"q": "From session 4: rewrite the four bounce gates as a function <code>bounce(pos, vel, low, high)</code> that returns the new velocity. Then say why the function has to return rather than print.",
+ "hinge": {"q": "From session 5: rewrite the four bounce gates as a function <code>bounce(pos, vel, low, high)</code> that returns the new velocity. Then say why the function has to return rather than print.",
            "code_a": 'def bounce(pos, vel, low, high):\n    if pos < low:\n        vel = -vel\n    if pos > high:\n        vel = -vel\n    return vel\n\nvx = bounce(x, vx, R, WIDTH - R)\nvy = bounce(y, vy, R, HEIGHT - R)',
            "a": "Two flat gates and <code>return vel</code> at the end. It must return because the line that called it needs the new velocity, so it can store it back into <code>vx</code>. A printing version would show the number on the terminal and change nothing in the game."},
  "brief": {
@@ -237,7 +237,7 @@ SESSIONS_C = [
      "1:25 exits, ledger stamp, 5 min",
    ],
    "misconceptions": [
-     ["Keeps session 5's canvas surface and cannot work out why the ball leaves a trail, or why it does not move.",
+     ["Keeps session 6's canvas surface and cannot work out why the ball leaves a trail, or why it does not move.",
       "The canvas was for a picture that never changed. Today the drawing goes straight onto the screen and the <code>fill</code> inside the loop is what wipes the last frame. Have them delete the fill and watch the trail."],
      ["Leaves out <code>flip</code> and reports a blank or frozen window.", "Everything was drawn on a page that was never turned over. Add the line and say nothing else."],
      ["Puts <code>fill</code> after the draw calls.", "Blank screen, no error. A silent bug, and a fast one to find with a single comment toggle."],
@@ -382,8 +382,8 @@ SESSIONS_C = [
    "questions": [
      {"q": "Which stamp covers the numbers at the top of your engine?",
       "a": "Stamp 10, the knob block. Every number you are about to change is there."},
-     {"q": "Which stamp tells you what to do when your change makes the program worse?",
-      "a": "Stamp 7. One change per run, and undo the last one before trying the next."},
+     {"q": "Where on the card does it say what to do when your change makes the program worse?",
+      "a": "The line under the reference strip: one change per run. Undo the last change before trying the next."},
    ],
  },
  "chunks": [
@@ -415,8 +415,8 @@ SESSIONS_C = [
    "predict": "Both versions run identically. Why does the rename get a minute on demo day?",
    "reveal": "Because the person reading it next is you, in three months, with no memory of what <code>check</code> checked. A clear name is the shortest comment you can write, and it stays correct as long as the function does what it says."},
  ],
- "hinge": {"q": "Pick any stamp on your ledger card from before session 7 and state the bug it was written to prevent.",
-           "a": "Accept any correct pairing. The common strong answers: stamp 1 and the int() trap, stamp 3 and the accumulator reset inside the loop, stamp 4 and a function that prints instead of returning, stamp 6 and a strip whose result was never stored."},
+ "hinge": {"q": "Pick any stamp on your ledger card from sessions 1 to 7 and state the bug it was written to prevent.",
+           "a": "Accept any correct pairing. The common strong answers: stamp 1 and the int() trap, stamp 3 and the accumulator reset inside the loop, stamp 4 and a typo that counted as a lost round, stamp 5 and a function that prints instead of returning, stamp 7 and a strip whose result was never stored."},
  "brief": {
    "title": "The commission",
    "minutes": 45,
@@ -461,7 +461,7 @@ SESSIONS_C = [
    ],
    "misconceptions": [
      ["Starts a new program from scratch because the engine feels like someone else's.", "Redirect immediately. Working inside code you did not write is the skill being assessed today."],
-     ["Makes six changes and cannot say which produced the improvement.", "Stamp 7. Revert to the last working version and go one at a time. Better a small demo that is understood."],
+     ["Makes six changes and cannot say which produced the improvement.", "One change per run, from the reference strip on the card. Revert to the last working version and go one at a time. Better a small demo that is understood."],
      ["Explains syntax during the tell beat.", "Ask what the player experiences differently. That is the answer, in one sentence."],
    ],
    "standards": ["5SL4", "5W2", "MP1"],
@@ -479,7 +479,7 @@ SESSIONS_C = [
  "fri": "Fri Dec 11",
  "bonus": True,
  "new": ["the distance formula", "a distance function that returns", "circle overlap", "comparing squares to avoid a square root", "a bumper that scores"],
- "reuse": "Session 10's frame loop and session 4's functions",
+ "reuse": "Session 10's frame loop and session 5's functions",
  "reuse_note": "Friday has one more session than Monday. This is a bonus and it is not required anywhere later, so nothing in session 12 depends on it. Monday students who want it can read this page on their own.",
  "env_note": True,
  "opener": {

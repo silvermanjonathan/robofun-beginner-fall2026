@@ -21,7 +21,7 @@ SESSIONS = SESSIONS_A + SESSIONS_B + SESSIONS_C
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "8"
+VERSION = "9"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -91,14 +91,35 @@ builtins.input = _echo_input
 '''
 
 
-def run_snippet(code, stdin=None, timeout=30, preamble="", fname="snippet.py"):
+SEED_RANDOM = '''
+# Installed by build/render.py so a snippet that picks at random prints the same
+# run every build. The seed is set before the snippet starts, so its line numbers
+# are unchanged and the page shows the program the student types.
+import random as _random
+_random.seed({seed})
+'''
+
+
+def run_snippet(code, stdin=None, timeout=30, preamble="", fname="snippet.py", seed=None):
     path = os.path.join(TMP, fname)
     with open(path, "w") as fh:
         fh.write(preamble + code + "\n")
     env = dict(os.environ)
-    if stdin is not None:
+    if stdin is not None or seed is not None:
+        hook = ECHO_INPUT if stdin is not None else ""
+        if seed is not None:
+            hook = hook + SEED_RANDOM.format(seed=int(seed))
         with open(os.path.join(TMP, "sitecustomize.py"), "w") as fh:
-            fh.write(ECHO_INPUT)
+            fh.write(hook)
+        # Two hooks of the same size written in the same second share a bytecode
+        # cache entry, and the second run would get the first run's seed. Never
+        # cache the hook.
+        env["PYTHONDONTWRITEBYTECODE"] = "1"
+        cache = os.path.join(TMP, "__pycache__")
+        if os.path.isdir(cache):
+            for name in os.listdir(cache):
+                if name.startswith("sitecustomize."):
+                    os.remove(os.path.join(cache, name))
         env["PYTHONPATH"] = TMP + os.pathsep + env.get("PYTHONPATH", "")
     try:
         proc = subprocess.run(
@@ -158,7 +179,8 @@ def verify(chunk, tag):
         out, rc = run_snippet(chunk["code"], preamble=pre, timeout=90, fname=fname)
     else:
         out, rc = run_snippet(chunk["code"], preamble=chunk.get("prefix", ""),
-                              stdin=chunk.get("stdin"), timeout=30, fname=fname)
+                              stdin=chunk.get("stdin"), timeout=30, fname=fname,
+                              seed=chunk.get("seed"))
     if out == "TIMEOUT":
         raise SystemExit("snippet timed out: " + tag)
     VERIFY_LOG.append([tag, mode, "rc=" + str(rc), str(len(out.splitlines())) + " lines"])
@@ -234,6 +256,7 @@ section.opener{border-left:8px solid var(--green)}
 section.chunk{border-left:8px solid var(--ochre-line)}
 section.hinge{border-left:8px solid var(--clay)}
 section.brief{border-left:8px solid var(--teal)}
+section.extension{border-left:8px solid var(--clay)}
 .chunk-no{
   font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.12em;
   text-transform:uppercase; color:var(--ochre); margin:0 0 8px; font-weight:700;
@@ -579,6 +602,8 @@ def render_session(s, prev_s, next_s):
         extra = ""
         if out:
             lbl = "What it actually prints"
+            if ch.get("seed") is not None:
+                lbl = "What it actually prints, on one run"
             if mode == "headless" and loops:
                 lbl = ("What it actually prints (run without a screen, quit after "
                        + str(ch.get("frames", 5)) + " frames)")
@@ -643,6 +668,8 @@ def render_session(s, prev_s, next_s):
         extra = ""
         if out:
             lbl = "What it actually prints"
+            if card.get("seed") is not None:
+                lbl = "What it actually prints, on one run"
             if mode == "headless":
                 lbl = ("What it actually prints (run without a screen, quit after "
                        + str(card.get("frames", 5)) + " frames)")
@@ -664,6 +691,40 @@ def render_session(s, prev_s, next_s):
     b.append('<div class="exit middle"><p class="tag">Middle</p><p>' + ex["middle"] + '</p></div>')
     b.append('<div class="exit stretch"><p class="tag">Stretch</p><p>' + ex["stretch"] + '</p></div>')
     b.append('</div></section>')
+
+    xt = s.get("extension")
+    if xt:
+        b.append('<section class="extension"><p class="chunk-no">Extension &middot; '
+                 'for after the stretch exit</p><h2>' + html.escape(xt["title"]) + '</h2>')
+        b.append(xt["intro"])
+        for j, card in enumerate(xt.get("cards", [])):
+            tag = "s%d-ext%d" % (n, j + 1)
+            out, mode = verify(card, tag)
+            b.append('<h3>' + html.escape(card["title"]) + '</h3>')
+            if card.get("teach"):
+                b.append('<p>' + card["teach"] + '</p>')
+            b.append(code_block(card["code"]))
+            extra = ""
+            if out:
+                lbl = "What it actually prints"
+                if card.get("seed") is not None:
+                    lbl = "What it actually prints, on one run"
+                extra = out_block(out, lbl)
+            b.append(reveal(tag, card["predict"], card["reveal"], "Predict", extra,
+                            "Run it first, then check here", "Hide", card.get("hint")))
+        if xt.get("steps"):
+            b.append('<h3>Building it</h3><ol>')
+            for st in xt["steps"]:
+                b.append('<li>' + st + '</li>')
+            b.append('</ol>')
+        if xt.get("checks"):
+            b.append('<h3>Expected and got</h3>'
+                     '<p>Fill in the left column before you run. Fill in the right column after.</p>')
+            b.append('<table><tr><th>Expected</th><th>Got</th></tr>')
+            for row in xt["checks"]:
+                b.append('<tr><td>' + row + '</td><td class="fill"></td></tr>')
+            b.append('</table>')
+        b.append('</section>')
 
     xc = s.get("extras")
     if xc:
@@ -740,7 +801,7 @@ def render_session(s, prev_s, next_s):
                  '<code>pygame.event.get()</code> in it.</p></div></div>'
                  '<p class="note">There is no turtle anywhere in this course. Turtle needs '
                  'a library our VS Code setup does not have, so pygame does all the drawing, '
-                 'starting in session 5.</p></section>')
+                 'starting in session 6.</p></section>')
 
     b.append('</div></main>')
 
@@ -876,7 +937,7 @@ def render_hub():
 
     b.append('<section><h2>Machines and libraries</h2>'
              '<p>VS Code on the desktop, throughout. One graphics library, pygame, from '
-             'session 5 onward, installed with <code>pip install pygame</code>. There is no '
+             'session 6 onward, installed with <code>pip install pygame</code>. There is no '
              'turtle session and no second graphics library, because turtle does not run in '
              'our VS Code setup.</p></section>')
     b.append('<section><h2>What students cannot do at home</h2>'
@@ -922,7 +983,7 @@ def render_constraints():
              '<p>Each of these is taught in a named session and not used before it.</p>'
              '<table>'
              '<tr><th>Now allowed</th><th>First taught</th><th>Why</th></tr>'
-             '<tr><td><code>return</code></td><td>Session 4</td><td>Without it a function '
+             '<tr><td><code>return</code></td><td>Session 5</td><td>Without it a function '
              'cannot be composed, tested, or reused, and every function returns '
              '<code>None</code>.</td></tr>'
              '<tr><td><code>and</code>, <code>or</code></td><td>Session 2</td><td>With '
@@ -930,13 +991,13 @@ def render_constraints():
              '<tr><td><code>len</code>, <code>sum</code>, <code>max</code>, <code>min</code></td>'
              '<td>Session 3</td><td>Taught as the reveal after the hand-written version, '
              'never before it.</td></tr>'
-             '<tr><td>String methods and slicing</td><td>Session 6</td><td>Students could '
+             '<tr><td>String methods and slicing</td><td>Session 7</td><td>Students could '
              'not clean their own input, which forced capitals-and-spaces workarounds.</td></tr>'
              '<tr><td>Dictionaries</td><td>Session 9</td><td>The parallel-list failure is '
              'taught first, then the fix.</td></tr>'
              '<tr><td><code>.find()</code></td><td>Session 8</td><td>Revealed after the '
              'hand-written rack scan.</td></tr>'
-             '<tr><td>pygame from session 5 onward</td><td>Session 5</td><td>The only graphics library in the course. It replaces the turtle drawing session, which does not run in VS Code.</td></tr>'
+             '<tr><td>pygame from session 6 onward</td><td>Session 6</td><td>The only graphics library in the course. It replaces the turtle drawing session, which does not run in VS Code.</td></tr>'
              '<tr><td>KEYDOWN, mouse, frame timers</td><td>Session 11</td><td>Without them a '
              'game reads as a demo. A held key and a single press are different '
              'questions.</td></tr>'
@@ -965,12 +1026,12 @@ def render_constraints():
              'in the window. That split holds all term.</li>'
              '<li><b>turtle.</b> Not used anywhere in this course. It needs a library our '
              'VS Code setup does not have, so pygame does all of the drawing, starting in '
-             'session 5. No turtle program appears in this repo.</li>'
+             'session 6. No turtle program appears in this repo.</li>'
              '</ul></section>')
 
     b.append('<section><h2>The frame loop, and only this one</h2>'
              '<p>This course uses one frame loop, everywhere, with no exceptions. Students '
-             'first copy it in session 5 as a loop holding '
+             'first copy it in session 6 as a loop holding '
              'a finished drawing on screen, and session 10 takes it apart.</p>')
     b.append(code_block('running = 1\nwhile running:\n    for event in pygame.event.get():\n'
                         '        if event.type == pygame.QUIT:\n            running = 0\n'
@@ -979,7 +1040,7 @@ def render_constraints():
     b.append('<p>A window never closes itself. It closes when the person closes it. Any '
              'program handed out in this course has this shape.</p>'
              '<p>Two placements of the drawing, both legitimate, and students meet them in '
-             'this order. In session 5 the drawing is done once onto a '
+             'this order. In session 6 the drawing is done once onto a '
              '<code>pygame.Surface</code> above the loop, and the loop only blits it, '
              'because the picture never changes. From session 10 on, the '
              '<code>fill</code> and the drawing sit inside the loop, because the picture '

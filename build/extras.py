@@ -1,4 +1,4 @@
-"""Extra cards for sessions 1 to 4: three more programs per session for a student who
+"""Extra cards for sessions 1 to 3 and 5: three more programs per session for a student who
 finishes the build with time left.
 
 Each session gets a card page for the student and an answer key for the teacher. Card A
@@ -582,49 +582,34 @@ print(f"The twelve answers add up to {total}.")
 print(f"{over_50} of the answers are over 50.")
 '''
 
-RPS_STARTER = '''import random
+COINS_STARTER = '''import random
 
-moves = ["rock", "paper", "scissors"]
-your_wins = 0
+sides = ["heads", "tails"]
+heads = 0
 
-for round_number in range(1, 6):
-    print(f"Round {round_number}")
-    you = input("rock, paper, or scissors: ")
-    computer = random.choice(moves)
-    print(f"The computer picked {computer}.")
+for flip in range(1, 21):
+    result = random.choice(sides)
+    print(f"Flip {flip}: {result}")
+    if result == "heads":
+        heads = heads + 1
 
-    if you == computer:
-        print("Tie.")
-    elif you == "rock" and computer == "scissors":
-        print("You win the round.")
-        your_wins = your_wins + 1
-    else:
-        print("The computer wins the round.")
-
-print(f"Rounds you won: {your_wins}")
+print(f"Heads: {heads}")
 '''
-RPS = edit(edit(edit(edit(
-    RPS_STARTER, "your_wins = 0\n\n", "your_wins = 0\ncomputer_wins = 0\n\n"),
-    "    else:\n",
-    '    elif you == "paper" and computer == "rock":\n'
-    '        print("You win the round.")\n        your_wins = your_wins + 1\n'
-    '    elif you == "scissors" and computer == "paper":\n'
-    '        print("You win the round.")\n        your_wins = your_wins + 1\n'
-    "    else:\n"),
-    '        print("The computer wins the round.")\n',
-    '        print("The computer wins the round.")\n        computer_wins = computer_wins + 1\n'),
-    'print(f"Rounds you won: {your_wins}")\n',
-    'print(f"You won {your_wins}. The computer won {computer_wins}.")\n'
-    'if your_wins > computer_wins:\n    print("You win the match.")\n'
-    'elif your_wins == computer_wins:\n    print("The match is a tie.")\n'
-    'else:\n    print("The computer wins the match.")\n')
-RPS_ASK = '''    you = ""
-    while you != "rock" and you != "paper" and you != "scissors":
-        you = input("rock, paper, or scissors: ")
-'''
-RPS_MORE = edit(RPS, '    you = input("rock, paper, or scissors: ")\n', RPS_ASK)
-RPS_TYPED = ["rock", "paper", "scissors", "rock", "paper"]
-RPS_SEED = 2
+COINS = edit(edit(edit(
+    COINS_STARTER, "heads = 0\n\n", "heads = 0\ntails = 0\n\n"),
+    "        heads = heads + 1\n\n",
+    "        heads = heads + 1\n    else:\n        tails = tails + 1\n\n"),
+    'print(f"Heads: {heads}")\n',
+    'print(f"Heads: {heads}")\nprint(f"Tails: {tails}")\n'
+    'if heads > tails:\n    print("Heads wins.")\n'
+    'elif heads == tails:\n    print("A draw.")\n'
+    'else:\n    print("Tails wins.")\n')
+COINS_MORE = edit(edit(edit(edit(
+    COINS, "tails = 0\n\n", "tails = 0\nrun = 0\nlongest = 0\n\n"),
+    "        heads = heads + 1\n", "        heads = heads + 1\n        run = run + 1\n"),
+    "        tails = tails + 1\n", "        tails = tails + 1\n        run = 0\n    if run > longest:\n        longest = run\n"),
+    'print(f"Tails: {tails}")\n', 'print(f"Tails: {tails}")\nprint(f"Longest run of heads: {longest}")\n')
+COINS_SEED = 4
 
 SCORES = '''scores = [72, 95, 88, 97, 67]
 best = 100
@@ -682,70 +667,72 @@ def session3():
              + want("\n".join(more[-2:]), "Its last two lines for the 7 times table"))
 
     # ---- card B
-    st = ok(RPS_STARTER, RPS_TYPED, RPS_SEED, fname(n, "rps"), "x3b-starter").splitlines()
-    assert st[4:8] == ["Round 2", "rock, paper, or scissors: paper", "The computer picked rock.",
-                       "The computer wins the round."], st[:8]
-    fin = ok(RPS, RPS_TYPED, RPS_SEED, fname(n, "rps"), "x3b").splitlines()
-    assert fin[7] == "You win the round." and fin[16:20] == [
-        "Round 5", "rock, paper, or scissors: paper", "The computer picked rock.", "You win the round."]
-    score_line = fin[-2]
-    assert re.fullmatch(r"You won \d\. The computer won \d\.", score_line)
-    # every pairing gives the right result: play each move against each computer pick
-    seen = set()
+    st = ok(COINS_STARTER, seed=COINS_SEED, name=fname(n, "coins"), tag="x3b-starter").splitlines()
+    assert st[0] == "Flip 1: heads" and st[1] == "Flip 2: tails" and st[-1].startswith("Heads: "), st
+    fin = ok(COINS, seed=COINS_SEED, name=fname(n, "coins"), tag="x3b").splitlines()
+    assert fin[:20] == st[:20] and fin[20] == st[20], fin
+    heads_n = int(fin[20].split(": ")[1])
+    tails_n = int(fin[21].split(": ")[1])
+    assert heads_n + tails_n == 20 and fin[22] == "Heads wins." and heads_n > tails_n, fin[20:]
+    # every seed: the two counts add to 20 and the verdict matches them
     for seed in range(40):
-        lines_ = ok(RPS, RPS_TYPED, seed, fname(n, "rps"), "x3b-pairs").splitlines()
-        for k in range(5):
-            you = lines_[4 * k + 1].split(": ")[1]
-            comp = lines_[4 * k + 2][len("The computer picked "):-1]
-            beats = {"rock": "scissors", "paper": "rock", "scissors": "paper"}
-            right = ("Tie." if you == comp else
-                     "You win the round." if beats[you] == comp else "The computer wins the round.")
-            assert lines_[4 * k + 3] == right, (seed, k, lines_)
-            seen.add((you, comp))
-    assert len(seen) == 9
-    askout = ok(RPS_MORE, ["rokc", "rock", "paper", "scissors", "rock", "paper"], RPS_SEED,
-                fname(n, "rps"), "x3b-more").splitlines()
-    assert askout[1].endswith(": rokc") and askout[2].endswith(": rock") and askout[-2] == score_line
-    b = ("<p>The player plays five rounds against the computer. The computer picks its move "
-         "with <code>random.choice</code>. You get a starter that runs but gets the result of "
-         "some rounds wrong.</p>"
-         "<p>The rules: rock beats scissors, paper beats rock, scissors beats paper. The same "
-         "move from both players is a tie.</p>" + file_line(n, "rps")
-         + "<p>Type the starter:</p>" + render.code_block(RPS_STARTER)
-         + "<p>Here are the first two rounds of one run of the starter. The computer picks at "
-           "random, so your rounds will be different.</p>"
-         + want("\n".join(st[:8]), "Two rounds of the starter")
-         + "<p>Round 2 is wrong. Paper beats rock, so the player won that round. The gate has "
-           "one way for the player to win, and the rules have three.</p>"
-         + ask("x3b-before", "Before you change anything",
-               "Read the gate. Which two ways for the player to win are missing?",
-               "Paper against rock, and scissors against paper.")
+        lines_ = ok(COINS, seed=seed, name=fname(n, "coins"), tag="x3b-seeds").splitlines()
+        h = sum(1 for ln in lines_[:20] if ln.endswith("heads"))
+        t = 20 - h
+        assert lines_[20] == f"Heads: {h}" and lines_[21] == f"Tails: {t}", (seed, lines_[20:])
+        right = "Heads wins." if h > t else "A draw." if h == t else "Tails wins."
+        assert lines_[22] == right, (seed, lines_[20:])
+    more = ok(COINS_MORE, seed=COINS_SEED, name=fname(n, "coins"), tag="x3b-more").splitlines()
+    assert more[:22] == fin[:22] and more[-1] == fin[-1], more
+    longest_n = int(more[22].split(": ")[1])
+    run = best = 0
+    for ln in more[:20]:
+        run = run + 1 if ln.endswith("heads") else 0
+        best = max(best, run)
+    assert longest_n == best == 4, (longest_n, best)
+    b = ("<p>The computer flips a coin twenty times with <code>random.choice</code> and prints "
+         "each flip. You get a starter that runs but only counts one side.</p>" + file_line(n, "coins")
+         + "<p>Type the starter:</p>" + render.code_block(COINS_STARTER)
+         + "<p>The gate is inside the for loop, so the <code>if</code> line is indented 4 spaces "
+           "and its block is indented 8 spaces. The gate runs once on every flip.</p>"
+         + ask("x3b-before", "Before you run",
+               "Look at the gate. On a flip that lands tails, which lines inside the loop run?",
+               "The <code>result</code> line and the print line. The gate's condition is False for "
+               "tails, so its block is skipped and nothing counts that flip.")
+         + "<p>The flips are random, so your run will be different from this one.</p>"
+         + want("\n".join(st[:3] + ["..."] + st[-2:]), "The start and end of one run of the starter")
+         + "<p>The starter counts heads and nothing else. The tails count is missing, and so is "
+           "the result.</p>"
          + steps([
-             "Add two more <code>elif</code> lines with their blocks, one for each missing way to "
-             "win. Put them above the <code>else</code>.",
-             "Make a counter called <code>computer_wins</code>. Start it at 0 above the loop. Add "
-             "1 to it in the <code>else</code> block.",
-             "Change the last line so it prints both scores, like this: " + c(score_line),
-             "Under that line, add a three-way gate that compares the two scores and prints "
-             "<code>You win the match.</code> or <code>The match is a tie.</code> or "
-             "<code>The computer wins the match.</code>",
+             "Make a second counter, <code>tails = 0</code>, under <code>heads = 0</code>.",
+             "Add an <code>else</code> to the gate, lined up with the <code>if</code>. In its "
+             "block, add 1 to <code>tails</code>.",
+             "After the loop, print the tails count the same way the heads count is printed.",
+             "Under that, add a three-way gate on the two counters. More heads prints "
+             "<code>Heads wins.</code> Equal prints <code>A draw.</code> Anything else prints "
+             "<code>Tails wins.</code>",
          ])
-         + want("\n".join(fin[16:]), "The end of a finished run")
-         + "<p><b>Check:</b> play until you have seen paper against rock and scissors against "
-           "paper. Both should print <code>You win the round.</code></p>"
-           "<h3>Go further</h3><p>Type <code>rokc</code> as your move. The program counts it as a "
-           "win for the computer. Fix that with a while loop that asks again until the move is "
-           "rock, paper, or scissors. The loop goes inside the for loop, where the "
-           "<code>input</code> line is now. Set <code>you = \"\"</code> just above it, so the "
-           "loop has a value to test on its first check.</p>")
+         + want("\n".join(fin[20:]), "The last three lines of a finished run")
+         + "<p><b>Check:</b> run it three times. Heads plus tails is 20 every time.</p>"
+           "<h3>Go further</h3><p>Find the longest run of heads: the most times in a row the coin "
+           "landed heads. You need two more counters above the loop, <code>run = 0</code> and "
+           "<code>longest = 0</code>. Inside the heads block, add 1 to <code>run</code>. Inside "
+           "the else block, set <code>run</code> back to 0, because a tails flip ends the run. "
+           "Then, after the gate and still inside the loop, use best so far: if <code>run</code> "
+           "is greater than <code>longest</code>, store <code>run</code> in <code>longest</code>. "
+           "Print <code>longest</code> after the loop. For the run that printed the lines above, it is "
+         + str(longest_n) + ". Your run will give its own number.</p>")
     if KEY["on"]:
-        b = ("<p><b>Before you change anything:</b> the two missing ways to win are paper against "
-             "rock, and scissors against paper.</p>" + render.code_block(RPS)
-             + want("\n".join(fin[16:]), "The end of one run")
-             + "<p><b>Go further:</b> these three lines replace the one <code>input</code> line "
-               "inside the for loop.</p>" + render.code_block(RPS_ASK)
-             + "<p>If the student writes <code>or</code> where each <code>and</code> is, the loop "
-               "never stops. It is the same mistake as the yes or no loop in session 2.</p>")
+        b = ("<p><b>Before you run:</b> on a tails flip, only the <code>result</code> line and the "
+             "print line run. The gate's block is skipped.</p>" + render.code_block(COINS)
+             + want("\n".join(fin[20:]), "The last three lines of one run")
+             + "<p><b>Go further:</b> this is the program with the longest run of heads. "
+               "<code>run</code> is a counter that is reset on purpose, and <code>longest</code> is "
+               "best so far from chunk 5. For the seeded run on the card it prints "
+             + str(longest_n) + ".</p>" + render.code_block(COINS_MORE)
+             + "<p>If the student puts the <code>run = 0</code> line above the loop only, and never "
+               "resets it, <code>longest</code> comes out equal to the heads count. Ask what should "
+               "happen to the run when the coin lands tails.</p>")
 
     # ---- card C
     c2 = edit(SCORES, "scores[5]", "scores[4]")
@@ -795,11 +782,11 @@ def session3():
                 "it has to be lower than every score.</p>")
 
     return [card("A", "build it from the steps", 15, "Times table", a),
-            card("B", "finish the starter", 20, "Rock paper scissors", b),
+            card("B", "finish the starter", 20, "Coin flips", b),
             card("C", "bug hunt", 15, "Bug hunt: the score report", cc, bug=True)]
 
 
-# =================================================================== session 4
+# =================================================================== session 5
 
 GRADES = '''def grade_of(score):
     if score >= 90:
@@ -878,14 +865,14 @@ def average_of(numbers):
 '''
 
 
-def session4():
-    n = 4
-    fare = [ch for ch in SESS[4]["chunks"] if "def fare(age):" in ch["code"]]
-    assert len(fare) == 1, "card 4A points at fare(age) on the session 4 page"
+def session5():
+    n = 5
+    fare = [ch for ch in SESS[5]["chunks"] if "def fare(age):" in ch["code"]]
+    assert len(fare) == 1, "card 5A points at fare(age) on the session 5 page"
     # ---- card A
-    g_out = ok(GRADES, name=fname(n, "grades"), tag="x4a")
+    g_out = ok(GRADES, name=fname(n, "grades"), tag="x5a")
     assert g_out.splitlines()[:3] == ["A", "B", "not yet"]
-    gm = ok(GRADES_MORE, name=fname(n, "grades"), tag="x4a-more").splitlines()
+    gm = ok(GRADES_MORE, name=fname(n, "grades"), tag="x5a-more").splitlines()
     count_a, count_b = gm[-2], gm[-1]
     assert gm[:-2] == g_out.splitlines() and (count_a, count_b) == ("2", "1")
     a = ("<p>You write a function called <code>grade_of</code> that takes a score and returns "
@@ -896,7 +883,7 @@ def session4():
          + steps([
              "At the top of the file, write <code>def grade_of(score):</code>. In its body, use "
              "flat gates with a <code>return</code> in each one, the same shape as "
-             "<code>fare(age)</code> on the session 4 page.",
+             "<code>fare(age)</code> on the session 5 page.",
              "Under the function, at the left edge, test it with three lines: "
              "<code>print(grade_of(95))</code>, <code>print(grade_of(80))</code>, and "
              "<code>print(grade_of(42))</code>.",
@@ -905,7 +892,7 @@ def session4():
              "the return value in a variable called <code>grade</code>, and print a line like "
              "<code>72 gets C</code> with an f-string.",
          ])
-         + ask("x4a-before", "Before you run",
+         + ask("x5a-before", "Before you run",
                "95 is 90 or more, and it is also 80 or more. Why does <code>grade_of(95)</code> "
                "return <code>\"A\"</code> and not <code>\"B\"</code>?",
                "<code>return</code> ends the function. 95 passes the first gate, the function "
@@ -925,18 +912,18 @@ def session4():
 
     # ---- card B
     assert DICE.startswith(ROLL)
-    d_out = ok(DICE, [""] * 5, DICE_SEED, fname(n, "dice"), "x4b")
+    d_out = ok(DICE, [""] * 5, DICE_SEED, fname(n, "dice"), "x5b")
     winners = re.findall(r"Winner: (\w+)", d_out)
     assert len(winners) == 5 and set(winners) == {"you", "computer", "tie"}, d_out
     for seed in range(60):
-        for ln in ok(DICE, [""] * 5, seed, fname(n, "dice"), "x4b-fair").splitlines():
+        for ln in ok(DICE, [""] * 5, seed, fname(n, "dice"), "x5b-fair").splitlines():
             m = re.match(r"Round \d: you rolled (\d+), the computer rolled (\d+)\. Winner: (\w+)", ln)
             if m:
                 y, cpu = int(m.group(1)), int(m.group(2))
                 assert 2 <= y <= 12 and 2 <= cpu <= 12
                 assert m.group(3) == ("you" if y > cpu else "computer" if cpu > y else "tie")
     many = ok(ROLL + "\n" + ROLL_MANY + "\nfor k in range(200):\n    print(roll_many(10))\n",
-              seed=1, name=fname(n, "dice"), tag="x4b-more")
+              seed=1, name=fname(n, "dice"), tag="x5b-more")
     assert all(10 <= int(v) <= 60 for v in many.split())
     b = ("<p>You and the computer each roll two dice for five rounds. The higher total wins "
          "the round. You build the game from three small functions.</p>" + file_line(n, "dice")
@@ -960,14 +947,14 @@ def session4():
          ])
          + "<p>The dice are random, so your numbers will be different from this finished run.</p>"
          + want(d_out)
-         + ask("x4b-before", "Before you run",
+         + ask("x5b-before", "Before you run",
                "What is the lowest number <code>roll_two()</code> can return, and what is the "
                "highest?",
                "The lowest is 2, from two rolls of 1. The highest is 12, from two rolls of 6.")
          + "<h3>Go further</h3><p>Write <code>roll_many(count)</code>. It returns the total of "
            "<code>count</code> rolls. Use an accumulator and a for loop with "
            "<code>range(count)</code>. Then print <code>roll_many(10)</code> a few times.</p>"
-         + ask("x4b-more", "Question",
+         + ask("x5b-more", "Question",
                "Every value <code>roll_many(10)</code> returns is between 10 and 60. Why?",
                "Ten rolls of 1 add up to 10, and ten rolls of 6 add up to 60. Every other set of "
                "ten rolls is in between."))
@@ -984,9 +971,9 @@ def session4():
     v3 = edit(v2, "    print(total_of(numbers) / len(numbers))", "    return total_of(numbers) / len(numbers)")
     v4 = edit(v3, "        total = total + n\n        return total", "        total = total + n\n    return total")
     alt = edit(v2, "        total = total + n\n        return total", "        total = total + n\n    return total")
-    final_out = ok(v4, name=fname(n, "bugs"), tag="x4c-final")
+    final_out = ok(v4, name=fname(n, "bugs"), tag="x5c-final")
     assert final_out == "20.0"
-    alt_out = ok(alt, name=fname(n, "bugs"), tag="x4c-alt").splitlines()
+    alt_out = ok(alt, name=fname(n, "bugs"), tag="x5c-alt").splitlines()
     assert alt_out == ["20.0", "None"]
     rows = bug_table(n, "bugs", [
         {"code": AVERAGE, "kind": "error", "expect": "NameError: name 'average_of' is not defined",
@@ -1001,7 +988,7 @@ def session4():
                 "after the first number",
          "fix": "Move <code>return total</code> left by 4 spaces, so it lines up with <code>for</code>"},
         {"code": v4, "kind": "done", "shows": ["20.0"]},
-    ], None, "x4c")
+    ], None, "x5c")
     cc = ("<p>This program has 3 bugs. The four numbers add up to 80, and 80 divided by 4 is "
           "20, so it is supposed to print this:</p>" + want(final_out)
           + file_line(n, "bugs") + "<p>Type the program exactly as it is here, bugs and all:</p>"
@@ -1010,7 +997,7 @@ def session4():
             "program runs and prints the wrong thing.</p>"
           + "<p>Fix one thing per run. For each bug, write down the line number and what you "
             "changed.</p>"
-          + clues("x4c", [
+          + clues("x5c", [
               "Bug 1: the error says <code>average_of</code> is not defined, and yet the "
               "<code>def</code> is in the file. Python reads a file from the top. Which does it "
               "reach first, the <code>def</code> or the call?",
@@ -1030,7 +1017,7 @@ def session4():
             card("C", "bug hunt", 15, "Bug hunt: the average", cc, bug=True)]
 
 
-BUILDERS = {1: session1, 2: session2, 3: session3, 4: session4}
+BUILDERS = {1: session1, 2: session2, 3: session3, 5: session5}
 
 
 # ------------------------------------------------------------- page furniture

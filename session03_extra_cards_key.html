@@ -72,6 +72,7 @@ section.opener{border-left:8px solid var(--green)}
 section.chunk{border-left:8px solid var(--ochre-line)}
 section.hinge{border-left:8px solid var(--clay)}
 section.brief{border-left:8px solid var(--teal)}
+section.extension{border-left:8px solid var(--clay)}
 .chunk-no{
   font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.12em;
   text-transform:uppercase; color:var(--ochre); margin:0 0 8px; font-weight:700;
@@ -292,7 +293,7 @@ section.xcard h3{margin-top:20px}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 3 of 12</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 5</span><span class="pill"><b>Friday section</b> Fri Oct 2</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session03_loops_counters_lists.html?v=8">Back to the session 3 page</a><a class="btn quiet" href="session03_extra_cards.html?v=8">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Times table</h2><p><b>Before you run:</b> <code>range</code> stops before its second number, so <code>range(1, 13)</code> gives 1 to 12.</p><p>This is the program with both Go further parts.</p><pre><span class="tk-var">n</span> = <span class="tk-fn">input</span>(<span class="tk-str">"Which times table? "</span>)
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 3 of 12</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 5</span><span class="pill"><b>Friday section</b> Fri Oct 2</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session03_loops_counters_lists.html?v=9">Back to the session 3 page</a><a class="btn quiet" href="session03_extra_cards.html?v=9">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Times table</h2><p><b>Before you run:</b> <code>range</code> stops before its second number, so <code>range(1, 13)</code> gives 1 to 12.</p><p>This is the program with both Go further parts.</p><pre><span class="tk-var">n</span> = <span class="tk-fn">input</span>(<span class="tk-str">"Which times table? "</span>)
 <span class="tk-var">n</span> = <span class="tk-cls">int</span>(<span class="tk-var">n</span>)
 
 <span class="tk-var">total</span> = <span class="tk-num">0</span>
@@ -307,49 +308,60 @@ section.xcard h3{margin-top:20px}
 <span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"The twelve answers add up to </span><span class="tk-kw">{</span><span class="tk-var">total</span><span class="tk-kw">}</span><span class="tk-str">."</span>)
 <span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"</span><span class="tk-kw">{</span><span class="tk-var">over_50</span><span class="tk-kw">}</span><span class="tk-str"> of the answers are over 50."</span>)
 </pre><p class="outlabel">Its last two lines for the 7 times table</p><pre class="want">The twelve answers add up to 546.
-5 of the answers are over 50.</pre></section><section class="chunk xcard"><p class="chunk-no">Card B &middot; finish the starter &middot; about 20 minutes</p><h2>Rock paper scissors</h2><p><b>Before you change anything:</b> the two missing ways to win are paper against rock, and scissors against paper.</p><pre><span class="tk-ctl">import</span> <span class="tk-cls">random</span>
+5 of the answers are over 50.</pre></section><section class="chunk xcard"><p class="chunk-no">Card B &middot; finish the starter &middot; about 20 minutes</p><h2>Coin flips</h2><p><b>Before you run:</b> on a tails flip, only the <code>result</code> line and the print line run. The gate's block is skipped.</p><pre><span class="tk-ctl">import</span> <span class="tk-cls">random</span>
 
-<span class="tk-var">moves</span> = [<span class="tk-str">"rock"</span>, <span class="tk-str">"paper"</span>, <span class="tk-str">"scissors"</span>]
-<span class="tk-var">your_wins</span> = <span class="tk-num">0</span>
-<span class="tk-var">computer_wins</span> = <span class="tk-num">0</span>
+<span class="tk-var">sides</span> = [<span class="tk-str">"heads"</span>, <span class="tk-str">"tails"</span>]
+<span class="tk-var">heads</span> = <span class="tk-num">0</span>
+<span class="tk-var">tails</span> = <span class="tk-num">0</span>
 
-<span class="tk-ctl">for</span> <span class="tk-var">round_number</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-num">1</span>, <span class="tk-num">6</span>):
-    <span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"Round </span><span class="tk-kw">{</span><span class="tk-var">round_number</span><span class="tk-kw">}</span><span class="tk-str">"</span>)
-    <span class="tk-var">you</span> = <span class="tk-fn">input</span>(<span class="tk-str">"rock, paper, or scissors: "</span>)
-    <span class="tk-var">computer</span> = <span class="tk-cls">random</span>.<span class="tk-fn">choice</span>(<span class="tk-var">moves</span>)
-    <span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"The computer picked </span><span class="tk-kw">{</span><span class="tk-var">computer</span><span class="tk-kw">}</span><span class="tk-str">."</span>)
-
-    <span class="tk-ctl">if</span> <span class="tk-var">you</span> == <span class="tk-var">computer</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"Tie."</span>)
-    <span class="tk-ctl">elif</span> <span class="tk-var">you</span> == <span class="tk-str">"rock"</span> <span class="tk-kw">and</span> <span class="tk-var">computer</span> == <span class="tk-str">"scissors"</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"You win the round."</span>)
-        <span class="tk-var">your_wins</span> = <span class="tk-var">your_wins</span> + <span class="tk-num">1</span>
-    <span class="tk-ctl">elif</span> <span class="tk-var">you</span> == <span class="tk-str">"paper"</span> <span class="tk-kw">and</span> <span class="tk-var">computer</span> == <span class="tk-str">"rock"</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"You win the round."</span>)
-        <span class="tk-var">your_wins</span> = <span class="tk-var">your_wins</span> + <span class="tk-num">1</span>
-    <span class="tk-ctl">elif</span> <span class="tk-var">you</span> == <span class="tk-str">"scissors"</span> <span class="tk-kw">and</span> <span class="tk-var">computer</span> == <span class="tk-str">"paper"</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"You win the round."</span>)
-        <span class="tk-var">your_wins</span> = <span class="tk-var">your_wins</span> + <span class="tk-num">1</span>
+<span class="tk-ctl">for</span> <span class="tk-var">flip</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-num">1</span>, <span class="tk-num">21</span>):
+    <span class="tk-var">result</span> = <span class="tk-cls">random</span>.<span class="tk-fn">choice</span>(<span class="tk-var">sides</span>)
+    <span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"Flip </span><span class="tk-kw">{</span><span class="tk-var">flip</span><span class="tk-kw">}</span><span class="tk-str">: </span><span class="tk-kw">{</span><span class="tk-var">result</span><span class="tk-kw">}</span><span class="tk-str">"</span>)
+    <span class="tk-ctl">if</span> <span class="tk-var">result</span> == <span class="tk-str">"heads"</span>:
+        <span class="tk-var">heads</span> = <span class="tk-var">heads</span> + <span class="tk-num">1</span>
     <span class="tk-ctl">else</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"The computer wins the round."</span>)
-        <span class="tk-var">computer_wins</span> = <span class="tk-var">computer_wins</span> + <span class="tk-num">1</span>
+        <span class="tk-var">tails</span> = <span class="tk-var">tails</span> + <span class="tk-num">1</span>
 
-<span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"You won </span><span class="tk-kw">{</span><span class="tk-var">your_wins</span><span class="tk-kw">}</span><span class="tk-str">. The computer won </span><span class="tk-kw">{</span><span class="tk-var">computer_wins</span><span class="tk-kw">}</span><span class="tk-str">."</span>)
-<span class="tk-ctl">if</span> <span class="tk-var">your_wins</span> &gt; <span class="tk-var">computer_wins</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"You win the match."</span>)
-<span class="tk-ctl">elif</span> <span class="tk-var">your_wins</span> == <span class="tk-var">computer_wins</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"The match is a tie."</span>)
+<span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"Heads: </span><span class="tk-kw">{</span><span class="tk-var">heads</span><span class="tk-kw">}</span><span class="tk-str">"</span>)
+<span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"Tails: </span><span class="tk-kw">{</span><span class="tk-var">tails</span><span class="tk-kw">}</span><span class="tk-str">"</span>)
+<span class="tk-ctl">if</span> <span class="tk-var">heads</span> &gt; <span class="tk-var">tails</span>:
+    <span class="tk-fn">print</span>(<span class="tk-str">"Heads wins."</span>)
+<span class="tk-ctl">elif</span> <span class="tk-var">heads</span> == <span class="tk-var">tails</span>:
+    <span class="tk-fn">print</span>(<span class="tk-str">"A draw."</span>)
 <span class="tk-ctl">else</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"The computer wins the match."</span>)
-</pre><p class="outlabel">The end of one run</p><pre class="want">Round 5
-rock, paper, or scissors: paper
-The computer picked rock.
-You win the round.
-You won 2. The computer won 2.
-The match is a tie.</pre><p><b>Go further:</b> these three lines replace the one <code>input</code> line inside the for loop.</p><pre>    <span class="tk-var">you</span> = <span class="tk-str">""</span>
-    <span class="tk-ctl">while</span> <span class="tk-var">you</span> != <span class="tk-str">"rock"</span> <span class="tk-kw">and</span> <span class="tk-var">you</span> != <span class="tk-str">"paper"</span> <span class="tk-kw">and</span> <span class="tk-var">you</span> != <span class="tk-str">"scissors"</span>:
-        <span class="tk-var">you</span> = <span class="tk-fn">input</span>(<span class="tk-str">"rock, paper, or scissors: "</span>)
-</pre><p>If the student writes <code>or</code> where each <code>and</code> is, the loop never stops. It is the same mistake as the yes or no loop in session 2.</p></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the score report</h2><div class="tscroll"><table class="xkey"><tr><th>Run</th><th>What the student sees</th><th>The bug</th><th>The fix</th></tr><tr><td>1</td><td><code>over 80: 0</code>, <code>best: 100</code>, then <code>IndexError: list index out of range</code>, on line 11</td><td>Five items have indexes 0 to 4</td><td><code>scores[4]</code></td></tr><tr><td>2</td><td><code>over 80: 0</code></td><td><code>count = 0</code> is inside the loop, so it runs on every pass</td><td>Move <code>count = 0</code> above the <code>for</code> line</td></tr><tr><td>3</td><td><code>best: 100</code></td><td>No score is greater than 100, so <code>best</code> never changes</td><td><code>best = 0</code></td></tr><tr><td>4</td><td><code>over 80: 3</code>, <code>best: 97</code>, <code>last score: 67</code></td><td>None left</td><td></td></tr></table></div><p>The student may fix bugs 2 and 3 in either order.</p><p>The fixed program:</p><pre><span class="tk-var">scores</span> = [<span class="tk-num">72</span>, <span class="tk-num">95</span>, <span class="tk-num">88</span>, <span class="tk-num">97</span>, <span class="tk-num">67</span>]
+    <span class="tk-fn">print</span>(<span class="tk-str">"Tails wins."</span>)
+</pre><p class="outlabel">The last three lines of one run</p><pre class="want">Heads: 12
+Tails: 8
+Heads wins.</pre><p><b>Go further:</b> this is the program with the longest run of heads. <code>run</code> is a counter that is reset on purpose, and <code>longest</code> is best so far from chunk 5. For the seeded run on the card it prints 4.</p><pre><span class="tk-ctl">import</span> <span class="tk-cls">random</span>
+
+<span class="tk-var">sides</span> = [<span class="tk-str">"heads"</span>, <span class="tk-str">"tails"</span>]
+<span class="tk-var">heads</span> = <span class="tk-num">0</span>
+<span class="tk-var">tails</span> = <span class="tk-num">0</span>
+<span class="tk-var">run</span> = <span class="tk-num">0</span>
+<span class="tk-var">longest</span> = <span class="tk-num">0</span>
+
+<span class="tk-ctl">for</span> <span class="tk-var">flip</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-num">1</span>, <span class="tk-num">21</span>):
+    <span class="tk-var">result</span> = <span class="tk-cls">random</span>.<span class="tk-fn">choice</span>(<span class="tk-var">sides</span>)
+    <span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"Flip </span><span class="tk-kw">{</span><span class="tk-var">flip</span><span class="tk-kw">}</span><span class="tk-str">: </span><span class="tk-kw">{</span><span class="tk-var">result</span><span class="tk-kw">}</span><span class="tk-str">"</span>)
+    <span class="tk-ctl">if</span> <span class="tk-var">result</span> == <span class="tk-str">"heads"</span>:
+        <span class="tk-var">heads</span> = <span class="tk-var">heads</span> + <span class="tk-num">1</span>
+        <span class="tk-var">run</span> = <span class="tk-var">run</span> + <span class="tk-num">1</span>
+    <span class="tk-ctl">else</span>:
+        <span class="tk-var">tails</span> = <span class="tk-var">tails</span> + <span class="tk-num">1</span>
+        <span class="tk-var">run</span> = <span class="tk-num">0</span>
+    <span class="tk-ctl">if</span> <span class="tk-var">run</span> &gt; <span class="tk-var">longest</span>:
+        <span class="tk-var">longest</span> = <span class="tk-var">run</span>
+
+<span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"Heads: </span><span class="tk-kw">{</span><span class="tk-var">heads</span><span class="tk-kw">}</span><span class="tk-str">"</span>)
+<span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"Tails: </span><span class="tk-kw">{</span><span class="tk-var">tails</span><span class="tk-kw">}</span><span class="tk-str">"</span>)
+<span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"Longest run of heads: </span><span class="tk-kw">{</span><span class="tk-var">longest</span><span class="tk-kw">}</span><span class="tk-str">"</span>)
+<span class="tk-ctl">if</span> <span class="tk-var">heads</span> &gt; <span class="tk-var">tails</span>:
+    <span class="tk-fn">print</span>(<span class="tk-str">"Heads wins."</span>)
+<span class="tk-ctl">elif</span> <span class="tk-var">heads</span> == <span class="tk-var">tails</span>:
+    <span class="tk-fn">print</span>(<span class="tk-str">"A draw."</span>)
+<span class="tk-ctl">else</span>:
+    <span class="tk-fn">print</span>(<span class="tk-str">"Tails wins."</span>)
+</pre><p>If the student puts the <code>run = 0</code> line above the loop only, and never resets it, <code>longest</code> comes out equal to the heads count. Ask what should happen to the run when the coin lands tails.</p></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the score report</h2><div class="tscroll"><table class="xkey"><tr><th>Run</th><th>What the student sees</th><th>The bug</th><th>The fix</th></tr><tr><td>1</td><td><code>over 80: 0</code>, <code>best: 100</code>, then <code>IndexError: list index out of range</code>, on line 11</td><td>Five items have indexes 0 to 4</td><td><code>scores[4]</code></td></tr><tr><td>2</td><td><code>over 80: 0</code></td><td><code>count = 0</code> is inside the loop, so it runs on every pass</td><td>Move <code>count = 0</code> above the <code>for</code> line</td></tr><tr><td>3</td><td><code>best: 100</code></td><td>No score is greater than 100, so <code>best</code> never changes</td><td><code>best = 0</code></td></tr><tr><td>4</td><td><code>over 80: 3</code>, <code>best: 97</code>, <code>last score: 67</code></td><td>None left</td><td></td></tr></table></div><p>The student may fix bugs 2 and 3 in either order.</p><p>The fixed program:</p><pre><span class="tk-var">scores</span> = [<span class="tk-num">72</span>, <span class="tk-num">95</span>, <span class="tk-num">88</span>, <span class="tk-num">97</span>, <span class="tk-num">67</span>]
 <span class="tk-var">best</span> = <span class="tk-num">0</span>
 <span class="tk-var">count</span> = <span class="tk-num">0</span>
 <span class="tk-ctl">for</span> <span class="tk-var">s</span> <span class="tk-ctl">in</span> <span class="tk-var">scores</span>:
@@ -360,7 +372,7 @@ The match is a tie.</pre><p><b>Go further:</b> these three lines replace the one
 <span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"over 80: </span><span class="tk-kw">{</span><span class="tk-var">count</span><span class="tk-kw">}</span><span class="tk-str">"</span>)
 <span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"best: </span><span class="tk-kw">{</span><span class="tk-var">best</span><span class="tk-kw">}</span><span class="tk-str">"</span>)
 <span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"last score: </span><span class="tk-kw">{</span><span class="tk-var">scores</span>[<span class="tk-num">4</span>]<span class="tk-kw">}</span><span class="tk-str">"</span>)
-</pre><p><b>Go further:</b> <code>lowest = 100</code> above the loop, then <code>if s &lt; lowest:</code> with <code>lowest = s</code> in its block. It prints 67, the same as <code>min(scores)</code>. The starting value for <code>lowest</code> has to be higher than every score. For <code>best</code> it has to be lower than every score.</p></section></div></main><nav class="pager"><a href="session03_loops_counters_lists.html?v=8">&larr; Session 3: Loops, counters, and lists</a><a href="beginner_semester_hub.html?v=8">Course home</a><a href="session04_functions_that_return.html?v=8">Session 4: Functions that return a value &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 3, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
+</pre><p><b>Go further:</b> <code>lowest = 100</code> above the loop, then <code>if s &lt; lowest:</code> with <code>lowest = s</code> in its block. It prints 67, the same as <code>min(scores)</code>. The starting value for <code>lowest</code> has to be higher than every score. For <code>best</code> it has to be lower than every score.</p></section></div></main><nav class="pager"><a href="session03_loops_counters_lists.html?v=9">&larr; Session 3: Loops, counters, and lists</a><a href="beginner_semester_hub.html?v=9">Course home</a><a href="session04_rock_paper_scissors.html?v=9">Session 4: Rock paper scissors &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 3, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

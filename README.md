@@ -26,14 +26,14 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | `session02_extra_cards.html` | Session 2 extra cards: three-question quiz, guess my number, bug hunt. |
 | `session02_extra_cards_key.html` | The session 2 extra cards' answer key. Linked from the session 2 teacher panel only. |
 | `session03_loops_counters_lists.html` | Loops, counters, and lists |
-| `session03_extra_cards.html` | Session 3 extra cards: times table, rock paper scissors, bug hunt. |
+| `session03_extra_cards.html` | Session 3 extra cards: times table, coin flips, bug hunt. |
 | `session03_extra_cards_key.html` | The session 3 extra cards' answer key. Linked from the session 3 teacher panel only. |
-| `session04_functions_that_return.html` | Functions that return a value |
-| `session04_extra_cards.html` | Session 4 extra cards: letter grades, dice game, bug hunt. |
-| `session04_extra_cards_key.html` | The session 4 extra cards' answer key. Linked from the session 4 teacher panel only. |
-| `session05_angles_and_shapes.html` | Angles and shapes on screen |
-| `session06_strings_as_data.html` | Strings as data |
-| `session07_debugging_clinic.html` | Debugging clinic |
+| `session04_rock_paper_scissors.html` | Rock paper scissors. Ends with an extension: rock paper scissors lizard Spock. |
+| `session05_functions_that_return.html` | Functions that return a value |
+| `session05_extra_cards.html` | Session 5 extra cards: letter grades, dice game, bug hunt. |
+| `session05_extra_cards_key.html` | The session 5 extra cards' answer key. Linked from the session 5 teacher panel only. |
+| `session06_angles_and_shapes.html` | Angles and shapes on screen |
+| `session07_strings_as_data.html` | Strings as data |
 | `session08_remainders_cipher_wheel.html` | Remainders and the cipher wheel |
 | `session09_dictionaries.html` | Dictionaries |
 | `session10_the_pygame_window.html` | The pygame window |
@@ -43,14 +43,14 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 
 ## Environment
 
-VS Code on the desktop, throughout. One graphics library, pygame, from session 5
+VS Code on the desktop, throughout. One graphics library, pygame, from session 6
 onward: `pip install pygame`. There is no turtle in this course and no second
-graphics library, because turtle does not run in our VS Code setup. Session 5 is a
+graphics library, because turtle does not run in our VS Code setup. Session 6 is a
 pygame drawing session carrying the same angle arithmetic a turtle session would.
 
 Students meet the frame loop twice, on purpose:
 
-- **Session 5** hands it over as a working harness whose only job is to hold a
+- **Session 6** hands it over as a working harness whose only job is to hold a
   finished drawing on screen. The drawing is done once onto a `pygame.Surface`
   above the loop, because the picture never changes.
 - **Session 10** takes the same eight lines apart and moves the `fill` and the
@@ -60,8 +60,11 @@ Students meet the frame loop twice, on purpose:
 Both placements are on the constraints page, in that order, so nobody has to guess
 which one a given page uses.
 
-If an earlier build was already uploaded, delete `session05_turtle_and_angles.html`
-from the live repo. It no longer exists here and the hub no longer links to it.
+If an earlier build was already uploaded, delete `session05_turtle_and_angles.html`,
+`session04_functions_that_return.html`, `session04_extra_cards.html`,
+`session04_extra_cards_key.html`, `session05_angles_and_shapes.html`,
+`session06_strings_as_data.html`, and `session07_debugging_clinic.html` from the live
+repo. None of them exist here and the hub no longer links to them.
 
 ## Look and behaviour
 
@@ -153,7 +156,7 @@ build/validate.py      checks the written site
 build/highlight.py     colours code blocks by role, the way VS Code's Light+ theme does
 build/worksheet.py     the worksheet CSS, blocks, and projector typing script, shared by every sheet
 build/ws02.py          the session 2 worksheet and its answer key
-build/extras.py        the extra cards and their answer keys, sessions 1 to 4
+build/extras.py        the extra cards and their answer keys, sessions 1 to 3 and 5
 build/pdf.py           renders the worksheets to PDF
 ```
 
@@ -184,10 +187,14 @@ the page. No output box on this site was typed from expectation.
   continues a program from an earlier chunk, the page says so on the page itself and
   the whole file was run together, with the earlier program supplied as a run prefix.
 - Snippet files are named after their session, so tracebacks shown to students read
-  `File "Jonathan_session07.py", line 3` rather than a temporary path. The house
+  `File "Jonathan_session02.py", line 3` rather than a temporary path. The house
   rule is that every student file starts with the student's first name, then an
   underscore, then the session; Jonathan stands in for the name on the pages.
 - Output labels only claim a frame quota when the snippet actually contains a loop.
+- A chunk or card with a `seed` runs with `random` seeded before the program starts,
+  through the same `sitecustomize` hook, so a program that picks at random prints the
+  same run every build and keeps its line numbers. The page labels that box "on one
+  run" and the prose says the student's run will differ.
 
 `validate.py` checks tag balance, reveal-button to answer-block parity, duplicate
 reveal ids, `aria-controls` and `aria-expanded` on every reveal button, escaped angle
@@ -214,9 +221,14 @@ False on the sheet and key is Python's own comparison, and every printed line in
 key comes from running the program at build time; the build stops if a run disagrees
 with a row or with a number in a sentence.
 
-Build briefs may carry `cards`: verified code blocks inside the brief (session 7's
-five broken cards, session 12's engine). They run through the same harness as
-chunks and their output sits behind the same reveal.
+Build briefs may carry `cards`: verified code blocks inside the brief (session 12's
+engine). They run through the same harness as chunks and their output sits behind
+the same reveal.
+
+A session with an `extension` entry gets a section after "Where you can stop" for a
+student who is past the stretch exit: an intro, verified `cards` with the same
+reveal, numbered steps, and an expected and got table. Session 4 uses it for rock
+paper scissors lizard Spock.
 
 A session with an `extras` entry gets a section under "Where you can stop" that links
 to its extra cards, and a Files note in its teacher panel with the answer key.
@@ -280,3 +292,18 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   3.11, which reproduces the v7 pages byte for byte; under 3.12 and 3.13 the same
   sources give the same colours but split f-string quote marks into their own spans,
   and one traceback on the session 7 page draws its caret line differently.
+- **2026-10-18, v9.** A new session 4, rock paper scissors, inserted after session 3:
+  eight chunks that build the game from the move list, a five-way gate, rounds,
+  counters, the verdict, and the asking loop, with a first-to-three build and an
+  extension for rock paper scissors lizard Spock. The debugging clinic is dropped.
+  Functions that return becomes session 5, angles and shapes session 6, strings as
+  data session 7, each on the next date; sessions 8 to 12 and the bonus keep their
+  dates. Every cross-reference, stamp number, and the constraints page's "first
+  taught" column renumbered. Session 8's opener retrieves the remainder from session
+  6 in place of the clinic's bug types; session 12's card questions point at the
+  reference strip's one-change-per-run line. Session 3's rock paper scissors extra
+  card is replaced by coin flips, so the card does not give session 4 away, and the
+  functions cards move to session 5 with `session05_` file names. `render.py` gains
+  `seed` on chunks and cards, an `extension` section, and a fix for the hook's
+  bytecode cache, which could hand one seeded run the previous run's seed. Version
+  pin bumped to `?v=9` on every page.
