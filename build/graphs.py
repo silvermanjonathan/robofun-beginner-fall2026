@@ -18,11 +18,15 @@ CARD = "#FFFDF7"
 RULE = "#D3CBB8"
 FONT = "font-family:JetBrains Mono,monospace"
 
-NODE_R = 44
+NODE_R = 50
 
 
-def _arrow(a, b, label, color, at=0.5, flip=False):
-    """One arrow from node a to node b, trimmed to the circle edges, with a label."""
+def _arrow(a, b, label, color, at=0.5, flip=False, label_at=None):
+    """One arrow from node a to node b, trimmed to the circle edges, with a label.
+
+    The label sits beside the line at fraction `at`, on the side `flip` picks, unless
+    label_at gives its centre outright.
+    """
     (ax, ay), (bx, by) = a, b
     dx, dy = bx - ax, by - ay
     length = math.hypot(dx, dy)
@@ -33,6 +37,8 @@ def _arrow(a, b, label, color, at=0.5, flip=False):
     # label sits beside the line, on the side the caller asks for
     nx, ny = (-uy, ux) if flip else (uy, -ux)
     lx, ly = lx + nx * 14, ly + ny * 14
+    if label_at:
+        lx, ly = label_at
     # a card-coloured box behind the label keeps it readable where lines cross
     w = len(label) * 8.6 + 10
     return (
@@ -83,7 +89,7 @@ def rps_graph():
 
 def rpsls_graph():
     """Five moves, ten arrows: each move beats two and loses to two."""
-    cx, cy, r = 320, 282, 196
+    cx, cy, r = 320, 284, 200
     names = ["scissors", "paper", "rock", "lizard", "spock"]
     pos = {}
     for i, name in enumerate(names):
@@ -92,21 +98,26 @@ def rpsls_graph():
     ring = [("scissors", "paper", "cuts"), ("paper", "rock", "covers"),
             ("rock", "lizard", "crushes"), ("lizard", "spock", "poisons"),
             ("spock", "scissors", "smashes")]
-    star = [("scissors", "lizard", "decapitates"), ("lizard", "paper", "eats"),
-            ("paper", "spock", "disproves"), ("spock", "rock", "vaporizes"),
-            ("rock", "scissors", "crushes")]
+    # the five crossing arrows make a star; each label sits in the open space
+    # beside its own arrow, placed by hand so none lands on another arrow
+    star = [("scissors", "lizard", "decapitates", (262, 188)),
+            ("lizard", "paper", "eats", (292, 398)),
+            ("paper", "spock", "disproves", (320, 243)),
+            ("spock", "rock", "vaporizes", (245, 318)),
+            ("rock", "scissors", "crushes", (402, 312))]
     body = _defs([TEAL, CLAY])
     for a, b, verb in ring:
         body += _arrow(pos[a], pos[b], verb, TEAL, flip=True)
-    for a, b, verb in star:
-        body += _arrow(pos[a], pos[b], verb, CLAY, at=0.2)
+    for a, b, verb, where in star:
+        body += _arrow(pos[a], pos[b], verb, CLAY, label_at=where)
     for name in names:
         body += _node(*pos[name], name)
-    body += (f'<text x="20" y="528" fill="{SOFT}" font-size="14" font-weight="700">'
-             'an arrow points from the move that wins to the move it beats: five round the '
-             'outside, five across the middle</text>')
+    body += (f'<text x="20" y="522" fill="{SOFT}" font-size="14" font-weight="700">'
+             'an arrow points from the move that wins to the move it beats:</text>'
+             f'<text x="20" y="542" fill="{SOFT}" font-size="14" font-weight="700">'
+             'five round the outside, five across the middle</text>')
     return ('<h3>The ten rules as arrows</h3>'
-            '<svg viewBox="0 0 640 545" width="100%" role="img" aria-label="Five circles in a '
+            '<svg viewBox="0 0 640 556" width="100%" role="img" aria-label="Five circles in a '
             'ring labelled scissors, paper, rock, lizard, and spock. Five arrows go round the '
             'outside: scissors cuts paper, paper covers rock, rock crushes lizard, lizard '
             'poisons spock, spock smashes scissors. Five arrows cross the middle: scissors '
@@ -142,11 +153,12 @@ def pairs_tree():
             body += (f'<text x="520" y="{yy + 6}" fill="{GREEN if win else CLAY}" font-weight="700" '
                      f'font-size="15">{"you win" if win else "you lose"}</text>')
             k += 1
-    body += (f'<text x="20" y="400" fill="{SOFT}" font-size="14" font-weight="700">'
-             '3 moves for you, times 2 moves for the computer that are not a tie, is 6 pairs. '
+    body += (f'<text x="20" y="396" fill="{SOFT}" font-size="14" font-weight="700">'
+             '3 moves for you, times 2 computer moves that are not a tie, is 6 pairs.</text>'
+             f'<text x="20" y="416" fill="{SOFT}" font-size="14" font-weight="700">'
              'Add the 3 ties for 9.</text>')
     return ('<h3>Every way a round can go, ties left out</h3>'
-            '<svg viewBox="0 0 640 418" width="100%" role="img" aria-label="A tree. On the '
+            '<svg viewBox="0 0 640 432" width="100%" role="img" aria-label="A tree. On the '
             'left, three boxes: rock, paper, scissors, for the move you type. From each box, '
             'two lines go to the two computer moves that are not a tie, and each pair is '
             'labelled you win or you lose. Three times two is six pairs; with the three ties '
