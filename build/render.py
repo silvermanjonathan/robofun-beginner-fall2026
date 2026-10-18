@@ -21,7 +21,7 @@ SESSIONS = SESSIONS_A + SESSIONS_B + SESSIONS_C
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "9"
+VERSION = "10"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -332,6 +332,10 @@ button.rev:hover{background:var(--teal-deep)}
 button.rev.hint{background:var(--card); color:var(--ochre); border:2px solid var(--ochre-line); margin:0 10px 10px 0}
 button.rev.hint:hover{background:var(--ochre-tint)}
 .hints .ans{margin:0 0 12px; padding-top:10px; border-top:2px solid var(--ochre-line)}
+.ladder .ans{margin:12px 0 0; padding-top:12px; border-top:2px solid var(--ochre-line)}
+.ladder .ans p{margin:0 0 12px}
+.ladder .ans pre{margin:0 0 12px}
+.ladder .q b{color:var(--clay)}
 .ans{display:none; margin-top:16px; padding-top:16px; border-top:2px solid var(--rule)}
 .ans.open{display:block}
 table{border-collapse:collapse; width:100%; margin:0 0 16px; font-size:16.5px}
@@ -504,6 +508,40 @@ def hint_buttons(idx, hints):
     return '<div class="hints">' + "".join(out) + '</div>'
 
 
+def hint_html(h):
+    """A hint is a string of HTML, or a dict with "text" and/or "code"."""
+    if isinstance(h, str):
+        return '<p>' + h + '</p>'
+    out = ""
+    if h.get("text"):
+        out += '<p>' + h["text"] + '</p>'
+    if h.get("code"):
+        out += code_block(h["code"])
+    return out
+
+
+def ladder(idx, question, hints, answer_html, label="What goes next?"):
+    """A question for the room, with hints that open one inside the next.
+
+    Hint 2's button sits inside hint 1's box, hint 3's inside hint 2's, and the button
+    that shows the lines sits inside the last hint, so the hints come out in order and
+    nothing below the question is on screen until it is asked for.
+    """
+    aid = idx + "-lines"
+    inner = ('<button class="rev" data-target="' + aid + '" aria-controls="' + aid + '" '
+             'aria-expanded="false" data-show="Show the lines" data-hide="Hide the lines">'
+             'Show the lines</button>'
+             '<div class="ans" id="' + aid + '">' + answer_html + '</div>')
+    for n in range(len(hints), 0, -1):
+        hid = idx + "-h" + str(n)
+        inner = ('<button class="rev hint" data-target="' + hid + '" aria-controls="' + hid + '" '
+                 'aria-expanded="false" data-show="Hint ' + str(n) + '" data-hide="Hide hint '
+                 + str(n) + '">Hint ' + str(n) + '</button>'
+                 '<div class="ans" id="' + hid + '">' + hint_html(hints[n - 1]) + inner + '</div>')
+    return ('<div class="predict ladder"><p class="q"><b>' + label + '</b> ' + question + '</p>'
+            + inner + '</div>')
+
+
 def reveal(idx, question, answer, qlabel="Predict", extra="",
            show="Show the answer", hide="Hide the answer", hints=None):
     return (
@@ -584,9 +622,10 @@ def render_session(s, prev_s, next_s):
         b.append('<p>' + ch["teach"] + '</p>')
         if ch.get("figure"):
             b.append(ch["figure"])
-        b.append(code_block(ch["code"]))
+        nx = ch.get("next")
+        shown = [code_block(ch["code"])]
         if ch.get("prefix"):
-            b.append('<p class="note">' + ch.get("where",
+            shown.append('<p class="note">' + ch.get("where",
                      'Add this code to the file you made in chunk 3. Where it goes matters. '
                      'Functions are defined near the top of a program, after the imports and '
                      'before any line that does work. The new function is separate from '
@@ -598,6 +637,11 @@ def render_session(s, prev_s, next_s):
                      'That is after <code>canvas.fill(BG)</code>, so the canvas exists before '
                      'you draw on it, and before <code>while running:</code>, because the loop '
                      'only shows what was drawn before it started. Then run the whole file.') + '</p>')
+        if nx:
+            b.append(ladder(tag + "-next", nx["q"], nx["hints"],
+                            "".join(shown) + '<p>' + nx["a"] + '</p>'))
+        else:
+            b.extend(shown)
         loops = "while running" in ch["code"]
         extra = ""
         if out:
@@ -703,7 +747,14 @@ def render_session(s, prev_s, next_s):
             b.append('<h3>' + html.escape(card["title"]) + '</h3>')
             if card.get("teach"):
                 b.append('<p>' + card["teach"] + '</p>')
-            b.append(code_block(card["code"]))
+            if card.get("figure"):
+                b.append(card["figure"])
+            nx = card.get("next")
+            if nx:
+                b.append(ladder(tag + "-next", nx["q"], nx["hints"],
+                                code_block(card["code"]) + '<p>' + nx["a"] + '</p>'))
+            else:
+                b.append(code_block(card["code"]))
             extra = ""
             if out:
                 lbl = "What it actually prints"

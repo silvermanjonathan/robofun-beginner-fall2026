@@ -1,3 +1,5 @@
+from graphs import rps_graph, rpsls_graph, pairs_tree
+
 SESSIONS_A = [
 
 # =====================================================================
@@ -371,12 +373,12 @@ SESSIONS_A = [
  "num": 4,
  "slug": "session04_rock_paper_scissors",
  "title": "Rock paper scissors",
- "subtitle": "A game you can play, built from a list, a gate, and two loops",
+ "subtitle": "A game you can play, built from a list, a gate, two loops, and a scoreboard",
  "mon": "Mon Oct 19",
  "fri": "Fri Oct 9",
- "new": ["a program someone can play", "the move list, used twice", "a five-way gate with and", "else as everything left", "a loop inside a loop", "two counters in one loop", "a probe print", "a silent bug"],
+ "new": ["a program someone can play", "the move list, used twice", "the rules as arrows", "a five-way gate with and", "else as everything left", "a loop inside a loop", "a scoreboard from two counters", "a probe print", "a silent bug"],
  "reuse": "Session 2: gates with and, the asking loop; session 3: for and range, counters, lists, random.choice",
- "reuse_note": "No new syntax today. Every line comes from session 2 or session 3, and what is new is putting them in one program that someone can play. Say that at the start, because the finished program is the longest one they have typed and the length is the only hard part. The Monday section has not met for two weeks, so the opener re-teaches random.choice rather than only checking it.",
+ "reuse_note": "No new syntax today. Every line comes from session 2 or session 3, and what is new is putting them in one program that someone can play. Say that at the start, because the finished program is the longest one they have typed and the length is the only hard part. From chunk 2 on, every chunk opens with a question for the room, What goes next?, with three hints behind buttons and the lines behind a fourth. Ask the room before you open anything; open a hint only when the room is stuck; open the lines last. The Monday section has not met for two weeks, so the opener re-teaches random.choice rather than only checking it.",
  "opener": {
    "title": "Retrieval: a random pick, and the word and",
    "minutes": 10,
@@ -399,7 +401,16 @@ SESSIONS_A = [
    "reveal": "No, and usually not. The first answer: it only ever gives back one of the three items, so <code>computer</code> is always rock, paper, or scissors, spelled exactly as the list spells it. The second answer: there is no <code>random.seed</code> line, so each run picks afresh, and three runs match only by chance, the way three coin flips can. The output box shows one run, and your runs do not have to match it. The move that can be anything is the one the player is about to type."},
 
   {"title": "Your move comes from the keyboard",
-   "teach": "<code>input</code> gives you the text the player typed. A tie is the easiest result to test for, so the gate starts there: one comparison between the typed move and the picked move.",
+   "teach": "The computer has its move. The player needs one too, and then the program needs a way to say what happened in the round. A tie is the easiest result to test for, so the gate starts there.",
+   "next": {
+     "q": "Line 4 gives the computer its move. What two things have to happen next, so the player has a move and the program can say whether the round is a tie?",
+     "hints": [
+       "The player types at the keyboard. Which function from session 1 stops the program and waits for typing, and what type of value does it give back?",
+       "A tie is when the two moves are the same text. The comparison <code>==</code> from session 2 gives True or False. Put that comparison after <code>if</code>, with an <code>else</code> for every other case.",
+       {"text": "Fill the blank.", "code": 'you = input("rock, paper, or scissors: ")\nprint(f"You picked {you}. The computer picked {computer}.")\nif you ____ computer:\n    print("Tie.")\nelse:\n    print("Not a tie.")'},
+     ],
+     "a": "Lines 5 to 10 are new: the question, a print that shows both moves, and a two-way gate on <code>==</code>.",
+   },
    "code": 'import random\n\nmoves = ["rock", "paper", "scissors"]\ncomputer = random.choice(moves)\nyou = input("rock, paper, or scissors: ")\nprint(f"You picked {you}. The computer picked {computer}.")\nif you == computer:\n    print("Tie.")\nelse:\n    print("Not a tie.")',
    "run": "py",
    "seed": 1,
@@ -408,17 +419,36 @@ SESSIONS_A = [
    "reveal": "Yes. Both variables hold the same four characters, r o c k, and <code>==</code> compares the characters. It does not care whether a value was typed, picked from a list, or written in the code. The quote marks around rock in the list are not part of the value. Type Rock with a capital R and the gate prints Not a tie, because R and r are different characters."},
 
   {"title": "One way to win, and a gate that is wrong",
-   "teach": "Rock beats scissors. Here that one rule becomes an <code>elif</code> with <code>and</code>, under the tie test, and the <code>else</code> prints that the computer won.</p><p>Line 6 is a <b>probe</b>: a print whose only job is to show you a value the program would otherwise keep to itself. Without it you would not know what the computer picked, so you could not tell whether the gate got the round right. Keep it in while you build, and take it out when the game works.",
+   "teach": "Leave the ties out and a round can go six ways: three moves for you, and for each one, two moves the computer can pick that are not the same. The tree shows all six. Three of them are wins for you, and the gate so far knows none of them.</p><p>Rock beats scissors. Here that one rule becomes a branch of the gate.</p><p>Line 6 is a <b>probe</b>: a print whose only job is to show you a value the program would otherwise keep to itself. Without it you would not know what the computer picked, so you could not tell whether the gate got the round right. Keep it in while you build, and take it out when the game works.",
+   "figure": pairs_tree(),
+   "next": {
+     "q": "Rock beats scissors. Which lines turn that one rule into a way through the gate, and where in the gate do they go?",
+     "hints": [
+       "It is a new way through the gate, so it is an <code>elif</code> with its own block, between the <code>if</code> and the <code>else</code>.",
+       "The rule needs two things to be true at once: you typed rock, and the computer picked scissors. Session 2's <code>and</code> joins two comparisons on one line.",
+       {"text": "Fill the blank.", "code": 'elif you == "rock" ____ computer == "scissors":\n    print("You win.")'},
+     ],
+     "a": "Lines 9 and 10 are new, and the <code>else</code> now says that the computer wins.",
+   },
    "code": 'import random\n\nmoves = ["rock", "paper", "scissors"]\ncomputer = random.choice(moves)\nyou = input("rock, paper, or scissors: ")\nprint(f"You picked {you}. The computer picked {computer}.")\nif you == computer:\n    print("Tie.")\nelif you == "rock" and computer == "scissors":\n    print("You win.")\nelse:\n    print("The computer wins.")',
    "run": "py",
    "seed": 1,
    "stdin": "paper\n",
    "predict": "You type paper and the computer picks rock. Paper beats rock. Which of the three print lines runs, and is it right?",
-   "reveal": "The last print line runs, and it is wrong: the output says the computer wins, and paper beats rock. The <code>if</code> is False, because paper and rock are different. The <code>elif</code> is False, because you did not type rock. So Python runs the <code>else</code>, which is every case the lines above it did not name, and right now that includes two winning pairs. No error appears. The program runs to the end and prints the wrong answer, which is a silent bug: the probe on line 6 is the only reason you can see it."},
+   "reveal": "The last print line runs, and it is wrong: the output says the computer wins, and paper beats rock. The <code>if</code> is False, because paper and rock are different. The <code>elif</code> is False, because you did not type rock. So Python runs the <code>else</code>, which is every case the lines above it did not name, and right now that includes two winning pairs from the tree. No error appears. The program runs to the end and prints the wrong answer, which is a silent bug: the probe on line 6 is the only reason you can see it."},
 
   {"title": "All three ways to win",
-   "teach": "The rules have three ways to win, so the gate gets three <code>elif</code> lines, one per rule, each with its own <code>and</code>. The tie test stays first and the <code>else</code> stays last. The table shows all nine pairs and which line of the gate handles each one.",
-   "figure": '<h3>The nine pairs</h3><table><tr><th>You typed</th><th>computer is rock</th><th>computer is paper</th><th>computer is scissors</th></tr><tr><th>rock</th><td>tie: the <code>if</code></td><td>lose: the <code>else</code></td><td>win: the first <code>elif</code></td></tr><tr><th>paper</th><td>win: the second <code>elif</code></td><td>tie: the <code>if</code></td><td>lose: the <code>else</code></td></tr><tr><th>scissors</th><td>lose: the <code>else</code></td><td>win: the third <code>elif</code></td><td>tie: the <code>if</code></td></tr></table>',
+   "teach": "The rules are three arrows. Each move beats exactly one other move and loses to exactly one, so the arrows go round in a circle and no move is the best one to pick. If a move beat both others, everyone would pick it and there would be no game.</p><p>Each arrow is one way to win, so the gate gets one <code>elif</code> per arrow, each with its own <code>and</code>. The tie test stays first and the <code>else</code> stays last. The table shows all nine pairs and which line of the gate handles each one.",
+   "figure": rps_graph() + '<h3>The nine pairs</h3><table><tr><th>You typed</th><th>computer is rock</th><th>computer is paper</th><th>computer is scissors</th></tr><tr><th>rock</th><td>tie: the <code>if</code></td><td>lose: the <code>else</code></td><td>win: the first <code>elif</code></td></tr><tr><th>paper</th><td>win: the second <code>elif</code></td><td>tie: the <code>if</code></td><td>lose: the <code>else</code></td></tr><tr><th>scissors</th><td>lose: the <code>else</code></td><td>win: the third <code>elif</code></td><td>tie: the <code>if</code></td></tr></table>',
+   "next": {
+     "q": "The gate knows one of the three arrows. What goes in for the other two, and does the <code>else</code> have to change?",
+     "hints": [
+       "Two more arrows means two more <code>elif</code> lines, each with its own print, above the <code>else</code>.",
+       "Read each arrow from its tail to its head: paper covers rock, and scissors cuts paper. The tail is what you typed and the head is what the computer picked.",
+       {"text": "Fill the two blanks.", "code": 'elif you == "paper" and computer == ____:\n    print("You win.")\nelif you == ____ and computer == "paper":\n    print("You win.")'},
+     ],
+     "a": "Lines 11 to 14 are new. The <code>else</code> does not change. It still says the computer wins, and the table shows why that is now right: the three losses are the only pairs left when Python reaches it.",
+   },
    "code": 'import random\n\nmoves = ["rock", "paper", "scissors"]\ncomputer = random.choice(moves)\nyou = input("rock, paper, or scissors: ")\nprint(f"You picked {you}. The computer picked {computer}.")\nif you == computer:\n    print("Tie.")\nelif you == "rock" and computer == "scissors":\n    print("You win.")\nelif you == "paper" and computer == "rock":\n    print("You win.")\nelif you == "scissors" and computer == "paper":\n    print("You win.")\nelse:\n    print("The computer wins.")',
    "run": "py",
    "seed": 1,
@@ -427,7 +457,16 @@ SESSIONS_A = [
    "reveal": "Three pairs: rock against paper, paper against scissors, and scissors against rock. By the time Python reaches the <code>else</code>, every other pair has been taken: the <code>if</code> took the three ties and the three <code>elif</code> lines took the three wins. Nine pairs, and the <code>else</code> is left with exactly the three losses, so it needs no condition of its own. Paper against rock now runs the second <code>elif</code> and prints <code>You win.</code>"},
 
   {"title": "Rounds: the game inside a for loop",
-   "teach": "One round is a pick, a question, and the gate. For three rounds, put those lines inside a <code>for</code> loop with <code>range(1, 4)</code>, and print the round number at the top of each pass. Every line that belongs to a round moves right by four spaces, so the gate's <code>if</code>, <code>elif</code>, and <code>else</code> lines now start four spaces in, and their print lines start eight spaces in.</p><p>The import and the list stay above the loop. The list is made once and used on every pass.",
+   "teach": "One round works. A game is several rounds, and nobody wants to type the gate three times.",
+   "next": {
+     "q": "What has to change so the program plays three rounds, without copying the whole program three times?",
+     "hints": [
+       "Session 3's <code>for</code> loop repeats a block. <code>range(1, 4)</code> gives the values 1, 2, 3, one per pass.",
+       "Every line that belongs to a round goes inside the loop, so each one moves right by four spaces. The gate's <code>if</code>, <code>elif</code>, and <code>else</code> lines start four spaces in, and their print lines start eight spaces in. The import and the list stay above the loop, because they are needed once.",
+       {"text": "Fill the blank, then indent everything from the pick to the end of the gate.", "code": 'for round_number in range(1, ____):\n    print(f"Round {round_number}")\n    computer = random.choice(moves)'},
+     ],
+     "a": "Lines 5 and 6 are new: the <code>for</code> line and the round number. Everything under them is the chunk 4 program, moved right by four spaces.",
+   },
    "code": 'import random\n\nmoves = ["rock", "paper", "scissors"]\n\nfor round_number in range(1, 4):\n    print(f"Round {round_number}")\n    computer = random.choice(moves)\n    you = input("rock, paper, or scissors: ")\n    print(f"You picked {you}. The computer picked {computer}.")\n    if you == computer:\n        print("Tie.")\n    elif you == "rock" and computer == "scissors":\n        print("You win.")\n    elif you == "paper" and computer == "rock":\n        print("You win.")\n    elif you == "scissors" and computer == "paper":\n        print("You win.")\n    else:\n        print("The computer wins.")',
    "run": "py",
    "seed": 35,
@@ -435,19 +474,37 @@ SESSIONS_A = [
    "predict": "Three passes. Which lines run three times, and which run once?",
    "reveal": "Three times: every line indented under the <code>for</code> line, which is the round number, the pick, the question, the probe, and the whole gate. Once: the two lines above the loop, <code>import random</code> and the list. The gate runs once per round with a fresh <code>you</code> and a fresh <code>computer</code> each time, which is why round 1 can be a win and round 2 a tie."},
 
-  {"title": "Two counters keep the score",
-   "teach": "A counter is a variable the program adds 1 to. Two of them, started at 0 above the loop: <code>your_wins</code> adds 1 in each of the three win branches, and <code>computer_wins</code> adds 1 in the <code>else</code>. The tie branch adds to neither. After the loop, one f-string prints both.",
-   "code": 'import random\n\nmoves = ["rock", "paper", "scissors"]\nyour_wins = 0\ncomputer_wins = 0\n\nfor round_number in range(1, 4):\n    print(f"Round {round_number}")\n    computer = random.choice(moves)\n    you = input("rock, paper, or scissors: ")\n    print(f"You picked {you}. The computer picked {computer}.")\n    if you == computer:\n        print("Tie.")\n    elif you == "rock" and computer == "scissors":\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "paper" and computer == "rock":\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "scissors" and computer == "paper":\n        print("You win.")\n        your_wins = your_wins + 1\n    else:\n        print("The computer wins.")\n        computer_wins = computer_wins + 1\n\nprint(f"You won {your_wins}. The computer won {computer_wins}.")',
+  {"title": "The scoreboard: two counters",
+   "teach": "The game plays three rounds and forgets each one as soon as it is over. A scoreboard remembers. A <b>counter</b> is a variable that starts at 0 and has 1 added to it when something happens, and the scoreboard is two of them.",
+   "next": {
+     "q": "What does a scoreboard need, where does each piece go, and what should the player see after every round?",
+     "hints": [
+       "Two counters: one for your wins and one for the computer's. Each starts at 0, above the loop, the same place the accumulator started in session 3.",
+       "Add 1 to <code>your_wins</code> in each of the three win branches, and 1 to <code>computer_wins</code> in the <code>else</code>. The tie branch adds to neither. Then print both counters at the end of every round, inside the loop, after the gate.",
+       {"text": "Fill the blanks. The print line is the scoreboard.", "code": 'your_wins = 0\ncomputer_wins = 0\n\nfor round_number in range(1, 4):\n    ...\n    elif you == "rock" and computer == "scissors":\n        print("You win.")\n        your_wins = your_wins ____ 1\n    ...\n    else:\n        print("The computer wins.")\n        computer_wins = ____ + 1\n    print(f"Score: you {your_wins}, computer {computer_wins}")'},
+     ],
+     "a": "Lines 4 and 5 start the counters. One line is added to each win branch and to the <code>else</code>. Line 26 is the scoreboard, indented four spaces so it prints once per round, and line 28 prints the final score once, after the loop.",
+   },
+   "code": 'import random\n\nmoves = ["rock", "paper", "scissors"]\nyour_wins = 0\ncomputer_wins = 0\n\nfor round_number in range(1, 4):\n    print(f"Round {round_number}")\n    computer = random.choice(moves)\n    you = input("rock, paper, or scissors: ")\n    print(f"You picked {you}. The computer picked {computer}.")\n    if you == computer:\n        print("Tie.")\n    elif you == "rock" and computer == "scissors":\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "paper" and computer == "rock":\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "scissors" and computer == "paper":\n        print("You win.")\n        your_wins = your_wins + 1\n    else:\n        print("The computer wins.")\n        computer_wins = computer_wins + 1\n    print(f"Score: you {your_wins}, computer {computer_wins}")\n\nprint(f"Final score: you {your_wins}, computer {computer_wins}")',
    "run": "py",
    "seed": 35,
    "stdin": "rock\npaper\nscissors\n",
-   "predict": "Three rounds. Can the two numbers on the last line add up to less than 3? Then say what the last line would print if <code>your_wins = 0</code> moved inside the loop.",
-   "reveal": "Yes. A tie round adds to neither counter, so in this run the two numbers add up to 2, and three ties would give 0 and 0. That is why the build adds a third counter.</p><p>Moved inside the loop, <code>your_wins = 0</code> runs at the start of every round and throws away the count so far, so the last line can only ever say you won 0 or 1. Both counters start above the loop, the same place the accumulator started in session 3."},
+   "predict": "Three rounds. Can the two numbers on the final score line add up to less than 3? Then say what the scoreboard would show after round 3 if <code>your_wins = 0</code> moved inside the loop.",
+   "reveal": "Yes. A tie round adds to neither counter, so in this run the two numbers add up to 2, and three ties would give 0 and 0. That is why the build adds a third counter.</p><p>Moved inside the loop, <code>your_wins = 0</code> runs at the start of every round and throws away the count so far, so the scoreboard can only ever say you 0 or you 1, however many rounds you win. Both counters start above the loop."},
 
   {"title": "The match verdict",
-   "teach": "After the loop, compare the two counters in a three-way gate. These lines are not indented, so they run once, after all three rounds.",
-   "prefix": 'import random\n\nmoves = ["rock", "paper", "scissors"]\nyour_wins = 0\ncomputer_wins = 0\n\nfor round_number in range(1, 4):\n    print(f"Round {round_number}")\n    computer = random.choice(moves)\n    you = input("rock, paper, or scissors: ")\n    print(f"You picked {you}. The computer picked {computer}.")\n    if you == computer:\n        print("Tie.")\n    elif you == "rock" and computer == "scissors":\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "paper" and computer == "rock":\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "scissors" and computer == "paper":\n        print("You win.")\n        your_wins = your_wins + 1\n    else:\n        print("The computer wins.")\n        computer_wins = computer_wins + 1\n\nprint(f"You won {your_wins}. The computer won {computer_wins}.")\n',
-   "where": "Add these six lines at the bottom of the file from chunk 6, at the left edge, under the line that prints both scores. They are not indented, so they are not part of the loop. The whole file was run together to make the output box.",
+   "teach": "The scoreboard shows the numbers. The program should also say who won the match.",
+   "next": {
+     "q": "After three rounds the final score is printed. What decides who won the match, and where do those lines go?",
+     "hints": [
+       "Compare the two counters. There are three outcomes: you have more, the computer has more, or the two are equal.",
+       "That is a three-way gate from session 2. It goes after the loop, at the left edge, so it runs once, after all three rounds.",
+       {"text": "Fill the blank.", "code": 'if your_wins > computer_wins:\n    print("You win the match.")\nelif your_wins ____ computer_wins:\n    print("The match is a tie.")\nelse:\n    print("The computer wins the match.")'},
+     ],
+     "a": "Six lines at the bottom of the file, none of them indented. Chunk 8 shows them in place in the whole program.",
+   },
+   "prefix": 'import random\n\nmoves = ["rock", "paper", "scissors"]\nyour_wins = 0\ncomputer_wins = 0\n\nfor round_number in range(1, 4):\n    print(f"Round {round_number}")\n    computer = random.choice(moves)\n    you = input("rock, paper, or scissors: ")\n    print(f"You picked {you}. The computer picked {computer}.")\n    if you == computer:\n        print("Tie.")\n    elif you == "rock" and computer == "scissors":\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "paper" and computer == "rock":\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "scissors" and computer == "paper":\n        print("You win.")\n        your_wins = your_wins + 1\n    else:\n        print("The computer wins.")\n        computer_wins = computer_wins + 1\n    print(f"Score: you {your_wins}, computer {computer_wins}")\n\nprint(f"Final score: you {your_wins}, computer {computer_wins}")\n',
+   "where": "Add these six lines at the bottom of the file from chunk 6, at the left edge, under the final score line. They are not indented, so they are not part of the loop. The whole file was run together to make the output box.",
    "code": 'if your_wins > computer_wins:\n    print("You win the match.")\nelif your_wins == computer_wins:\n    print("The match is a tie.")\nelse:\n    print("The computer wins the match.")',
    "run": "py",
    "seed": 35,
@@ -456,8 +513,17 @@ SESSIONS_A = [
    "reveal": "Yes. One win, one loss, and one tie gives 1 and 1, and three ties gives 0 and 0. So the middle branch is needed, and in this run it is the one that prints. A two-way gate would call a drawn match a win for the computer."},
 
   {"title": "Ask until the move is on the list",
-   "teach": "Type a move with a typo, say rokc, and the program counts it as a loss: the tie test is False, no <code>elif</code> matches, and the <code>else</code> runs. No error, wrong answer, a silent bug.</p><p>The fix is the asking loop from session 2, placed inside the <code>for</code> loop where the <code>input</code> line was. The stopping condition has three tests joined by <code>and</code>: keep asking while the answer is not rock and not paper and not scissors. <code>you = \"\"</code> goes just above it, so the condition has a value to test on its first check. This is the whole program, with the verdict from chunk 7 at the bottom.",
-   "code": 'import random\n\nmoves = ["rock", "paper", "scissors"]\nyour_wins = 0\ncomputer_wins = 0\n\nfor round_number in range(1, 4):\n    print(f"Round {round_number}")\n    computer = random.choice(moves)\n    you = ""\n    while you != "rock" and you != "paper" and you != "scissors":\n        you = input("rock, paper, or scissors: ")\n    print(f"You picked {you}. The computer picked {computer}.")\n    if you == computer:\n        print("Tie.")\n    elif you == "rock" and computer == "scissors":\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "paper" and computer == "rock":\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "scissors" and computer == "paper":\n        print("You win.")\n        your_wins = your_wins + 1\n    else:\n        print("The computer wins.")\n        computer_wins = computer_wins + 1\n\nprint(f"You won {your_wins}. The computer won {computer_wins}.")\nif your_wins > computer_wins:\n    print("You win the match.")\nelif your_wins == computer_wins:\n    print("The match is a tie.")\nelse:\n    print("The computer wins the match.")',
+   "teach": "Type a move with a typo, say rokc, and the program counts it as a loss: the tie test is False, no <code>elif</code> matches, and the <code>else</code> runs. No error, wrong answer, a silent bug.",
+   "next": {
+     "q": "What stops the gate from ever seeing a move that is not on the list?",
+     "hints": [
+       "Ask again until the answer is one of the three moves. Session 2's <code>while</code> loop keeps asking while its condition is True, and this loop goes where the <code>input</code> line is now, inside the <code>for</code> loop.",
+       "The stopping condition has three tests joined by <code>and</code>: the answer is not rock, and not paper, and not scissors. Set <code>you = \"\"</code> above the loop so the condition has a value to test on its first check.",
+       {"text": "Fill the blank.", "code": 'you = ""\nwhile you != "rock" ____ you != "paper" and you != "scissors":\n    you = input("rock, paper, or scissors: ")'},
+     ],
+     "a": "Lines 10 to 12 replace the one <code>input</code> line, inside the <code>for</code> loop. This is the whole program, with the verdict from chunk 7 at the bottom.",
+   },
+   "code": 'import random\n\nmoves = ["rock", "paper", "scissors"]\nyour_wins = 0\ncomputer_wins = 0\n\nfor round_number in range(1, 4):\n    print(f"Round {round_number}")\n    computer = random.choice(moves)\n    you = ""\n    while you != "rock" and you != "paper" and you != "scissors":\n        you = input("rock, paper, or scissors: ")\n    print(f"You picked {you}. The computer picked {computer}.")\n    if you == computer:\n        print("Tie.")\n    elif you == "rock" and computer == "scissors":\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "paper" and computer == "rock":\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "scissors" and computer == "paper":\n        print("You win.")\n        your_wins = your_wins + 1\n    else:\n        print("The computer wins.")\n        computer_wins = computer_wins + 1\n    print(f"Score: you {your_wins}, computer {computer_wins}")\n\nprint(f"Final score: you {your_wins}, computer {computer_wins}")\nif your_wins > computer_wins:\n    print("You win the match.")\nelif your_wins == computer_wins:\n    print("The match is a tie.")\nelse:\n    print("The computer wins the match.")',
    "run": "py",
    "seed": 35,
    "stdin": "rokc\nrock\npaper\nscissors\n",
@@ -473,7 +539,7 @@ SESSIONS_A = [
    "intro": "You are writing a game for someone else to play. The person at the keyboard is the player, and the program is the opponent. In chunk 8 the game lasts exactly three rounds. In this version it lasts until someone has won three rounds, which could take three rounds or thirty. A <code>for</code> loop with <code>range</code> has to be told how many passes to make, so it does not fit. A <code>while</code> loop fits: it keeps going while neither counter has reached 3.",
    "minutes": 15,
    "steps": [
-     "Start from the chunk 8 program. Add a third counter, <code>ties</code>, started at 0 above the loop and adding 1 in the tie branch.",
+     "Start from the chunk 8 program. Add a third counter, <code>ties</code>, started at 0 above the loop and adding 1 in the tie branch. Put it on the scoreboard line too.",
      "Replace the <code>for</code> line with <code>while your_wins &lt; 3 and computer_wins &lt; 3:</code>. The lines under it stay exactly as they are.",
      "<code>range</code> no longer counts the rounds for you, so make <code>round_number = 0</code> above the loop and add 1 to it as the first line inside the loop, before the line that prints the round.",
      "After the loop, print all three counters and the round count in one f-string.",
@@ -482,22 +548,23 @@ SESSIONS_A = [
    "expected_got": [
      ["Typing paper against rock prints You win.", ""],
      ["A typo makes the program ask again instead of counting a loss", ""],
+     ["The scoreboard line shows the new score after every round", ""],
      ["The game stops the moment either counter reaches 3", ""],
      ["your_wins plus computer_wins plus ties equals the round count", ""],
    ],
  },
  "exits": {
    "floor": "One round, no loop: the computer picks, you type a move, and the five-way gate prints Tie, You win, or The computer wins, correctly for paper against rock.",
-   "middle": "First to three: the asking loop, three counters, the round count, and a two-way verdict.",
-   "stretch": "Add lizard and Spock. The extension under this box has the rules, the five-move list, and the shape each win branch takes.",
+   "middle": "First to three: the asking loop, three counters on the scoreboard, the round count, and a two-way verdict.",
+   "stretch": "Add lizard and Spock. The extension under this box has the rules as arrows, the five-move list, and the shape each win branch takes.",
  },
- "ledger": "Stamp 4: the list is the one place the moves live, <code>random.choice(moves)</code>, <code>==</code> compares the typed text with the list's text, a five-way gate with the tie first and <code>else</code> as everything left, two counters started above the loop, the asking loop inside the <code>for</code> loop. Copy the asking loop's stopping condition onto the card and circle each <code>and</code>.",
+ "ledger": "Stamp 4: the list is the one place the moves live, <code>random.choice(moves)</code>, <code>==</code> compares the typed text with the list's text, a five-way gate with the tie first and <code>else</code> as everything left, a scoreboard is two counters started above the loop, the asking loop inside the <code>for</code> loop. Copy the asking loop's stopping condition onto the card and circle each <code>and</code>.",
  "teacher": {
    "timing": [
      "0:00 retrieval opener, 10 min",
      "0:10 chunks 1 and 2, 10 min",
-     "0:20 chunks 3 and 4, the gate, 20 min (the core of the session; the nine-pair table is the thing to project)",
-     "0:40 chunks 5 and 6, rounds and counters, 15 min",
+     "0:20 chunks 3 and 4, the gate, 20 min (the core of the session; project the arrows and the nine-pair table)",
+     "0:40 chunks 5 and 6, rounds and the scoreboard, 15 min",
      "0:55 chunks 7 and 8, the verdict and the asking loop, 15 min",
      "1:10 build brief, 15 min (most rooms reach the while loop; the two-way verdict is the stretch in practice)",
      "1:25 exits, ledger stamp, 5 min",
@@ -506,39 +573,50 @@ SESSIONS_A = [
      ["Types Rock with a capital letter, gets asked again, and says the program is broken.", "It is not. <code>==</code> compares every character, and R is not r. Have them type it in lowercase. Session 7 teaches <code>lower</code>, which fixes this for good; do not teach it today."],
      ["Writes <code>or</code> between the three tests in the asking loop and the program asks forever.", "Substitute rock into all three tests out loud. Two stay True, and <code>or</code> needs only one. This is the hinge question. If it happens before the hinge, let the room watch, and stop the program with Ctrl+C in the terminal."],
      ["Writes <code>you == \"rock\" and \"scissors\"</code>, and rock now beats paper.", "Each side of <code>and</code> has to be a whole comparison. The right side here is the text scissors on its own, which Python treats as True, so the branch runs whenever the player typed rock and the round was not a tie. Print the two halves separately and ask what the second one is."],
-     ["Puts <code>your_wins = 0</code> inside the loop and reports a final score of 0 or 1.", "Session 3's accumulator bug in a new place. Have them print the counter at the top of each round and watch it reset."],
+     ["Puts <code>your_wins = 0</code> inside the loop and the scoreboard never gets past 1.", "Session 3's accumulator bug in a new place. The scoreboard line already shows it resetting; ask them to read the score after each round out loud."],
      ["Adds an <code>elif</code> for each way to lose, or a second tie test.", "Both run and both are correct, so do not call it wrong. Count the nine pairs on the table together and ask which ones are left when the <code>else</code> is reached. The three losses are, so the <code>else</code> is enough."],
+     ["Answers a What goes next? question with the right idea in the wrong words, for example a loop that asks again, without naming while.", "Take the idea and ask for the line. Hint 2 names the construct and hint 3 shows it with a blank, so open them in that order rather than saying the answer."],
      ["Cannot stop a loop that never ends.", "Ctrl+C in the terminal. Teach it the first time it happens and not before."],
    ],
    "standards": ["NY-6.EE.5", "MP7", "MP6"],
-   "routing": "If the room is slow, stop after chunk 6 and make the build the three-round game with two counters; that is a real middle exit, and chunks 7 and 8 fit in the first fifteen minutes of session 5 as retrieval. If the room is fast, the extension is twenty minutes of work and needs nothing from you after the rules are read out once. The one new piece of punctuation in it is the parentheses, and without them the win branches give the wrong answer with no error: <code>you == \"rock\" and computer == \"scissors\" or computer == \"lizard\"</code> is True for every pick of lizard, because Python reads the <code>and</code> first. Let a student find that before you say it.",
+   "routing": "If the room is slow, stop after chunk 6 and make the build the three-round game with the scoreboard; that is a real middle exit, and chunks 7 and 8 fit in the first fifteen minutes of session 5 as retrieval. If the room is fast, the extension is twenty minutes of work and needs nothing from you after the arrows are read out once. The one new piece of punctuation in it is the parentheses, and without them the win branches give the wrong answer with no error: <code>you == \"rock\" and computer == \"scissors\" or computer == \"lizard\"</code> is True for every pick of lizard, because Python reads the <code>and</code> first. Let a student find that before you say it.",
  },
  "extension": {
    "title": "Extension: rock paper scissors lizard Spock",
-   "intro": '<p>The same game with five moves instead of three. It was invented by Sam Kass and Karen Bryla, and the point of it is that ties happen less often: with three moves, one pair in three is a tie, and with five moves it is one pair in five. Each move beats two of the other four.</p>'
+   "intro": '<p>The same game with five moves instead of three. It was invented by Sam Kass and Karen Bryla, and the point of it is that ties happen less often: with three moves, one pair in three is a tie, and with five moves it is one pair in five. Each move beats two of the other four and loses to the other two, so the arrows still balance and no move is the best one to pick.</p>'
+            + rpsls_graph() +
             '<table><tr><th>Move</th><th>Beats these two</th></tr>'
             '<tr><td>rock</td><td>scissors, lizard</td></tr>'
             '<tr><td>paper</td><td>rock, spock</td></tr>'
             '<tr><td>scissors</td><td>paper, lizard</td></tr>'
             '<tr><td>lizard</td><td>spock, paper</td></tr>'
             '<tr><td>spock</td><td>scissors, rock</td></tr></table>'
-            '<p>Three things change in the chunk 8 program, and the loops do not. The list gets two more items, in lowercase so the player types them the same way as the others. The asking loop gets two more tests, one per new move, joined with <code>and</code> like the first three. The gate gets one win branch per move instead of one per rule.</p>'
-            '<p>A move now beats two moves, so each win branch names both of them, with <code>or</code> between them and parentheses around the pair. Python works out what is inside the parentheses first, the same as in maths: <code>computer == "scissors" or computer == "lizard"</code> comes out True or False, and then <code>and</code> joins that answer to <code>you == "rock"</code>. You could write ten <code>elif</code> lines instead, one per way to win, and that works too. This version has five.</p>',
+            '<p>Three things change in the chunk 8 program, and the loops do not. The list gets two more items, in lowercase so the player types them the same way as the others. The asking loop gets two more tests, one per new move, joined with <code>and</code> like the first three. The gate gets one win branch per move instead of one per arrow.</p>'
+            '<p>A move now beats two moves, so each win branch names both of them, with <code>or</code> between them and parentheses around the pair. Python works out what is inside the parentheses first, the same as in maths: <code>computer == "scissors" or computer == "lizard"</code> comes out True or False, and then <code>and</code> joins that answer to <code>you == "rock"</code>. You could write ten <code>elif</code> lines instead, one per arrow, and that works too. This version has five.</p>',
    "cards": [
      {"title": "The whole program with five moves", "run": "py", "seed": 54,
       "stdin": "lizard\npaper\nspock\n",
       "teach": "The computer picks at random, so your run will be different from the one in the box.",
-      "code": 'import random\n\nmoves = ["rock", "paper", "scissors", "lizard", "spock"]\nyour_wins = 0\ncomputer_wins = 0\n\nfor round_number in range(1, 4):\n    print(f"Round {round_number}")\n    computer = random.choice(moves)\n    you = ""\n    while you != "rock" and you != "paper" and you != "scissors" and you != "lizard" and you != "spock":\n        you = input("rock, paper, scissors, lizard, or spock: ")\n    print(f"You picked {you}. The computer picked {computer}.")\n    if you == computer:\n        print("Tie.")\n    elif you == "rock" and (computer == "scissors" or computer == "lizard"):\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "paper" and (computer == "rock" or computer == "spock"):\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "scissors" and (computer == "paper" or computer == "lizard"):\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "lizard" and (computer == "spock" or computer == "paper"):\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "spock" and (computer == "scissors" or computer == "rock"):\n        print("You win.")\n        your_wins = your_wins + 1\n    else:\n        print("The computer wins.")\n        computer_wins = computer_wins + 1\n\nprint(f"You won {your_wins}. The computer won {computer_wins}.")\nif your_wins > computer_wins:\n    print("You win the match.")\nelif your_wins == computer_wins:\n    print("The match is a tie.")\nelse:\n    print("The computer wins the match.")',
+      "next": {
+        "q": "Rock beats scissors and rock beats lizard. What does the rock branch of the gate look like now, with both arrows on one line?",
+        "hints": [
+          "One <code>elif</code> for rock, and it has to be True for either of the two moves rock beats.",
+          "Either means <code>or</code>: <code>computer == \"scissors\" or computer == \"lizard\"</code>. That pair goes in parentheses, and <code>and</code> joins it to <code>you == \"rock\"</code>.",
+          {"text": "Fill the blank, then write the other four branches from the arrows.", "code": 'elif you == "rock" and (computer == "scissors" ____ computer == "lizard"):\n    print("You win.")\n    your_wins = your_wins + 1'},
+        ],
+        "a": "Five win branches, one per move, each with its two arrows inside parentheses. The tie branch, the <code>else</code>, the scoreboard, and the verdict are unchanged.",
+      },
+      "code": 'import random\n\nmoves = ["rock", "paper", "scissors", "lizard", "spock"]\nyour_wins = 0\ncomputer_wins = 0\n\nfor round_number in range(1, 4):\n    print(f"Round {round_number}")\n    computer = random.choice(moves)\n    you = ""\n    while you != "rock" and you != "paper" and you != "scissors" and you != "lizard" and you != "spock":\n        you = input("rock, paper, scissors, lizard, or spock: ")\n    print(f"You picked {you}. The computer picked {computer}.")\n    if you == computer:\n        print("Tie.")\n    elif you == "rock" and (computer == "scissors" or computer == "lizard"):\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "paper" and (computer == "rock" or computer == "spock"):\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "scissors" and (computer == "paper" or computer == "lizard"):\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "lizard" and (computer == "spock" or computer == "paper"):\n        print("You win.")\n        your_wins = your_wins + 1\n    elif you == "spock" and (computer == "scissors" or computer == "rock"):\n        print("You win.")\n        your_wins = your_wins + 1\n    else:\n        print("The computer wins.")\n        computer_wins = computer_wins + 1\n    print(f"Score: you {your_wins}, computer {computer_wins}")\n\nprint(f"Final score: you {your_wins}, computer {computer_wins}")\nif your_wins > computer_wins:\n    print("You win the match.")\nelif your_wins == computer_wins:\n    print("The match is a tie.")\nelse:\n    print("The computer wins the match.")',
       "predict": "Five moves, and each one beats two of the others. How many ways to win are there in total, and how many branches does the gate have?",
-      "hint": ["Count the table: five rows, two moves in each.", "The gate has one branch for ties, one branch for each move you can win with, and one branch for everything left."],
-      "reveal": "Ten ways to win: five moves, two each, and that is the ten pairs in the table. Seven branches: the <code>if</code> for the five ties, five <code>elif</code> lines with one win branch per move, and the <code>else</code> for the ten ways to lose. Twenty-five pairs in all, which is five ties, ten wins, and ten losses. In this run, your lizard beat the computer's paper in round 1, the computer's lizard beat your paper in round 2, and spock against spock was a tie."},
+      "hint": ["Count the arrows: five round the outside and five across the middle.", "The gate has one branch for ties, one branch for each move you can win with, and one branch for everything left."],
+      "reveal": "Ten ways to win: five moves, two each, and that is the ten arrows. Seven branches: the <code>if</code> for the five ties, five <code>elif</code> lines with one win branch per move, and the <code>else</code> for the ten ways to lose. Twenty-five pairs in all, which is five ties, ten wins, and ten losses. In this run, your lizard beat the computer's paper in round 1, the computer's lizard beat your paper in round 2, and spock against spock was a tie."},
    ],
    "steps": [
      "Add <code>\"lizard\"</code> and <code>\"spock\"</code> to the move list. <code>random.choice</code> needs no change, because the list is the one place the moves live.",
      "Add two tests to the asking loop's stopping condition, one for each new move, each joined with <code>and</code>. Change the question so it names all five moves.",
-     "Replace the three win branches with five, one per move. Each one names the two moves it beats inside parentheses with <code>or</code> between them. Use the table.",
+     "Replace the three win branches with five, one per move. Each one names the two moves it beats inside parentheses with <code>or</code> between them. Read the two arrows that leave each move.",
      "Keep the tie branch first and the <code>else</code> last. Nothing else in the gate changes.",
-     "Test one pair from each row of the table, both ways round: lizard against paper should print You win, and paper against lizard should print The computer wins.",
+     "Test one arrow from each move, both ways round: lizard against paper should print You win, and paper against lizard should print The computer wins.",
    ],
    "checks": [
      "Typing lizard against paper prints You win.",

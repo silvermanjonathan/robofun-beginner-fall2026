@@ -157,6 +157,7 @@ build/highlight.py     colours code blocks by role, the way VS Code's Light+ the
 build/worksheet.py     the worksheet CSS, blocks, and projector typing script, shared by every sheet
 build/ws02.py          the session 2 worksheet and its answer key
 build/extras.py        the extra cards and their answer keys, sessions 1 to 3 and 5
+build/graphs.py        session 4's figures: the rules as arrows, and the tree of pairs
 build/pdf.py           renders the worksheets to PDF
 ```
 
@@ -229,6 +230,14 @@ A session with an `extension` entry gets a section after "Where you can stop" fo
 student who is past the stretch exit: an intro, verified `cards` with the same
 reveal, numbered steps, and an expected and got table. Session 4 uses it for rock
 paper scissors lizard Spock.
+
+A chunk or extension card with a `next` entry opens with a question for the room,
+"What goes next?", before any of its code is on screen. The question has hints that
+open one inside the next (hint 2's button is inside hint 1's box), the last hint is
+the code with one blank written as `____`, and a final button shows the lines: the
+chunk's full code block, which is otherwise not rendered. The hints count toward
+reveal parity like any other button. Session 4 uses this on chunks 2 to 8 and on
+the extension.
 
 A session with an `extras` entry gets a section under "Where you can stop" that links
 to its extra cards, and a Files note in its teacher panel with the answer key.
@@ -307,3 +316,11 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   `seed` on chunks and cards, an `extension` section, and a fix for the hook's
   bytecode cache, which could hand one seeded run the previous run's seed. Version
   pin bumped to `?v=9` on every page.
+- **2026-10-18, v10.** Session 4 reworked for the room. Chunks 2 to 8 and the
+  extension card now open with a "What goes next?" question whose hints open one
+  inside the next, the third being the code with one blank, and whose last button is
+  the only place the chunk's code appears (`next` on a chunk, `ladder` in
+  `render.py`). Three figures from `build/graphs.py`: the rules as arrows for three
+  moves (chunk 4) and for five (the extension), and the tree of the six pairs that
+  are not ties (chunk 3). A scoreboard line prints after every round from chunk 6
+  on, and the build puts the ties counter on it. Version pin bumped to `?v=10`.
