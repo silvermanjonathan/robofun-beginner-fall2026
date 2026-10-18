@@ -7,6 +7,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.environ.get("BVC_OUT", os.path.dirname(HERE))
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
         "meta", "param", "source", "track", "wbr"}
+# the span classes hl.py writes inside <pre class="py"><code> blocks
+CODE_CLASSES = {"hk", "hs", "hf", "hc", "hv", "hn", "hq", "he", "hd", "hm"}
 BANNED_WORDS = ["genuinely", "delve", "tapestry", "testament to", "at its core",
                 "dial worth turning", "earns its keep", "unleash", "supercharge",
                 # locked decision 7: no page references a camp or another course
@@ -75,10 +77,32 @@ def check(name, text, all_names):
     if rows and not re.search(r'<li>\d+:\d\d [^<]*ledger[^<]*, \d+ min', text):
         fail.append("teacher panel has no ledger stamp row")
 
-    for block in re.findall(r'<pre[^>]*>(.*?)</pre>', text, re.S):
-        if re.search(r'<(?!/?(?:code|b|em|span)\b)[a-zA-Z/]', block):
+    # a pre block holds code or output, so once its color spans and the code tag are
+    # stripped, no tag may remain; the anatomy figures are the one exception and
+    # carry their own labelled spans
+    for attrs, block in re.findall(r'<pre([^>]*)>(.*?)</pre>', text, re.S):
+        if 'class="anatomy"' in attrs:
+            inner = re.sub(r'</?(?:span|b|em|code)\b[^>]*>', '', block)
+        else:
+            inner = re.sub(r'</?span\b[^>]*>|</?code>', '', block)
+        if re.search(r'<[a-zA-Z/]', inner):
             fail.append("unescaped angle bracket inside a pre block: "
                         + block[:60].replace("\n", " "))
+    # every colored code block is <pre class="py"><code>, and uses only hl.py's classes
+    for block in re.findall(r'<pre class="py"><code>(.*?)</code></pre>', text, re.S):
+        for cls in re.findall(r'<span class="([^"]+)">', block):
+            if cls not in CODE_CLASSES:
+                fail.append("unknown code color class: " + cls)
+    for attrs in re.findall(r'<pre([^>]*)><code>', text):
+        if 'class="py"' not in attrs:
+            fail.append("a <pre><code> block without the py class: <pre" + attrs + ">")
+    if re.search(r'<pre class="py">(?!<code>)', text):
+        fail.append("a pre.py block without a code tag inside it")
+    # prose and output are never colored
+    for attrs, block in re.findall(r'<pre([^>]*)>(.*?)</pre>', text, re.S):
+        if 'class="out"' in attrs or 'class="want"' in attrs:
+            if re.search(r'<span class="h[a-z]"', block):
+                fail.append("an output box carries code color spans")
 
     for api in ("localStorage", "sessionStorage", "indexedDB"):
         if api in text:
@@ -127,8 +151,11 @@ def main():
                for n in names)
     outs = sum(len(re.findall(r'<pre class="out">', open(os.path.join(SITE, n)).read()))
                for n in names)
+    pys = sum(len(re.findall(r'<pre class="py"><code>', open(os.path.join(SITE, n)).read()))
+              for n in names)
     print("reveal buttons: %d" % revs)
     print("verified output blocks: %d" % outs)
+    print("colored code blocks: %d" % pys)
     if FAILURES:
         print("\n%d FAILURES" % len(FAILURES))
         sys.exit(1)

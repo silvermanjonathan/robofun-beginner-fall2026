@@ -35,7 +35,10 @@ header.top{
   background:var(--teal); color:#FFFDF7;
   border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
 }
-.wrap{max-width:900px; margin:0 auto}
+.wrap{max-width:1080px; margin:0 auto}
+/* prose lines stay at reading length inside the wider column; code gets the width */
+p,li{max-width:72ch}
+.dates,.sessionlist li,.toolbar,.legend,.exits p,.card p,.stamp,.pill{max-width:none}
 .eyebrow{
   font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
   text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
@@ -80,6 +83,7 @@ section.extension{border-left:8px solid var(--clay)}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 14px; padding-left:24px}
 li{margin:0 0 8px}
+.sessionlist li{max-width:none}
 code,pre{
   /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
      glyph; students then type a character that does not exist. Keep every
@@ -92,22 +96,18 @@ code{
   padding:2px 6px; border-radius:3px;
 }
 pre{
-  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  /* 19px, a little over the 18px prose, so code reads from the back of the room */
+  font-family:'JetBrains Mono',monospace; font-size:19px; line-height:1.6;
   background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
-/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
-   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
-   italic, so every character keeps its width. */
-.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
-.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
-.tk-str{color:#A31515}  /* strings */
-.tk-num{color:#06704A}  /* numbers */
-.tk-com{color:#3B6E2A}  /* comments */
-.tk-fn{color:#795E26}   /* functions */
-.tk-cls{color:#1D6A80}  /* classes, types, modules */
-.tk-var{color:#001080}  /* variables */
+pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-weight:inherit; color:inherit}
+/* Python code, colored the way VS Code's light theme colors it, on white. Each color
+   clears 7:1 on white (render.py checks), and the same colors print. Color only, never
+   bold or italic, so every character keeps its width. */
+pre.py{background:#FFFFFF; color:#1F1F1F}
+pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -186,7 +186,7 @@ details.teacher[open] summary{margin-bottom:14px}
   padding-left:14px; margin:0 0 14px;
 }
 .pager{
-  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  max-width:1080px; margin:0 auto; padding:8px 22px 34px;
   display:flex; justify-content:space-between; gap:12px;
   font-family:'JetBrains Mono',monospace; font-size:14px;
 }
@@ -248,6 +248,12 @@ a.btn.quiet:hover{background:#EFE9DA}
   letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
   font-weight:700;
 }
+@media (max-width:760px){
+  pre{font-size:15px}
+  /* a wide table scrolls inside itself instead of widening the page */
+  table{display:block; overflow-x:auto; max-width:100%}
+  table tbody{display:table; width:100%}
+}
 @media print{
   body{background:#fff; font-size:11pt}
   header.top{background:#fff; color:#111; border-bottom:3px solid #111}
@@ -257,6 +263,9 @@ a.btn.quiet:hover{background:#EFE9DA}
   section,.stamp,.card{background:#fff; break-inside:avoid}
   .noprint,.toolbar{display:none}
   a{color:#111}
+  /* printed code keeps its old size, so printed pages and PDFs do not reflow */
+  pre{font-size:15.5px}
+  pre.py{background:#fff; border:1px solid #999}
 }
 </style>
 
@@ -297,31 +306,31 @@ section.xcard h3{margin-top:20px}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 2 of 12</p><h1>Extra cards: three more programs</h1><p class="sub">For when you finish the build with time left. Each card uses only what is on the session 2 page.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Sep 28</span><span class="pill"><b>Friday section</b> Fri Sep 25</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session02_comparisons_and_gates.html?v=10">Back to the session 2 page</a></div><section><h2>How the cards work</h2><ul><li>Pick any one card. The three cards do not depend on each other.</li><li>Each card needs a new file. The card gives the file name.</li><li>Say what you think the program will do before you run it.</li><li>Change one thing, then run it. One change per run.</li></ul></section><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 20 minutes</p><h2>Three-question quiz</h2><p>You make a quiz that asks three questions, keeps score, and prints a different last line for 3 right, 2 right, and anything lower.</p><p>Make a new file called <code>Jonathan_session02_quiz.py</code>, with your own first name in place of Jonathan.</p><p>In this finished run the player got the second question wrong.</p><p class="outlabel">A finished run</p><pre class="want">How many legs does a spider have? 8
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 2 of 12</p><h1>Extra cards: three more programs</h1><p class="sub">For when you finish the build with time left. Each card uses only what is on the session 2 page.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Sep 28</span><span class="pill"><b>Friday section</b> Fri Sep 25</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session02_comparisons_and_gates.html?v=11">Back to the session 2 page</a></div><section><h2>How the cards work</h2><ul><li>Pick any one card. The three cards do not depend on each other.</li><li>Each card needs a new file. The card gives the file name.</li><li>Say what you think the program will do before you run it.</li><li>Change one thing, then run it. One change per run.</li></ul></section><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 20 minutes</p><h2>Three-question quiz</h2><p>You make a quiz that asks three questions, keeps score, and prints a different last line for 3 right, 2 right, and anything lower.</p><p>Make a new file called <code>Jonathan_session02_quiz.py</code>, with your own first name in place of Jonathan.</p><p>In this finished run the player got the second question wrong.</p><p class="outlabel">A finished run</p><pre class="want">How many legs does a spider have? 8
 Correct.
 What is the capital of France? London
 No. It is Paris.
 Which planet do we live on? Earth
 Correct.
-Close. 2 out of 3.</pre><p>Question 1 is done for you. Type it in.</p><pre><span class="tk-var">score</span> = <span class="tk-num">0</span>
+Close. 2 out of 3.</pre><p>Question 1 is done for you. Type it in.</p><pre class="py"><code><span class="hv">score</span> = <span class="hd">0</span>
 
-<span class="tk-var">answer</span> = <span class="tk-fn">input</span>(<span class="tk-str">"How many legs does a spider have? "</span>)
-<span class="tk-ctl">if</span> <span class="tk-var">answer</span> == <span class="tk-str">"8"</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Correct."</span>)
-    <span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">1</span>
-<span class="tk-ctl">else</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"No. A spider has 8 legs."</span>)
-</pre><p>The 8 is in quote marks because <code>input</code> gives text, and this gate compares text with text. No <code>int()</code> is needed here.</p><ol><li>Under question 1, write two more questions of your own. Each one has an <code>input</code> line and a gate, the same as question 1.</li><li>After the third question, write a three-way gate on <code>score</code>. If <code>score</code> is 3, print <code>Perfect. 3 out of 3.</code> If <code>score</code> is 2, print <code>Close. 2 out of 3.</code> For anything else, print the score in an f-string.</li></ol><div class="predict"><p class="q">Before you run: <code>score = 0</code> is on line 1, above all three questions. Suppose you added a second <code>score = 0</code> just above the last gate. A player gets all three right. What would the last line print?</p><button class="rev" data-target="x2a-before" aria-controls="x2a-before" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="x2a-before"><p><code>You got 0 out of 3. Run it again.</code> The second <code>score = 0</code> replaces the count just before the gate reads it.</p></div></div><p><b>Check:</b> run it three times. Get all three right, then two right, then none right. You should see three different last lines.</p><h3>Go further</h3><p>Pick a question whose answer is a word. A player who types the word without its capital letter is marked wrong. Change that gate so both spellings are correct. Use <code>or</code>, with a whole comparison on each side of it, like this:</p><pre><span class="tk-ctl">if</span> <span class="tk-var">answer</span> == <span class="tk-str">"Paris"</span> <span class="tk-kw">or</span> <span class="tk-var">answer</span> == <span class="tk-str">"paris"</span>:</pre></section><section class="chunk xcard"><p class="chunk-no">Card B &middot; finish the starter &middot; about 15 minutes</p><h2>Guess my number</h2><p>The program holds a secret number. The player keeps guessing until the guess is right. You get a starter that works but leaves one thing out.</p><p>Make a new file called <code>Jonathan_session02_guess.py</code>, with your own first name in place of Jonathan.</p><p>Type the starter:</p><pre><span class="tk-var">secret</span> = <span class="tk-num">37</span>
-<span class="tk-var">guess</span> = <span class="tk-num">0</span>
+<span class="hv">answer</span> = <span class="hf">input</span>(<span class="hq">"How many legs does a spider have? "</span>)
+<span class="hk">if</span> <span class="hv">answer</span> == <span class="hq">"8"</span>:
+    <span class="hf">print</span>(<span class="hq">"Correct."</span>)
+    <span class="hv">score</span> = <span class="hv">score</span> + <span class="hd">1</span>
+<span class="hk">else</span>:
+    <span class="hf">print</span>(<span class="hq">"No. A spider has 8 legs."</span>)
+</code></pre><p>The 8 is in quote marks because <code>input</code> gives text, and this gate compares text with text. No <code>int()</code> is needed here.</p><ol><li>Under question 1, write two more questions of your own. Each one has an <code>input</code> line and a gate, the same as question 1.</li><li>After the third question, write a three-way gate on <code>score</code>. If <code>score</code> is 3, print <code>Perfect. 3 out of 3.</code> If <code>score</code> is 2, print <code>Close. 2 out of 3.</code> For anything else, print the score in an f-string.</li></ol><div class="predict"><p class="q">Before you run: <code>score = 0</code> is on line 1, above all three questions. Suppose you added a second <code>score = 0</code> just above the last gate. A player gets all three right. What would the last line print?</p><button class="rev" data-target="x2a-before" aria-controls="x2a-before" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="x2a-before"><p><code>You got 0 out of 3. Run it again.</code> The second <code>score = 0</code> replaces the count just before the gate reads it.</p></div></div><p><b>Check:</b> run it three times. Get all three right, then two right, then none right. You should see three different last lines.</p><h3>Go further</h3><p>Pick a question whose answer is a word. A player who types the word without its capital letter is marked wrong. Change that gate so both spellings are correct. Use <code>or</code>, with a whole comparison on each side of it, like this:</p><pre class="py"><code><span class="hk">if</span> <span class="hv">answer</span> == <span class="hq">"Paris"</span> <span class="hs">or</span> <span class="hv">answer</span> == <span class="hq">"paris"</span>:</code></pre></section><section class="chunk xcard"><p class="chunk-no">Card B &middot; finish the starter &middot; about 15 minutes</p><h2>Guess my number</h2><p>The program holds a secret number. The player keeps guessing until the guess is right. You get a starter that works but leaves one thing out.</p><p>Make a new file called <code>Jonathan_session02_guess.py</code>, with your own first name in place of Jonathan.</p><p>Type the starter:</p><pre class="py"><code><span class="hv">secret</span> = <span class="hd">37</span>
+<span class="hv">guess</span> = <span class="hd">0</span>
 
-<span class="tk-ctl">while</span> <span class="tk-var">guess</span> != <span class="tk-var">secret</span>:
-    <span class="tk-var">guess</span> = <span class="tk-fn">input</span>(<span class="tk-str">"Guess my number, 1 to 50: "</span>)
-    <span class="tk-var">guess</span> = <span class="tk-cls">int</span>(<span class="tk-var">guess</span>)
-    <span class="tk-ctl">if</span> <span class="tk-var">guess</span> &lt; <span class="tk-var">secret</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"Too low."</span>)
+<span class="hk">while</span> <span class="hv">guess</span> != <span class="hv">secret</span>:
+    <span class="hv">guess</span> = <span class="hf">input</span>(<span class="hq">"Guess my number, 1 to 50: "</span>)
+    <span class="hv">guess</span> = <span class="hc">int</span>(<span class="hv">guess</span>)
+    <span class="hk">if</span> <span class="hv">guess</span> &lt; <span class="hv">secret</span>:
+        <span class="hf">print</span>(<span class="hq">"Too low."</span>)
 
-<span class="tk-fn">print</span>(<span class="tk-str">"You got it."</span>)
-</pre><p>The gate is inside the while loop, so the <code>if</code> line is indented 4 spaces and its block is indented 8 spaces. The gate runs once on every pass of the loop.</p><div class="predict"><p class="q">Before you run: Find the stopping condition. Which guess makes the loop stop?</p><button class="rev" data-target="x2b-before" aria-controls="x2b-before" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="x2b-before"><p>The condition is <code>guess != secret</code>. The loop stops when the guess is 37, because then <code>guess != secret</code> is False.</p></div></div><p>Run the starter and guess 20, then 40, then 37.</p><p class="outlabel">What the starter prints</p><pre class="want">Guess my number, 1 to 50: 20
+<span class="hf">print</span>(<span class="hq">"You got it."</span>)
+</code></pre><p>The gate is inside the while loop, so the <code>if</code> line is indented 4 spaces and its block is indented 8 spaces. The gate runs once on every pass of the loop.</p><div class="predict"><p class="q">Before you run: Find the stopping condition. Which guess makes the loop stop?</p><button class="rev" data-target="x2b-before" aria-controls="x2b-before" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="x2b-before"><p>The condition is <code>guess != secret</code>. The loop stops when the guess is 37, because then <code>guess != secret</code> is False.</p></div></div><p>Run the starter and guess 20, then 40, then 37.</p><p class="outlabel">What the starter prints</p><pre class="want">Guess my number, 1 to 50: 20
 Too low.
 Guess my number, 1 to 50: 40
 Guess my number, 1 to 50: 37
@@ -332,13 +341,13 @@ Too high.
 Guess my number, 1 to 50: 35
 Too low.
 Guess my number, 1 to 50: 37
-You got it.</pre><h3>Go further</h3><p><b>Part 1.</b> Count the guesses. Make a variable <code>tries = 0</code> above the loop. Add 1 to it inside the loop. Change the last line to an f-string, so that the same four guesses print <code>You got it in 4 tries.</code></p><p><b>Part 2.</b> After that line, add a three-way gate on <code>tries</code>. For 4 or fewer print <code>Sharp guessing.</code> For 7 or fewer print <code>Not bad.</code> For anything else print <code>That took a while.</code></p></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the door</h2><p>A sign on a door says: you can come in if you are 13 or older and you have a ticket. This program is supposed to follow the sign. It has 3 bugs.</p><p>Make a new file called <code>Jonathan_session02_bugs.py</code>, with your own first name in place of Jonathan.</p><p>Type the program exactly as it is here, bugs and all:</p><pre><span class="tk-var">age</span> = <span class="tk-fn">input</span>(<span class="tk-str">"Age: "</span>)
-<span class="tk-var">ticket</span> = <span class="tk-fn">input</span>(<span class="tk-str">"Ticket? yes or no: "</span>)
-<span class="tk-ctl">if</span> <span class="tk-var">age</span> &gt; <span class="tk-num">13</span> <span class="tk-kw">and</span> <span class="tk-var">ticket</span> = <span class="tk-str">"yes"</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Come in."</span>)
-<span class="tk-ctl">else</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Not today."</span>)
-</pre><p>Two of the bugs stop the program with an error. The third bug gives no error: the program runs and prints the wrong line for one of the four people in this table. Fix the first two bugs, one per run. Then run the program once for each row to find the third.</p><div class="tscroll"><table><tr><th>Age</th><th>Ticket</th><th>It should print</th></tr><tr><td>15</td><td>yes</td><td><code>Come in.</code></td></tr><tr><td>13</td><td>yes</td><td><code>Come in.</code></td></tr><tr><td>13</td><td>no</td><td><code>Not today.</code></td></tr><tr><td>10</td><td>yes</td><td><code>Not today.</code></td></tr></table></div><p>For each bug, write down the line number and what you changed.</p><p><b>Clues, if you are stuck.</b> Open one at a time.</p><div class="hints"><button class="rev hint" data-target="x2c-clue1" aria-controls="x2c-clue1" aria-expanded="false" data-show="Show clue 1" data-hide="Hide clue 1">Show clue 1</button><div class="ans" id="x2c-clue1"><p>Bug 1: the error points at line 3. One equals sign stores a value. Two equals signs make a comparison.</p></div><button class="rev hint" data-target="x2c-clue2" aria-controls="x2c-clue2" aria-expanded="false" data-show="Show clue 2" data-hide="Hide clue 2">Show clue 2</button><div class="ans" id="x2c-clue2"><p>Bug 2: the error says <code>'&gt;' not supported between instances of 'str' and 'int'</code>. Which variable is still text?</p></div><button class="rev hint" data-target="x2c-clue3" aria-controls="x2c-clue3" aria-expanded="false" data-show="Show clue 3" data-hide="Hide clue 3">Show clue 3</button><div class="ans" id="x2c-clue3"><p>Bug 3: test the row with 13 and yes. The sign says 13 or older. Which comparison means 13 or more?</p></div></div></section></div></main><nav class="pager"><a href="session02_comparisons_and_gates.html?v=10">&larr; Session 2: Comparisons and gates</a><a href="beginner_semester_hub.html?v=10">Course home</a><a href="session03_loops_counters_lists.html?v=10">Session 3: Loops, counters, and lists &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 2, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
+You got it.</pre><h3>Go further</h3><p><b>Part 1.</b> Count the guesses. Make a variable <code>tries = 0</code> above the loop. Add 1 to it inside the loop. Change the last line to an f-string, so that the same four guesses print <code>You got it in 4 tries.</code></p><p><b>Part 2.</b> After that line, add a three-way gate on <code>tries</code>. For 4 or fewer print <code>Sharp guessing.</code> For 7 or fewer print <code>Not bad.</code> For anything else print <code>That took a while.</code></p></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the door</h2><p>A sign on a door says: you can come in if you are 13 or older and you have a ticket. This program is supposed to follow the sign. It has 3 bugs.</p><p>Make a new file called <code>Jonathan_session02_bugs.py</code>, with your own first name in place of Jonathan.</p><p>Type the program exactly as it is here, bugs and all:</p><pre class="py"><code><span class="hv">age</span> = <span class="hf">input</span>(<span class="hq">"Age: "</span>)
+<span class="hv">ticket</span> = <span class="hf">input</span>(<span class="hq">"Ticket? yes or no: "</span>)
+<span class="hk">if</span> <span class="hv">age</span> &gt; <span class="hd">13</span> <span class="hs">and</span> <span class="hv">ticket</span> = <span class="hq">"yes"</span>:
+    <span class="hf">print</span>(<span class="hq">"Come in."</span>)
+<span class="hk">else</span>:
+    <span class="hf">print</span>(<span class="hq">"Not today."</span>)
+</code></pre><p>Two of the bugs stop the program with an error. The third bug gives no error: the program runs and prints the wrong line for one of the four people in this table. Fix the first two bugs, one per run. Then run the program once for each row to find the third.</p><div class="tscroll"><table><tr><th>Age</th><th>Ticket</th><th>It should print</th></tr><tr><td>15</td><td>yes</td><td><code>Come in.</code></td></tr><tr><td>13</td><td>yes</td><td><code>Come in.</code></td></tr><tr><td>13</td><td>no</td><td><code>Not today.</code></td></tr><tr><td>10</td><td>yes</td><td><code>Not today.</code></td></tr></table></div><p>For each bug, write down the line number and what you changed.</p><p><b>Clues, if you are stuck.</b> Open one at a time.</p><div class="hints"><button class="rev hint" data-target="x2c-clue1" aria-controls="x2c-clue1" aria-expanded="false" data-show="Show clue 1" data-hide="Hide clue 1">Show clue 1</button><div class="ans" id="x2c-clue1"><p>Bug 1: the error points at line 3. One equals sign stores a value. Two equals signs make a comparison.</p></div><button class="rev hint" data-target="x2c-clue2" aria-controls="x2c-clue2" aria-expanded="false" data-show="Show clue 2" data-hide="Hide clue 2">Show clue 2</button><div class="ans" id="x2c-clue2"><p>Bug 2: the error says <code>'&gt;' not supported between instances of 'str' and 'int'</code>. Which variable is still text?</p></div><button class="rev hint" data-target="x2c-clue3" aria-controls="x2c-clue3" aria-expanded="false" data-show="Show clue 3" data-hide="Hide clue 3">Show clue 3</button><div class="ans" id="x2c-clue3"><p>Bug 3: test the row with 13 and yes. The sign says 13 or older. Which comparison means 13 or more?</p></div></div></section></div></main><nav class="pager"><a href="session02_comparisons_and_gates.html?v=11">&larr; Session 2: Comparisons and gates</a><a href="beginner_semester_hub.html?v=11">Course home</a><a href="session03_loops_counters_lists.html?v=11">Session 3: Loops, counters, and lists &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 2, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

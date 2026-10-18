@@ -58,7 +58,7 @@ table.rename td{height:38px}
 table.rename td.old{font-family:'JetBrains Mono',monospace; font-weight:700; width:130px; text-align:center;
   background:#EFE9DA; white-space:nowrap}
 .two-up{display:grid; gap:18px; grid-template-columns:minmax(0,1fr)}
-.two-up pre{margin:0; font-size:14px; line-height:1.5}
+.two-up pre{margin:0; line-height:1.5}
 .nb{font-size:15px; color:var(--ink-soft)}
 .tscroll{overflow-x:auto; margin:0 0 16px}
 .tscroll table{margin:0}

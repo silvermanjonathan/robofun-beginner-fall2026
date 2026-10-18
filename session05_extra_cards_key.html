@@ -35,7 +35,10 @@ header.top{
   background:var(--teal); color:#FFFDF7;
   border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
 }
-.wrap{max-width:900px; margin:0 auto}
+.wrap{max-width:1080px; margin:0 auto}
+/* prose lines stay at reading length inside the wider column; code gets the width */
+p,li{max-width:72ch}
+.dates,.sessionlist li,.toolbar,.legend,.exits p,.card p,.stamp,.pill{max-width:none}
 .eyebrow{
   font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
   text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
@@ -80,6 +83,7 @@ section.extension{border-left:8px solid var(--clay)}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 14px; padding-left:24px}
 li{margin:0 0 8px}
+.sessionlist li{max-width:none}
 code,pre{
   /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
      glyph; students then type a character that does not exist. Keep every
@@ -92,22 +96,18 @@ code{
   padding:2px 6px; border-radius:3px;
 }
 pre{
-  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  /* 19px, a little over the 18px prose, so code reads from the back of the room */
+  font-family:'JetBrains Mono',monospace; font-size:19px; line-height:1.6;
   background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
-/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
-   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
-   italic, so every character keeps its width. */
-.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
-.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
-.tk-str{color:#A31515}  /* strings */
-.tk-num{color:#06704A}  /* numbers */
-.tk-com{color:#3B6E2A}  /* comments */
-.tk-fn{color:#795E26}   /* functions */
-.tk-cls{color:#1D6A80}  /* classes, types, modules */
-.tk-var{color:#001080}  /* variables */
+pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-weight:inherit; color:inherit}
+/* Python code, colored the way VS Code's light theme colors it, on white. Each color
+   clears 7:1 on white (render.py checks), and the same colors print. Color only, never
+   bold or italic, so every character keeps its width. */
+pre.py{background:#FFFFFF; color:#1F1F1F}
+pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -186,7 +186,7 @@ details.teacher[open] summary{margin-bottom:14px}
   padding-left:14px; margin:0 0 14px;
 }
 .pager{
-  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  max-width:1080px; margin:0 auto; padding:8px 22px 34px;
   display:flex; justify-content:space-between; gap:12px;
   font-family:'JetBrains Mono',monospace; font-size:14px;
 }
@@ -248,6 +248,12 @@ a.btn.quiet:hover{background:#EFE9DA}
   letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
   font-weight:700;
 }
+@media (max-width:760px){
+  pre{font-size:15px}
+  /* a wide table scrolls inside itself instead of widening the page */
+  table{display:block; overflow-x:auto; max-width:100%}
+  table tbody{display:table; width:100%}
+}
 @media print{
   body{background:#fff; font-size:11pt}
   header.top{background:#fff; color:#111; border-bottom:3px solid #111}
@@ -257,6 +263,9 @@ a.btn.quiet:hover{background:#EFE9DA}
   section,.stamp,.card{background:#fff; break-inside:avoid}
   .noprint,.toolbar{display:none}
   a{color:#111}
+  /* printed code keeps its old size, so printed pages and PDFs do not reflow */
+  pre{font-size:15.5px}
+  pre.py{background:#fff; border:1px solid #999}
 }
 </style>
 
@@ -297,34 +306,34 @@ section.xcard h3{margin-top:20px}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 5 of 12</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 26</span><span class="pill"><b>Friday section</b> Fri Oct 16</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session05_functions_that_return.html?v=10">Back to the session 5 page</a><a class="btn quiet" href="session05_extra_cards.html?v=10">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Letter grades</h2><p><b>Before you run:</b> <code>return</code> ends the function. 95 passes the first gate, the function returns <code>"A"</code>, and the gate for 80 never runs.</p><p>This is the program with the Go further part: <code>count_grade</code> and the last two lines.</p><pre><span class="tk-kw">def</span> <span class="tk-fn">grade_of</span>(<span class="tk-var">score</span>):
-    <span class="tk-ctl">if</span> <span class="tk-var">score</span> &gt;= <span class="tk-num">90</span>:
-        <span class="tk-ctl">return</span> <span class="tk-str">"A"</span>
-    <span class="tk-ctl">if</span> <span class="tk-var">score</span> &gt;= <span class="tk-num">80</span>:
-        <span class="tk-ctl">return</span> <span class="tk-str">"B"</span>
-    <span class="tk-ctl">if</span> <span class="tk-var">score</span> &gt;= <span class="tk-num">70</span>:
-        <span class="tk-ctl">return</span> <span class="tk-str">"C"</span>
-    <span class="tk-ctl">return</span> <span class="tk-str">"not yet"</span>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 5 of 12</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 26</span><span class="pill"><b>Friday section</b> Fri Oct 16</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session05_functions_that_return.html?v=11">Back to the session 5 page</a><a class="btn quiet" href="session05_extra_cards.html?v=11">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Letter grades</h2><p><b>Before you run:</b> <code>return</code> ends the function. 95 passes the first gate, the function returns <code>"A"</code>, and the gate for 80 never runs.</p><p>This is the program with the Go further part: <code>count_grade</code> and the last two lines.</p><pre class="py"><code><span class="hs">def</span> <span class="hf">grade_of</span>(<span class="hv">score</span>):
+    <span class="hk">if</span> <span class="hv">score</span> &gt;= <span class="hd">90</span>:
+        <span class="hk">return</span> <span class="hq">"A"</span>
+    <span class="hk">if</span> <span class="hv">score</span> &gt;= <span class="hd">80</span>:
+        <span class="hk">return</span> <span class="hq">"B"</span>
+    <span class="hk">if</span> <span class="hv">score</span> &gt;= <span class="hd">70</span>:
+        <span class="hk">return</span> <span class="hq">"C"</span>
+    <span class="hk">return</span> <span class="hq">"not yet"</span>
 
-<span class="tk-kw">def</span> <span class="tk-fn">count_grade</span>(<span class="tk-var">scores</span>, <span class="tk-var">letter</span>):
-    <span class="tk-var">count</span> = <span class="tk-num">0</span>
-    <span class="tk-ctl">for</span> <span class="tk-var">s</span> <span class="tk-ctl">in</span> <span class="tk-var">scores</span>:
-        <span class="tk-ctl">if</span> <span class="tk-fn">grade_of</span>(<span class="tk-var">s</span>) == <span class="tk-var">letter</span>:
-            <span class="tk-var">count</span> = <span class="tk-var">count</span> + <span class="tk-num">1</span>
-    <span class="tk-ctl">return</span> <span class="tk-var">count</span>
+<span class="hs">def</span> <span class="hf">count_grade</span>(<span class="hv">scores</span>, <span class="hv">letter</span>):
+    <span class="hv">count</span> = <span class="hd">0</span>
+    <span class="hk">for</span> <span class="hv">s</span> <span class="hs">in</span> <span class="hv">scores</span>:
+        <span class="hk">if</span> <span class="hf">grade_of</span>(<span class="hv">s</span>) == <span class="hv">letter</span>:
+            <span class="hv">count</span> = <span class="hv">count</span> + <span class="hd">1</span>
+    <span class="hk">return</span> <span class="hv">count</span>
 
-<span class="tk-fn">print</span>(<span class="tk-fn">grade_of</span>(<span class="tk-num">95</span>))
-<span class="tk-fn">print</span>(<span class="tk-fn">grade_of</span>(<span class="tk-num">80</span>))
-<span class="tk-fn">print</span>(<span class="tk-fn">grade_of</span>(<span class="tk-num">42</span>))
+<span class="hf">print</span>(<span class="hf">grade_of</span>(<span class="hd">95</span>))
+<span class="hf">print</span>(<span class="hf">grade_of</span>(<span class="hd">80</span>))
+<span class="hf">print</span>(<span class="hf">grade_of</span>(<span class="hd">42</span>))
 
-<span class="tk-var">scores</span> = [<span class="tk-num">72</span>, <span class="tk-num">95</span>, <span class="tk-num">88</span>, <span class="tk-num">97</span>, <span class="tk-num">67</span>]
-<span class="tk-ctl">for</span> <span class="tk-var">s</span> <span class="tk-ctl">in</span> <span class="tk-var">scores</span>:
-    <span class="tk-var">grade</span> = <span class="tk-fn">grade_of</span>(<span class="tk-var">s</span>)
-    <span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"</span><span class="tk-kw">{</span><span class="tk-var">s</span><span class="tk-kw">}</span><span class="tk-str"> gets </span><span class="tk-kw">{</span><span class="tk-var">grade</span><span class="tk-kw">}</span><span class="tk-str">"</span>)
+<span class="hv">scores</span> = [<span class="hd">72</span>, <span class="hd">95</span>, <span class="hd">88</span>, <span class="hd">97</span>, <span class="hd">67</span>]
+<span class="hk">for</span> <span class="hv">s</span> <span class="hs">in</span> <span class="hv">scores</span>:
+    <span class="hv">grade</span> = <span class="hf">grade_of</span>(<span class="hv">s</span>)
+    <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"</span><span class="hs">{</span><span class="hv">s</span><span class="hs">}</span><span class="hq"> gets </span><span class="hs">{</span><span class="hv">grade</span><span class="hs">}</span><span class="hq">"</span>)
 
-<span class="tk-fn">print</span>(<span class="tk-fn">count_grade</span>(<span class="tk-var">scores</span>, <span class="tk-str">"A"</span>))
-<span class="tk-fn">print</span>(<span class="tk-fn">count_grade</span>(<span class="tk-var">scores</span>, <span class="tk-str">"B"</span>))
-</pre><p class="outlabel">What it prints</p><pre class="want">A
+<span class="hf">print</span>(<span class="hf">count_grade</span>(<span class="hv">scores</span>, <span class="hq">"A"</span>))
+<span class="hf">print</span>(<span class="hf">count_grade</span>(<span class="hv">scores</span>, <span class="hq">"B"</span>))
+</code></pre><p class="outlabel">What it prints</p><pre class="want">A
 B
 not yet
 72 gets C
@@ -333,33 +342,33 @@ not yet
 97 gets A
 67 gets not yet
 2
-1</pre></section><section class="chunk xcard"><p class="chunk-no">Card B &middot; build it from the steps &middot; about 20 minutes</p><h2>Dice game</h2><p><b>Before you run:</b> the lowest is 2 and the highest is 12.</p><pre><span class="tk-ctl">import</span> <span class="tk-cls">random</span>
+1</pre></section><section class="chunk xcard"><p class="chunk-no">Card B &middot; build it from the steps &middot; about 20 minutes</p><h2>Dice game</h2><p><b>Before you run:</b> the lowest is 2 and the highest is 12.</p><pre class="py"><code><span class="hk">import</span> <span class="hc">random</span>
 
-<span class="tk-kw">def</span> <span class="tk-fn">roll</span>():
-    <span class="tk-ctl">return</span> <span class="tk-cls">random</span>.<span class="tk-fn">choice</span>([<span class="tk-num">1</span>, <span class="tk-num">2</span>, <span class="tk-num">3</span>, <span class="tk-num">4</span>, <span class="tk-num">5</span>, <span class="tk-num">6</span>])
+<span class="hs">def</span> <span class="hf">roll</span>():
+    <span class="hk">return</span> <span class="hc">random</span>.<span class="hf">choice</span>([<span class="hd">1</span>, <span class="hd">2</span>, <span class="hd">3</span>, <span class="hd">4</span>, <span class="hd">5</span>, <span class="hd">6</span>])
 
-<span class="tk-kw">def</span> <span class="tk-fn">roll_two</span>():
-    <span class="tk-ctl">return</span> <span class="tk-fn">roll</span>() + <span class="tk-fn">roll</span>()
+<span class="hs">def</span> <span class="hf">roll_two</span>():
+    <span class="hk">return</span> <span class="hf">roll</span>() + <span class="hf">roll</span>()
 
-<span class="tk-kw">def</span> <span class="tk-fn">winner_of</span>(<span class="tk-var">you</span>, <span class="tk-var">computer</span>):
-    <span class="tk-ctl">if</span> <span class="tk-var">you</span> &gt; <span class="tk-var">computer</span>:
-        <span class="tk-ctl">return</span> <span class="tk-str">"you"</span>
-    <span class="tk-ctl">if</span> <span class="tk-var">computer</span> &gt; <span class="tk-var">you</span>:
-        <span class="tk-ctl">return</span> <span class="tk-str">"computer"</span>
-    <span class="tk-ctl">return</span> <span class="tk-str">"tie"</span>
+<span class="hs">def</span> <span class="hf">winner_of</span>(<span class="hv">you</span>, <span class="hv">computer</span>):
+    <span class="hk">if</span> <span class="hv">you</span> &gt; <span class="hv">computer</span>:
+        <span class="hk">return</span> <span class="hq">"you"</span>
+    <span class="hk">if</span> <span class="hv">computer</span> &gt; <span class="hv">you</span>:
+        <span class="hk">return</span> <span class="hq">"computer"</span>
+    <span class="hk">return</span> <span class="hq">"tie"</span>
 
-<span class="tk-var">your_wins</span> = <span class="tk-num">0</span>
-<span class="tk-ctl">for</span> <span class="tk-var">round_number</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-num">1</span>, <span class="tk-num">6</span>):
-    <span class="tk-fn">input</span>(<span class="tk-str">"Press Enter to roll."</span>)
-    <span class="tk-var">you</span> = <span class="tk-fn">roll_two</span>()
-    <span class="tk-var">computer</span> = <span class="tk-fn">roll_two</span>()
-    <span class="tk-var">result</span> = <span class="tk-fn">winner_of</span>(<span class="tk-var">you</span>, <span class="tk-var">computer</span>)
-    <span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"Round </span><span class="tk-kw">{</span><span class="tk-var">round_number</span><span class="tk-kw">}</span><span class="tk-str">: you rolled </span><span class="tk-kw">{</span><span class="tk-var">you</span><span class="tk-kw">}</span><span class="tk-str">, the computer rolled </span><span class="tk-kw">{</span><span class="tk-var">computer</span><span class="tk-kw">}</span><span class="tk-str">. Winner: </span><span class="tk-kw">{</span><span class="tk-var">result</span><span class="tk-kw">}</span><span class="tk-str">"</span>)
-    <span class="tk-ctl">if</span> <span class="tk-var">result</span> == <span class="tk-str">"you"</span>:
-        <span class="tk-var">your_wins</span> = <span class="tk-var">your_wins</span> + <span class="tk-num">1</span>
+<span class="hv">your_wins</span> = <span class="hd">0</span>
+<span class="hk">for</span> <span class="hv">round_number</span> <span class="hs">in</span> <span class="hc">range</span>(<span class="hd">1</span>, <span class="hd">6</span>):
+    <span class="hf">input</span>(<span class="hq">"Press Enter to roll."</span>)
+    <span class="hv">you</span> = <span class="hf">roll_two</span>()
+    <span class="hv">computer</span> = <span class="hf">roll_two</span>()
+    <span class="hv">result</span> = <span class="hf">winner_of</span>(<span class="hv">you</span>, <span class="hv">computer</span>)
+    <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Round </span><span class="hs">{</span><span class="hv">round_number</span><span class="hs">}</span><span class="hq">: you rolled </span><span class="hs">{</span><span class="hv">you</span><span class="hs">}</span><span class="hq">, the computer rolled </span><span class="hs">{</span><span class="hv">computer</span><span class="hs">}</span><span class="hq">. Winner: </span><span class="hs">{</span><span class="hv">result</span><span class="hs">}</span><span class="hq">"</span>)
+    <span class="hk">if</span> <span class="hv">result</span> == <span class="hq">"you"</span>:
+        <span class="hv">your_wins</span> = <span class="hv">your_wins</span> + <span class="hd">1</span>
 
-<span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"You won </span><span class="tk-kw">{</span><span class="tk-var">your_wins</span><span class="tk-kw">}</span><span class="tk-str"> of 5 rounds."</span>)
-</pre><p class="outlabel">One run</p><pre class="want">Press Enter to roll.
+<span class="hf">print</span>(<span class="hs">f</span><span class="hq">"You won </span><span class="hs">{</span><span class="hv">your_wins</span><span class="hs">}</span><span class="hq"> of 5 rounds."</span>)
+</code></pre><p class="outlabel">One run</p><pre class="want">Press Enter to roll.
 Round 1: you rolled 8, the computer rolled 4. Winner: you
 Press Enter to roll.
 Round 2: you rolled 9, the computer rolled 7. Winner: you
@@ -369,22 +378,22 @@ Press Enter to roll.
 Round 4: you rolled 7, the computer rolled 5. Winner: you
 Press Enter to roll.
 Round 5: you rolled 6, the computer rolled 8. Winner: computer
-You won 3 of 5 rounds.</pre><p><b>Go further:</b></p><pre><span class="tk-kw">def</span> <span class="tk-fn">roll_many</span>(<span class="tk-var">count</span>):
-    <span class="tk-var">total</span> = <span class="tk-num">0</span>
-    <span class="tk-ctl">for</span> <span class="tk-var">i</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-var">count</span>):
-        <span class="tk-var">total</span> = <span class="tk-var">total</span> + <span class="tk-fn">roll</span>()
-    <span class="tk-ctl">return</span> <span class="tk-var">total</span>
-</pre><p>Ten rolls of 1 add up to 10 and ten rolls of 6 add up to 60, so <code>roll_many(10)</code> is always between 10 and 60.</p></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the average</h2><div class="tscroll"><table class="xkey"><tr><th>Run</th><th>What the student sees</th><th>The bug</th><th>The fix</th></tr><tr><td>1</td><td><code>NameError: name 'average_of' is not defined</code>, on line 1</td><td>The call is above the <code>def</code></td><td>Move the <code>print</code> line to the bottom of the file</td></tr><tr><td>2</td><td><code>3.0</code>, then <code>None</code></td><td><code>average_of</code> prints the value and has no <code>return</code></td><td>In <code>average_of</code>, change <code>print(...)</code> to <code>return ...</code></td></tr><tr><td>3</td><td><code>3.0</code></td><td><code>return total</code> is inside the loop, so <code>total_of</code> returns after the first number</td><td>Move <code>return total</code> left by 4 spaces, so it lines up with <code>for</code></td></tr><tr><td>4</td><td><code>20.0</code></td><td>None left</td><td></td></tr></table></div><p>The student may fix bugs 2 and 3 in either order. With the indent fixed first, run 2 prints <code>20.0</code>, then <code>None</code>.</p><p>The fixed program:</p><pre><span class="tk-kw">def</span> <span class="tk-fn">total_of</span>(<span class="tk-var">numbers</span>):
-    <span class="tk-var">total</span> = <span class="tk-num">0</span>
-    <span class="tk-ctl">for</span> <span class="tk-var">n</span> <span class="tk-ctl">in</span> <span class="tk-var">numbers</span>:
-        <span class="tk-var">total</span> = <span class="tk-var">total</span> + <span class="tk-var">n</span>
-    <span class="tk-ctl">return</span> <span class="tk-var">total</span>
+You won 3 of 5 rounds.</pre><p><b>Go further:</b></p><pre class="py"><code><span class="hs">def</span> <span class="hf">roll_many</span>(<span class="hv">count</span>):
+    <span class="hv">total</span> = <span class="hd">0</span>
+    <span class="hk">for</span> <span class="hv">i</span> <span class="hs">in</span> <span class="hc">range</span>(<span class="hv">count</span>):
+        <span class="hv">total</span> = <span class="hv">total</span> + <span class="hf">roll</span>()
+    <span class="hk">return</span> <span class="hv">total</span>
+</code></pre><p>Ten rolls of 1 add up to 10 and ten rolls of 6 add up to 60, so <code>roll_many(10)</code> is always between 10 and 60.</p></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the average</h2><div class="tscroll"><table class="xkey"><tr><th>Run</th><th>What the student sees</th><th>The bug</th><th>The fix</th></tr><tr><td>1</td><td><code>NameError: name 'average_of' is not defined</code>, on line 1</td><td>The call is above the <code>def</code></td><td>Move the <code>print</code> line to the bottom of the file</td></tr><tr><td>2</td><td><code>3.0</code>, then <code>None</code></td><td><code>average_of</code> prints the value and has no <code>return</code></td><td>In <code>average_of</code>, change <code>print(...)</code> to <code>return ...</code></td></tr><tr><td>3</td><td><code>3.0</code></td><td><code>return total</code> is inside the loop, so <code>total_of</code> returns after the first number</td><td>Move <code>return total</code> left by 4 spaces, so it lines up with <code>for</code></td></tr><tr><td>4</td><td><code>20.0</code></td><td>None left</td><td></td></tr></table></div><p>The student may fix bugs 2 and 3 in either order. With the indent fixed first, run 2 prints <code>20.0</code>, then <code>None</code>.</p><p>The fixed program:</p><pre class="py"><code><span class="hs">def</span> <span class="hf">total_of</span>(<span class="hv">numbers</span>):
+    <span class="hv">total</span> = <span class="hd">0</span>
+    <span class="hk">for</span> <span class="hv">n</span> <span class="hs">in</span> <span class="hv">numbers</span>:
+        <span class="hv">total</span> = <span class="hv">total</span> + <span class="hv">n</span>
+    <span class="hk">return</span> <span class="hv">total</span>
 
-<span class="tk-kw">def</span> <span class="tk-fn">average_of</span>(<span class="tk-var">numbers</span>):
-    <span class="tk-ctl">return</span> <span class="tk-fn">total_of</span>(<span class="tk-var">numbers</span>) / <span class="tk-fn">len</span>(<span class="tk-var">numbers</span>)
+<span class="hs">def</span> <span class="hf">average_of</span>(<span class="hv">numbers</span>):
+    <span class="hk">return</span> <span class="hf">total_of</span>(<span class="hv">numbers</span>) / <span class="hf">len</span>(<span class="hv">numbers</span>)
 
-<span class="tk-fn">print</span>(<span class="tk-fn">average_of</span>([<span class="tk-num">12</span>, <span class="tk-num">20</span>, <span class="tk-num">28</span>, <span class="tk-num">20</span>]))
-</pre></section></div></main><nav class="pager"><a href="session05_functions_that_return.html?v=10">&larr; Session 5: Functions that return a value</a><a href="beginner_semester_hub.html?v=10">Course home</a><a href="session06_angles_and_shapes.html?v=10">Session 6: Angles and shapes on screen &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 5, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
+<span class="hf">print</span>(<span class="hf">average_of</span>([<span class="hd">12</span>, <span class="hd">20</span>, <span class="hd">28</span>, <span class="hd">20</span>]))
+</code></pre></section></div></main><nav class="pager"><a href="session05_functions_that_return.html?v=11">&larr; Session 5: Functions that return a value</a><a href="beginner_semester_hub.html?v=11">Course home</a><a href="session06_angles_and_shapes.html?v=11">Session 6: Angles and shapes on screen &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 5, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

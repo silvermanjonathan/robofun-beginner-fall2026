@@ -35,7 +35,10 @@ header.top{
   background:var(--teal); color:#FFFDF7;
   border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
 }
-.wrap{max-width:900px; margin:0 auto}
+.wrap{max-width:1080px; margin:0 auto}
+/* prose lines stay at reading length inside the wider column; code gets the width */
+p,li{max-width:72ch}
+.dates,.sessionlist li,.toolbar,.legend,.exits p,.card p,.stamp,.pill{max-width:none}
 .eyebrow{
   font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
   text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
@@ -80,6 +83,7 @@ section.extension{border-left:8px solid var(--clay)}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 14px; padding-left:24px}
 li{margin:0 0 8px}
+.sessionlist li{max-width:none}
 code,pre{
   /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
      glyph; students then type a character that does not exist. Keep every
@@ -92,22 +96,18 @@ code{
   padding:2px 6px; border-radius:3px;
 }
 pre{
-  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  /* 19px, a little over the 18px prose, so code reads from the back of the room */
+  font-family:'JetBrains Mono',monospace; font-size:19px; line-height:1.6;
   background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
-/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
-   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
-   italic, so every character keeps its width. */
-.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
-.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
-.tk-str{color:#A31515}  /* strings */
-.tk-num{color:#06704A}  /* numbers */
-.tk-com{color:#3B6E2A}  /* comments */
-.tk-fn{color:#795E26}   /* functions */
-.tk-cls{color:#1D6A80}  /* classes, types, modules */
-.tk-var{color:#001080}  /* variables */
+pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-weight:inherit; color:inherit}
+/* Python code, colored the way VS Code's light theme colors it, on white. Each color
+   clears 7:1 on white (render.py checks), and the same colors print. Color only, never
+   bold or italic, so every character keeps its width. */
+pre.py{background:#FFFFFF; color:#1F1F1F}
+pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -186,7 +186,7 @@ details.teacher[open] summary{margin-bottom:14px}
   padding-left:14px; margin:0 0 14px;
 }
 .pager{
-  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  max-width:1080px; margin:0 auto; padding:8px 22px 34px;
   display:flex; justify-content:space-between; gap:12px;
   font-family:'JetBrains Mono',monospace; font-size:14px;
 }
@@ -248,6 +248,12 @@ a.btn.quiet:hover{background:#EFE9DA}
   letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
   font-weight:700;
 }
+@media (max-width:760px){
+  pre{font-size:15px}
+  /* a wide table scrolls inside itself instead of widening the page */
+  table{display:block; overflow-x:auto; max-width:100%}
+  table tbody{display:table; width:100%}
+}
 @media print{
   body{background:#fff; font-size:11pt}
   header.top{background:#fff; color:#111; border-bottom:3px solid #111}
@@ -257,6 +263,9 @@ a.btn.quiet:hover{background:#EFE9DA}
   section,.stamp,.card{background:#fff; break-inside:avoid}
   .noprint,.toolbar{display:none}
   a{color:#111}
+  /* printed code keeps its old size, so printed pages and PDFs do not reflow */
+  pre{font-size:15.5px}
+  pre.py{background:#fff; border:1px solid #999}
 }
 </style>
 
@@ -297,62 +306,62 @@ section.xcard h3{margin-top:20px}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 2 of 12</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Sep 28</span><span class="pill"><b>Friday section</b> Fri Sep 25</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session02_comparisons_and_gates.html?v=10">Back to the session 2 page</a><a class="btn quiet" href="session02_extra_cards.html?v=10">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 20 minutes</p><h2>Three-question quiz</h2><pre><span class="tk-var">score</span> = <span class="tk-num">0</span>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 2 of 12</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Sep 28</span><span class="pill"><b>Friday section</b> Fri Sep 25</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session02_comparisons_and_gates.html?v=11">Back to the session 2 page</a><a class="btn quiet" href="session02_extra_cards.html?v=11">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 20 minutes</p><h2>Three-question quiz</h2><pre class="py"><code><span class="hv">score</span> = <span class="hd">0</span>
 
-<span class="tk-var">answer</span> = <span class="tk-fn">input</span>(<span class="tk-str">"How many legs does a spider have? "</span>)
-<span class="tk-ctl">if</span> <span class="tk-var">answer</span> == <span class="tk-str">"8"</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Correct."</span>)
-    <span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">1</span>
-<span class="tk-ctl">else</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"No. A spider has 8 legs."</span>)
+<span class="hv">answer</span> = <span class="hf">input</span>(<span class="hq">"How many legs does a spider have? "</span>)
+<span class="hk">if</span> <span class="hv">answer</span> == <span class="hq">"8"</span>:
+    <span class="hf">print</span>(<span class="hq">"Correct."</span>)
+    <span class="hv">score</span> = <span class="hv">score</span> + <span class="hd">1</span>
+<span class="hk">else</span>:
+    <span class="hf">print</span>(<span class="hq">"No. A spider has 8 legs."</span>)
 
-<span class="tk-var">answer</span> = <span class="tk-fn">input</span>(<span class="tk-str">"What is the capital of France? "</span>)
-<span class="tk-ctl">if</span> <span class="tk-var">answer</span> == <span class="tk-str">"Paris"</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Correct."</span>)
-    <span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">1</span>
-<span class="tk-ctl">else</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"No. It is Paris."</span>)
+<span class="hv">answer</span> = <span class="hf">input</span>(<span class="hq">"What is the capital of France? "</span>)
+<span class="hk">if</span> <span class="hv">answer</span> == <span class="hq">"Paris"</span>:
+    <span class="hf">print</span>(<span class="hq">"Correct."</span>)
+    <span class="hv">score</span> = <span class="hv">score</span> + <span class="hd">1</span>
+<span class="hk">else</span>:
+    <span class="hf">print</span>(<span class="hq">"No. It is Paris."</span>)
 
-<span class="tk-var">answer</span> = <span class="tk-fn">input</span>(<span class="tk-str">"Which planet do we live on? "</span>)
-<span class="tk-ctl">if</span> <span class="tk-var">answer</span> == <span class="tk-str">"Earth"</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Correct."</span>)
-    <span class="tk-var">score</span> = <span class="tk-var">score</span> + <span class="tk-num">1</span>
-<span class="tk-ctl">else</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"No. It is Earth."</span>)
+<span class="hv">answer</span> = <span class="hf">input</span>(<span class="hq">"Which planet do we live on? "</span>)
+<span class="hk">if</span> <span class="hv">answer</span> == <span class="hq">"Earth"</span>:
+    <span class="hf">print</span>(<span class="hq">"Correct."</span>)
+    <span class="hv">score</span> = <span class="hv">score</span> + <span class="hd">1</span>
+<span class="hk">else</span>:
+    <span class="hf">print</span>(<span class="hq">"No. It is Earth."</span>)
 
-<span class="tk-ctl">if</span> <span class="tk-var">score</span> == <span class="tk-num">3</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Perfect. 3 out of 3."</span>)
-<span class="tk-ctl">elif</span> <span class="tk-var">score</span> == <span class="tk-num">2</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Close. 2 out of 3."</span>)
-<span class="tk-ctl">else</span>:
-    <span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"You got </span><span class="tk-kw">{</span><span class="tk-var">score</span><span class="tk-kw">}</span><span class="tk-str"> out of 3. Run it again."</span>)
-</pre><p class="outlabel">What it prints</p><pre class="want">How many legs does a spider have? 8
+<span class="hk">if</span> <span class="hv">score</span> == <span class="hd">3</span>:
+    <span class="hf">print</span>(<span class="hq">"Perfect. 3 out of 3."</span>)
+<span class="hk">elif</span> <span class="hv">score</span> == <span class="hd">2</span>:
+    <span class="hf">print</span>(<span class="hq">"Close. 2 out of 3."</span>)
+<span class="hk">else</span>:
+    <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"You got </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq"> out of 3. Run it again."</span>)
+</code></pre><p class="outlabel">What it prints</p><pre class="want">How many legs does a spider have? 8
 Correct.
 What is the capital of France? London
 No. It is Paris.
 Which planet do we live on? Earth
 Correct.
-Close. 2 out of 3.</pre><p><b>Before you run:</b> a second <code>score = 0</code> just above the last gate replaces the count, so every run ends with <code>You got 0 out of 3. Run it again.</code></p><p><b>Go further:</b> <code>if answer == "Paris" or answer == "paris":</code> Watch for <code>if answer == "Paris" or "paris":</code> That version marks every answer correct. Let the student find that out by typing London.</p></section><section class="chunk xcard"><p class="chunk-no">Card B &middot; finish the starter &middot; about 15 minutes</p><h2>Guess my number</h2><p><b>Before you run:</b> the stopping condition is <code>guess != secret</code>. The loop stops when the guess is 37.</p><p>This is the program with both Go further parts.</p><pre><span class="tk-var">secret</span> = <span class="tk-num">37</span>
-<span class="tk-var">guess</span> = <span class="tk-num">0</span>
-<span class="tk-var">tries</span> = <span class="tk-num">0</span>
+Close. 2 out of 3.</pre><p><b>Before you run:</b> a second <code>score = 0</code> just above the last gate replaces the count, so every run ends with <code>You got 0 out of 3. Run it again.</code></p><p><b>Go further:</b> <code>if answer == "Paris" or answer == "paris":</code> Watch for <code>if answer == "Paris" or "paris":</code> That version marks every answer correct. Let the student find that out by typing London.</p></section><section class="chunk xcard"><p class="chunk-no">Card B &middot; finish the starter &middot; about 15 minutes</p><h2>Guess my number</h2><p><b>Before you run:</b> the stopping condition is <code>guess != secret</code>. The loop stops when the guess is 37.</p><p>This is the program with both Go further parts.</p><pre class="py"><code><span class="hv">secret</span> = <span class="hd">37</span>
+<span class="hv">guess</span> = <span class="hd">0</span>
+<span class="hv">tries</span> = <span class="hd">0</span>
 
-<span class="tk-ctl">while</span> <span class="tk-var">guess</span> != <span class="tk-var">secret</span>:
-    <span class="tk-var">guess</span> = <span class="tk-fn">input</span>(<span class="tk-str">"Guess my number, 1 to 50: "</span>)
-    <span class="tk-var">guess</span> = <span class="tk-cls">int</span>(<span class="tk-var">guess</span>)
-    <span class="tk-var">tries</span> = <span class="tk-var">tries</span> + <span class="tk-num">1</span>
-    <span class="tk-ctl">if</span> <span class="tk-var">guess</span> &lt; <span class="tk-var">secret</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"Too low."</span>)
-    <span class="tk-ctl">elif</span> <span class="tk-var">guess</span> &gt; <span class="tk-var">secret</span>:
-        <span class="tk-fn">print</span>(<span class="tk-str">"Too high."</span>)
+<span class="hk">while</span> <span class="hv">guess</span> != <span class="hv">secret</span>:
+    <span class="hv">guess</span> = <span class="hf">input</span>(<span class="hq">"Guess my number, 1 to 50: "</span>)
+    <span class="hv">guess</span> = <span class="hc">int</span>(<span class="hv">guess</span>)
+    <span class="hv">tries</span> = <span class="hv">tries</span> + <span class="hd">1</span>
+    <span class="hk">if</span> <span class="hv">guess</span> &lt; <span class="hv">secret</span>:
+        <span class="hf">print</span>(<span class="hq">"Too low."</span>)
+    <span class="hk">elif</span> <span class="hv">guess</span> &gt; <span class="hv">secret</span>:
+        <span class="hf">print</span>(<span class="hq">"Too high."</span>)
 
-<span class="tk-fn">print</span>(<span class="tk-kw">f</span><span class="tk-str">"You got it in </span><span class="tk-kw">{</span><span class="tk-var">tries</span><span class="tk-kw">}</span><span class="tk-str"> tries."</span>)
-<span class="tk-ctl">if</span> <span class="tk-var">tries</span> &lt;= <span class="tk-num">4</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Sharp guessing."</span>)
-<span class="tk-ctl">elif</span> <span class="tk-var">tries</span> &lt;= <span class="tk-num">7</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Not bad."</span>)
-<span class="tk-ctl">else</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"That took a while."</span>)
-</pre><p class="outlabel">What it prints for 20, 40, 35, 37</p><pre class="want">Guess my number, 1 to 50: 20
+<span class="hf">print</span>(<span class="hs">f</span><span class="hq">"You got it in </span><span class="hs">{</span><span class="hv">tries</span><span class="hs">}</span><span class="hq"> tries."</span>)
+<span class="hk">if</span> <span class="hv">tries</span> &lt;= <span class="hd">4</span>:
+    <span class="hf">print</span>(<span class="hq">"Sharp guessing."</span>)
+<span class="hk">elif</span> <span class="hv">tries</span> &lt;= <span class="hd">7</span>:
+    <span class="hf">print</span>(<span class="hq">"Not bad."</span>)
+<span class="hk">else</span>:
+    <span class="hf">print</span>(<span class="hq">"That took a while."</span>)
+</code></pre><p class="outlabel">What it prints for 20, 40, 35, 37</p><pre class="want">Guess my number, 1 to 50: 20
 Too low.
 Guess my number, 1 to 50: 40
 Too high.
@@ -360,14 +369,14 @@ Guess my number, 1 to 50: 35
 Too low.
 Guess my number, 1 to 50: 37
 You got it in 4 tries.
-Sharp guessing.</pre></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the door</h2><div class="tscroll"><table class="xkey"><tr><th>Run</th><th>What the student sees</th><th>The bug</th><th>The fix</th></tr><tr><td>1</td><td><code>SyntaxError: invalid syntax</code>, on line 3</td><td>One equals sign in a comparison</td><td><code>ticket == "yes"</code></td></tr><tr><td>2</td><td><code>TypeError: '&gt;' not supported between instances of 'str' and 'int'</code>, on line 3</td><td><code>age</code> is still text</td><td>Add <code>age = int(age)</code> under line 1</td></tr><tr><td>3</td><td>13 and yes prints <code>Not today.</code></td><td><code>age &gt; 13</code> leaves out 13</td><td><code>age &gt;= 13</code></td></tr><tr><td>4</td><td>All four rows of the table match</td><td>None left</td><td></td></tr></table></div><p>The fixed program:</p><pre><span class="tk-var">age</span> = <span class="tk-fn">input</span>(<span class="tk-str">"Age: "</span>)
-<span class="tk-var">age</span> = <span class="tk-cls">int</span>(<span class="tk-var">age</span>)
-<span class="tk-var">ticket</span> = <span class="tk-fn">input</span>(<span class="tk-str">"Ticket? yes or no: "</span>)
-<span class="tk-ctl">if</span> <span class="tk-var">age</span> &gt;= <span class="tk-num">13</span> <span class="tk-kw">and</span> <span class="tk-var">ticket</span> == <span class="tk-str">"yes"</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Come in."</span>)
-<span class="tk-ctl">else</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Not today."</span>)
-</pre></section></div></main><nav class="pager"><a href="session02_comparisons_and_gates.html?v=10">&larr; Session 2: Comparisons and gates</a><a href="beginner_semester_hub.html?v=10">Course home</a><a href="session03_loops_counters_lists.html?v=10">Session 3: Loops, counters, and lists &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 2, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
+Sharp guessing.</pre></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the door</h2><div class="tscroll"><table class="xkey"><tr><th>Run</th><th>What the student sees</th><th>The bug</th><th>The fix</th></tr><tr><td>1</td><td><code>SyntaxError: invalid syntax</code>, on line 3</td><td>One equals sign in a comparison</td><td><code>ticket == "yes"</code></td></tr><tr><td>2</td><td><code>TypeError: '&gt;' not supported between instances of 'str' and 'int'</code>, on line 3</td><td><code>age</code> is still text</td><td>Add <code>age = int(age)</code> under line 1</td></tr><tr><td>3</td><td>13 and yes prints <code>Not today.</code></td><td><code>age &gt; 13</code> leaves out 13</td><td><code>age &gt;= 13</code></td></tr><tr><td>4</td><td>All four rows of the table match</td><td>None left</td><td></td></tr></table></div><p>The fixed program:</p><pre class="py"><code><span class="hv">age</span> = <span class="hf">input</span>(<span class="hq">"Age: "</span>)
+<span class="hv">age</span> = <span class="hc">int</span>(<span class="hv">age</span>)
+<span class="hv">ticket</span> = <span class="hf">input</span>(<span class="hq">"Ticket? yes or no: "</span>)
+<span class="hk">if</span> <span class="hv">age</span> &gt;= <span class="hd">13</span> <span class="hs">and</span> <span class="hv">ticket</span> == <span class="hq">"yes"</span>:
+    <span class="hf">print</span>(<span class="hq">"Come in."</span>)
+<span class="hk">else</span>:
+    <span class="hf">print</span>(<span class="hq">"Not today."</span>)
+</code></pre></section></div></main><nav class="pager"><a href="session02_comparisons_and_gates.html?v=11">&larr; Session 2: Comparisons and gates</a><a href="beginner_semester_hub.html?v=11">Course home</a><a href="session03_loops_counters_lists.html?v=11">Session 3: Loops, counters, and lists &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 2, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

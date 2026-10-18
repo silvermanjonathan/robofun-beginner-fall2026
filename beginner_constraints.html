@@ -35,7 +35,10 @@ header.top{
   background:var(--teal); color:#FFFDF7;
   border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
 }
-.wrap{max-width:900px; margin:0 auto}
+.wrap{max-width:1080px; margin:0 auto}
+/* prose lines stay at reading length inside the wider column; code gets the width */
+p,li{max-width:72ch}
+.dates,.sessionlist li,.toolbar,.legend,.exits p,.card p,.stamp,.pill{max-width:none}
 .eyebrow{
   font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
   text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
@@ -80,6 +83,7 @@ section.extension{border-left:8px solid var(--clay)}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 14px; padding-left:24px}
 li{margin:0 0 8px}
+.sessionlist li{max-width:none}
 code,pre{
   /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
      glyph; students then type a character that does not exist. Keep every
@@ -92,22 +96,18 @@ code{
   padding:2px 6px; border-radius:3px;
 }
 pre{
-  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  /* 19px, a little over the 18px prose, so code reads from the back of the room */
+  font-family:'JetBrains Mono',monospace; font-size:19px; line-height:1.6;
   background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
-/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
-   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
-   italic, so every character keeps its width. */
-.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
-.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
-.tk-str{color:#A31515}  /* strings */
-.tk-num{color:#06704A}  /* numbers */
-.tk-com{color:#3B6E2A}  /* comments */
-.tk-fn{color:#795E26}   /* functions */
-.tk-cls{color:#1D6A80}  /* classes, types, modules */
-.tk-var{color:#001080}  /* variables */
+pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-weight:inherit; color:inherit}
+/* Python code, colored the way VS Code's light theme colors it, on white. Each color
+   clears 7:1 on white (render.py checks), and the same colors print. Color only, never
+   bold or italic, so every character keeps its width. */
+pre.py{background:#FFFFFF; color:#1F1F1F}
+pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -186,7 +186,7 @@ details.teacher[open] summary{margin-bottom:14px}
   padding-left:14px; margin:0 0 14px;
 }
 .pager{
-  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  max-width:1080px; margin:0 auto; padding:8px 22px 34px;
   display:flex; justify-content:space-between; gap:12px;
   font-family:'JetBrains Mono',monospace; font-size:14px;
 }
@@ -248,6 +248,12 @@ a.btn.quiet:hover{background:#EFE9DA}
   letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
   font-weight:700;
 }
+@media (max-width:760px){
+  pre{font-size:15px}
+  /* a wide table scrolls inside itself instead of widening the page */
+  table{display:block; overflow-x:auto; max-width:100%}
+  table tbody{display:table; width:100%}
+}
 @media print{
   body{background:#fff; font-size:11pt}
   header.top{background:#fff; color:#111; border-bottom:3px solid #111}
@@ -257,20 +263,23 @@ a.btn.quiet:hover{background:#EFE9DA}
   section,.stamp,.card{background:#fff; break-inside:avoid}
   .noprint,.toolbar{display:none}
   a{color:#111}
+  /* printed code keeps its old size, so printed pages and PDFs do not reflow */
+  pre{font-size:15.5px}
+  pre.py{background:#fff; border:1px solid #999}
 }
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beginner course &middot; published 2026-09-12</p><h1>Code constraints</h1><p class="sub">What this course uses, what it leaves out, and the one frame loop. Every page on this site obeys this list. Changing the list means republishing it with a new date.</p></div></header><main><div class="wrap"><section><h2>Allowed, and where each is first taught</h2><p>Each of these is taught in a named session and not used before it.</p><table><tr><th>Now allowed</th><th>First taught</th><th>Why</th></tr><tr><td><code>return</code></td><td>Session 5</td><td>Without it a function cannot be composed, tested, or reused, and every function returns <code>None</code>.</td></tr><tr><td><code>and</code>, <code>or</code></td><td>Session 2</td><td>With nesting banned there was no way to write two conditions at once.</td></tr><tr><td><code>len</code>, <code>sum</code>, <code>max</code>, <code>min</code></td><td>Session 3</td><td>Taught as the reveal after the hand-written version, never before it.</td></tr><tr><td>String methods and slicing</td><td>Session 7</td><td>Students could not clean their own input, which forced capitals-and-spaces workarounds.</td></tr><tr><td>Dictionaries</td><td>Session 9</td><td>The parallel-list failure is taught first, then the fix.</td></tr><tr><td><code>.find()</code></td><td>Session 8</td><td>Revealed after the hand-written rack scan.</td></tr><tr><td>pygame from session 6 onward</td><td>Session 6</td><td>The only graphics library in the course. It replaces the turtle drawing session, which does not run in VS Code.</td></tr><tr><td>KEYDOWN, mouse, frame timers</td><td>Session 11</td><td>Without them a game reads as a demo. A held key and a single press are different questions.</td></tr><tr><td><code>random.seed</code>, <code>randint</code></td><td>Session 3</td><td>A seed is how you test a program that is supposed to be unpredictable.</td></tr></table></section><section><h2>Still excluded, all twelve sessions</h2><ul><li><b>Nested gates.</b> Flat <code>if</code>, <code>elif</code>, <code>else</code> only. If a student reaches for an if inside an if, hand them <code>and</code>.</li><li><b><code>break</code> and <code>continue</code>.</b> Every <code>while</code> has a stopping condition you can point at.</li><li><b><code>while True</code>.</b> Same reason.</li><li><b><code>try</code> and <code>except</code>.</b> Ask-until-valid loops cover the same ground at this level.</li><li><b><code>//</code>.</b> A single slash and <code>%</code> are enough.</li><li><b><code>class</code>.</b> Advanced course material.</li><li><b>Recursion, list comprehensions, lambda, <code>global</code>.</b></li><li><b>Multi-file programs and importing your own module.</b> Advanced course.</li><li><b>File input and output.</b> Held as a float, not one of the twelve sessions.</li><li><b><code>pygame.font</code>.</b> Words go in the terminal and visuals go in the window. That split holds all term.</li><li><b>turtle.</b> Not used anywhere in this course. It needs a library our VS Code setup does not have, so pygame does all of the drawing, starting in session 6. No turtle program appears in this repo.</li></ul></section><section><h2>The frame loop, and only this one</h2><p>This course uses one frame loop, everywhere, with no exceptions. Students first copy it in session 6 as a loop holding a finished drawing on screen, and session 10 takes it apart.</p><pre><span class="tk-var">running</span> = <span class="tk-num">1</span>
-<span class="tk-ctl">while</span> <span class="tk-var">running</span>:
-    <span class="tk-ctl">for</span> <span class="tk-var">event</span> <span class="tk-ctl">in</span> <span class="tk-var">pygame</span>.<span class="tk-var">event</span>.<span class="tk-fn">get</span>():
-        <span class="tk-ctl">if</span> <span class="tk-var">event</span>.<span class="tk-var">type</span> == <span class="tk-var">pygame</span>.<span class="tk-var">QUIT</span>:
-            <span class="tk-var">running</span> = <span class="tk-num">0</span>
-    <span class="tk-var">screen</span>.<span class="tk-fn">fill</span>(<span class="tk-var">BG</span>)
-    <span class="tk-com"># draw here</span>
-    <span class="tk-var">pygame</span>.<span class="tk-var">display</span>.<span class="tk-fn">flip</span>()
-    <span class="tk-var">clock</span>.<span class="tk-fn">tick</span>(<span class="tk-num">60</span>)
-<span class="tk-var">pygame</span>.<span class="tk-fn">quit</span>()</pre><p>A window never closes itself. It closes when the person closes it. Any program handed out in this course has this shape.</p><p>Two placements of the drawing, both legitimate, and students meet them in this order. In session 6 the drawing is done once onto a <code>pygame.Surface</code> above the loop, and the loop only blits it, because the picture never changes. From session 10 on, the <code>fill</code> and the drawing sit inside the loop, because the picture changes every frame.</p></section><section><h2>Standing rules</h2><ul><li><b>One change per run.</b> Change one thing, run it, write down what happened.</li><li><b>Predict before you run.</b> Out loud or on paper, every chunk.</li><li><b>Expected and got.</b> The expected column is filled in before the run, not after.</li><li><b>Names that say what they do.</b> A function called <code>check</code> that removes a life gets renamed. This is an exit criterion, not a style preference.</li><li><b>Words in the terminal, visuals in the window.</b></li><li><b>Functions at the top.</b> Every <code>def</code> goes together near the top of the file, after the imports and before any line that does work. Python must read a function before the line that calls it.</li><li><b>Knob block at the top.</b> Every number the behaviour depends on gets a capitalised name above the code that uses it.</li></ul></section><section><h2>Verification</h2><p>Every output box on every session page was produced by running that exact snippet, not typed from expectation. Terminal snippets were run with real input where they ask for it. The pygame snippets were run without a screen, with a quit event injected after a set number of frames, and the printed probe lines on those pages are the real ones. Every snippet on this site was run. Where a snippet continues a program from an earlier chunk, the page says so and the whole file was run together.</p></section></div></main><nav class="pager"><a href="beginner_semester_hub.html?v=10">Course home</a><a href="standards_map.html?v=10">Standards map &rarr;</a></nav><footer><div class="wrap"><p>Published 2026-09-12.</p></div></footer>
+<header class="top"><div class="wrap"><p class="eyebrow">Beginner course &middot; published 2026-09-12</p><h1>Code constraints</h1><p class="sub">What this course uses, what it leaves out, and the one frame loop. Every page on this site obeys this list. Changing the list means republishing it with a new date.</p></div></header><main><div class="wrap"><section><h2>Allowed, and where each is first taught</h2><p>Each of these is taught in a named session and not used before it.</p><table><tr><th>Now allowed</th><th>First taught</th><th>Why</th></tr><tr><td><code>return</code></td><td>Session 5</td><td>Without it a function cannot be composed, tested, or reused, and every function returns <code>None</code>.</td></tr><tr><td><code>and</code>, <code>or</code></td><td>Session 2</td><td>With nesting banned there was no way to write two conditions at once.</td></tr><tr><td><code>len</code>, <code>sum</code>, <code>max</code>, <code>min</code></td><td>Session 3</td><td>Taught as the reveal after the hand-written version, never before it.</td></tr><tr><td>String methods and slicing</td><td>Session 7</td><td>Students could not clean their own input, which forced capitals-and-spaces workarounds.</td></tr><tr><td>Dictionaries</td><td>Session 9</td><td>The parallel-list failure is taught first, then the fix.</td></tr><tr><td><code>.find()</code></td><td>Session 8</td><td>Revealed after the hand-written rack scan.</td></tr><tr><td>pygame from session 6 onward</td><td>Session 6</td><td>The only graphics library in the course. It replaces the turtle drawing session, which does not run in VS Code.</td></tr><tr><td>KEYDOWN, mouse, frame timers</td><td>Session 11</td><td>Without them a game reads as a demo. A held key and a single press are different questions.</td></tr><tr><td><code>random.seed</code>, <code>randint</code></td><td>Session 3</td><td>A seed is how you test a program that is supposed to be unpredictable.</td></tr></table></section><section><h2>Still excluded, all twelve sessions</h2><ul><li><b>Nested gates.</b> Flat <code>if</code>, <code>elif</code>, <code>else</code> only. If a student reaches for an if inside an if, hand them <code>and</code>.</li><li><b><code>break</code> and <code>continue</code>.</b> Every <code>while</code> has a stopping condition you can point at.</li><li><b><code>while True</code>.</b> Same reason.</li><li><b><code>try</code> and <code>except</code>.</b> Ask-until-valid loops cover the same ground at this level.</li><li><b><code>//</code>.</b> A single slash and <code>%</code> are enough.</li><li><b><code>class</code>.</b> Advanced course material.</li><li><b>Recursion, list comprehensions, lambda, <code>global</code>.</b></li><li><b>Multi-file programs and importing your own module.</b> Advanced course.</li><li><b>File input and output.</b> Held as a float, not one of the twelve sessions.</li><li><b><code>pygame.font</code>.</b> Words go in the terminal and visuals go in the window. That split holds all term.</li><li><b>turtle.</b> Not used anywhere in this course. It needs a library our VS Code setup does not have, so pygame does all of the drawing, starting in session 6. No turtle program appears in this repo.</li></ul></section><section><h2>The frame loop, and only this one</h2><p>This course uses one frame loop, everywhere, with no exceptions. Students first copy it in session 6 as a loop holding a finished drawing on screen, and session 10 takes it apart.</p><pre class="py"><code><span class="hv">running</span> = <span class="hd">1</span>
+<span class="hk">while</span> <span class="hv">running</span>:
+    <span class="hk">for</span> <span class="hv">event</span> <span class="hs">in</span> <span class="hc">pygame</span>.<span class="hc">event</span>.<span class="hf">get</span>():
+        <span class="hk">if</span> <span class="hv">event</span>.<span class="hv">type</span> == <span class="hc">pygame</span>.<span class="hn">QUIT</span>:
+            <span class="hv">running</span> = <span class="hd">0</span>
+    <span class="hv">screen</span>.<span class="hf">fill</span>(<span class="hn">BG</span>)
+    <span class="hm"># draw here</span>
+    <span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">flip</span>()
+    <span class="hv">clock</span>.<span class="hf">tick</span>(<span class="hd">60</span>)
+<span class="hc">pygame</span>.<span class="hf">quit</span>()</code></pre><p>A window never closes itself. It closes when the person closes it. Any program handed out in this course has this shape.</p><p>Two placements of the drawing, both legitimate, and students meet them in this order. In session 6 the drawing is done once onto a <code>pygame.Surface</code> above the loop, and the loop only blits it, because the picture never changes. From session 10 on, the <code>fill</code> and the drawing sit inside the loop, because the picture changes every frame.</p></section><section><h2>Standing rules</h2><ul><li><b>One change per run.</b> Change one thing, run it, write down what happened.</li><li><b>Predict before you run.</b> Out loud or on paper, every chunk.</li><li><b>Expected and got.</b> The expected column is filled in before the run, not after.</li><li><b>Names that say what they do.</b> A function called <code>check</code> that removes a life gets renamed. This is an exit criterion, not a style preference.</li><li><b>Words in the terminal, visuals in the window.</b></li><li><b>Functions at the top.</b> Every <code>def</code> goes together near the top of the file, after the imports and before any line that does work. Python must read a function before the line that calls it.</li><li><b>Knob block at the top.</b> Every number the behaviour depends on gets a capitalised name above the code that uses it.</li></ul></section><section><h2>Verification</h2><p>Every output box on every session page was produced by running that exact snippet, not typed from expectation. Terminal snippets were run with real input where they ask for it. The pygame snippets were run without a screen, with a quit event injected after a set number of frames, and the printed probe lines on those pages are the real ones. Every snippet on this site was run. Where a snippet continues a program from an earlier chunk, the page says so and the whole file was run together.</p></section></div></main><nav class="pager"><a href="beginner_semester_hub.html?v=11">Course home</a><a href="standards_map.html?v=11">Standards map &rarr;</a></nav><footer><div class="wrap"><p>Published 2026-09-12.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

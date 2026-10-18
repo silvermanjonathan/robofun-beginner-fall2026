@@ -91,15 +91,27 @@ rules are 2px and accent edges 6 to 8px, because 1px light-grey lines vanish whe
 projected. Nothing relies on colour alone; every coloured element also carries a text
 label or a border-width cue.
 
-**Code colours.** Every code block is coloured by role, following VS Code's Light+
-theme, so the projected page and a student's editor look alike: control words purple,
-`def`, `and`, `or`, `True` blue, strings red, numbers green, comments green, called
-functions brown, modules and types teal, variables navy, operators ink. Four Light+
-colours are darkened within their hue to clear 4.5:1 on the code background. Colour
-only, never bold or italic. Output boxes stay plain, and so does code inside a
-sentence. `build/highlight.py` adds the colour when the page is built; stripping its
-spans gives back every snippet exactly (checked for all 113 on Python 3.11, 3.12, and
-3.13, with the same colour on every character).
+**Code colors.** Every block of Python is colored the way VS Code's light theme colors
+it, so the projected page and a student's editor look alike: control words purple
+(`hk`), `def`, `True`, `and`, `or`, `in` and the `f` of an f-string blue (`hs`),
+functions brown (`hf`), classes and modules teal (`hc`), variables navy (`hv`), CAPITAL
+constants mid blue (`hn`), strings dark red (`hq`), escapes red (`he`), numbers dark
+green (`hd`), comments green (`hm`); operators and brackets stay ink. The block is
+`<pre class="py"><code>` on a white background with a visible border, and each color is
+the VS Code hue darkened until it clears 7:1 contrast on white; `render.py` computes
+the ratios and stops the build if one falls short. The same colors print. Color only,
+never bold or italic, so every character keeps its width. Output boxes, the
+expected/got sheets, and code inside a sentence stay plain. `build/hl.py` (copied from
+the Advanced Python course, with its module list trimmed to pygame, random, math, and
+time) adds the color when the page is built and asserts that stripping its spans gives
+back the snippet exactly.
+
+**Code size.** Code blocks and output boxes are 19px, a little over the 18px prose, so
+they read from the back of the room. The page column is 1080px wide to fit them, and
+paragraphs and list items are capped at 72ch so prose lines stay at reading length. On
+a phone (760px and under) code is 15px and a wide table scrolls inside itself, so the
+page never scrolls sideways. In print the code keeps its old 15.5px, so printed pages
+and the PDFs do not reflow.
 
 **Reveals hide the real output.** Each chunk shows the code, then the prediction
 question, then a button reading "Run it first, then check here". The button reveals
@@ -153,7 +165,7 @@ build/sessions_b.py    sessions 5 to 8
 build/sessions_c.py    sessions 9 to 12 and the Friday bonus
 build/render.py        runs every snippet, then writes the site
 build/validate.py      checks the written site
-build/highlight.py     colours code blocks by role, the way VS Code's Light+ theme does
+build/hl.py            colors Python code the way VS Code does; copied from the Advanced course
 build/worksheet.py     the worksheet CSS, blocks, and projector typing script, shared by every sheet
 build/ws02.py          the session 2 worksheet and its answer key
 build/extras.py        the extra cards and their answer keys, sessions 1 to 3 and 5
@@ -199,7 +211,9 @@ the page. No output box on this site was typed from expectation.
 
 `validate.py` checks tag balance, reveal-button to answer-block parity, duplicate
 reveal ids, `aria-controls` and `aria-expanded` on every reveal button, escaped angle
-brackets inside `<pre>` blocks, absence of storage APIs, dash characters, banned
+brackets inside `<pre>` blocks (with the color spans stripped first), that every
+`<pre><code>` block carries the `py` class and only `hl.py`'s color classes, that no
+output box carries color spans, absence of storage APIs, dash characters, banned
 filler phrases (including any mention of a summer camp or another course), dead
 internal links, the presence of a title and an h1 on every page, that every teacher
 panel's timing rows sum to 90 minutes and include a ledger stamp row, and that no
@@ -324,3 +338,16 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   moves (chunk 4) and for five (the extension), and the tree of the six pairs that
   are not ties (chunk 3). A scoreboard line prints after every round from chunk 6
   on, and the build puts the ties counter on it. Version pin bumped to `?v=10`.
+- **2026-10-18, v11.** Two style changes, no content changes. Python code is colored
+  at build time the way VS Code does, by `build/hl.py` from the Advanced course (ten
+  token classes, each color darkened to at least 7:1 on a white code background,
+  checked in `render.py`); every code block is now `<pre class="py"><code>`, output
+  and sheets stay plain, and the ledger card's reference strip colors only its code
+  column. Code and output go from 15.5px to 19px, the column from 900px to 1080px
+  with prose capped at 72ch, 15px code on phones with tables that scroll inside
+  themselves, and the old 15.5px kept in print. Checked in Chromium at 1280px with
+  every reveal open: the same 4 of 264 code blocks scroll sideways before and after
+  (the longest `while` line in sessions 4, 5's key, 6, and 12), none new; at 390px no
+  page scrolls sideways. Every page's prose and every block's plain text are byte for
+  byte what they were. `session02_worksheet.pdf` re-rendered: same four pages, same
+  five embedded fonts, white code boxes with the new colors. Version pin `?v=11`.

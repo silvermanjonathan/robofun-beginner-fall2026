@@ -35,7 +35,10 @@ header.top{
   background:var(--teal); color:#FFFDF7;
   border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
 }
-.wrap{max-width:900px; margin:0 auto}
+.wrap{max-width:1080px; margin:0 auto}
+/* prose lines stay at reading length inside the wider column; code gets the width */
+p,li{max-width:72ch}
+.dates,.sessionlist li,.toolbar,.legend,.exits p,.card p,.stamp,.pill{max-width:none}
 .eyebrow{
   font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
   text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
@@ -80,6 +83,7 @@ section.extension{border-left:8px solid var(--clay)}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 14px; padding-left:24px}
 li{margin:0 0 8px}
+.sessionlist li{max-width:none}
 code,pre{
   /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
      glyph; students then type a character that does not exist. Keep every
@@ -92,22 +96,18 @@ code{
   padding:2px 6px; border-radius:3px;
 }
 pre{
-  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  /* 19px, a little over the 18px prose, so code reads from the back of the room */
+  font-family:'JetBrains Mono',monospace; font-size:19px; line-height:1.6;
   background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
-/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
-   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
-   italic, so every character keeps its width. */
-.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
-.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
-.tk-str{color:#A31515}  /* strings */
-.tk-num{color:#06704A}  /* numbers */
-.tk-com{color:#3B6E2A}  /* comments */
-.tk-fn{color:#795E26}   /* functions */
-.tk-cls{color:#1D6A80}  /* classes, types, modules */
-.tk-var{color:#001080}  /* variables */
+pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-weight:inherit; color:inherit}
+/* Python code, colored the way VS Code's light theme colors it, on white. Each color
+   clears 7:1 on white (render.py checks), and the same colors print. Color only, never
+   bold or italic, so every character keeps its width. */
+pre.py{background:#FFFFFF; color:#1F1F1F}
+pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -186,7 +186,7 @@ details.teacher[open] summary{margin-bottom:14px}
   padding-left:14px; margin:0 0 14px;
 }
 .pager{
-  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  max-width:1080px; margin:0 auto; padding:8px 22px 34px;
   display:flex; justify-content:space-between; gap:12px;
   font-family:'JetBrains Mono',monospace; font-size:14px;
 }
@@ -248,6 +248,12 @@ a.btn.quiet:hover{background:#EFE9DA}
   letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
   font-weight:700;
 }
+@media (max-width:760px){
+  pre{font-size:15px}
+  /* a wide table scrolls inside itself instead of widening the page */
+  table{display:block; overflow-x:auto; max-width:100%}
+  table tbody{display:table; width:100%}
+}
 @media print{
   body{background:#fff; font-size:11pt}
   header.top{background:#fff; color:#111; border-bottom:3px solid #111}
@@ -257,6 +263,9 @@ a.btn.quiet:hover{background:#EFE9DA}
   section,.stamp,.card{background:#fff; break-inside:avoid}
   .noprint,.toolbar{display:none}
   a{color:#111}
+  /* printed code keeps its old size, so printed pages and PDFs do not reflow */
+  pre{font-size:15.5px}
+  pre.py{background:#fff; border:1px solid #999}
 }
 </style>
 
@@ -297,18 +306,18 @@ section.xcard h3{margin-top:20px}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 5 of 12</p><h1>Extra cards: three more programs</h1><p class="sub">For when you finish the build with time left. Each card uses only what is on the session 5 page.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 26</span><span class="pill"><b>Friday section</b> Fri Oct 16</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session05_functions_that_return.html?v=10">Back to the session 5 page</a></div><section><h2>How the cards work</h2><ul><li>Pick any one card. The three cards do not depend on each other.</li><li>Each card needs a new file. The card gives the file name.</li><li>Say what you think the program will do before you run it.</li><li>Change one thing, then run it. One change per run.</li></ul></section><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Letter grades</h2><p>You write a function called <code>grade_of</code> that takes a score and returns a grade. Then you use it on a whole list of scores.</p><p>The rule: 90 or more returns <code>"A"</code>. 80 or more returns <code>"B"</code>. 70 or more returns <code>"C"</code>. Anything lower returns <code>"not yet"</code>.</p><p>Make a new file called <code>Jonathan_session05_grades.py</code>, with your own first name in place of Jonathan.</p><p class="outlabel">A finished run</p><pre class="want">A
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 5 of 12</p><h1>Extra cards: three more programs</h1><p class="sub">For when you finish the build with time left. Each card uses only what is on the session 5 page.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 26</span><span class="pill"><b>Friday section</b> Fri Oct 16</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session05_functions_that_return.html?v=11">Back to the session 5 page</a></div><section><h2>How the cards work</h2><ul><li>Pick any one card. The three cards do not depend on each other.</li><li>Each card needs a new file. The card gives the file name.</li><li>Say what you think the program will do before you run it.</li><li>Change one thing, then run it. One change per run.</li></ul></section><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Letter grades</h2><p>You write a function called <code>grade_of</code> that takes a score and returns a grade. Then you use it on a whole list of scores.</p><p>The rule: 90 or more returns <code>"A"</code>. 80 or more returns <code>"B"</code>. 70 or more returns <code>"C"</code>. Anything lower returns <code>"not yet"</code>.</p><p>Make a new file called <code>Jonathan_session05_grades.py</code>, with your own first name in place of Jonathan.</p><p class="outlabel">A finished run</p><pre class="want">A
 B
 not yet
 72 gets C
 95 gets A
 88 gets B
 97 gets A
-67 gets not yet</pre><ol><li>At the top of the file, write <code>def grade_of(score):</code>. In its body, use flat gates with a <code>return</code> in each one, the same shape as <code>fare(age)</code> on the session 5 page.</li><li>Under the function, at the left edge, test it with three lines: <code>print(grade_of(95))</code>, <code>print(grade_of(80))</code>, and <code>print(grade_of(42))</code>.</li><li>Make the list <code>scores = [72, 95, 88, 97, 67]</code>.</li><li>Loop through <code>scores</code>. On each pass, call <code>grade_of</code>, store the return value in a variable called <code>grade</code>, and print a line like <code>72 gets C</code> with an f-string.</li></ol><div class="predict"><p class="q">Before you run: 95 is 90 or more, and it is also 80 or more. Why does <code>grade_of(95)</code> return <code>"A"</code> and not <code>"B"</code>?</p><button class="rev" data-target="x5a-before" aria-controls="x5a-before" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="x5a-before"><p><code>return</code> ends the function. 95 passes the first gate, the function returns <code>"A"</code>, and the gate for 80 never runs.</p></div></div><h3>Go further</h3><p>Write a second function, <code>count_grade(scores, letter)</code>. It returns how many scores in the list get that grade. It has a counter and a loop, and it calls <code>grade_of</code> inside its gate. Put its <code>def</code> under <code>grade_of</code> and above the lines that print. With the list above, <code>count_grade(scores, "A")</code> returns 2 and <code>count_grade(scores, "B")</code> returns 1.</p></section><section class="chunk xcard"><p class="chunk-no">Card B &middot; build it from the steps &middot; about 20 minutes</p><h2>Dice game</h2><p>You and the computer each roll two dice for five rounds. The higher total wins the round. You build the game from three small functions.</p><p>Make a new file called <code>Jonathan_session05_dice.py</code>, with your own first name in place of Jonathan.</p><p>The first function is done for you. It returns one random number from 1 to 6. Type it in:</p><pre><span class="tk-ctl">import</span> <span class="tk-cls">random</span>
+67 gets not yet</pre><ol><li>At the top of the file, write <code>def grade_of(score):</code>. In its body, use flat gates with a <code>return</code> in each one, the same shape as <code>fare(age)</code> on the session 5 page.</li><li>Under the function, at the left edge, test it with three lines: <code>print(grade_of(95))</code>, <code>print(grade_of(80))</code>, and <code>print(grade_of(42))</code>.</li><li>Make the list <code>scores = [72, 95, 88, 97, 67]</code>.</li><li>Loop through <code>scores</code>. On each pass, call <code>grade_of</code>, store the return value in a variable called <code>grade</code>, and print a line like <code>72 gets C</code> with an f-string.</li></ol><div class="predict"><p class="q">Before you run: 95 is 90 or more, and it is also 80 or more. Why does <code>grade_of(95)</code> return <code>"A"</code> and not <code>"B"</code>?</p><button class="rev" data-target="x5a-before" aria-controls="x5a-before" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="x5a-before"><p><code>return</code> ends the function. 95 passes the first gate, the function returns <code>"A"</code>, and the gate for 80 never runs.</p></div></div><h3>Go further</h3><p>Write a second function, <code>count_grade(scores, letter)</code>. It returns how many scores in the list get that grade. It has a counter and a loop, and it calls <code>grade_of</code> inside its gate. Put its <code>def</code> under <code>grade_of</code> and above the lines that print. With the list above, <code>count_grade(scores, "A")</code> returns 2 and <code>count_grade(scores, "B")</code> returns 1.</p></section><section class="chunk xcard"><p class="chunk-no">Card B &middot; build it from the steps &middot; about 20 minutes</p><h2>Dice game</h2><p>You and the computer each roll two dice for five rounds. The higher total wins the round. You build the game from three small functions.</p><p>Make a new file called <code>Jonathan_session05_dice.py</code>, with your own first name in place of Jonathan.</p><p>The first function is done for you. It returns one random number from 1 to 6. Type it in:</p><pre class="py"><code><span class="hk">import</span> <span class="hc">random</span>
 
-<span class="tk-kw">def</span> <span class="tk-fn">roll</span>():
-    <span class="tk-ctl">return</span> <span class="tk-cls">random</span>.<span class="tk-fn">choice</span>([<span class="tk-num">1</span>, <span class="tk-num">2</span>, <span class="tk-num">3</span>, <span class="tk-num">4</span>, <span class="tk-num">5</span>, <span class="tk-num">6</span>])
-</pre><ol><li>Write <code>roll_two()</code>. It returns the total of two rolls. It calls <code>roll</code> twice and adds the two return values.</li><li>Write <code>winner_of(you, computer)</code>. It returns <code>"you"</code> when the first number is higher, <code>"computer"</code> when the second number is higher, and <code>"tie"</code> when they are equal. Use flat gates and three returns.</li><li>Under the three functions, at the left edge, make a counter <code>your_wins = 0</code>.</li><li>Write a for loop with <code>range(1, 6)</code>. Inside it: the line <code>input("Press Enter to roll.")</code>, then one call to <code>roll_two</code> for you, one call to <code>roll_two</code> for the computer, and one call to <code>winner_of</code>. Store all three return values.</li><li>Still inside the loop, print the round with an f-string. Then add 1 to <code>your_wins</code> when the winner is <code>"you"</code>.</li><li>After the loop, print how many rounds you won.</li></ol><p>The dice are random, so your numbers will be different from this finished run.</p><p class="outlabel">A finished run</p><pre class="want">Press Enter to roll.
+<span class="hs">def</span> <span class="hf">roll</span>():
+    <span class="hk">return</span> <span class="hc">random</span>.<span class="hf">choice</span>([<span class="hd">1</span>, <span class="hd">2</span>, <span class="hd">3</span>, <span class="hd">4</span>, <span class="hd">5</span>, <span class="hd">6</span>])
+</code></pre><ol><li>Write <code>roll_two()</code>. It returns the total of two rolls. It calls <code>roll</code> twice and adds the two return values.</li><li>Write <code>winner_of(you, computer)</code>. It returns <code>"you"</code> when the first number is higher, <code>"computer"</code> when the second number is higher, and <code>"tie"</code> when they are equal. Use flat gates and three returns.</li><li>Under the three functions, at the left edge, make a counter <code>your_wins = 0</code>.</li><li>Write a for loop with <code>range(1, 6)</code>. Inside it: the line <code>input("Press Enter to roll.")</code>, then one call to <code>roll_two</code> for you, one call to <code>roll_two</code> for the computer, and one call to <code>winner_of</code>. Store all three return values.</li><li>Still inside the loop, print the round with an f-string. Then add 1 to <code>your_wins</code> when the winner is <code>"you"</code>.</li><li>After the loop, print how many rounds you won.</li></ol><p>The dice are random, so your numbers will be different from this finished run.</p><p class="outlabel">A finished run</p><pre class="want">Press Enter to roll.
 Round 1: you rolled 8, the computer rolled 4. Winner: you
 Press Enter to roll.
 Round 2: you rolled 9, the computer rolled 7. Winner: you
@@ -318,17 +327,17 @@ Press Enter to roll.
 Round 4: you rolled 7, the computer rolled 5. Winner: you
 Press Enter to roll.
 Round 5: you rolled 6, the computer rolled 8. Winner: computer
-You won 3 of 5 rounds.</pre><div class="predict"><p class="q">Before you run: What is the lowest number <code>roll_two()</code> can return, and what is the highest?</p><button class="rev" data-target="x5b-before" aria-controls="x5b-before" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="x5b-before"><p>The lowest is 2, from two rolls of 1. The highest is 12, from two rolls of 6.</p></div></div><h3>Go further</h3><p>Write <code>roll_many(count)</code>. It returns the total of <code>count</code> rolls. Use an accumulator and a for loop with <code>range(count)</code>. Then print <code>roll_many(10)</code> a few times.</p><div class="predict"><p class="q">Question: Every value <code>roll_many(10)</code> returns is between 10 and 60. Why?</p><button class="rev" data-target="x5b-more" aria-controls="x5b-more" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="x5b-more"><p>Ten rolls of 1 add up to 10, and ten rolls of 6 add up to 60. Every other set of ten rolls is in between.</p></div></div></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the average</h2><p>This program has 3 bugs. The four numbers add up to 80, and 80 divided by 4 is 20, so it is supposed to print this:</p><p class="outlabel">A finished run</p><pre class="want">20.0</pre><p>Make a new file called <code>Jonathan_session05_bugs.py</code>, with your own first name in place of Jonathan.</p><p>Type the program exactly as it is here, bugs and all:</p><pre><span class="tk-fn">print</span>(<span class="tk-fn">average_of</span>([<span class="tk-num">12</span>, <span class="tk-num">20</span>, <span class="tk-num">28</span>, <span class="tk-num">20</span>]))
+You won 3 of 5 rounds.</pre><div class="predict"><p class="q">Before you run: What is the lowest number <code>roll_two()</code> can return, and what is the highest?</p><button class="rev" data-target="x5b-before" aria-controls="x5b-before" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="x5b-before"><p>The lowest is 2, from two rolls of 1. The highest is 12, from two rolls of 6.</p></div></div><h3>Go further</h3><p>Write <code>roll_many(count)</code>. It returns the total of <code>count</code> rolls. Use an accumulator and a for loop with <code>range(count)</code>. Then print <code>roll_many(10)</code> a few times.</p><div class="predict"><p class="q">Question: Every value <code>roll_many(10)</code> returns is between 10 and 60. Why?</p><button class="rev" data-target="x5b-more" aria-controls="x5b-more" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="x5b-more"><p>Ten rolls of 1 add up to 10, and ten rolls of 6 add up to 60. Every other set of ten rolls is in between.</p></div></div></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the average</h2><p>This program has 3 bugs. The four numbers add up to 80, and 80 divided by 4 is 20, so it is supposed to print this:</p><p class="outlabel">A finished run</p><pre class="want">20.0</pre><p>Make a new file called <code>Jonathan_session05_bugs.py</code>, with your own first name in place of Jonathan.</p><p>Type the program exactly as it is here, bugs and all:</p><pre class="py"><code><span class="hf">print</span>(<span class="hf">average_of</span>([<span class="hd">12</span>, <span class="hd">20</span>, <span class="hd">28</span>, <span class="hd">20</span>]))
 
-<span class="tk-kw">def</span> <span class="tk-fn">total_of</span>(<span class="tk-var">numbers</span>):
-    <span class="tk-var">total</span> = <span class="tk-num">0</span>
-    <span class="tk-ctl">for</span> <span class="tk-var">n</span> <span class="tk-ctl">in</span> <span class="tk-var">numbers</span>:
-        <span class="tk-var">total</span> = <span class="tk-var">total</span> + <span class="tk-var">n</span>
-        <span class="tk-ctl">return</span> <span class="tk-var">total</span>
+<span class="hs">def</span> <span class="hf">total_of</span>(<span class="hv">numbers</span>):
+    <span class="hv">total</span> = <span class="hd">0</span>
+    <span class="hk">for</span> <span class="hv">n</span> <span class="hs">in</span> <span class="hv">numbers</span>:
+        <span class="hv">total</span> = <span class="hv">total</span> + <span class="hv">n</span>
+        <span class="hk">return</span> <span class="hv">total</span>
 
-<span class="tk-kw">def</span> <span class="tk-fn">average_of</span>(<span class="tk-var">numbers</span>):
-    <span class="tk-fn">print</span>(<span class="tk-fn">total_of</span>(<span class="tk-var">numbers</span>) / <span class="tk-fn">len</span>(<span class="tk-var">numbers</span>))
-</pre><p>One bug stops the program with an error. The other two give no error: the program runs and prints the wrong thing.</p><p>Fix one thing per run. For each bug, write down the line number and what you changed.</p><p><b>Clues, if you are stuck.</b> Open one at a time.</p><div class="hints"><button class="rev hint" data-target="x5c-clue1" aria-controls="x5c-clue1" aria-expanded="false" data-show="Show clue 1" data-hide="Hide clue 1">Show clue 1</button><div class="ans" id="x5c-clue1"><p>Bug 1: the error says <code>average_of</code> is not defined, and yet the <code>def</code> is in the file. Python reads a file from the top. Which does it reach first, the <code>def</code> or the call?</p></div><button class="rev hint" data-target="x5c-clue2" aria-controls="x5c-clue2" aria-expanded="false" data-show="Show clue 2" data-hide="Hide clue 2">Show clue 2</button><div class="ans" id="x5c-clue2"><p>Bug 2: the output has the word <code>None</code> in it. Which function prints a value when it should return the value?</p></div><button class="rev hint" data-target="x5c-clue3" aria-controls="x5c-clue3" aria-expanded="false" data-show="Show clue 3" data-hide="Hide clue 3">Show clue 3</button><div class="ans" id="x5c-clue3"><p>Bug 3: the output is 3.0, and 12 divided by 4 is 3. Why did <code>total_of</code> return only the first number? Look at how far the line <code>return total</code> is indented.</p></div></div></section></div></main><nav class="pager"><a href="session05_functions_that_return.html?v=10">&larr; Session 5: Functions that return a value</a><a href="beginner_semester_hub.html?v=10">Course home</a><a href="session06_angles_and_shapes.html?v=10">Session 6: Angles and shapes on screen &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 5, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
+<span class="hs">def</span> <span class="hf">average_of</span>(<span class="hv">numbers</span>):
+    <span class="hf">print</span>(<span class="hf">total_of</span>(<span class="hv">numbers</span>) / <span class="hf">len</span>(<span class="hv">numbers</span>))
+</code></pre><p>One bug stops the program with an error. The other two give no error: the program runs and prints the wrong thing.</p><p>Fix one thing per run. For each bug, write down the line number and what you changed.</p><p><b>Clues, if you are stuck.</b> Open one at a time.</p><div class="hints"><button class="rev hint" data-target="x5c-clue1" aria-controls="x5c-clue1" aria-expanded="false" data-show="Show clue 1" data-hide="Hide clue 1">Show clue 1</button><div class="ans" id="x5c-clue1"><p>Bug 1: the error says <code>average_of</code> is not defined, and yet the <code>def</code> is in the file. Python reads a file from the top. Which does it reach first, the <code>def</code> or the call?</p></div><button class="rev hint" data-target="x5c-clue2" aria-controls="x5c-clue2" aria-expanded="false" data-show="Show clue 2" data-hide="Hide clue 2">Show clue 2</button><div class="ans" id="x5c-clue2"><p>Bug 2: the output has the word <code>None</code> in it. Which function prints a value when it should return the value?</p></div><button class="rev hint" data-target="x5c-clue3" aria-controls="x5c-clue3" aria-expanded="false" data-show="Show clue 3" data-hide="Hide clue 3">Show clue 3</button><div class="ans" id="x5c-clue3"><p>Bug 3: the output is 3.0, and 12 divided by 4 is 3. Why did <code>total_of</code> return only the first number? Look at how far the line <code>return total</code> is indented.</p></div></div></section></div></main><nav class="pager"><a href="session05_functions_that_return.html?v=11">&larr; Session 5: Functions that return a value</a><a href="beginner_semester_hub.html?v=11">Course home</a><a href="session06_angles_and_shapes.html?v=11">Session 6: Angles and shapes on screen &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 5, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

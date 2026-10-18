@@ -35,7 +35,10 @@ header.top{
   background:var(--teal); color:#FFFDF7;
   border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
 }
-.wrap{max-width:900px; margin:0 auto}
+.wrap{max-width:1080px; margin:0 auto}
+/* prose lines stay at reading length inside the wider column; code gets the width */
+p,li{max-width:72ch}
+.dates,.sessionlist li,.toolbar,.legend,.exits p,.card p,.stamp,.pill{max-width:none}
 .eyebrow{
   font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
   text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
@@ -80,6 +83,7 @@ section.extension{border-left:8px solid var(--clay)}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 14px; padding-left:24px}
 li{margin:0 0 8px}
+.sessionlist li{max-width:none}
 code,pre{
   /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
      glyph; students then type a character that does not exist. Keep every
@@ -92,22 +96,18 @@ code{
   padding:2px 6px; border-radius:3px;
 }
 pre{
-  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  /* 19px, a little over the 18px prose, so code reads from the back of the room */
+  font-family:'JetBrains Mono',monospace; font-size:19px; line-height:1.6;
   background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
-/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
-   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
-   italic, so every character keeps its width. */
-.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
-.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
-.tk-str{color:#A31515}  /* strings */
-.tk-num{color:#06704A}  /* numbers */
-.tk-com{color:#3B6E2A}  /* comments */
-.tk-fn{color:#795E26}   /* functions */
-.tk-cls{color:#1D6A80}  /* classes, types, modules */
-.tk-var{color:#001080}  /* variables */
+pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-weight:inherit; color:inherit}
+/* Python code, colored the way VS Code's light theme colors it, on white. Each color
+   clears 7:1 on white (render.py checks), and the same colors print. Color only, never
+   bold or italic, so every character keeps its width. */
+pre.py{background:#FFFFFF; color:#1F1F1F}
+pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -186,7 +186,7 @@ details.teacher[open] summary{margin-bottom:14px}
   padding-left:14px; margin:0 0 14px;
 }
 .pager{
-  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  max-width:1080px; margin:0 auto; padding:8px 22px 34px;
   display:flex; justify-content:space-between; gap:12px;
   font-family:'JetBrains Mono',monospace; font-size:14px;
 }
@@ -248,6 +248,12 @@ a.btn.quiet:hover{background:#EFE9DA}
   letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
   font-weight:700;
 }
+@media (max-width:760px){
+  pre{font-size:15px}
+  /* a wide table scrolls inside itself instead of widening the page */
+  table{display:block; overflow-x:auto; max-width:100%}
+  table tbody{display:table; width:100%}
+}
 @media print{
   body{background:#fff; font-size:11pt}
   header.top{background:#fff; color:#111; border-bottom:3px solid #111}
@@ -257,6 +263,9 @@ a.btn.quiet:hover{background:#EFE9DA}
   section,.stamp,.card{background:#fff; break-inside:avoid}
   .noprint,.toolbar{display:none}
   a{color:#111}
+  /* printed code keeps its old size, so printed pages and PDFs do not reflow */
+  pre{font-size:15.5px}
+  pre.py{background:#fff; border:1px solid #999}
 }
 </style>
 
@@ -297,7 +306,7 @@ section.xcard h3{margin-top:20px}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 1 of 12</p><h1>Extra cards: three more programs</h1><p class="sub">For when you finish the build with time left. Each card uses only what is on the session 1 page.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Sep 14</span><span class="pill"><b>Friday section</b> Fri Sep 18</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session01_printing_names_input.html?v=10">Back to the session 1 page</a></div><section><h2>How the cards work</h2><ul><li>Pick any one card. The three cards do not depend on each other.</li><li>Each card needs a new file. The card gives the file name.</li><li>Say what you think the program will do before you run it.</li><li>Change one thing, then run it. One change per run.</li></ul></section><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Silly story</h2><p>You make a program that asks four questions, then prints a three-line story that uses the answers.</p><p>Make a new file called <code>Jonathan_session01_story.py</code>, with your own first name in place of Jonathan.</p><p class="outlabel">A finished run</p><pre class="want">Name an animal: penguin
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 1 of 12</p><h1>Extra cards: three more programs</h1><p class="sub">For when you finish the build with time left. Each card uses only what is on the session 1 page.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Sep 14</span><span class="pill"><b>Friday section</b> Fri Sep 18</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session01_printing_names_input.html?v=11">Back to the session 1 page</a></div><section><h2>How the cards work</h2><ul><li>Pick any one card. The three cards do not depend on each other.</li><li>Each card needs a new file. The card gives the file name.</li><li>Say what you think the program will do before you run it.</li><li>Change one thing, then run it. One change per run.</li></ul></section><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Silly story</h2><p>You make a program that asks four questions, then prints a three-line story that uses the answers.</p><p>Make a new file called <code>Jonathan_session01_story.py</code>, with your own first name in place of Jonathan.</p><p class="outlabel">A finished run</p><pre class="want">Name an animal: penguin
 Name a food: tacos
 Name a place: the library
 Pick a whole number: 7
@@ -309,11 +318,11 @@ Ada, you are about 4015 days old.
 That is about 96360 hours.
 In 10 years you will be 21.</pre><ol><li>Ask for the name and the age. Change the type of the age to a number.</li><li>Make a variable called <code>days</code>. Its value is the age times 365.</li><li>Make a variable called <code>hours</code>. Its value is <code>days</code> times 24.</li><li>Make a variable called <code>later</code>. Its value is the age plus 10.</li><li>Print the three sentences. Each one is an f-string.</li></ol><div class="predict"><p class="q">Before you run: Suppose the line that makes <code>hours</code> came before the line that makes <code>days</code>. What would Python do?</p><button class="rev" data-target="x1b-before" aria-controls="x1b-before" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="x1b-before"><p>It stops with <code>NameError: name 'days' is not defined</code> Python runs the lines from the top. On the <code>hours</code> line, <code>days</code> has no value yet.</p></div></div><p><b>Check:</b> run it with Ada and 11. Your three lines should match the finished run above.</p><h3>Go further</h3><p>Add minutes and seconds, each with its own printed sentence. An hour has 60 minutes and a minute has 60 seconds. For age 11 the program should print 5781600 minutes and 346896000 seconds.</p></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the snack machine</h2><p>This program has 3 bugs. When you type pretzels and 3, it is supposed to print this:</p><p class="outlabel">A finished run</p><pre class="want">Which snack? pretzels
 How many bags? 3
-You get 4 bags of pretzels. One is free.</pre><p>Make a new file called <code>Jonathan_session01_bugs.py</code>, with your own first name in place of Jonathan.</p><p>Type the program exactly as it is here, bugs and all:</p><pre><span class="tk-var">snack</span> = <span class="tk-fn">input</span>(<span class="tk-str">"Which snack? "</span>)
-<span class="tk-var">count</span> = <span class="tk-fn">input</span>(<span class="tk-str">"How many bags? "</span>)
-<span class="tk-var">extra</span> = <span class="tk-var">count</span> + <span class="tk-num">1</span>
-<span class="tk-fn">print</span>(<span class="tk-str">"You get {extra} bags of {snak}. One is free."</span>)
-</pre><ol><li>Run it.</li><li>If there is an error, read its last line first.</li><li>Fix one thing. Run it again.</li><li>Keep going until the output matches the finished run above.</li></ol><p>For each bug, write down the line number and what you changed.</p><p><b>Clues, if you are stuck.</b> Open one at a time.</p><div class="hints"><button class="rev hint" data-target="x1c-clue1" aria-controls="x1c-clue1" aria-expanded="false" data-show="Show clue 1" data-hide="Hide clue 1">Show clue 1</button><div class="ans" id="x1c-clue1"><p>Bug 1: the error names line 3. What type is the value of <code>count</code>?</p></div><button class="rev hint" data-target="x1c-clue2" aria-controls="x1c-clue2" aria-expanded="false" data-show="Show clue 2" data-hide="Hide clue 2">Show clue 2</button><div class="ans" id="x1c-clue2"><p>Bug 2: the program runs, but it prints the curly braces. Which letter is missing in front of the opening quote mark?</p></div><button class="rev hint" data-target="x1c-clue3" aria-controls="x1c-clue3" aria-expanded="false" data-show="Show clue 3" data-hide="Hide clue 3">Show clue 3</button><div class="ans" id="x1c-clue3"><p>Bug 3: the error says a name is not defined. Compare how that name is spelled with the name on line 1.</p></div></div></section></div></main><nav class="pager"><a href="session01_printing_names_input.html?v=10">&larr; Session 1: Printing, names, and input</a><a href="beginner_semester_hub.html?v=10">Course home</a><a href="session02_comparisons_and_gates.html?v=10">Session 2: Comparisons and gates &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 1, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
+You get 4 bags of pretzels. One is free.</pre><p>Make a new file called <code>Jonathan_session01_bugs.py</code>, with your own first name in place of Jonathan.</p><p>Type the program exactly as it is here, bugs and all:</p><pre class="py"><code><span class="hv">snack</span> = <span class="hf">input</span>(<span class="hq">"Which snack? "</span>)
+<span class="hv">count</span> = <span class="hf">input</span>(<span class="hq">"How many bags? "</span>)
+<span class="hv">extra</span> = <span class="hv">count</span> + <span class="hd">1</span>
+<span class="hf">print</span>(<span class="hq">"You get {extra} bags of {snak}. One is free."</span>)
+</code></pre><ol><li>Run it.</li><li>If there is an error, read its last line first.</li><li>Fix one thing. Run it again.</li><li>Keep going until the output matches the finished run above.</li></ol><p>For each bug, write down the line number and what you changed.</p><p><b>Clues, if you are stuck.</b> Open one at a time.</p><div class="hints"><button class="rev hint" data-target="x1c-clue1" aria-controls="x1c-clue1" aria-expanded="false" data-show="Show clue 1" data-hide="Hide clue 1">Show clue 1</button><div class="ans" id="x1c-clue1"><p>Bug 1: the error names line 3. What type is the value of <code>count</code>?</p></div><button class="rev hint" data-target="x1c-clue2" aria-controls="x1c-clue2" aria-expanded="false" data-show="Show clue 2" data-hide="Hide clue 2">Show clue 2</button><div class="ans" id="x1c-clue2"><p>Bug 2: the program runs, but it prints the curly braces. Which letter is missing in front of the opening quote mark?</p></div><button class="rev hint" data-target="x1c-clue3" aria-controls="x1c-clue3" aria-expanded="false" data-show="Show clue 3" data-hide="Hide clue 3">Show clue 3</button><div class="ans" id="x1c-clue3"><p>Bug 3: the error says a name is not defined. Compare how that name is spelled with the name on line 1.</p></div></div></section></div></main><nav class="pager"><a href="session01_printing_names_input.html?v=11">&larr; Session 1: Printing, names, and input</a><a href="beginner_semester_hub.html?v=11">Course home</a><a href="session02_comparisons_and_gates.html?v=11">Session 2: Comparisons and gates &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 1, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

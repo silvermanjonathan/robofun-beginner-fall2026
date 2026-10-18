@@ -10,7 +10,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from standards import STANDARDS, RESOLVED_ON, CONNECTOR
-from highlight import highlight
+from hl import highlight
 from sessions_a import SESSIONS_A
 from sessions_b import SESSIONS_B
 from sessions_c import SESSIONS_C
@@ -21,7 +21,7 @@ SESSIONS = SESSIONS_A + SESSIONS_B + SESSIONS_C
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "10"
+VERSION = "11"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -29,6 +29,44 @@ TMP = os.environ.get("BVC_TMP",
 
 os.makedirs(OUT, exist_ok=True)
 os.makedirs(TMP, exist_ok=True)
+
+# ------------------------------------------------------------------ code colors
+# The hues VS Code's light theme gives Python tokens, each darkened until it clears
+# 7:1 contrast on the white code background (WCAG AAA for body text), so the code
+# reads when it is projected in a room with the lights on. The same colors print.
+CODE_BG = "#FFFFFF"
+CODE_INK = "#1F1F1F"
+CODE_COLORS = {
+    "hk": "#8A00B0",  # control words: if, for, while, return, import
+    "hs": "#0000FF",  # def, True, False, None, and, or, not, in, is, the f of an f-string
+    "hf": "#6A4E14",  # functions and methods
+    "hc": "#135C70",  # classes, types, modules
+    "hv": "#001080",  # variables and parameters
+    "hn": "#00579A",  # CAPITAL constants
+    "hq": "#A31515",  # strings
+    "he": "#B00000",  # escapes inside strings
+    "hd": "#035F3E",  # numbers
+    "hm": "#006400",  # comments
+}
+
+
+def _luminance(hex_color):
+    """Relative luminance of a #RRGGBB color, as WCAG defines it."""
+    rgb = [int(hex_color[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    lin = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in rgb]
+    return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+
+
+def contrast(fg, bg):
+    """WCAG contrast ratio between two #RRGGBB colors, from 1 to 21."""
+    a, b = _luminance(fg), _luminance(bg)
+    hi, lo = max(a, b), min(a, b)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+for _cls, _hex in list(CODE_COLORS.items()) + [("ink", CODE_INK)]:
+    _ratio = contrast(_hex, CODE_BG)
+    assert _ratio >= 7.0, "code color %s %s is only %.2f:1 on %s" % (_cls, _hex, _ratio, CODE_BG)
 
 # ---------------------------------------------------------------- verification
 
@@ -219,7 +257,10 @@ header.top{
   background:var(--teal); color:#FFFDF7;
   border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
 }
-.wrap{max-width:900px; margin:0 auto}
+.wrap{max-width:1080px; margin:0 auto}
+/* prose lines stay at reading length inside the wider column; code gets the width */
+p,li{max-width:72ch}
+.dates,.sessionlist li,.toolbar,.legend,.exits p,.card p,.stamp,.pill{max-width:none}
 .eyebrow{
   font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
   text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
@@ -264,6 +305,7 @@ section.extension{border-left:8px solid var(--clay)}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 14px; padding-left:24px}
 li{margin:0 0 8px}
+.sessionlist li{max-width:none}
 code,pre{
   /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
      glyph; students then type a character that does not exist. Keep every
@@ -276,22 +318,18 @@ code{
   padding:2px 6px; border-radius:3px;
 }
 pre{
-  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  /* 19px, a little over the 18px prose, so code reads from the back of the room */
+  font-family:'JetBrains Mono',monospace; font-size:19px; line-height:1.6;
   background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
-/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
-   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
-   italic, so every character keeps its width. */
-.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
-.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
-.tk-str{color:#A31515}  /* strings */
-.tk-num{color:#06704A}  /* numbers */
-.tk-com{color:#3B6E2A}  /* comments */
-.tk-fn{color:#795E26}   /* functions */
-.tk-cls{color:#1D6A80}  /* classes, types, modules */
-.tk-var{color:#001080}  /* variables */
+pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-weight:inherit; color:inherit}
+/* Python code, colored the way VS Code's light theme colors it, on white. Each color
+   clears 7:1 on white (render.py checks), and the same colors print. Color only, never
+   bold or italic, so every character keeps its width. */
+pre.py{background:CODE_BG_HEX; color:CODE_INK_HEX}
+CODE_COLOR_RULES
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -370,7 +408,7 @@ details.teacher[open] summary{margin-bottom:14px}
   padding-left:14px; margin:0 0 14px;
 }
 .pager{
-  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  max-width:1080px; margin:0 auto; padding:8px 22px 34px;
   display:flex; justify-content:space-between; gap:12px;
   font-family:'JetBrains Mono',monospace; font-size:14px;
 }
@@ -432,6 +470,12 @@ a.btn.quiet:hover{background:#EFE9DA}
   letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
   font-weight:700;
 }
+@media (max-width:760px){
+  pre{font-size:15px}
+  /* a wide table scrolls inside itself instead of widening the page */
+  table{display:block; overflow-x:auto; max-width:100%}
+  table tbody{display:table; width:100%}
+}
 @media print{
   body{background:#fff; font-size:11pt}
   header.top{background:#fff; color:#111; border-bottom:3px solid #111}
@@ -441,8 +485,14 @@ a.btn.quiet:hover{background:#EFE9DA}
   section,.stamp,.card{background:#fff; break-inside:avoid}
   .noprint,.toolbar{display:none}
   a{color:#111}
+  /* printed code keeps its old size, so printed pages and PDFs do not reflow */
+  pre{font-size:15.5px}
+  pre.py{background:#fff; border:1px solid #999}
 }
 """
+
+CSS = (CSS.replace("CODE_BG_HEX", CODE_BG).replace("CODE_INK_HEX", CODE_INK)
+       .replace("CODE_COLOR_RULES", " ".join("pre.py .%s{color:%s}" % kv for kv in CODE_COLORS.items())))
 
 JS = """
 document.addEventListener('click', function(e){
@@ -480,10 +530,27 @@ def link(slug):
     return slug + ".html?v=" + VERSION
 
 
-def code_block(code):
-    # Coloured by role, the way VS Code's Light+ theme colours Python. Output boxes
-    # (out_block) stay plain: they are output, not code.
-    return '<pre>' + highlight(code) + '</pre>'
+def code_block(code, context=None):
+    """A block of Python, colored the way VS Code colors it.
+
+    context is the whole program when code is only the part being added, so a name
+    is colored by what it is in the whole program. Output boxes (out_block) and the
+    expected/got sheets stay plain: they are not code.
+    """
+    return '<pre class="py"><code>' + highlight(code, context) + '</code></pre>'
+
+
+def strip_block(text, width=24):
+    """The ledger card's reference strip: code in the left column, a plain gloss in the right.
+
+    Only the code column is colored. The gloss is English, so its words stay in ink
+    rather than being read as keywords.
+    """
+    lines = []
+    for ln in text.split("\n"):
+        code, gloss = ln[:width], ln[width:]
+        lines.append(highlight(code) + html.escape(gloss, quote=False))
+    return '<pre class="py"><code>' + "\n".join(lines) + '</code></pre>'
 
 
 def out_block(text, label="What actually happens"):
@@ -623,7 +690,7 @@ def render_session(s, prev_s, next_s):
         if ch.get("figure"):
             b.append(ch["figure"])
         nx = ch.get("next")
-        shown = [code_block(ch["code"])]
+        shown = [code_block(ch["code"], (ch.get("prefix", "") + ch["code"]) if ch.get("prefix") else None)]
         if ch.get("prefix"):
             shown.append('<p class="note">' + ch.get("where",
                      'Add this code to the file you made in chunk 3. Where it goes matters. '
@@ -1236,7 +1303,7 @@ def render_ledger():
     b.append('<section><h2>Reference strip</h2>'
              '<p>The syntax that is hardest to remember after a week away. Everything else '
              'goes in a stamp, in the student\'s handwriting.</p>')
-    b.append(code_block(
+    b.append(strip_block(
         'name = value            a variable: store a value under a name\n'
         'type(value)             str for text, int for a whole number\n'
         'int(text)               text to number, on its own line\n'

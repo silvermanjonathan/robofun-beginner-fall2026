@@ -35,7 +35,10 @@ header.top{
   background:var(--teal); color:#FFFDF7;
   border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
 }
-.wrap{max-width:900px; margin:0 auto}
+.wrap{max-width:1080px; margin:0 auto}
+/* prose lines stay at reading length inside the wider column; code gets the width */
+p,li{max-width:72ch}
+.dates,.sessionlist li,.toolbar,.legend,.exits p,.card p,.stamp,.pill{max-width:none}
 .eyebrow{
   font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
   text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
@@ -80,6 +83,7 @@ section.extension{border-left:8px solid var(--clay)}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 14px; padding-left:24px}
 li{margin:0 0 8px}
+.sessionlist li{max-width:none}
 code,pre{
   /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
      glyph; students then type a character that does not exist. Keep every
@@ -92,22 +96,18 @@ code{
   padding:2px 6px; border-radius:3px;
 }
 pre{
-  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  /* 19px, a little over the 18px prose, so code reads from the back of the room */
+  font-family:'JetBrains Mono',monospace; font-size:19px; line-height:1.6;
   background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
-/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
-   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
-   italic, so every character keeps its width. */
-.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
-.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
-.tk-str{color:#A31515}  /* strings */
-.tk-num{color:#06704A}  /* numbers */
-.tk-com{color:#3B6E2A}  /* comments */
-.tk-fn{color:#795E26}   /* functions */
-.tk-cls{color:#1D6A80}  /* classes, types, modules */
-.tk-var{color:#001080}  /* variables */
+pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-weight:inherit; color:inherit}
+/* Python code, colored the way VS Code's light theme colors it, on white. Each color
+   clears 7:1 on white (render.py checks), and the same colors print. Color only, never
+   bold or italic, so every character keeps its width. */
+pre.py{background:#FFFFFF; color:#1F1F1F}
+pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -186,7 +186,7 @@ details.teacher[open] summary{margin-bottom:14px}
   padding-left:14px; margin:0 0 14px;
 }
 .pager{
-  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  max-width:1080px; margin:0 auto; padding:8px 22px 34px;
   display:flex; justify-content:space-between; gap:12px;
   font-family:'JetBrains Mono',monospace; font-size:14px;
 }
@@ -248,6 +248,12 @@ a.btn.quiet:hover{background:#EFE9DA}
   letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
   font-weight:700;
 }
+@media (max-width:760px){
+  pre{font-size:15px}
+  /* a wide table scrolls inside itself instead of widening the page */
+  table{display:block; overflow-x:auto; max-width:100%}
+  table tbody{display:table; width:100%}
+}
 @media print{
   body{background:#fff; font-size:11pt}
   header.top{background:#fff; color:#111; border-bottom:3px solid #111}
@@ -257,35 +263,38 @@ a.btn.quiet:hover{background:#EFE9DA}
   section,.stamp,.card{background:#fff; break-inside:avoid}
   .noprint,.toolbar{display:none}
   a{color:#111}
+  /* printed code keeps its old size, so printed pages and PDFs do not reflow */
+  pre{font-size:15.5px}
+  pre.py{background:#fff; border:1px solid #999}
 }
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">One page &middot; print it &middot; it grows weekly</p><h1>Semester ledger card</h1><p class="sub">Nothing about this course survives at home except this card. One stamp a week, written by hand, in the student's own words. Print it on card stock at the start of term and keep the stack in the room.</p></div></header><main><div class="wrap"><section class="noprint"><h2>How to use it</h2><ul><li>Ten minutes at the end of each session. The student writes, not the teacher.</li><li>One stamp per session, in the box for that session number.</li><li>At least one error message per term, copied out by hand.</li><li>The card comes out again in the retrieval opener the following week.</li><li>Session 12 reads the card out loud. If a stamp is unreadable, that is the first thing fixed that day.</li></ul></section><section><h2>Stamps</h2><div class="stampgrid"><div class="stamp"><span class="no">Stamp 1 &middot; Printing, names, and input</span></div><div class="stamp"><span class="no">Stamp 2 &middot; Comparisons and gates</span></div><div class="stamp"><span class="no">Stamp 3 &middot; Loops, counters, and lists</span></div><div class="stamp"><span class="no">Stamp 4 &middot; Rock paper scissors</span></div><div class="stamp"><span class="no">Stamp 5 &middot; Functions that return a value</span></div><div class="stamp"><span class="no">Stamp 6 &middot; Angles and shapes on screen</span></div><div class="stamp"><span class="no">Stamp 7 &middot; Strings as data</span></div><div class="stamp"><span class="no">Stamp 8 &middot; Remainders and the cipher wheel</span></div><div class="stamp"><span class="no">Stamp 9 &middot; Dictionaries</span></div><div class="stamp"><span class="no">Stamp 10 &middot; The pygame window</span></div><div class="stamp"><span class="no">Stamp 11 &middot; Grids, keys, and game state</span></div><div class="stamp"><span class="no">Stamp 12 &middot; Commission and demo day</span></div><div class="stamp"><span class="no">Bonus &middot; distance and bumpers</span></div></div></section><section><h2>Reference strip</h2><p>The syntax that is hardest to remember after a week away. Everything else goes in a stamp, in the student's handwriting.</p><pre><span class="tk-var">name</span> = <span class="tk-var">value</span>            <span class="tk-var">a</span> <span class="tk-var">variable</span>: <span class="tk-var">store</span> <span class="tk-var">a</span> <span class="tk-var">value</span> <span class="tk-var">under</span> <span class="tk-var">a</span> <span class="tk-var">name</span>
-<span class="tk-fn">type</span>(<span class="tk-var">value</span>)             <span class="tk-var">str</span> <span class="tk-ctl">for</span> <span class="tk-var">text</span>, <span class="tk-var">int</span> <span class="tk-ctl">for</span> <span class="tk-var">a</span> <span class="tk-var">whole</span> <span class="tk-var">number</span>
-<span class="tk-cls">int</span>(<span class="tk-var">text</span>)               <span class="tk-var">text</span> <span class="tk-var">to</span> <span class="tk-var">number</span>, <span class="tk-var">on</span> <span class="tk-var">its</span> <span class="tk-var">own</span> <span class="tk-var">line</span>
-<span class="tk-kw">f</span><span class="tk-str">"</span><span class="tk-kw">{</span><span class="tk-var">name</span><span class="tk-kw">}</span><span class="tk-str"> has </span><span class="tk-kw">{</span><span class="tk-var">n</span><span class="tk-kw">}</span><span class="tk-str">"</span>       <span class="tk-var">drop</span> <span class="tk-var">values</span> <span class="tk-var">into</span> <span class="tk-var">a</span> <span class="tk-var">sentence</span>
-<span class="tk-ctl">if</span> / <span class="tk-ctl">elif</span> / <span class="tk-ctl">else</span>        <span class="tk-var">flat</span> <span class="tk-var">gates</span>, <span class="tk-var">never</span> <span class="tk-var">nested</span>
-==  !=  &lt;  &gt;  &lt;=  &gt;=    <span class="tk-var">comparisons</span>, <span class="tk-var">give</span> <span class="tk-kw">True</span> <span class="tk-kw">or</span> <span class="tk-kw">False</span>
-<span class="tk-kw">and</span> / <span class="tk-kw">or</span>                <span class="tk-var">two</span> <span class="tk-var">conditions</span> <span class="tk-var">at</span> <span class="tk-var">once</span>
-<span class="tk-ctl">while</span> <span class="tk-var">condition</span>:        <span class="tk-var">repeats</span> <span class="tk-ctl">while</span> <span class="tk-kw">True</span>; <span class="tk-var">the</span> <span class="tk-var">condition</span> <span class="tk-kw">is</span> <span class="tk-var">what</span> <span class="tk-var">stops</span> <span class="tk-var">it</span>
-<span class="tk-ctl">for</span> <span class="tk-var">i</span> <span class="tk-ctl">in</span> <span class="tk-fn">range</span>(<span class="tk-num">5</span>):      <span class="tk-num">0</span> <span class="tk-num">1</span> <span class="tk-num">2</span> <span class="tk-num">3</span> <span class="tk-num">4</span>, <span class="tk-var">stops</span> <span class="tk-var">before</span> <span class="tk-num">5</span>
-<span class="tk-var">list</span>[<span class="tk-num">0</span>]                 <span class="tk-var">first</span> <span class="tk-var">slot</span>; <span class="tk-var">last</span> <span class="tk-kw">is</span> <span class="tk-var">len</span> - <span class="tk-num">1</span>
-<span class="tk-var">text</span>[<span class="tk-num">0</span>:<span class="tk-num">3</span>]               <span class="tk-var">slots</span> <span class="tk-num">0</span> <span class="tk-num">1</span> <span class="tk-num">2</span>, <span class="tk-var">stops</span> <span class="tk-var">before</span> <span class="tk-num">3</span>
-<span class="tk-kw">def</span> <span class="tk-fn">f</span>(<span class="tk-var">x</span>):               ...    <span class="tk-ctl">return</span> <span class="tk-var">x</span> * <span class="tk-num">2</span>
-<span class="tk-var">no</span> <span class="tk-ctl">return</span>               <span class="tk-var">returns</span> <span class="tk-kw">None</span>
-<span class="tk-var">d</span> = {<span class="tk-str">"key"</span>: <span class="tk-var">value</span>}      <span class="tk-var">look</span> <span class="tk-var">up</span> <span class="tk-ctl">with</span> <span class="tk-var">d</span>[<span class="tk-str">"key"</span>]
-<span class="tk-var">key</span> <span class="tk-kw">in</span> <span class="tk-var">d</span>                <span class="tk-kw">True</span> <span class="tk-kw">or</span> <span class="tk-kw">False</span>, <span class="tk-var">checks</span> <span class="tk-var">keys</span>
-<span class="tk-var">a</span> % <span class="tk-var">b</span>                   <span class="tk-var">remainder</span>; <span class="tk-var">wraps</span> <span class="tk-var">a</span> <span class="tk-var">counter</span>
-<span class="tk-var">rack</span>.<span class="tk-fn">find</span>(<span class="tk-var">ch</span>)           <span class="tk-var">a</span> <span class="tk-var">slot</span>, <span class="tk-kw">or</span> -<span class="tk-num">1</span> <span class="tk-ctl">for</span> <span class="tk-kw">not</span> <span class="tk-var">found</span>
-<span class="tk-num">360</span> / <span class="tk-var">sides</span>             <span class="tk-var">the</span> <span class="tk-var">turn</span> <span class="tk-var">that</span> <span class="tk-var">closes</span> <span class="tk-var">a</span> <span class="tk-var">shape</span>
-<span class="tk-var">math</span>.<span class="tk-fn">radians</span>(<span class="tk-var">deg</span>)       <span class="tk-var">convert</span> <span class="tk-var">before</span> <span class="tk-var">cos</span> <span class="tk-kw">and</span> <span class="tk-var">sin</span>
-<span class="tk-var">cos</span> <span class="tk-kw">is</span> <span class="tk-var">across</span>, <span class="tk-var">sin</span> <span class="tk-var">down</span> <span class="tk-var">the</span> <span class="tk-var">far</span> <span class="tk-var">end</span> <span class="tk-var">of</span> <span class="tk-var">a</span> <span class="tk-var">step</span>
-<span class="tk-var">draw</span>.<span class="tk-fn">line</span>(<span class="tk-var">c</span>, <span class="tk-var">col</span>, <span class="tk-var">a</span>, <span class="tk-var">b</span>, <span class="tk-num">3</span>)  <span class="tk-var">canvas</span>, <span class="tk-var">colour</span>, <span class="tk-var">start</span>, <span class="tk-var">end</span>, <span class="tk-var">width</span>
-<span class="tk-ctl">while</span> <span class="tk-var">running</span>:          <span class="tk-var">pygame</span> <span class="tk-var">frame</span> <span class="tk-var">loop</span>, <span class="tk-var">QUIT</span> <span class="tk-var">sets</span> <span class="tk-var">running</span> = <span class="tk-num">0</span>
-<span class="tk-var">x</span> = <span class="tk-var">x</span> + <span class="tk-var">vx</span>              <span class="tk-var">move</span> <span class="tk-var">once</span> <span class="tk-var">per</span> <span class="tk-var">frame</span>
-<span class="tk-var">v</span> = -<span class="tk-var">v</span>                  <span class="tk-var">bounce</span>
-<span class="tk-var">level</span>[<span class="tk-var">row</span>][<span class="tk-var">col</span>]         <span class="tk-var">row</span> <span class="tk-var">first</span>, <span class="tk-var">then</span> <span class="tk-var">column</span></pre><p class="note">Read the last line of an error first. One change per run.</p></section><section><h2>Error names met this term</h2><p>Write the real message next to each one, the first time you meet it.</p><table><tr><th>Name</th><th>What it usually means</th><th>Your message</th></tr><tr><td>NameError</td><td>A word Python does not know. Often a typo.</td><td class="fill"></td></tr><tr><td>SyntaxError</td><td>Punctuation. A bracket, a colon, one equals sign where two belong.</td><td class="fill"></td></tr><tr><td>IndentationError</td><td>A block is missing, or indented unevenly.</td><td class="fill"></td></tr><tr><td>TypeError</td><td>Two kinds that will not mix. Usually text and number.</td><td class="fill"></td></tr><tr><td>IndexError</td><td>A slot past the end. Length and last index are one apart.</td><td class="fill"></td></tr><tr><td>KeyError</td><td>A dictionary key that is not there. Gate with <code>in</code>.</td><td class="fill"></td></tr><tr><td>No error, wrong answer</td><td>A silent bug. Use a probe.</td><td class="fill"></td></tr></table></section></div></main><nav class="pager noprint"><a href="beginner_semester_hub.html?v=10">Course home</a><a href="session01_printing_names_input.html?v=10">Session 1 &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding beginner semester, Robofun Fall 2026.</p></div></footer>
+<header class="top"><div class="wrap"><p class="eyebrow">One page &middot; print it &middot; it grows weekly</p><h1>Semester ledger card</h1><p class="sub">Nothing about this course survives at home except this card. One stamp a week, written by hand, in the student's own words. Print it on card stock at the start of term and keep the stack in the room.</p></div></header><main><div class="wrap"><section class="noprint"><h2>How to use it</h2><ul><li>Ten minutes at the end of each session. The student writes, not the teacher.</li><li>One stamp per session, in the box for that session number.</li><li>At least one error message per term, copied out by hand.</li><li>The card comes out again in the retrieval opener the following week.</li><li>Session 12 reads the card out loud. If a stamp is unreadable, that is the first thing fixed that day.</li></ul></section><section><h2>Stamps</h2><div class="stampgrid"><div class="stamp"><span class="no">Stamp 1 &middot; Printing, names, and input</span></div><div class="stamp"><span class="no">Stamp 2 &middot; Comparisons and gates</span></div><div class="stamp"><span class="no">Stamp 3 &middot; Loops, counters, and lists</span></div><div class="stamp"><span class="no">Stamp 4 &middot; Rock paper scissors</span></div><div class="stamp"><span class="no">Stamp 5 &middot; Functions that return a value</span></div><div class="stamp"><span class="no">Stamp 6 &middot; Angles and shapes on screen</span></div><div class="stamp"><span class="no">Stamp 7 &middot; Strings as data</span></div><div class="stamp"><span class="no">Stamp 8 &middot; Remainders and the cipher wheel</span></div><div class="stamp"><span class="no">Stamp 9 &middot; Dictionaries</span></div><div class="stamp"><span class="no">Stamp 10 &middot; The pygame window</span></div><div class="stamp"><span class="no">Stamp 11 &middot; Grids, keys, and game state</span></div><div class="stamp"><span class="no">Stamp 12 &middot; Commission and demo day</span></div><div class="stamp"><span class="no">Bonus &middot; distance and bumpers</span></div></div></section><section><h2>Reference strip</h2><p>The syntax that is hardest to remember after a week away. Everything else goes in a stamp, in the student's handwriting.</p><pre class="py"><code><span class="hv">name</span> = <span class="hv">value</span>            a variable: store a value under a name
+<span class="hc">type</span>(<span class="hv">value</span>)             str for text, int for a whole number
+<span class="hc">int</span>(<span class="hv">text</span>)               text to number, on its own line
+<span class="hs">f</span><span class="hq">"</span><span class="hs">{</span><span class="hv">name</span><span class="hs">}</span><span class="hq"> has </span><span class="hs">{</span><span class="hv">n</span><span class="hs">}</span><span class="hq">"</span>       drop values into a sentence
+<span class="hk">if</span> / <span class="hk">elif</span> / <span class="hk">else</span>        flat gates, never nested
+==  !=  &lt;  &gt;  &lt;=  &gt;=    comparisons, give True or False
+<span class="hs">and</span> / <span class="hs">or</span>                two conditions at once
+<span class="hk">while</span> <span class="hv">condition</span>:        repeats while True; the condition is what stops it
+<span class="hk">for</span> <span class="hv">i</span> <span class="hs">in</span> <span class="hc">range</span>(<span class="hd">5</span>):      0 1 2 3 4, stops before 5
+<span class="hc">list</span>[<span class="hd">0</span>]                 first slot; last is len - 1
+<span class="hv">text</span>[<span class="hd">0</span>:<span class="hd">3</span>]               slots 0 1 2, stops before 3
+<span class="hs">def</span> <span class="hf">f</span>(<span class="hv">x</span>):               ...    return x * 2
+<span class="hv">no</span> <span class="hk">return</span>               returns None
+<span class="hv">d</span> = {<span class="hq">"key"</span>: <span class="hv">value</span>}      look up with d["key"]
+<span class="hv">key</span> <span class="hs">in</span> <span class="hv">d</span>                True or False, checks keys
+<span class="hv">a</span> % <span class="hv">b</span>                   remainder; wraps a counter
+<span class="hv">rack</span>.<span class="hf">find</span>(<span class="hv">ch</span>)           a slot, or -1 for not found
+<span class="hd">360</span> / <span class="hv">sides</span>             the turn that closes a shape
+<span class="hc">math</span>.<span class="hf">radians</span>(<span class="hv">deg</span>)       convert before cos and sin
+<span class="hv">cos</span> <span class="hs">is</span> <span class="hv">across</span>, <span class="hv">sin</span> <span class="hv">down</span> the far end of a step
+<span class="hv">draw</span>.<span class="hf">line</span>(<span class="hv">c</span>, <span class="hv">col</span>, <span class="hv">a</span>, <span class="hv">b</span>, 3)  canvas, colour, start, end, width
+<span class="hk">while</span> <span class="hv">running</span>:          pygame frame loop, QUIT sets running = 0
+<span class="hv">x</span> = <span class="hv">x</span> + <span class="hv">vx</span>              move once per frame
+<span class="hv">v</span> = -<span class="hv">v</span>                  bounce
+<span class="hv">level</span>[<span class="hv">row</span>][<span class="hv">col</span>]         row first, then column</code></pre><p class="note">Read the last line of an error first. One change per run.</p></section><section><h2>Error names met this term</h2><p>Write the real message next to each one, the first time you meet it.</p><table><tr><th>Name</th><th>What it usually means</th><th>Your message</th></tr><tr><td>NameError</td><td>A word Python does not know. Often a typo.</td><td class="fill"></td></tr><tr><td>SyntaxError</td><td>Punctuation. A bracket, a colon, one equals sign where two belong.</td><td class="fill"></td></tr><tr><td>IndentationError</td><td>A block is missing, or indented unevenly.</td><td class="fill"></td></tr><tr><td>TypeError</td><td>Two kinds that will not mix. Usually text and number.</td><td class="fill"></td></tr><tr><td>IndexError</td><td>A slot past the end. Length and last index are one apart.</td><td class="fill"></td></tr><tr><td>KeyError</td><td>A dictionary key that is not there. Gate with <code>in</code>.</td><td class="fill"></td></tr><tr><td>No error, wrong answer</td><td>A silent bug. Use a probe.</td><td class="fill"></td></tr></table></section></div></main><nav class="pager noprint"><a href="beginner_semester_hub.html?v=11">Course home</a><a href="session01_printing_names_input.html?v=11">Session 1 &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding beginner semester, Robofun Fall 2026.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

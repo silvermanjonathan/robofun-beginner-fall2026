@@ -35,7 +35,10 @@ header.top{
   background:var(--teal); color:#FFFDF7;
   border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
 }
-.wrap{max-width:900px; margin:0 auto}
+.wrap{max-width:1080px; margin:0 auto}
+/* prose lines stay at reading length inside the wider column; code gets the width */
+p,li{max-width:72ch}
+.dates,.sessionlist li,.toolbar,.legend,.exits p,.card p,.stamp,.pill{max-width:none}
 .eyebrow{
   font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
   text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
@@ -80,6 +83,7 @@ section.extension{border-left:8px solid var(--clay)}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 14px; padding-left:24px}
 li{margin:0 0 8px}
+.sessionlist li{max-width:none}
 code,pre{
   /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
      glyph; students then type a character that does not exist. Keep every
@@ -92,22 +96,18 @@ code{
   padding:2px 6px; border-radius:3px;
 }
 pre{
-  font-family:'JetBrains Mono',monospace; font-size:15.5px; line-height:1.6;
+  /* 19px, a little over the 18px prose, so code reads from the back of the room */
+  font-family:'JetBrains Mono',monospace; font-size:19px; line-height:1.6;
   background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
   border-left:6px solid #B9AF96; border-radius:4px;
   padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
 }
-/* Code colours by role, from VS Code's Light+ theme. Four are darkened within the same
-   hue so every one clears 4.5:1 on the code background. Colour only, never bold or
-   italic, so every character keeps its width. */
-.tk-ctl{color:#9A00C2}  /* control words: if elif else for while return import */
-.tk-kw{color:#0000FF}   /* def, class, and, or, not, True, False, None, f-string parts */
-.tk-str{color:#A31515}  /* strings */
-.tk-num{color:#06704A}  /* numbers */
-.tk-com{color:#3B6E2A}  /* comments */
-.tk-fn{color:#795E26}   /* functions */
-.tk-cls{color:#1D6A80}  /* classes, types, modules */
-.tk-var{color:#001080}  /* variables */
+pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-weight:inherit; color:inherit}
+/* Python code, colored the way VS Code's light theme colors it, on white. Each color
+   clears 7:1 on white (render.py checks), and the same colors print. Color only, never
+   bold or italic, so every character keeps its width. */
+pre.py{background:#FFFFFF; color:#1F1F1F}
+pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -186,7 +186,7 @@ details.teacher[open] summary{margin-bottom:14px}
   padding-left:14px; margin:0 0 14px;
 }
 .pager{
-  max-width:900px; margin:0 auto; padding:8px 22px 34px;
+  max-width:1080px; margin:0 auto; padding:8px 22px 34px;
   display:flex; justify-content:space-between; gap:12px;
   font-family:'JetBrains Mono',monospace; font-size:14px;
 }
@@ -248,6 +248,12 @@ a.btn.quiet:hover{background:#EFE9DA}
   letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
   font-weight:700;
 }
+@media (max-width:760px){
+  pre{font-size:15px}
+  /* a wide table scrolls inside itself instead of widening the page */
+  table{display:block; overflow-x:auto; max-width:100%}
+  table tbody{display:table; width:100%}
+}
 @media print{
   body{background:#fff; font-size:11pt}
   header.top{background:#fff; color:#111; border-bottom:3px solid #111}
@@ -257,6 +263,9 @@ a.btn.quiet:hover{background:#EFE9DA}
   section,.stamp,.card{background:#fff; break-inside:avoid}
   .noprint,.toolbar{display:none}
   a{color:#111}
+  /* printed code keeps its old size, so printed pages and PDFs do not reflow */
+  pre{font-size:15.5px}
+  pre.py{background:#fff; border:1px solid #999}
 }
 </style>
 
@@ -301,7 +310,7 @@ table.rename td{height:38px}
 table.rename td.old{font-family:'JetBrains Mono',monospace; font-weight:700; width:130px; text-align:center;
   background:#EFE9DA; white-space:nowrap}
 .two-up{display:grid; gap:18px; grid-template-columns:minmax(0,1fr)}
-.two-up pre{margin:0; font-size:14px; line-height:1.5}
+.two-up pre{margin:0; line-height:1.5}
 .nb{font-size:15px; color:var(--ink-soft)}
 .tscroll{overflow-x:auto; margin:0 0 16px}
 .tscroll table{margin:0}
@@ -340,23 +349,23 @@ table.rename td.old{font-family:'JetBrains Mono',monospace; font-weight:700; wid
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 2 of 12</p><h1>Answer key: work out True or False before you run it</h1><div class="dates"><span class="pill"><b>Date</b> Mon Oct 5</span><span class="pill"><b>Covers</b> chunks 4 to 6</span></div></div></header><main><div class="wrap"><div class="ws-name"><span><b>Teacher copy</b> every blank filled</span><span><b>Date</b> Mon Oct 5</span></div><div class="toolbar"><a class="btn quiet" href="session02_comparisons_and_gates.html?v=10">Back to the session 2 page</a></div><section class="chunk"><p class="chunk-no">Chunk 4 of 6</p><h2>and: both must be True</h2><p><code>and</code> is True only when both sides are True.</p><div class="two-up"><div><pre><span class="tk-var">height</span> = <span class="tk-num">52</span>
-<span class="tk-var">has_ticket</span> = <span class="tk-kw">True</span>
-<span class="tk-ctl">if</span> <span class="tk-var">height</span> &gt; <span class="tk-num">48</span> <span class="tk-kw">and</span> <span class="tk-var">has_ticket</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Board the coaster."</span>)
-<span class="tk-ctl">else</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Step aside."</span>)</pre></div><p>Each row is one rider. Fill in the blanks. Shaded rows are done for you.</p><div class="tscroll"><table class="trace"><colgroup><col style="width:8%"><col style="width:11%"><col style="width:14%"><col style="width:14%"><col style="width:21%"><col style="width:32%"></colgroup><thead><tr><th>rider</th><th>height</th><th>has_ticket</th><th class="q">height &gt; 48?</th><th class="q">height &gt; 48 and has_ticket?</th><th>what it prints</th></tr></thead><tr class="done"><td class="i">1</td><td>52</td><td>True</td><td class="q">True</td><td class="q">True</td><td>Board the coaster.</td></tr><tr class="done"><td class="i">2</td><td>52</td><td>False</td><td class="q">True</td><td class="q">False</td><td>Step aside.</td></tr><tr class="done"><td class="i">3</td><td>48</td><td>False</td><td class="q">False</td><td class="q">False</td><td>Step aside.</td></tr><tr class="done"><td class="i">4</td><td>48</td><td>True</td><td class="q">False</td><td class="q">False</td><td>Step aside.</td></tr><tr class="done"><td class="i">5</td><td>40</td><td>True</td><td class="q">False</td><td class="q">False</td><td>Step aside.</td></tr><tr class="done"><td class="i">6</td><td>60</td><td>False</td><td class="q">True</td><td class="q">False</td><td>Step aside.</td></tr><tr class="done"><td class="i">7</td><td>49</td><td>False</td><td class="q">True</td><td class="q">False</td><td>Step aside.</td></tr><tr class="done"><td class="i">8</td><td>49</td><td>True</td><td class="q">True</td><td class="q">True</td><td>Board the coaster.</td></tr></table></div></div><div class="keep"><p>Which riders board the coaster? Why?</p><div class="lines"><p class="key">Riders 1 and 8. Theirs are the only rows where both sides are True.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 5 of 6</p><h2>or: one is enough</h2><p><code>or</code> is True when either side is True.</p><div class="two-up"><div><pre><span class="tk-var">is_staff</span> = <span class="tk-kw">False</span>
-<span class="tk-var">has_pass</span> = <span class="tk-kw">True</span>
-<span class="tk-ctl">if</span> <span class="tk-var">is_staff</span> <span class="tk-kw">or</span> <span class="tk-var">has_pass</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Gate opens."</span>)
-<span class="tk-ctl">else</span>:
-    <span class="tk-fn">print</span>(<span class="tk-str">"Gate stays shut."</span>)</pre></div><p>Each row is one visitor. Fill in the blanks. The shaded row is done for you.</p><div class="tscroll"><table class="trace"><colgroup><col style="width:11%"><col style="width:16%"><col style="width:16%"><col style="width:27%"><col style="width:30%"></colgroup><thead><tr><th>visitor</th><th>is_staff</th><th>has_pass</th><th class="q">is_staff or has_pass?</th><th>what it prints</th></tr></thead><tr class="done"><td class="i">1</td><td>False</td><td>True</td><td class="q">True</td><td>Gate opens.</td></tr><tr class="done"><td class="i">2</td><td>True</td><td>False</td><td class="q">True</td><td>Gate opens.</td></tr><tr class="done"><td class="i">3</td><td>True</td><td>True</td><td class="q">True</td><td>Gate opens.</td></tr><tr class="done"><td class="i">4</td><td>False</td><td>False</td><td class="q">False</td><td>Gate stays shut.</td></tr></table></div></div><div class="keep"><p>Which visitor is kept out? Why?</p><div class="lines"><p class="key">Visitor 4. Both sides are False, and <code>or</code> needs at least one True side.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 6 of 6</p><h2>A while loop and its stopping condition</h2><p><code>!=</code> means is not equal to. <code>""</code> is empty text.</p><div class="two-up"><div><pre><span class="tk-var">answer</span> = <span class="tk-str">""</span>
-<span class="tk-ctl">while</span> <span class="tk-var">answer</span> != <span class="tk-str">"yes"</span> <span class="tk-kw">and</span> <span class="tk-var">answer</span> != <span class="tk-str">"no"</span>:
-    <span class="tk-var">answer</span> = <span class="tk-fn">input</span>(<span class="tk-str">"Ready? Type yes or no: "</span>)
-<span class="tk-fn">print</span>(<span class="tk-str">"Recorded:"</span>, <span class="tk-var">answer</span>)</pre></div><p>Each row is one check of the condition. Fill in the blanks. The shaded row is done for you.</p><div class="tscroll"><table class="trace"><colgroup><col style="width:8%"><col style="width:14%"><col style="width:18%"><col style="width:18%"><col style="width:42%"></colgroup><thead><tr><th>check</th><th>answer</th><th class="q">answer != "yes"?</th><th class="q">answer != "no"?</th><th class="q">answer != "yes" and answer != "no"?</th></tr></thead><tr class="done"><td class="i">1</td><td>""</td><td class="q">True</td><td class="q">True</td><td class="q">True</td></tr><tr class="done"><td class="i">2</td><td>"maybe"</td><td class="q">True</td><td class="q">True</td><td class="q">True</td></tr><tr class="done"><td class="i">3</td><td>"soon"</td><td class="q">True</td><td class="q">True</td><td class="q">True</td></tr><tr class="done"><td class="i">4</td><td>"yes"</td><td class="q">False</td><td class="q">True</td><td class="q">False</td></tr></table></div></div><div class="keep"><p>How many times is the question asked? Which check stops the loop?</p><div class="lines"><p class="key">3 times. Check 4 stops it: <code>answer</code> is "yes", so <code>answer != "yes"</code> is False, and <code>and</code> needs both sides True.</p></div></div><div class="orpart"><h3>The same loop with or</h3><div class="two-up"><p>Line 2 now says <code>or</code>. Trace it on paper only.</p><div><pre><span class="tk-var">answer</span> = <span class="tk-str">""</span>
-<span class="tk-ctl">while</span> <span class="tk-var">answer</span> != <span class="tk-str">"yes"</span> <span class="tk-kw">or</span> <span class="tk-var">answer</span> != <span class="tk-str">"no"</span>:
-    <span class="tk-var">answer</span> = <span class="tk-fn">input</span>(<span class="tk-str">"Ready? Type yes or no: "</span>)
-<span class="tk-fn">print</span>(<span class="tk-str">"Recorded:"</span>, <span class="tk-var">answer</span>)</pre></div><div class="tscroll"><table class="trace"><colgroup><col style="width:8%"><col style="width:14%"><col style="width:18%"><col style="width:18%"><col style="width:42%"></colgroup><thead><tr><th>check</th><th>answer</th><th class="q">answer != "yes"?</th><th class="q">answer != "no"?</th><th class="q">answer != "yes" or answer != "no"?</th></tr></thead><tr class="done"><td class="i">1</td><td>""</td><td class="q">True</td><td class="q">True</td><td class="q">True</td></tr><tr class="done"><td class="i">2</td><td>"maybe"</td><td class="q">True</td><td class="q">True</td><td class="q">True</td></tr><tr class="done"><td class="i">3</td><td>"yes"</td><td class="q">False</td><td class="q">True</td><td class="q">True</td></tr><tr class="done"><td class="i">4</td><td>"no"</td><td class="q">True</td><td class="q">False</td><td class="q">True</td></tr></table></div></div><div class="keep"><p>Does this loop ever stop? Why?</p><div class="lines"><p class="key">No. Every answer makes at least one side True: yes makes <code>answer != "no"</code> True, and anything else makes <code>answer != "yes"</code> True. <code>or</code> needs only one True side. When maybe, yes, and no are typed, it asks a fourth time.</p></div></div></div></section></div></main><nav class="pager"><a href="session02_comparisons_and_gates.html?v=10">&larr; Session 2: Comparisons and gates</a><a href="beginner_semester_hub.html?v=10">Course home</a><a href="session03_loops_counters_lists.html?v=10">Session 3: Loops, counters, and lists &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Worksheet for session 2, written by a generator in <code>build/</code>. Every printed line in the answer key comes from running the program when the site was built.</p></div></footer>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 2 of 12</p><h1>Answer key: work out True or False before you run it</h1><div class="dates"><span class="pill"><b>Date</b> Mon Oct 5</span><span class="pill"><b>Covers</b> chunks 4 to 6</span></div></div></header><main><div class="wrap"><div class="ws-name"><span><b>Teacher copy</b> every blank filled</span><span><b>Date</b> Mon Oct 5</span></div><div class="toolbar"><a class="btn quiet" href="session02_comparisons_and_gates.html?v=11">Back to the session 2 page</a></div><section class="chunk"><p class="chunk-no">Chunk 4 of 6</p><h2>and: both must be True</h2><p><code>and</code> is True only when both sides are True.</p><div class="two-up"><div><pre class="py"><code><span class="hv">height</span> = <span class="hd">52</span>
+<span class="hv">has_ticket</span> = <span class="hs">True</span>
+<span class="hk">if</span> <span class="hv">height</span> &gt; <span class="hd">48</span> <span class="hs">and</span> <span class="hv">has_ticket</span>:
+    <span class="hf">print</span>(<span class="hq">"Board the coaster."</span>)
+<span class="hk">else</span>:
+    <span class="hf">print</span>(<span class="hq">"Step aside."</span>)</code></pre></div><p>Each row is one rider. Fill in the blanks. Shaded rows are done for you.</p><div class="tscroll"><table class="trace"><colgroup><col style="width:8%"><col style="width:11%"><col style="width:14%"><col style="width:14%"><col style="width:21%"><col style="width:32%"></colgroup><thead><tr><th>rider</th><th>height</th><th>has_ticket</th><th class="q">height &gt; 48?</th><th class="q">height &gt; 48 and has_ticket?</th><th>what it prints</th></tr></thead><tr class="done"><td class="i">1</td><td>52</td><td>True</td><td class="q">True</td><td class="q">True</td><td>Board the coaster.</td></tr><tr class="done"><td class="i">2</td><td>52</td><td>False</td><td class="q">True</td><td class="q">False</td><td>Step aside.</td></tr><tr class="done"><td class="i">3</td><td>48</td><td>False</td><td class="q">False</td><td class="q">False</td><td>Step aside.</td></tr><tr class="done"><td class="i">4</td><td>48</td><td>True</td><td class="q">False</td><td class="q">False</td><td>Step aside.</td></tr><tr class="done"><td class="i">5</td><td>40</td><td>True</td><td class="q">False</td><td class="q">False</td><td>Step aside.</td></tr><tr class="done"><td class="i">6</td><td>60</td><td>False</td><td class="q">True</td><td class="q">False</td><td>Step aside.</td></tr><tr class="done"><td class="i">7</td><td>49</td><td>False</td><td class="q">True</td><td class="q">False</td><td>Step aside.</td></tr><tr class="done"><td class="i">8</td><td>49</td><td>True</td><td class="q">True</td><td class="q">True</td><td>Board the coaster.</td></tr></table></div></div><div class="keep"><p>Which riders board the coaster? Why?</p><div class="lines"><p class="key">Riders 1 and 8. Theirs are the only rows where both sides are True.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 5 of 6</p><h2>or: one is enough</h2><p><code>or</code> is True when either side is True.</p><div class="two-up"><div><pre class="py"><code><span class="hv">is_staff</span> = <span class="hs">False</span>
+<span class="hv">has_pass</span> = <span class="hs">True</span>
+<span class="hk">if</span> <span class="hv">is_staff</span> <span class="hs">or</span> <span class="hv">has_pass</span>:
+    <span class="hf">print</span>(<span class="hq">"Gate opens."</span>)
+<span class="hk">else</span>:
+    <span class="hf">print</span>(<span class="hq">"Gate stays shut."</span>)</code></pre></div><p>Each row is one visitor. Fill in the blanks. The shaded row is done for you.</p><div class="tscroll"><table class="trace"><colgroup><col style="width:11%"><col style="width:16%"><col style="width:16%"><col style="width:27%"><col style="width:30%"></colgroup><thead><tr><th>visitor</th><th>is_staff</th><th>has_pass</th><th class="q">is_staff or has_pass?</th><th>what it prints</th></tr></thead><tr class="done"><td class="i">1</td><td>False</td><td>True</td><td class="q">True</td><td>Gate opens.</td></tr><tr class="done"><td class="i">2</td><td>True</td><td>False</td><td class="q">True</td><td>Gate opens.</td></tr><tr class="done"><td class="i">3</td><td>True</td><td>True</td><td class="q">True</td><td>Gate opens.</td></tr><tr class="done"><td class="i">4</td><td>False</td><td>False</td><td class="q">False</td><td>Gate stays shut.</td></tr></table></div></div><div class="keep"><p>Which visitor is kept out? Why?</p><div class="lines"><p class="key">Visitor 4. Both sides are False, and <code>or</code> needs at least one True side.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 6 of 6</p><h2>A while loop and its stopping condition</h2><p><code>!=</code> means is not equal to. <code>""</code> is empty text.</p><div class="two-up"><div><pre class="py"><code><span class="hv">answer</span> = <span class="hq">""</span>
+<span class="hk">while</span> <span class="hv">answer</span> != <span class="hq">"yes"</span> <span class="hs">and</span> <span class="hv">answer</span> != <span class="hq">"no"</span>:
+    <span class="hv">answer</span> = <span class="hf">input</span>(<span class="hq">"Ready? Type yes or no: "</span>)
+<span class="hf">print</span>(<span class="hq">"Recorded:"</span>, <span class="hv">answer</span>)</code></pre></div><p>Each row is one check of the condition. Fill in the blanks. The shaded row is done for you.</p><div class="tscroll"><table class="trace"><colgroup><col style="width:8%"><col style="width:14%"><col style="width:18%"><col style="width:18%"><col style="width:42%"></colgroup><thead><tr><th>check</th><th>answer</th><th class="q">answer != "yes"?</th><th class="q">answer != "no"?</th><th class="q">answer != "yes" and answer != "no"?</th></tr></thead><tr class="done"><td class="i">1</td><td>""</td><td class="q">True</td><td class="q">True</td><td class="q">True</td></tr><tr class="done"><td class="i">2</td><td>"maybe"</td><td class="q">True</td><td class="q">True</td><td class="q">True</td></tr><tr class="done"><td class="i">3</td><td>"soon"</td><td class="q">True</td><td class="q">True</td><td class="q">True</td></tr><tr class="done"><td class="i">4</td><td>"yes"</td><td class="q">False</td><td class="q">True</td><td class="q">False</td></tr></table></div></div><div class="keep"><p>How many times is the question asked? Which check stops the loop?</p><div class="lines"><p class="key">3 times. Check 4 stops it: <code>answer</code> is "yes", so <code>answer != "yes"</code> is False, and <code>and</code> needs both sides True.</p></div></div><div class="orpart"><h3>The same loop with or</h3><div class="two-up"><p>Line 2 now says <code>or</code>. Trace it on paper only.</p><div><pre class="py"><code><span class="hv">answer</span> = <span class="hq">""</span>
+<span class="hk">while</span> <span class="hv">answer</span> != <span class="hq">"yes"</span> <span class="hs">or</span> <span class="hv">answer</span> != <span class="hq">"no"</span>:
+    <span class="hv">answer</span> = <span class="hf">input</span>(<span class="hq">"Ready? Type yes or no: "</span>)
+<span class="hf">print</span>(<span class="hq">"Recorded:"</span>, <span class="hv">answer</span>)</code></pre></div><div class="tscroll"><table class="trace"><colgroup><col style="width:8%"><col style="width:14%"><col style="width:18%"><col style="width:18%"><col style="width:42%"></colgroup><thead><tr><th>check</th><th>answer</th><th class="q">answer != "yes"?</th><th class="q">answer != "no"?</th><th class="q">answer != "yes" or answer != "no"?</th></tr></thead><tr class="done"><td class="i">1</td><td>""</td><td class="q">True</td><td class="q">True</td><td class="q">True</td></tr><tr class="done"><td class="i">2</td><td>"maybe"</td><td class="q">True</td><td class="q">True</td><td class="q">True</td></tr><tr class="done"><td class="i">3</td><td>"yes"</td><td class="q">False</td><td class="q">True</td><td class="q">True</td></tr><tr class="done"><td class="i">4</td><td>"no"</td><td class="q">True</td><td class="q">False</td><td class="q">True</td></tr></table></div></div><div class="keep"><p>Does this loop ever stop? Why?</p><div class="lines"><p class="key">No. Every answer makes at least one side True: yes makes <code>answer != "no"</code> True, and anything else makes <code>answer != "yes"</code> True. <code>or</code> needs only one True side. When maybe, yes, and no are typed, it asks a fourth time.</p></div></div></div></section></div></main><nav class="pager"><a href="session02_comparisons_and_gates.html?v=11">&larr; Session 2: Comparisons and gates</a><a href="beginner_semester_hub.html?v=11">Course home</a><a href="session03_loops_counters_lists.html?v=11">Session 3: Loops, counters, and lists &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Worksheet for session 2, written by a generator in <code>build/</code>. Every printed line in the answer key comes from running the program when the site was built.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');
