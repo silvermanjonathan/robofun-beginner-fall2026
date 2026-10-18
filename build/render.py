@@ -21,7 +21,7 @@ SESSIONS = SESSIONS_A + SESSIONS_B + SESSIONS_C
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "11"
+VERSION = "12"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -374,6 +374,8 @@ button.rev.hint:hover{background:var(--ochre-tint)}
 .ladder .ans p{margin:0 0 12px}
 .ladder .ans pre{margin:0 0 12px}
 .ladder .q b{color:var(--clay)}
+.sofar,.whole{margin:0 0 16px}
+.sofar .ans,.whole .ans{margin-top:12px; padding-top:0; border-top:0}
 .ans{display:none; margin-top:16px; padding-top:16px; border-top:2px solid var(--rule)}
 .ans.open{display:block}
 table{border-collapse:collapse; width:100%; margin:0 0 16px; font-size:16.5px}
@@ -587,17 +589,25 @@ def hint_html(h):
     return out
 
 
-def ladder(idx, question, hints, answer_html, label="What goes next?"):
+def toggle(idx, show, hide, inner):
+    """One button that opens one block."""
+    return ('<button class="rev" data-target="' + idx + '" aria-controls="' + idx + '" '
+            'aria-expanded="false" data-show="' + show + '" data-hide="' + hide + '">'
+            + show + '</button><div class="ans" id="' + idx + '">' + inner + '</div>')
+
+
+def ladder(idx, question, hints, answer_html, label="What goes next?",
+           show="Show the lines", hide="Hide the lines"):
     """A question for the room, with hints that open one inside the next.
 
     Hint 2's button sits inside hint 1's box, hint 3's inside hint 2's, and the button
-    that shows the lines sits inside the last hint, so the hints come out in order and
+    that shows the answer sits inside the last hint, so the hints come out in order and
     nothing below the question is on screen until it is asked for.
     """
     aid = idx + "-lines"
     inner = ('<button class="rev" data-target="' + aid + '" aria-controls="' + aid + '" '
-             'aria-expanded="false" data-show="Show the lines" data-hide="Hide the lines">'
-             'Show the lines</button>'
+             'aria-expanded="false" data-show="' + show + '" data-hide="' + hide + '">'
+             + show + '</button>'
              '<div class="ans" id="' + aid + '">' + answer_html + '</div>')
     for n in range(len(hints), 0, -1):
         hid = idx + "-h" + str(n)
@@ -607,6 +617,28 @@ def ladder(idx, question, hints, answer_html, label="What goes next?"):
                  '<div class="ans" id="' + hid + '">' + hint_html(hints[n - 1]) + inner + '</div>')
     return ('<div class="predict ladder"><p class="q"><b>' + label + '</b> ' + question + '</p>'
             + inner + '</div>')
+
+
+def check_step(step, code, tag):
+    """A step's line must be in the chunk's program, at the line number its label names.
+
+    The label is "Line 7", "Lines 18, 21, and 24", or "Lines 9 to 13"; every number in
+    it is checked against the program, so a label cannot drift from the code.
+    """
+    lines = code.split("\n")
+    wanted = [ln for ln in step["line"].split("\n") if ln.strip()]
+    for ln in wanted:
+        assert ln in lines, "%s: step line not in the program: %r" % (tag, ln)
+    label = step["label"]
+    m = re.fullmatch(r"Lines (\d+) to (\d+)", label)
+    if m:
+        nums = list(range(int(m.group(1)), int(m.group(2)) + 1))
+        assert [lines[n - 1] for n in nums] == wanted, "%s: %s does not match" % (tag, label)
+        return
+    nums = [int(x) for x in re.findall(r"\d+", label)]
+    assert nums, "%s: step label needs a line number: %r" % (tag, label)
+    for n in nums:
+        assert lines[n - 1] in wanted, "%s: %s names line %d, which is %r" % (tag, label, n, lines[n - 1])
 
 
 def reveal(idx, question, answer, qlabel="Predict", extra="",
@@ -704,7 +736,27 @@ def render_session(s, prev_s, next_s):
                      'That is after <code>canvas.fill(BG)</code>, so the canvas exists before '
                      'you draw on it, and before <code>while running:</code>, because the loop '
                      'only shows what was drawn before it started. Then run the whole file.') + '</p>')
-        if nx:
+        steps = ch.get("steps")
+        if steps:
+            # one question per new line: the program so far behind a button, then a
+            # hint ladder for each line, then the whole program behind a button
+            start = ch["start"] if "start" in ch else s["chunks"][i - 1]["code"]
+            if start:
+                b.append('<div class="sofar">' + toggle(tag + "-start", "Show the program so far",
+                         "Hide the program so far", code_block(start)) + '</div>')
+            for j, st in enumerate(steps):
+                check_step(st, ch["code"], tag)
+                sid = tag + "-l" + str(j + 1)
+                ans = code_block(st["line"], context=ch["code"])
+                if st.get("note"):
+                    ans += '<p>' + st["note"] + '</p>'
+                low = st["label"][0].lower() + st["label"][1:]
+                b.append(ladder(sid, st["q"], st["hints"], ans,
+                                label=st["label"] + ". What goes next?",
+                                show="Show " + low, hide="Hide " + low))
+            b.append('<div class="whole">' + toggle(tag + "-whole", "Show the whole program",
+                     "Hide the whole program", code_block(ch["code"])) + '</div>')
+        elif nx:
             b.append(ladder(tag + "-next", nx["q"], nx["hints"],
                             "".join(shown) + '<p>' + nx["a"] + '</p>'))
         else:

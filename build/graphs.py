@@ -21,32 +21,99 @@ FONT = "font-family:JetBrains Mono,monospace"
 NODE_R = 50
 
 
-def _arrow(a, b, label, color, at=0.5, flip=False, label_at=None):
-    """One arrow from node a to node b, trimmed to the circle edges, with a label.
+def _seg_dist(p, a, b):
+    """Distance from point p to the segment a-b."""
+    (px, py), (ax, ay), (bx, by) = p, a, b
+    dx, dy = bx - ax, by - ay
+    if dx == dy == 0:
+        return math.hypot(px - ax, py - ay)
+    t = max(0.0, min(1.0, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy)))
+    return math.hypot(px - (ax + t * dx), py - (ay + t * dy))
 
-    The label sits beside the line at fraction `at`, on the side `flip` picks, unless
-    label_at gives its centre outright.
-    """
+
+def _trim(a, b):
+    """The visible part of the arrow from node a to node b: start and end points."""
     (ax, ay), (bx, by) = a, b
     dx, dy = bx - ax, by - ay
     length = math.hypot(dx, dy)
     ux, uy = dx / length, dy / length
-    sx, sy = ax + ux * (NODE_R + 4), ay + uy * (NODE_R + 4)
-    ex, ey = bx - ux * (NODE_R + 12), by - uy * (NODE_R + 12)
-    lx, ly = sx + (ex - sx) * at, sy + (ey - sy) * at
-    # label sits beside the line, on the side the caller asks for
-    nx, ny = (-uy, ux) if flip else (uy, -ux)
-    lx, ly = lx + nx * 14, ly + ny * 14
-    if label_at:
-        lx, ly = label_at
-    # a card-coloured box behind the label keeps it readable where lines cross
-    w = len(label) * 8.6 + 10
+    return (ax + ux * (NODE_R + 4), ay + uy * (NODE_R + 4)), (bx - ux * (NODE_R + 12), by - uy * (NODE_R + 12))
+
+
+def _crosses_box(seg, x0, y0, x1, y1):
+    """True when the segment passes through the box (Liang-Barsky clipping)."""
+    (ax, ay), (bx, by) = seg
+    dx, dy = bx - ax, by - ay
+    t0, t1 = 0.0, 1.0
+    for p, q in ((-dx, ax - x0), (dx, x1 - ax), (-dy, ay - y0), (dy, y1 - ay)):
+        if p == 0:
+            if q < 0:
+                return False
+            continue
+        r = q / p
+        if p < 0:
+            if r > t1:
+                return False
+            t0 = max(t0, r)
+        else:
+            if r < t0:
+                return False
+            t1 = min(t1, r)
+    return t0 <= t1
+
+
+def _box_room(cx, cy, hw, hh, others, nodes, taken):
+    """How much clear space a label box centered at (cx, cy) has around it.
+
+    Measured from the box's edges: to every other arrow, to every node's edge, and to
+    every label already placed. Negative means something overlaps the box.
+    """
+    pts = [(cx + dx, cy + dy) for dx in (-hw, 0, hw) for dy in (-hh, 0, hh)]
+    room = min(_seg_dist(p, *o) for p in pts for o in others)
+    for o in others:
+        if _crosses_box(o, cx - hw, cy - hh, cx + hw, cy + hh):
+            room = min(room, -40.0)
+    room = min([room] + [math.hypot(px - nx, py - ny) - NODE_R for px, py in pts for nx, ny in nodes])
+    for qx, qy, qw, qh in taken:
+        room = min(room, max(abs(cx - qx) - (hw + qw), abs(cy - qy) - (hh + qh)))
+    return room
+
+
+def _label_spot(a, b, others, nodes, taken, label):
+    """Where on the arrow a-b its label box sits: the point with the most room.
+
+    The box is centered on the arrow itself, so the arrow runs into one side of it and
+    out of the other and there is no doubt which arrow the word belongs to. Among the
+    points along the arrow, pick the one whose box is farthest from every other arrow,
+    every node, and every label already placed. The tail half is tried first, so the
+    word reads soon after the move that wins; the head half is used only when the tail
+    half has no room.
+    """
+    (sx, sy), (ex, ey) = _trim(a, b)
+    hw, hh = len(label) * 4.3 + 6, 11
+    best, best_room, best_pt = 0.3, -1e9, None
+    for lo, hi, penalty in ((10, 44, 0), (56, 90, 14)):
+        for k in range(lo, hi + 1):
+            t = k / 100.0
+            px, py = sx + (ex - sx) * t, sy + (ey - sy) * t
+            room = _box_room(px, py, hw, hh, others, nodes, taken) - penalty
+            if room > best_room + 1e-6:
+                best, best_room, best_pt = t, room, (px, py)
+    taken.append((best_pt[0], best_pt[1], hw, hh))
+    return best
+
+
+def _arrow(a, b, label, color, t=0.5):
+    """One arrow from node a to node b, trimmed to the circle edges, with its label on it."""
+    (sx, sy), (ex, ey) = _trim(a, b)
+    lx, ly = sx + (ex - sx) * t, sy + (ey - sy) * t
+    w = len(label) * 8.6 + 12
     return (
         f'<line x1="{sx:.1f}" y1="{sy:.1f}" x2="{ex:.1f}" y2="{ey:.1f}" stroke="{color}" '
         f'stroke-width="4" marker-end="url(#head-{color[1:]})"/>'
-        f'<rect x="{lx - w / 2:.1f}" y="{ly - 12:.1f}" width="{w:.1f}" height="19" rx="4" '
-        f'fill="{CARD}"/>'
-        f'<text x="{lx:.1f}" y="{ly + 3:.1f}" fill="{color}" font-weight="700" font-size="14" '
+        f'<rect x="{lx - w / 2:.1f}" y="{ly - 11:.1f}" width="{w:.1f}" height="22" rx="4" '
+        f'fill="{CARD}" stroke="{color}" stroke-width="1.5"/>'
+        f'<text x="{lx:.1f}" y="{ly + 5:.1f}" fill="{color}" font-weight="700" font-size="14" '
         f'text-anchor="middle">{label}</text>'
     )
 
@@ -74,11 +141,11 @@ def rps_graph():
     paper = (120, 300)
     body = _defs([TEAL])
     body += _arrow(rock, scissors, "crushes", TEAL)
-    body += _arrow(scissors, paper, "cuts", TEAL, flip=True)
+    body += _arrow(scissors, paper, "cuts", TEAL)
     body += _arrow(paper, rock, "covers", TEAL)
     body += _node(*rock, "rock") + _node(*scissors, "scissors") + _node(*paper, "paper")
     body += (f'<text x="20" y="372" fill="{SOFT}" font-size="14" font-weight="700">'
-             'an arrow points from the move that wins to the move it beats</text>')
+             'each word sits on its own arrow, which points from the move that wins to the move it beats</text>')
     return ('<h3>The rules as arrows</h3>'
             '<svg viewBox="0 0 560 390" width="100%" role="img" aria-label="Three circles '
             'labelled rock, paper, and scissors. An arrow from rock to scissors says crushes, '
@@ -98,24 +165,29 @@ def rpsls_graph():
     ring = [("scissors", "paper", "cuts"), ("paper", "rock", "covers"),
             ("rock", "lizard", "crushes"), ("lizard", "spock", "poisons"),
             ("spock", "scissors", "smashes")]
-    # the five crossing arrows make a star; each label sits in the open space
-    # beside its own arrow, placed by hand so none lands on another arrow
-    star = [("scissors", "lizard", "decapitates", (262, 188)),
-            ("lizard", "paper", "eats", (292, 398)),
-            ("paper", "spock", "disproves", (320, 243)),
-            ("spock", "rock", "vaporizes", (245, 318)),
-            ("rock", "scissors", "crushes", (402, 312))]
+    # the five crossing arrows make a star; each label sits on its own arrow at the
+    # point with the most room, so it never lands on a crossing
+    star = [("scissors", "lizard", "decapitates"), ("lizard", "paper", "eats"),
+            ("paper", "spock", "disproves"), ("spock", "rock", "vaporizes"),
+            ("rock", "scissors", "crushes")]
+    segs = {(a, b): _trim(pos[a], pos[b]) for a, b, _ in ring + star}
+    centers = list(pos.values())
+    taken = []
     body = _defs([TEAL, CLAY])
     for a, b, verb in ring:
-        body += _arrow(pos[a], pos[b], verb, TEAL, flip=True)
-    for a, b, verb, where in star:
-        body += _arrow(pos[a], pos[b], verb, CLAY, label_at=where)
+        (sx, sy), (ex, ey) = segs[(a, b)]
+        taken.append(((sx + ex) / 2, (sy + ey) / 2, len(verb) * 4.3 + 6, 11))
+        body += _arrow(pos[a], pos[b], verb, TEAL)
+    for a, b, verb in sorted(star, key=lambda s: -len(s[2])):
+        others = [s for k, s in segs.items() if k != (a, b)]
+        t = _label_spot(pos[a], pos[b], others, centers, taken, verb)
+        body += _arrow(pos[a], pos[b], verb, CLAY, t)
     for name in names:
         body += _node(*pos[name], name)
     body += (f'<text x="20" y="522" fill="{SOFT}" font-size="14" font-weight="700">'
-             'an arrow points from the move that wins to the move it beats:</text>'
+             'each word sits on its own arrow, which points from the move that wins</text>'
              f'<text x="20" y="542" fill="{SOFT}" font-size="14" font-weight="700">'
-             'five round the outside, five across the middle</text>')
+             'to the move it beats: five round the outside, five across the middle</text>')
     return ('<h3>The ten rules as arrows</h3>'
             '<svg viewBox="0 0 640 556" width="100%" role="img" aria-label="Five circles in a '
             'ring labelled scissors, paper, rock, lizard, and spock. Five arrows go round the '

@@ -245,13 +245,16 @@ student who is past the stretch exit: an intro, verified `cards` with the same
 reveal, numbered steps, and an expected and got table. Session 4 uses it for rock
 paper scissors lizard Spock.
 
-A chunk or extension card with a `next` entry opens with a question for the room,
-"What goes next?", before any of its code is on screen. The question has hints that
-open one inside the next (hint 2's button is inside hint 1's box), the last hint is
-the code with one blank written as `____`, and a final button shows the lines: the
-chunk's full code block, which is otherwise not rendered. The hints count toward
-reveal parity like any other button. Session 4 uses this on chunks 2 to 8 and on
-the extension.
+A chunk with a `steps` entry is taught one line at a time. The program so far (the
+previous chunk's code, or the chunk's own `start`) sits behind a button; then each
+step is a question for the room, "Line 9. What goes next?", with hints that open one
+inside the next (hint 2's button is inside hint 1's box), the last hint being the line
+with one blank written as `____`, and a final button that shows the line; then the
+whole program sits behind a button. Each step's `label` names its line number, and
+`render.py` checks the label and the line against the chunk's program, so a number
+cannot drift from the code. A chunk or extension card with a `next` entry instead asks
+one question for the whole block. Session 4 uses `steps` on chunks 2 to 8 and `next`
+on the extension.
 
 A session with an `extras` entry gets a section under "Where you can stop" that links
 to its extra cards, and a Files note in its teacher panel with the answer key.
@@ -351,3 +354,12 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   page scrolls sideways. Every page's prose and every block's plain text are byte for
   byte what they were. `session02_worksheet.pdf` re-rendered: same four pages, same
   five embedded fonts, white code boxes with the new colors. Version pin `?v=11`.
+- **2026-10-18, v12.** Session 4 taught one line at a time: chunks 2 to 8 each open
+  with the program so far behind a button, then one "What goes next?" question per
+  new line, with hints that open one inside the next and the line behind the last
+  button (`steps` on a chunk; the labels are checked against the code at build time).
+  The game is finished at chunk 6; keeping score and the match verdict follow as two
+  modifications to the working program, each line by line. The five-move figure's
+  verbs now sit on their own arrows, in boxes the arrow passes through, placed by a
+  clearance search so none lands on a crossing. Prose pass over the session for plain
+  wording. Version pin `?v=12`.
