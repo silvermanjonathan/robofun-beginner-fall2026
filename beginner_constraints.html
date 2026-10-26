@@ -108,15 +108,18 @@ pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-we
    bold or italic, so every character keeps its width. */
 pre.py{background:#FFFFFF; color:#1F1F1F}
 pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
-/* Indent guides inside the hints, the lines VS Code draws down each step of
-   indentation, so a line shown on its own still shows how far in it goes. Each
-   four-space step is one box with a thick dark bar down its left edge, as tall as the
-   line, so the bars join up from line to line. A border rather than a shadow, so the
-   bars print. */
-.hints pre.py .ig,.ladder pre.py .ig{
-  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+/* Indent guides on every code block, the lines VS Code draws down each step of
+   indentation, so even a line shown on its own shows how far in it goes. Each
+   four-space step is one box with a thick dark bar down its left edge. The box holds
+   the step's four spaces, or on a blank line one space drawn by the CSS and not part
+   of the text, so it is exactly as tall as a line wherever it sits and the bars join
+   up from line to line. The spaces never wrap, even where the printed worksheets let
+   code wrap. A border rather than a shadow, so the bars print. */
+pre.py .ig{
+  display:inline-block; width:4ch; vertical-align:top; white-space:pre;
   border-left:6px solid #595959;
 }
+pre.py .ig:empty::before{content:" "}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -290,7 +293,7 @@ a.btn.quiet:hover{background:#EFE9DA}
 <span class="ig">    </span><span class="hm"># draw here</span>
 <span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">flip</span>()
 <span class="ig">    </span><span class="hv">clock</span>.<span class="hf">tick</span>(<span class="hd">60</span>)
-<span class="hc">pygame</span>.<span class="hf">quit</span>()</code></pre><p>A window never closes itself. It closes when the person closes it. Any program handed out in this course has this shape.</p><p>Two placements of the drawing, both legitimate, and students meet them in this order. In session 6 the drawing is done once onto a <code>pygame.Surface</code> above the loop, and the loop only blits it, because the picture never changes. From session 11 on, the <code>fill</code> and the drawing sit inside the loop, because the picture changes every frame.</p></section><section><h2>Standing rules</h2><ul><li><b>One change per run.</b> Change one thing, run it, write down what happened.</li><li><b>Predict before you run.</b> Out loud or on paper, every chunk.</li><li><b>Expected and got.</b> The expected column is filled in before the run, not after.</li><li><b>Names that say what they do.</b> A function called <code>check</code> that removes a life gets renamed. This is an exit criterion, not a style preference.</li><li><b>Words in the terminal, visuals in the window.</b></li><li><b>Functions at the top.</b> Every <code>def</code> goes together near the top of the file, after the imports and before any line that does work. Python must read a function before the line that calls it.</li><li><b>Knob block at the top.</b> Every number the behaviour depends on gets a capitalised name above the code that uses it.</li></ul></section><section><h2>Verification</h2><p>Every output box on every session page was produced by running that exact snippet, not typed from expectation. Terminal snippets were run with real input where they ask for it. The pygame snippets were run without a screen, with a quit event injected after a set number of frames, and the printed probe lines on those pages are the real ones. Every snippet on this site was run. Where a snippet continues a program from an earlier chunk, the page says so and the whole file was run together.</p></section></div></main><nav class="pager"><a href="beginner_semester_hub.html?v=14">Course home</a><a href="standards_map.html?v=14">Standards map &rarr;</a></nav><footer><div class="wrap"><p>Published 2026-09-12.</p></div></footer>
+<span class="hc">pygame</span>.<span class="hf">quit</span>()</code></pre><p>A window never closes itself. It closes when the person closes it. Any program handed out in this course has this shape.</p><p>Two placements of the drawing, both legitimate, and students meet them in this order. In session 6 the drawing is done once onto a <code>pygame.Surface</code> above the loop, and the loop only blits it, because the picture never changes. From session 11 on, the <code>fill</code> and the drawing sit inside the loop, because the picture changes every frame.</p></section><section><h2>Standing rules</h2><ul><li><b>One change per run.</b> Change one thing, run it, write down what happened.</li><li><b>Predict before you run.</b> Out loud or on paper, every chunk.</li><li><b>Expected and got.</b> The expected column is filled in before the run, not after.</li><li><b>Names that say what they do.</b> A function called <code>check</code> that removes a life gets renamed. This is an exit criterion, not a style preference.</li><li><b>Words in the terminal, visuals in the window.</b></li><li><b>Functions at the top.</b> Every <code>def</code> goes together near the top of the file, after the imports and before any line that does work. Python must read a function before the line that calls it.</li><li><b>Knob block at the top.</b> Every number the behaviour depends on gets a capitalised name above the code that uses it.</li></ul></section><section><h2>Verification</h2><p>Every output box on every session page was produced by running that exact snippet, not typed from expectation. Terminal snippets were run with real input where they ask for it. The pygame snippets were run without a screen, with a quit event injected after a set number of frames, and the printed probe lines on those pages are the real ones. Every snippet on this site was run. Where a snippet continues a program from an earlier chunk, the page says so and the whole file was run together.</p></section></div></main><nav class="pager"><a href="beginner_semester_hub.html?v=15">Course home</a><a href="standards_map.html?v=15">Standards map &rarr;</a></nav><footer><div class="wrap"><p>Published 2026-09-12.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

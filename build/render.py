@@ -23,7 +23,7 @@ SESSIONS = sorted(SESSIONS_A + [SESSION06] + SESSIONS_B + SESSIONS_C, key=lambda
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "14"
+VERSION = "15"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -66,7 +66,7 @@ def contrast(fg, bg):
     return (hi + 0.05) / (lo + 0.05)
 
 
-# VS Code draws a thin light-grey line down each step of indentation. Inside the hints
+# VS Code draws a thin light-grey line down each step of indentation. On these pages
 # the same lines are drawn 6px wide and dark, because a 1px light-grey line vanishes on
 # a projector with the lights on. The grey clears 7:1 on white, like the code colors.
 GUIDE = "#595959"
@@ -338,15 +338,18 @@ pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-we
    bold or italic, so every character keeps its width. */
 pre.py{background:CODE_BG_HEX; color:CODE_INK_HEX}
 CODE_COLOR_RULES
-/* Indent guides inside the hints, the lines VS Code draws down each step of
-   indentation, so a line shown on its own still shows how far in it goes. Each
-   four-space step is one box with a thick dark bar down its left edge, as tall as the
-   line, so the bars join up from line to line. A border rather than a shadow, so the
-   bars print. */
-.hints pre.py .ig,.ladder pre.py .ig{
-  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+/* Indent guides on every code block, the lines VS Code draws down each step of
+   indentation, so even a line shown on its own shows how far in it goes. Each
+   four-space step is one box with a thick dark bar down its left edge. The box holds
+   the step's four spaces, or on a blank line one space drawn by the CSS and not part
+   of the text, so it is exactly as tall as a line wherever it sits and the bars join
+   up from line to line. The spaces never wrap, even where the printed worksheets let
+   code wrap. A border rather than a shadow, so the bars print. */
+pre.py .ig{
+  display:inline-block; width:4ch; vertical-align:top; white-space:pre;
   border-left:GUIDE_WIDTH solid GUIDE_HEX;
 }
+pre.py .ig:empty::before{content:" "}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -564,8 +567,8 @@ def indent_guides(colored):
     """Put each four-space step of indentation in its own guide span.
 
     colored is code that hl.py has colored, one line of code per line of text. Each
-    step's four spaces go inside <span class="ig">, which the CSS draws, inside the
-    hints, as a thick bar down its left edge: the indent guides VS Code shows. A blank
+    step's four spaces go inside <span class="ig">, which the CSS draws as a thick
+    bar down its left edge: the indent guides VS Code shows. A blank
     line inside an indented block gets empty guide spans, as many steps as the lines
     above and below it share, so the bars run through it unbroken the way they do in
     VS Code. The spaces stay spaces and nothing is added to the text, so code copied

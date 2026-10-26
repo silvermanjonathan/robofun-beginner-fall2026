@@ -108,15 +108,18 @@ pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-we
    bold or italic, so every character keeps its width. */
 pre.py{background:#FFFFFF; color:#1F1F1F}
 pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
-/* Indent guides inside the hints, the lines VS Code draws down each step of
-   indentation, so a line shown on its own still shows how far in it goes. Each
-   four-space step is one box with a thick dark bar down its left edge, as tall as the
-   line, so the bars join up from line to line. A border rather than a shadow, so the
-   bars print. */
-.hints pre.py .ig,.ladder pre.py .ig{
-  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+/* Indent guides on every code block, the lines VS Code draws down each step of
+   indentation, so even a line shown on its own shows how far in it goes. Each
+   four-space step is one box with a thick dark bar down its left edge. The box holds
+   the step's four spaces, or on a blank line one space drawn by the CSS and not part
+   of the text, so it is exactly as tall as a line wherever it sits and the bars join
+   up from line to line. The spaces never wrap, even where the printed worksheets let
+   code wrap. A border rather than a shadow, so the bars print. */
+pre.py .ig{
+  display:inline-block; width:4ch; vertical-align:top; white-space:pre;
   border-left:6px solid #595959;
 }
+pre.py .ig:empty::before{content:" "}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -317,7 +320,7 @@ section.xcard h3{margin-top:20px}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 5 of 13</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 26</span><span class="pill"><b>Friday section</b> Fri Oct 16</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session05_functions_that_return.html?v=14">Back to the session 5 page</a><a class="btn quiet" href="session05_extra_cards.html?v=14">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Letter grades</h2><p><b>Before you run:</b> <code>return</code> ends the function. 95 passes the first gate, the function returns <code>"A"</code>, and the gate for 80 never runs.</p><p>This is the program with the Go further part: <code>count_grade</code> and the last two lines.</p><pre class="py"><code><span class="hs">def</span> <span class="hf">grade_of</span>(<span class="hv">score</span>):
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 5 of 13</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 26</span><span class="pill"><b>Friday section</b> Fri Oct 16</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session05_functions_that_return.html?v=15">Back to the session 5 page</a><a class="btn quiet" href="session05_extra_cards.html?v=15">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Letter grades</h2><p><b>Before you run:</b> <code>return</code> ends the function. 95 passes the first gate, the function returns <code>"A"</code>, and the gate for 80 never runs.</p><p>This is the program with the Go further part: <code>count_grade</code> and the last two lines.</p><pre class="py"><code><span class="hs">def</span> <span class="hf">grade_of</span>(<span class="hv">score</span>):
 <span class="ig">    </span><span class="hk">if</span> <span class="hv">score</span> &gt;= <span class="hd">90</span>:
 <span class="ig">    </span><span class="ig">    </span><span class="hk">return</span> <span class="hq">"A"</span>
 <span class="ig">    </span><span class="hk">if</span> <span class="hv">score</span> &gt;= <span class="hd">80</span>:
@@ -404,7 +407,7 @@ You won 3 of 5 rounds.</pre><p><b>Go further:</b></p><pre class="py"><code><span
 <span class="ig">    </span><span class="hk">return</span> <span class="hf">total_of</span>(<span class="hv">numbers</span>) / <span class="hf">len</span>(<span class="hv">numbers</span>)
 
 <span class="hf">print</span>(<span class="hf">average_of</span>([<span class="hd">12</span>, <span class="hd">20</span>, <span class="hd">28</span>, <span class="hd">20</span>]))
-</code></pre></section></div></main><nav class="pager"><a href="session05_functions_that_return.html?v=14">&larr; Session 5: Functions that return a value</a><a href="beginner_semester_hub.html?v=14">Course home</a><a href="session06_mondrian_rectangles.html?v=14">Session 6: A Mondrian made of rectangles &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 5, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
+</code></pre></section></div></main><nav class="pager"><a href="session05_functions_that_return.html?v=15">&larr; Session 5: Functions that return a value</a><a href="beginner_semester_hub.html?v=15">Course home</a><a href="session06_mondrian_rectangles.html?v=15">Session 6: A Mondrian made of rectangles &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 5, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');
