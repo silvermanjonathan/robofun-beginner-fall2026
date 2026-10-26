@@ -108,6 +108,15 @@ pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-we
    bold or italic, so every character keeps its width. */
 pre.py{background:#FFFFFF; color:#1F1F1F}
 pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
+/* Indent guides inside the hints, the lines VS Code draws down each step of
+   indentation, so a line shown on its own still shows how far in it goes. Each
+   four-space step is one box with a thick dark bar down its left edge, as tall as the
+   line, so the bars join up from line to line. A border rather than a shadow, so the
+   bars print. */
+.hints pre.py .ig,.ladder pre.py .ig{
+  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+  border-left:6px solid #595959;
+}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -297,7 +306,7 @@ a.btn.quiet:hover{background:#EFE9DA}
 <span class="hk">while</span> <span class="hv">running</span>:          pygame frame loop, QUIT sets running = 0
 <span class="hv">x</span> = <span class="hv">x</span> + <span class="hv">vx</span>              move once per frame
 <span class="hv">v</span> = -<span class="hv">v</span>                  bounce
-<span class="hv">level</span>[<span class="hv">row</span>][<span class="hv">col</span>]         row first, then column</code></pre><p class="note">Read the last line of an error first. One change per run.</p></section><section><h2>Error names met this term</h2><p>Write the real message next to each one, the first time you meet it.</p><table><tr><th>Name</th><th>What it usually means</th><th>Your message</th></tr><tr><td>NameError</td><td>A word Python does not know. Often a typo.</td><td class="fill"></td></tr><tr><td>SyntaxError</td><td>Punctuation. A bracket, a colon, one equals sign where two belong.</td><td class="fill"></td></tr><tr><td>IndentationError</td><td>A block is missing, or indented unevenly.</td><td class="fill"></td></tr><tr><td>TypeError</td><td>Two kinds that will not mix. Usually text and number.</td><td class="fill"></td></tr><tr><td>IndexError</td><td>A slot past the end. Length and last index are one apart.</td><td class="fill"></td></tr><tr><td>KeyError</td><td>A dictionary key that is not there. Gate with <code>in</code>.</td><td class="fill"></td></tr><tr><td>No error, wrong answer</td><td>A silent bug. Use a probe.</td><td class="fill"></td></tr></table></section></div></main><nav class="pager noprint"><a href="beginner_semester_hub.html?v=13">Course home</a><a href="session01_printing_names_input.html?v=13">Session 1 &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding beginner semester, Robofun Fall 2026.</p></div></footer>
+<span class="hv">level</span>[<span class="hv">row</span>][<span class="hv">col</span>]         row first, then column</code></pre><p class="note">Read the last line of an error first. One change per run.</p></section><section><h2>Error names met this term</h2><p>Write the real message next to each one, the first time you meet it.</p><table><tr><th>Name</th><th>What it usually means</th><th>Your message</th></tr><tr><td>NameError</td><td>A word Python does not know. Often a typo.</td><td class="fill"></td></tr><tr><td>SyntaxError</td><td>Punctuation. A bracket, a colon, one equals sign where two belong.</td><td class="fill"></td></tr><tr><td>IndentationError</td><td>A block is missing, or indented unevenly.</td><td class="fill"></td></tr><tr><td>TypeError</td><td>Two kinds that will not mix. Usually text and number.</td><td class="fill"></td></tr><tr><td>IndexError</td><td>A slot past the end. Length and last index are one apart.</td><td class="fill"></td></tr><tr><td>KeyError</td><td>A dictionary key that is not there. Gate with <code>in</code>.</td><td class="fill"></td></tr><tr><td>No error, wrong answer</td><td>A silent bug. Use a probe.</td><td class="fill"></td></tr></table></section></div></main><nav class="pager noprint"><a href="beginner_semester_hub.html?v=14">Course home</a><a href="session01_printing_names_input.html?v=14">Session 1 &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding beginner semester, Robofun Fall 2026.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

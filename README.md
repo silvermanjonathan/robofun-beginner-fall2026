@@ -131,6 +131,19 @@ that builds them. The session 5 build brief writes its three tools (`total_of`,
 `tallest_of`, `average_of`) line by line this way, and session 6 writes `tile` the
 same way.
 
+**Indent guides in the hints.** Inside every hint ladder (the per-line "What goes
+next?" ladders, the hints on predict questions, and the extra cards' clues), code
+shows the indent guides VS Code draws: a bar down each four-space step of
+indentation, so a single line shown on its own still shows how far in it goes. They
+are 6px wide in `#595959` (7:1 on white, checked in `render.py` with the code
+colors), not VS Code's 1px light grey, because thin light lines wash out on the
+projector. The bars run unbroken through blank lines inside a block, as they do in
+VS Code. `render.indent_guides` puts each step's four spaces in a
+`<span class="ig">` in every code block on the site, but only blocks inside the
+hints draw them; the rule is one CSS selector, so other blocks can have them later
+by widening it. The spaces stay spaces, so copied code keeps its indentation. The
+bars are borders, so they print.
+
 **Reveals hide the real output.** Each chunk shows the code, then the prediction
 question, then a button reading "Run it first, then check here". The button reveals
 the verified terminal output *and* the explanation together. Nothing about what the
@@ -146,7 +159,7 @@ hidden `.ans` container.
   dependency.
 - No `localStorage`, no `sessionStorage`, no `indexedDB`. These pages are embedded
   in Google Sites by full-page URL and storage is blocked inside the iframe.
-- Internal links carry a version pin: `?v=13`. Bump the pin on every page whose
+- Internal links carry a version pin: `?v=14`. Bump the pin on every page whose
   content changes, so the embed does not serve a cached copy.
 - Re-upload the hub whenever a page is added, renamed, or removed, or the
   navigation will have gaps.
@@ -231,7 +244,9 @@ the page. No output box on this site was typed from expectation.
 `validate.py` checks tag balance, reveal-button to answer-block parity, duplicate
 reveal ids, `aria-controls` and `aria-expanded` on every reveal button, escaped angle
 brackets inside `<pre>` blocks (with the color spans stripped first), that every
-`<pre><code>` block carries the `py` class and only `hl.py`'s color classes, that no
+`<pre><code>` block carries the `py` class and only `hl.py`'s color classes and the
+indent guide class, that every step of indentation in a code block sits in a guide
+span, that no
 output box carries color spans, absence of storage APIs, dash characters, banned
 filler phrases (including any mention of a summer camp or another course), dead
 internal links, the presence of a title and an h1 on every page, that every teacher
@@ -382,3 +397,10 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   verbs now sit on their own arrows, in boxes the arrow passes through, placed by a
   clearance search so none lands on a crossing. Prose pass over the session for plain
   wording. Version pin `?v=12`.
+- **2026-10-26, v14.** Indent guides in the hints, the way VS Code shows them but
+  6px wide and dark grey so they survive the projector (see "Indent guides in the
+  hints" above). No content changes: with the guide spans removed, every page is
+  byte for byte what it was apart from the CSS and the pin. Checked in Chromium at
+  1280px and 390px with every reveal open: every page is the same height as before,
+  and the same code blocks scroll sideways, none new. The worksheet has no hints, so
+  `session02_worksheet.pdf` was not re-rendered. Version pin `?v=14`.

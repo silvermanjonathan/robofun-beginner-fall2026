@@ -91,8 +91,17 @@ def check(name, text, all_names):
     # every colored code block is <pre class="py"><code>, and uses only hl.py's classes
     for block in re.findall(r'<pre class="py"><code>(.*?)</code></pre>', text, re.S):
         for cls in re.findall(r'<span class="([^"]+)">', block):
-            if cls not in CODE_CLASSES:
+            if cls not in CODE_CLASSES and cls != "ig":
                 fail.append("unknown code color class: " + cls)
+        # every step of indentation sits in an indent guide span, so the hints can
+        # draw VS Code's guides; a guide span holds four spaces or, on a blank line,
+        # nothing
+        for ln in block.split("\n"):
+            if ln.startswith("    "):
+                fail.append("indentation without indent guides: " + ln.strip()[:60])
+        for inner in re.findall(r'<span class="ig">(.*?)</span>', block):
+            if inner not in ("    ", ""):
+                fail.append("an indent guide span holds %r, not four spaces" % inner)
     for attrs in re.findall(r'<pre([^>]*)><code>', text):
         if 'class="py"' not in attrs:
             fail.append("a <pre><code> block without the py class: <pre" + attrs + ">")

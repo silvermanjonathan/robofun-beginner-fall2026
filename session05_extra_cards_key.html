@@ -108,6 +108,15 @@ pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-we
    bold or italic, so every character keeps its width. */
 pre.py{background:#FFFFFF; color:#1F1F1F}
 pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
+/* Indent guides inside the hints, the lines VS Code draws down each step of
+   indentation, so a line shown on its own still shows how far in it goes. Each
+   four-space step is one box with a thick dark bar down its left edge, as tall as the
+   line, so the bars join up from line to line. A border rather than a shadow, so the
+   bars print. */
+.hints pre.py .ig,.ladder pre.py .ig{
+  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+  border-left:6px solid #595959;
+}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -308,21 +317,21 @@ section.xcard h3{margin-top:20px}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 5 of 13</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 26</span><span class="pill"><b>Friday section</b> Fri Oct 16</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session05_functions_that_return.html?v=13">Back to the session 5 page</a><a class="btn quiet" href="session05_extra_cards.html?v=13">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Letter grades</h2><p><b>Before you run:</b> <code>return</code> ends the function. 95 passes the first gate, the function returns <code>"A"</code>, and the gate for 80 never runs.</p><p>This is the program with the Go further part: <code>count_grade</code> and the last two lines.</p><pre class="py"><code><span class="hs">def</span> <span class="hf">grade_of</span>(<span class="hv">score</span>):
-    <span class="hk">if</span> <span class="hv">score</span> &gt;= <span class="hd">90</span>:
-        <span class="hk">return</span> <span class="hq">"A"</span>
-    <span class="hk">if</span> <span class="hv">score</span> &gt;= <span class="hd">80</span>:
-        <span class="hk">return</span> <span class="hq">"B"</span>
-    <span class="hk">if</span> <span class="hv">score</span> &gt;= <span class="hd">70</span>:
-        <span class="hk">return</span> <span class="hq">"C"</span>
-    <span class="hk">return</span> <span class="hq">"not yet"</span>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 5 of 13</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 26</span><span class="pill"><b>Friday section</b> Fri Oct 16</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session05_functions_that_return.html?v=14">Back to the session 5 page</a><a class="btn quiet" href="session05_extra_cards.html?v=14">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Letter grades</h2><p><b>Before you run:</b> <code>return</code> ends the function. 95 passes the first gate, the function returns <code>"A"</code>, and the gate for 80 never runs.</p><p>This is the program with the Go further part: <code>count_grade</code> and the last two lines.</p><pre class="py"><code><span class="hs">def</span> <span class="hf">grade_of</span>(<span class="hv">score</span>):
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">score</span> &gt;= <span class="hd">90</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hk">return</span> <span class="hq">"A"</span>
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">score</span> &gt;= <span class="hd">80</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hk">return</span> <span class="hq">"B"</span>
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">score</span> &gt;= <span class="hd">70</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hk">return</span> <span class="hq">"C"</span>
+<span class="ig">    </span><span class="hk">return</span> <span class="hq">"not yet"</span>
 
 <span class="hs">def</span> <span class="hf">count_grade</span>(<span class="hv">scores</span>, <span class="hv">letter</span>):
-    <span class="hv">count</span> = <span class="hd">0</span>
-    <span class="hk">for</span> <span class="hv">s</span> <span class="hs">in</span> <span class="hv">scores</span>:
-        <span class="hk">if</span> <span class="hf">grade_of</span>(<span class="hv">s</span>) == <span class="hv">letter</span>:
-            <span class="hv">count</span> = <span class="hv">count</span> + <span class="hd">1</span>
-    <span class="hk">return</span> <span class="hv">count</span>
+<span class="ig">    </span><span class="hv">count</span> = <span class="hd">0</span>
+<span class="ig">    </span><span class="hk">for</span> <span class="hv">s</span> <span class="hs">in</span> <span class="hv">scores</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hk">if</span> <span class="hf">grade_of</span>(<span class="hv">s</span>) == <span class="hv">letter</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">count</span> = <span class="hv">count</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="hk">return</span> <span class="hv">count</span>
 
 <span class="hf">print</span>(<span class="hf">grade_of</span>(<span class="hd">95</span>))
 <span class="hf">print</span>(<span class="hf">grade_of</span>(<span class="hd">80</span>))
@@ -330,8 +339,8 @@ section.xcard h3{margin-top:20px}
 
 <span class="hv">scores</span> = [<span class="hd">72</span>, <span class="hd">95</span>, <span class="hd">88</span>, <span class="hd">97</span>, <span class="hd">67</span>]
 <span class="hk">for</span> <span class="hv">s</span> <span class="hs">in</span> <span class="hv">scores</span>:
-    <span class="hv">grade</span> = <span class="hf">grade_of</span>(<span class="hv">s</span>)
-    <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"</span><span class="hs">{</span><span class="hv">s</span><span class="hs">}</span><span class="hq"> gets </span><span class="hs">{</span><span class="hv">grade</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="ig">    </span><span class="hv">grade</span> = <span class="hf">grade_of</span>(<span class="hv">s</span>)
+<span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"</span><span class="hs">{</span><span class="hv">s</span><span class="hs">}</span><span class="hq"> gets </span><span class="hs">{</span><span class="hv">grade</span><span class="hs">}</span><span class="hq">"</span>)
 
 <span class="hf">print</span>(<span class="hf">count_grade</span>(<span class="hv">scores</span>, <span class="hq">"A"</span>))
 <span class="hf">print</span>(<span class="hf">count_grade</span>(<span class="hv">scores</span>, <span class="hq">"B"</span>))
@@ -347,27 +356,27 @@ not yet
 1</pre></section><section class="chunk xcard"><p class="chunk-no">Card B &middot; build it from the steps &middot; about 20 minutes</p><h2>Dice game</h2><p><b>Before you run:</b> the lowest is 2 and the highest is 12.</p><pre class="py"><code><span class="hk">import</span> <span class="hc">random</span>
 
 <span class="hs">def</span> <span class="hf">roll</span>():
-    <span class="hk">return</span> <span class="hc">random</span>.<span class="hf">choice</span>([<span class="hd">1</span>, <span class="hd">2</span>, <span class="hd">3</span>, <span class="hd">4</span>, <span class="hd">5</span>, <span class="hd">6</span>])
+<span class="ig">    </span><span class="hk">return</span> <span class="hc">random</span>.<span class="hf">choice</span>([<span class="hd">1</span>, <span class="hd">2</span>, <span class="hd">3</span>, <span class="hd">4</span>, <span class="hd">5</span>, <span class="hd">6</span>])
 
 <span class="hs">def</span> <span class="hf">roll_two</span>():
-    <span class="hk">return</span> <span class="hf">roll</span>() + <span class="hf">roll</span>()
+<span class="ig">    </span><span class="hk">return</span> <span class="hf">roll</span>() + <span class="hf">roll</span>()
 
 <span class="hs">def</span> <span class="hf">winner_of</span>(<span class="hv">you</span>, <span class="hv">computer</span>):
-    <span class="hk">if</span> <span class="hv">you</span> &gt; <span class="hv">computer</span>:
-        <span class="hk">return</span> <span class="hq">"you"</span>
-    <span class="hk">if</span> <span class="hv">computer</span> &gt; <span class="hv">you</span>:
-        <span class="hk">return</span> <span class="hq">"computer"</span>
-    <span class="hk">return</span> <span class="hq">"tie"</span>
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">you</span> &gt; <span class="hv">computer</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hk">return</span> <span class="hq">"you"</span>
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">computer</span> &gt; <span class="hv">you</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hk">return</span> <span class="hq">"computer"</span>
+<span class="ig">    </span><span class="hk">return</span> <span class="hq">"tie"</span>
 
 <span class="hv">your_wins</span> = <span class="hd">0</span>
 <span class="hk">for</span> <span class="hv">round_number</span> <span class="hs">in</span> <span class="hc">range</span>(<span class="hd">1</span>, <span class="hd">6</span>):
-    <span class="hf">input</span>(<span class="hq">"Press Enter to roll."</span>)
-    <span class="hv">you</span> = <span class="hf">roll_two</span>()
-    <span class="hv">computer</span> = <span class="hf">roll_two</span>()
-    <span class="hv">result</span> = <span class="hf">winner_of</span>(<span class="hv">you</span>, <span class="hv">computer</span>)
-    <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Round </span><span class="hs">{</span><span class="hv">round_number</span><span class="hs">}</span><span class="hq">: you rolled </span><span class="hs">{</span><span class="hv">you</span><span class="hs">}</span><span class="hq">, the computer rolled </span><span class="hs">{</span><span class="hv">computer</span><span class="hs">}</span><span class="hq">. Winner: </span><span class="hs">{</span><span class="hv">result</span><span class="hs">}</span><span class="hq">"</span>)
-    <span class="hk">if</span> <span class="hv">result</span> == <span class="hq">"you"</span>:
-        <span class="hv">your_wins</span> = <span class="hv">your_wins</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="hf">input</span>(<span class="hq">"Press Enter to roll."</span>)
+<span class="ig">    </span><span class="hv">you</span> = <span class="hf">roll_two</span>()
+<span class="ig">    </span><span class="hv">computer</span> = <span class="hf">roll_two</span>()
+<span class="ig">    </span><span class="hv">result</span> = <span class="hf">winner_of</span>(<span class="hv">you</span>, <span class="hv">computer</span>)
+<span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Round </span><span class="hs">{</span><span class="hv">round_number</span><span class="hs">}</span><span class="hq">: you rolled </span><span class="hs">{</span><span class="hv">you</span><span class="hs">}</span><span class="hq">, the computer rolled </span><span class="hs">{</span><span class="hv">computer</span><span class="hs">}</span><span class="hq">. Winner: </span><span class="hs">{</span><span class="hv">result</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">result</span> == <span class="hq">"you"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">your_wins</span> = <span class="hv">your_wins</span> + <span class="hd">1</span>
 
 <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"You won </span><span class="hs">{</span><span class="hv">your_wins</span><span class="hs">}</span><span class="hq"> of 5 rounds."</span>)
 </code></pre><p class="outlabel">One run</p><pre class="want">Press Enter to roll.
@@ -381,21 +390,21 @@ Round 4: you rolled 7, the computer rolled 5. Winner: you
 Press Enter to roll.
 Round 5: you rolled 6, the computer rolled 8. Winner: computer
 You won 3 of 5 rounds.</pre><p><b>Go further:</b></p><pre class="py"><code><span class="hs">def</span> <span class="hf">roll_many</span>(<span class="hv">count</span>):
-    <span class="hv">total</span> = <span class="hd">0</span>
-    <span class="hk">for</span> <span class="hv">i</span> <span class="hs">in</span> <span class="hc">range</span>(<span class="hv">count</span>):
-        <span class="hv">total</span> = <span class="hv">total</span> + <span class="hf">roll</span>()
-    <span class="hk">return</span> <span class="hv">total</span>
+<span class="ig">    </span><span class="hv">total</span> = <span class="hd">0</span>
+<span class="ig">    </span><span class="hk">for</span> <span class="hv">i</span> <span class="hs">in</span> <span class="hc">range</span>(<span class="hv">count</span>):
+<span class="ig">    </span><span class="ig">    </span><span class="hv">total</span> = <span class="hv">total</span> + <span class="hf">roll</span>()
+<span class="ig">    </span><span class="hk">return</span> <span class="hv">total</span>
 </code></pre><p>Ten rolls of 1 add up to 10 and ten rolls of 6 add up to 60, so <code>roll_many(10)</code> is always between 10 and 60.</p></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the average</h2><div class="tscroll"><table class="xkey"><tr><th>Run</th><th>What the student sees</th><th>The bug</th><th>The fix</th></tr><tr><td>1</td><td><code>NameError: name 'average_of' is not defined</code>, on line 1</td><td>The call is above the <code>def</code></td><td>Move the <code>print</code> line to the bottom of the file</td></tr><tr><td>2</td><td><code>3.0</code>, then <code>None</code></td><td><code>average_of</code> prints the value and has no <code>return</code></td><td>In <code>average_of</code>, change <code>print(...)</code> to <code>return ...</code></td></tr><tr><td>3</td><td><code>3.0</code></td><td><code>return total</code> is inside the loop, so <code>total_of</code> returns after the first number</td><td>Move <code>return total</code> left by 4 spaces, so it lines up with <code>for</code></td></tr><tr><td>4</td><td><code>20.0</code></td><td>None left</td><td></td></tr></table></div><p>The student may fix bugs 2 and 3 in either order. With the indent fixed first, run 2 prints <code>20.0</code>, then <code>None</code>.</p><p>The fixed program:</p><pre class="py"><code><span class="hs">def</span> <span class="hf">total_of</span>(<span class="hv">numbers</span>):
-    <span class="hv">total</span> = <span class="hd">0</span>
-    <span class="hk">for</span> <span class="hv">n</span> <span class="hs">in</span> <span class="hv">numbers</span>:
-        <span class="hv">total</span> = <span class="hv">total</span> + <span class="hv">n</span>
-    <span class="hk">return</span> <span class="hv">total</span>
+<span class="ig">    </span><span class="hv">total</span> = <span class="hd">0</span>
+<span class="ig">    </span><span class="hk">for</span> <span class="hv">n</span> <span class="hs">in</span> <span class="hv">numbers</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">total</span> = <span class="hv">total</span> + <span class="hv">n</span>
+<span class="ig">    </span><span class="hk">return</span> <span class="hv">total</span>
 
 <span class="hs">def</span> <span class="hf">average_of</span>(<span class="hv">numbers</span>):
-    <span class="hk">return</span> <span class="hf">total_of</span>(<span class="hv">numbers</span>) / <span class="hf">len</span>(<span class="hv">numbers</span>)
+<span class="ig">    </span><span class="hk">return</span> <span class="hf">total_of</span>(<span class="hv">numbers</span>) / <span class="hf">len</span>(<span class="hv">numbers</span>)
 
 <span class="hf">print</span>(<span class="hf">average_of</span>([<span class="hd">12</span>, <span class="hd">20</span>, <span class="hd">28</span>, <span class="hd">20</span>]))
-</code></pre></section></div></main><nav class="pager"><a href="session05_functions_that_return.html?v=13">&larr; Session 5: Functions that return a value</a><a href="beginner_semester_hub.html?v=13">Course home</a><a href="session06_mondrian_rectangles.html?v=13">Session 6: A Mondrian made of rectangles &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 5, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
+</code></pre></section></div></main><nav class="pager"><a href="session05_functions_that_return.html?v=14">&larr; Session 5: Functions that return a value</a><a href="beginner_semester_hub.html?v=14">Course home</a><a href="session06_mondrian_rectangles.html?v=14">Session 6: A Mondrian made of rectangles &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 5, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

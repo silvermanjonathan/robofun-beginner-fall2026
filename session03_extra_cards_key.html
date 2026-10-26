@@ -108,6 +108,15 @@ pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-we
    bold or italic, so every character keeps its width. */
 pre.py{background:#FFFFFF; color:#1F1F1F}
 pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
+/* Indent guides inside the hints, the lines VS Code draws down each step of
+   indentation, so a line shown on its own still shows how far in it goes. Each
+   four-space step is one box with a thick dark bar down its left edge, as tall as the
+   line, so the bars join up from line to line. A border rather than a shadow, so the
+   bars print. */
+.hints pre.py .ig,.ladder pre.py .ig{
+  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+  border-left:6px solid #595959;
+}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -308,17 +317,17 @@ section.xcard h3{margin-top:20px}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 3 of 13</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 5</span><span class="pill"><b>Friday section</b> Fri Oct 2</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session03_loops_counters_lists.html?v=13">Back to the session 3 page</a><a class="btn quiet" href="session03_extra_cards.html?v=13">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Times table</h2><p><b>Before you run:</b> <code>range</code> stops before its second number, so <code>range(1, 13)</code> gives 1 to 12.</p><p>This is the program with both Go further parts.</p><pre class="py"><code><span class="hv">n</span> = <span class="hf">input</span>(<span class="hq">"Which times table? "</span>)
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 3 of 13</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Oct 5</span><span class="pill"><b>Friday section</b> Fri Oct 2</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session03_loops_counters_lists.html?v=14">Back to the session 3 page</a><a class="btn quiet" href="session03_extra_cards.html?v=14">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 15 minutes</p><h2>Times table</h2><p><b>Before you run:</b> <code>range</code> stops before its second number, so <code>range(1, 13)</code> gives 1 to 12.</p><p>This is the program with both Go further parts.</p><pre class="py"><code><span class="hv">n</span> = <span class="hf">input</span>(<span class="hq">"Which times table? "</span>)
 <span class="hv">n</span> = <span class="hc">int</span>(<span class="hv">n</span>)
 
 <span class="hv">total</span> = <span class="hd">0</span>
 <span class="hv">over_50</span> = <span class="hd">0</span>
 <span class="hk">for</span> <span class="hv">i</span> <span class="hs">in</span> <span class="hc">range</span>(<span class="hd">1</span>, <span class="hd">13</span>):
-    <span class="hv">answer</span> = <span class="hv">n</span> * <span class="hv">i</span>
-    <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"</span><span class="hs">{</span><span class="hv">n</span><span class="hs">}</span><span class="hq"> x </span><span class="hs">{</span><span class="hv">i</span><span class="hs">}</span><span class="hq"> = </span><span class="hs">{</span><span class="hv">answer</span><span class="hs">}</span><span class="hq">"</span>)
-    <span class="hv">total</span> = <span class="hv">total</span> + <span class="hv">answer</span>
-    <span class="hk">if</span> <span class="hv">answer</span> &gt; <span class="hd">50</span>:
-        <span class="hv">over_50</span> = <span class="hv">over_50</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="hv">answer</span> = <span class="hv">n</span> * <span class="hv">i</span>
+<span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"</span><span class="hs">{</span><span class="hv">n</span><span class="hs">}</span><span class="hq"> x </span><span class="hs">{</span><span class="hv">i</span><span class="hs">}</span><span class="hq"> = </span><span class="hs">{</span><span class="hv">answer</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="ig">    </span><span class="hv">total</span> = <span class="hv">total</span> + <span class="hv">answer</span>
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">answer</span> &gt; <span class="hd">50</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">over_50</span> = <span class="hv">over_50</span> + <span class="hd">1</span>
 
 <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"The twelve answers add up to </span><span class="hs">{</span><span class="hv">total</span><span class="hs">}</span><span class="hq">."</span>)
 <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"</span><span class="hs">{</span><span class="hv">over_50</span><span class="hs">}</span><span class="hq"> of the answers are over 50."</span>)
@@ -330,21 +339,21 @@ section.xcard h3{margin-top:20px}
 <span class="hv">tails</span> = <span class="hd">0</span>
 
 <span class="hk">for</span> <span class="hv">flip</span> <span class="hs">in</span> <span class="hc">range</span>(<span class="hd">1</span>, <span class="hd">21</span>):
-    <span class="hv">result</span> = <span class="hc">random</span>.<span class="hf">choice</span>(<span class="hv">sides</span>)
-    <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Flip </span><span class="hs">{</span><span class="hv">flip</span><span class="hs">}</span><span class="hq">: </span><span class="hs">{</span><span class="hv">result</span><span class="hs">}</span><span class="hq">"</span>)
-    <span class="hk">if</span> <span class="hv">result</span> == <span class="hq">"heads"</span>:
-        <span class="hv">heads</span> = <span class="hv">heads</span> + <span class="hd">1</span>
-    <span class="hk">else</span>:
-        <span class="hv">tails</span> = <span class="hv">tails</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="hv">result</span> = <span class="hc">random</span>.<span class="hf">choice</span>(<span class="hv">sides</span>)
+<span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Flip </span><span class="hs">{</span><span class="hv">flip</span><span class="hs">}</span><span class="hq">: </span><span class="hs">{</span><span class="hv">result</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">result</span> == <span class="hq">"heads"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">heads</span> = <span class="hv">heads</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="hk">else</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">tails</span> = <span class="hv">tails</span> + <span class="hd">1</span>
 
 <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Heads: </span><span class="hs">{</span><span class="hv">heads</span><span class="hs">}</span><span class="hq">"</span>)
 <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Tails: </span><span class="hs">{</span><span class="hv">tails</span><span class="hs">}</span><span class="hq">"</span>)
 <span class="hk">if</span> <span class="hv">heads</span> &gt; <span class="hv">tails</span>:
-    <span class="hf">print</span>(<span class="hq">"Heads wins."</span>)
+<span class="ig">    </span><span class="hf">print</span>(<span class="hq">"Heads wins."</span>)
 <span class="hk">elif</span> <span class="hv">heads</span> == <span class="hv">tails</span>:
-    <span class="hf">print</span>(<span class="hq">"A draw."</span>)
+<span class="ig">    </span><span class="hf">print</span>(<span class="hq">"A draw."</span>)
 <span class="hk">else</span>:
-    <span class="hf">print</span>(<span class="hq">"Tails wins."</span>)
+<span class="ig">    </span><span class="hf">print</span>(<span class="hq">"Tails wins."</span>)
 </code></pre><p class="outlabel">The last three lines of one run</p><pre class="want">Heads: 12
 Tails: 8
 Heads wins.</pre><p><b>Go further:</b> this is the program with the longest run of heads. <code>run</code> is a counter that is reset on purpose, and <code>longest</code> is best so far from chunk 5. For the seeded run on the card it prints 4.</p><pre class="py"><code><span class="hk">import</span> <span class="hc">random</span>
@@ -356,38 +365,38 @@ Heads wins.</pre><p><b>Go further:</b> this is the program with the longest run 
 <span class="hv">longest</span> = <span class="hd">0</span>
 
 <span class="hk">for</span> <span class="hv">flip</span> <span class="hs">in</span> <span class="hc">range</span>(<span class="hd">1</span>, <span class="hd">21</span>):
-    <span class="hv">result</span> = <span class="hc">random</span>.<span class="hf">choice</span>(<span class="hv">sides</span>)
-    <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Flip </span><span class="hs">{</span><span class="hv">flip</span><span class="hs">}</span><span class="hq">: </span><span class="hs">{</span><span class="hv">result</span><span class="hs">}</span><span class="hq">"</span>)
-    <span class="hk">if</span> <span class="hv">result</span> == <span class="hq">"heads"</span>:
-        <span class="hv">heads</span> = <span class="hv">heads</span> + <span class="hd">1</span>
-        <span class="hv">run</span> = <span class="hv">run</span> + <span class="hd">1</span>
-    <span class="hk">else</span>:
-        <span class="hv">tails</span> = <span class="hv">tails</span> + <span class="hd">1</span>
-        <span class="hv">run</span> = <span class="hd">0</span>
-    <span class="hk">if</span> <span class="hv">run</span> &gt; <span class="hv">longest</span>:
-        <span class="hv">longest</span> = <span class="hv">run</span>
+<span class="ig">    </span><span class="hv">result</span> = <span class="hc">random</span>.<span class="hf">choice</span>(<span class="hv">sides</span>)
+<span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Flip </span><span class="hs">{</span><span class="hv">flip</span><span class="hs">}</span><span class="hq">: </span><span class="hs">{</span><span class="hv">result</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">result</span> == <span class="hq">"heads"</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">heads</span> = <span class="hv">heads</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hv">run</span> = <span class="hv">run</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="hk">else</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">tails</span> = <span class="hv">tails</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hv">run</span> = <span class="hd">0</span>
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">run</span> &gt; <span class="hv">longest</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">longest</span> = <span class="hv">run</span>
 
 <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Heads: </span><span class="hs">{</span><span class="hv">heads</span><span class="hs">}</span><span class="hq">"</span>)
 <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Tails: </span><span class="hs">{</span><span class="hv">tails</span><span class="hs">}</span><span class="hq">"</span>)
 <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Longest run of heads: </span><span class="hs">{</span><span class="hv">longest</span><span class="hs">}</span><span class="hq">"</span>)
 <span class="hk">if</span> <span class="hv">heads</span> &gt; <span class="hv">tails</span>:
-    <span class="hf">print</span>(<span class="hq">"Heads wins."</span>)
+<span class="ig">    </span><span class="hf">print</span>(<span class="hq">"Heads wins."</span>)
 <span class="hk">elif</span> <span class="hv">heads</span> == <span class="hv">tails</span>:
-    <span class="hf">print</span>(<span class="hq">"A draw."</span>)
+<span class="ig">    </span><span class="hf">print</span>(<span class="hq">"A draw."</span>)
 <span class="hk">else</span>:
-    <span class="hf">print</span>(<span class="hq">"Tails wins."</span>)
+<span class="ig">    </span><span class="hf">print</span>(<span class="hq">"Tails wins."</span>)
 </code></pre><p>If the student puts the <code>run = 0</code> line above the loop only, and never resets it, <code>longest</code> comes out equal to the heads count. Ask what should happen to the run when the coin lands tails.</p></section><section class="hinge xcard"><p class="chunk-no">Card C &middot; bug hunt &middot; about 15 minutes</p><h2>Bug hunt: the score report</h2><div class="tscroll"><table class="xkey"><tr><th>Run</th><th>What the student sees</th><th>The bug</th><th>The fix</th></tr><tr><td>1</td><td><code>over 80: 0</code>, <code>best: 100</code>, then <code>IndexError: list index out of range</code>, on line 11</td><td>Five items have indexes 0 to 4</td><td><code>scores[4]</code></td></tr><tr><td>2</td><td><code>over 80: 0</code></td><td><code>count = 0</code> is inside the loop, so it runs on every pass</td><td>Move <code>count = 0</code> above the <code>for</code> line</td></tr><tr><td>3</td><td><code>best: 100</code></td><td>No score is greater than 100, so <code>best</code> never changes</td><td><code>best = 0</code></td></tr><tr><td>4</td><td><code>over 80: 3</code>, <code>best: 97</code>, <code>last score: 67</code></td><td>None left</td><td></td></tr></table></div><p>The student may fix bugs 2 and 3 in either order.</p><p>The fixed program:</p><pre class="py"><code><span class="hv">scores</span> = [<span class="hd">72</span>, <span class="hd">95</span>, <span class="hd">88</span>, <span class="hd">97</span>, <span class="hd">67</span>]
 <span class="hv">best</span> = <span class="hd">0</span>
 <span class="hv">count</span> = <span class="hd">0</span>
 <span class="hk">for</span> <span class="hv">s</span> <span class="hs">in</span> <span class="hv">scores</span>:
-    <span class="hk">if</span> <span class="hv">s</span> &gt; <span class="hd">80</span>:
-        <span class="hv">count</span> = <span class="hv">count</span> + <span class="hd">1</span>
-    <span class="hk">if</span> <span class="hv">s</span> &gt; <span class="hv">best</span>:
-        <span class="hv">best</span> = <span class="hv">s</span>
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">s</span> &gt; <span class="hd">80</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">count</span> = <span class="hv">count</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">s</span> &gt; <span class="hv">best</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">best</span> = <span class="hv">s</span>
 <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"over 80: </span><span class="hs">{</span><span class="hv">count</span><span class="hs">}</span><span class="hq">"</span>)
 <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"best: </span><span class="hs">{</span><span class="hv">best</span><span class="hs">}</span><span class="hq">"</span>)
 <span class="hf">print</span>(<span class="hs">f</span><span class="hq">"last score: </span><span class="hs">{</span><span class="hv">scores</span>[<span class="hd">4</span>]<span class="hs">}</span><span class="hq">"</span>)
-</code></pre><p><b>Go further:</b> <code>lowest = 100</code> above the loop, then <code>if s &lt; lowest:</code> with <code>lowest = s</code> in its block. It prints 67, the same as <code>min(scores)</code>. The starting value for <code>lowest</code> has to be higher than every score. For <code>best</code> it has to be lower than every score.</p></section></div></main><nav class="pager"><a href="session03_loops_counters_lists.html?v=13">&larr; Session 3: Loops, counters, and lists</a><a href="beginner_semester_hub.html?v=13">Course home</a><a href="session04_rock_paper_scissors.html?v=13">Session 4: Rock paper scissors &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 3, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
+</code></pre><p><b>Go further:</b> <code>lowest = 100</code> above the loop, then <code>if s &lt; lowest:</code> with <code>lowest = s</code> in its block. It prints 67, the same as <code>min(scores)</code>. The starting value for <code>lowest</code> has to be higher than every score. For <code>best</code> it has to be lower than every score.</p></section></div></main><nav class="pager"><a href="session03_loops_counters_lists.html?v=14">&larr; Session 3: Loops, counters, and lists</a><a href="beginner_semester_hub.html?v=14">Course home</a><a href="session04_rock_paper_scissors.html?v=14">Session 4: Rock paper scissors &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 3, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');

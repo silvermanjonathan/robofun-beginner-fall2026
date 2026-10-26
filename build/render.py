@@ -23,7 +23,7 @@ SESSIONS = sorted(SESSIONS_A + [SESSION06] + SESSIONS_B + SESSIONS_C, key=lambda
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "13"
+VERSION = "14"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -66,7 +66,13 @@ def contrast(fg, bg):
     return (hi + 0.05) / (lo + 0.05)
 
 
-for _cls, _hex in list(CODE_COLORS.items()) + [("ink", CODE_INK)]:
+# VS Code draws a thin light-grey line down each step of indentation. Inside the hints
+# the same lines are drawn 6px wide and dark, because a 1px light-grey line vanishes on
+# a projector with the lights on. The grey clears 7:1 on white, like the code colors.
+GUIDE = "#595959"
+GUIDE_WIDTH = "6px"
+
+for _cls, _hex in list(CODE_COLORS.items()) + [("ink", CODE_INK), ("guide", GUIDE)]:
     _ratio = contrast(_hex, CODE_BG)
     assert _ratio >= 7.0, "code color %s %s is only %.2f:1 on %s" % (_cls, _hex, _ratio, CODE_BG)
 
@@ -332,6 +338,15 @@ pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-we
    bold or italic, so every character keeps its width. */
 pre.py{background:CODE_BG_HEX; color:CODE_INK_HEX}
 CODE_COLOR_RULES
+/* Indent guides inside the hints, the lines VS Code draws down each step of
+   indentation, so a line shown on its own still shows how far in it goes. Each
+   four-space step is one box with a thick dark bar down its left edge, as tall as the
+   line, so the bars join up from line to line. A border rather than a shadow, so the
+   bars print. */
+.hints pre.py .ig,.ladder pre.py .ig{
+  display:inline-block; width:4ch; height:1.6em; vertical-align:top;
+  border-left:GUIDE_WIDTH solid GUIDE_HEX;
+}
 pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
 pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
 pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
@@ -496,6 +511,7 @@ a.btn.quiet:hover{background:#EFE9DA}
 """
 
 CSS = (CSS.replace("CODE_BG_HEX", CODE_BG).replace("CODE_INK_HEX", CODE_INK)
+       .replace("GUIDE_HEX", GUIDE).replace("GUIDE_WIDTH", GUIDE_WIDTH)
        .replace("CODE_COLOR_RULES", " ".join("pre.py .%s{color:%s}" % kv for kv in CODE_COLORS.items())))
 
 JS = """
@@ -541,7 +557,32 @@ def code_block(code, context=None):
     is colored by what it is in the whole program. Output boxes (out_block) and the
     expected/got sheets stay plain: they are not code.
     """
-    return '<pre class="py"><code>' + highlight(code, context) + '</code></pre>'
+    return '<pre class="py"><code>' + indent_guides(highlight(code, context)) + '</code></pre>'
+
+
+def indent_guides(colored):
+    """Put each four-space step of indentation in its own guide span.
+
+    colored is code that hl.py has colored, one line of code per line of text. Each
+    step's four spaces go inside <span class="ig">, which the CSS draws, inside the
+    hints, as a thick bar down its left edge: the indent guides VS Code shows. A blank
+    line inside an indented block gets empty guide spans, as many steps as the lines
+    above and below it share, so the bars run through it unbroken the way they do in
+    VS Code. The spaces stay spaces and nothing is added to the text, so code copied
+    from a page pastes with its indentation as it was.
+    """
+    lines = colored.split("\n")
+    steps = [(len(ln) - len(ln.lstrip(" "))) // 4 if ln.strip() else None for ln in lines]
+    out = []
+    for i, ln in enumerate(lines):
+        n = steps[i]
+        if n is None:
+            above = next((s for s in reversed(steps[:i]) if s is not None), 0)
+            below = next((s for s in steps[i + 1:] if s is not None), 0)
+            out.append('<span class="ig"></span>' * min(above, below) + ln)
+        else:
+            out.append('<span class="ig">    </span>' * n + ln[4 * n:])
+    return "\n".join(out)
 
 
 def strip_block(text, width=24):
