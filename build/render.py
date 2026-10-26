@@ -12,16 +12,18 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from standards import STANDARDS, RESOLVED_ON, CONNECTOR
 from hl import highlight
 from sessions_a import SESSIONS_A
+from session06 import SESSION06
 from sessions_b import SESSIONS_B
 from sessions_c import SESSIONS_C
 
-SESSIONS = SESSIONS_A + SESSIONS_B + SESSIONS_C
+# session 6, the Mondrian, was added in October 2026 and lives in its own file
+SESSIONS = sorted(SESSIONS_A + [SESSION06] + SESSIONS_B + SESSIONS_C, key=lambda s: s["num"])
 # Paths are relative to this file, so the repo runs from wherever it is cloned.
 # The pages live in the repo root, one level up from build/.
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "12"
+VERSION = "13"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -191,7 +193,7 @@ def verify(chunk, tag):
     if mode is None:
         return None, None
     num = tag.split("-")[0].replace("s", "")
-    if num == "13":
+    if num == "14":
         fname = "Jonathan_friday_bonus.py"
     else:
         fname = "Jonathan_session%02d.py" % int(num)
@@ -560,21 +562,30 @@ def out_block(text, label="What actually happens"):
             + html.escape(text) + '</pre>')
 
 
-def hint_buttons(idx, hints):
-    """One 'Show hint' button per hint, each with its own hidden block."""
+def nest_hints(idx, hints, inner, prefix="-hint", word="Hint"):
+    """Wrap inner (a button and its block) in hints that open one inside the next.
+
+    Hint 2's button sits inside hint 1's box, hint 3's inside hint 2's, and inner,
+    which is usually the button that shows the answer, sits inside the last hint. So
+    the hints come out in order, and the answer cannot be opened before the hints.
+    With one hint, its button reads "Show a hint" rather than "Hint 1".
+    """
     if not hints:
-        return ""
+        return inner
     if isinstance(hints, str):
         hints = [hints]
-    out = []
-    for k, h in enumerate(hints):
-        hid = idx + "-hint" + str(k + 1)
-        label = "Show a hint" if len(hints) == 1 else "Show hint " + str(k + 1)
-        out.append('<button class="rev hint" data-target="' + hid + '" aria-controls="' + hid + '" '
-                   'aria-expanded="false" data-show="' + label + '" '
-                   'data-hide="Hide the hint">' + label + '</button>'
-                   '<div class="ans" id="' + hid + '"><p>' + h + '</p></div>')
-    return '<div class="hints">' + "".join(out) + '</div>'
+    for n in range(len(hints), 0, -1):
+        hid = idx + prefix + str(n)
+        low = word.lower()
+        if len(hints) == 1:
+            show, hide = "Show a " + low, "Hide the " + low
+        else:
+            show, hide = word + " " + str(n), "Hide " + low + " " + str(n)
+        inner = ('<button class="rev hint" data-target="' + hid + '" aria-controls="' + hid + '" '
+                 'aria-expanded="false" data-show="' + show + '" data-hide="' + hide + '">'
+                 + show + '</button>'
+                 '<div class="ans" id="' + hid + '">' + hint_html(hints[n - 1]) + inner + '</div>')
+    return '<div class="hints">' + inner + '</div>'
 
 
 def hint_html(h):
@@ -604,19 +615,9 @@ def ladder(idx, question, hints, answer_html, label="What goes next?",
     that shows the answer sits inside the last hint, so the hints come out in order and
     nothing below the question is on screen until it is asked for.
     """
-    aid = idx + "-lines"
-    inner = ('<button class="rev" data-target="' + aid + '" aria-controls="' + aid + '" '
-             'aria-expanded="false" data-show="' + show + '" data-hide="' + hide + '">'
-             + show + '</button>'
-             '<div class="ans" id="' + aid + '">' + answer_html + '</div>')
-    for n in range(len(hints), 0, -1):
-        hid = idx + "-h" + str(n)
-        inner = ('<button class="rev hint" data-target="' + hid + '" aria-controls="' + hid + '" '
-                 'aria-expanded="false" data-show="Hint ' + str(n) + '" data-hide="Hide hint '
-                 + str(n) + '">Hint ' + str(n) + '</button>'
-                 '<div class="ans" id="' + hid + '">' + hint_html(hints[n - 1]) + inner + '</div>')
+    inner = toggle(idx + "-lines", show, hide, answer_html)
     return ('<div class="predict ladder"><p class="q"><b>' + label + '</b> ' + question + '</p>'
-            + inner + '</div>')
+            + nest_hints(idx, hints, inner, prefix="-h") + '</div>')
 
 
 def check_step(step, code, tag):
@@ -641,16 +642,38 @@ def check_step(step, code, tag):
         assert lines[n - 1] in wanted, "%s: %s names line %d, which is %r" % (tag, label, n, lines[n - 1])
 
 
+def line_ladders(tag, program, steps, start=None, whole="Show the whole program"):
+    """One question per new line of a program, each behind a ladder of hints.
+
+    The program so far sits behind a button, then each step is a What goes next?
+    ladder whose last button shows the line, then the whole program sits behind a
+    button. Every step's line is checked against the program at the line its label
+    names, so a label cannot drift from the code.
+    """
+    out = []
+    if start:
+        out.append('<div class="sofar">' + toggle(tag + "-start", "Show the program so far",
+                   "Hide the program so far", code_block(start)) + '</div>')
+    for j, st in enumerate(steps):
+        check_step(st, program, tag)
+        sid = tag + "-l" + str(j + 1)
+        ans = code_block(st["line"], context=program)
+        if st.get("note"):
+            ans += '<p>' + st["note"] + '</p>'
+        low = st["label"][0].lower() + st["label"][1:]
+        out.append(ladder(sid, st["q"], st["hints"], ans,
+                          label=st["label"] + ". What goes next?",
+                          show="Show " + low, hide="Hide " + low))
+    out.append('<div class="whole">' + toggle(tag + "-whole", whole,
+               whole.replace("Show", "Hide", 1), code_block(program)) + '</div>')
+    return "".join(out)
+
+
 def reveal(idx, question, answer, qlabel="Predict", extra="",
            show="Show the answer", hide="Hide the answer", hints=None):
-    return (
-        '<div class="predict"><p class="q">' + qlabel + ': ' + question + '</p>'
-        + hint_buttons(idx, hints) +
-        '<button class="rev" data-target="' + idx + '" aria-controls="' + idx + '" '
-        'aria-expanded="false" data-show="' + show + '" '
-        'data-hide="' + hide + '">' + show + '</button>'
-        '<div class="ans" id="' + idx + '">' + extra + '<p>' + answer + '</p></div></div>'
-    )
+    inner = toggle(idx, show, hide, extra + '<p>' + answer + '</p>')
+    return ('<div class="predict"><p class="q">' + qlabel + ': ' + question + '</p>'
+            + nest_hints(idx, hints, inner) + '</div>')
 
 
 def standards_table(codes):
@@ -669,7 +692,7 @@ def standards_table(codes):
 def render_session(s, prev_s, next_s):
     n = s["num"]
     bonus = s.get("bonus", False)
-    label = "Bonus session" if bonus else "Session " + str(n) + " of 12"
+    label = "Bonus session" if bonus else "Session " + str(n) + " of 13"
 
     b = ['<header class="top"><div class="wrap">']
     b.append('<p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; ' + label + '</p>')
@@ -738,24 +761,9 @@ def render_session(s, prev_s, next_s):
                      'only shows what was drawn before it started. Then run the whole file.') + '</p>')
         steps = ch.get("steps")
         if steps:
-            # one question per new line: the program so far behind a button, then a
-            # hint ladder for each line, then the whole program behind a button
             start = ch["start"] if "start" in ch else s["chunks"][i - 1]["code"]
-            if start:
-                b.append('<div class="sofar">' + toggle(tag + "-start", "Show the program so far",
-                         "Hide the program so far", code_block(start)) + '</div>')
-            for j, st in enumerate(steps):
-                check_step(st, ch["code"], tag)
-                sid = tag + "-l" + str(j + 1)
-                ans = code_block(st["line"], context=ch["code"])
-                if st.get("note"):
-                    ans += '<p>' + st["note"] + '</p>'
-                low = st["label"][0].lower() + st["label"][1:]
-                b.append(ladder(sid, st["q"], st["hints"], ans,
-                                label=st["label"] + ". What goes next?",
-                                show="Show " + low, hide="Hide " + low))
-            b.append('<div class="whole">' + toggle(tag + "-whole", "Show the whole program",
-                     "Hide the whole program", code_block(ch["code"])) + '</div>')
+            b.append(line_ladders(tag, ch["code"], steps, start))
+            b.extend(shown[1:])  # the note saying where the lines go, when there is one
         elif nx:
             b.append(ladder(tag + "-next", nx["q"], nx["hints"],
                             "".join(shown) + '<p>' + nx["a"] + '</p>'))
@@ -821,6 +829,20 @@ def render_session(s, prev_s, next_s):
     for st in br["steps"]:
         b.append('<li>' + st + '</li>')
     b.append('</ol>')
+    for j, tool in enumerate(br.get("tools", [])):
+        # a function written one line at a time, each line behind a hint ladder, and
+        # a real run of the finished function at the end
+        tag = "s%d-tool%d" % (n, j + 1)
+        out, mode = verify(tool, tag)
+        b.append('<h3>' + html.escape(tool["title"]) + '</h3>')
+        if tool.get("intro"):
+            b.append('<p>' + tool["intro"] + '</p>')
+        b.append(line_ladders(tag, tool["code"], tool["steps"], tool.get("start"),
+                              whole="Show the whole function and its test"))
+        if out:
+            b.append(reveal(tag, tool["predict"], tool["reveal"], "Predict",
+                            out_block(out, "What it actually prints"),
+                            "Run it first, then check here", "Hide", tool.get("hint")))
     for j, card in enumerate(br.get("cards", [])):
         tag = "s%d-card%d" % (n, j + 1)
         out, mode = verify(card, tag)
@@ -991,7 +1013,7 @@ def render_session(s, prev_s, next_s):
 
     b.append('<footer><div class="wrap">'
              '<p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. '
-             '110 West End Avenue. The Monday and Friday sections cover the same twelve sessions.</p>'
+             '110 West End Avenue. The Monday and Friday sections cover the same thirteen sessions.</p>'
              '<p>Mapped to NY Next Generation Learning Standards and the Standards for '
              'Mathematical Practice. Codes resolved through the ' + CONNECTOR + ' on '
              + RESOLVED_ON + '. <a href="' + link("standards_map") + '">Full standards map</a> '
@@ -1008,12 +1030,12 @@ def render_hub():
     b = ['<header class="top"><div class="wrap">']
     b.append('<p class="eyebrow">Robofun &middot; Fall 2026 &middot; 110 West End Avenue</p>')
     b.append('<h1>Beyond Vibe Coding: Python, beginner</h1>')
-    b.append('<p class="sub">Twelve sessions of ninety minutes. You read the code, '
+    b.append('<p class="sub">Thirteen sessions of ninety minutes. You read the code, '
              'trace it out loud, and then run it. Monday and Friday are separate classes '
-             'working through the same twelve sessions.</p>')
+             'working through the same thirteen sessions.</p>')
     b.append('<div class="dates">'
-             '<span class="pill"><b>Monday</b> Sep 14 to Dec 14, 12 sessions</span>'
-             '<span class="pill"><b>Friday</b> Sep 18 to Dec 18, 12 sessions plus 1 bonus</span>'
+             '<span class="pill"><b>Monday</b> Sep 14 to Dec 14, 13 sessions, last date to be decided</span>'
+             '<span class="pill"><b>Friday</b> Sep 18 to Dec 18, 13 sessions</span>'
              '<span class="pill"><b>Grades</b> 5 to 8</span>'
              '<span class="pill"><b>Demo day</b> the last session of each section</span>'
              '</div></div></header>')
@@ -1037,7 +1059,7 @@ def render_hub():
              'all real places to stop. One stamp goes on the semester card.</li>'
              '</ol></section>')
 
-    b.append('<section><h2>The twelve sessions</h2><ul class="sessionlist">')
+    b.append('<section><h2>The thirteen sessions</h2><ul class="sessionlist">')
     for s in SESSIONS:
         cls = ' class="bonus"' if s.get("bonus") else ''
         num = "B" if s.get("bonus") else str(s["num"])
@@ -1076,7 +1098,7 @@ def render_hub():
              'Fri Oct 2 falls in the intermediate days of Sukkot, which some Upper West Side '
              'programs skip. Check the published closure list and adjust.</div>')
     b.append('<div class="grid2">')
-    b.append('<div class="card"><h3>Monday, 12 sessions</h3><table>'
+    b.append('<div class="card"><h3>Monday, 13 sessions</h3><table>'
              '<tr><th>Date</th><th>Session</th></tr>')
     for s in SESSIONS:
         if s.get("bonus"):
@@ -1084,10 +1106,10 @@ def render_hub():
         b.append('<tr><td>' + s["mon"] + '</td><td>' + str(s["num"]) + '. '
                  + html.escape(s["title"]) + '</td></tr>')
     b.append('</table></div>')
-    b.append('<div class="card"><h3>Friday, 12 sessions plus a bonus</h3><table>'
+    b.append('<div class="card"><h3>Friday, 13 sessions</h3><table>'
              '<tr><th>Date</th><th>Session</th></tr>')
     fri = sorted(SESSIONS, key=lambda s: ("Dec" in s["fri"], s["fri"]))
-    order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 12]
+    order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
     by_num = {s["num"]: s for s in SESSIONS}
     for num in order:
         s = by_num[num]
@@ -1095,14 +1117,16 @@ def render_hub():
         b.append('<tr><td>' + s["fri"] + '</td><td>' + tag + html.escape(s["title"])
                  + '</td></tr>')
     b.append('</table></div></div>')
-    b.append('<p class="note">Monday has twelve dates, so the required course is twelve sessions, '
-             'and Friday spends its extra date on a bonus that nothing later depends on. '
-             'If a parent compares the two classes, the required content is identical.</p>'
+    b.append('<p class="note">The course is thirteen sessions since session 6, the Mondrian, was '
+             'added in October. Monday has twelve dates between Sep 14 and Dec 14, so the last '
+             'Monday session, the demo, needs a date after Dec 14 or a session merged into '
+             'another; that date is still to be decided. Friday has thirteen dates, so every '
+             'Friday session has one, and the bonus session is no longer scheduled. It stays on '
+             'the site for anyone who wants it. If a parent compares the two classes, the '
+             'required content is identical.</p>'
              '<p class="note">From session 4 on, Friday runs one to two sessions ahead of '
              'Monday, so in most weeks the two sections are on different pages. Each page '
-             'shows both dates in its header. If Fri Oct 2 is lost to Sukkot, drop the '
-             'bonus, move sessions 3 to 11 one Friday later, and keep session 12 on '
-             'Dec 18.</p>')
+             'shows both dates in its header.</p>')
     b.append('</section>')
 
     b.append('<section><h2>Machines and libraries</h2>'
@@ -1161,14 +1185,14 @@ def render_constraints():
              '<tr><td><code>len</code>, <code>sum</code>, <code>max</code>, <code>min</code></td>'
              '<td>Session 3</td><td>Taught as the reveal after the hand-written version, '
              'never before it.</td></tr>'
-             '<tr><td>String methods and slicing</td><td>Session 7</td><td>Students could '
+             '<tr><td>String methods and slicing</td><td>Session 8</td><td>Students could '
              'not clean their own input, which forced capitals-and-spaces workarounds.</td></tr>'
-             '<tr><td>Dictionaries</td><td>Session 9</td><td>The parallel-list failure is '
+             '<tr><td>Dictionaries</td><td>Session 10</td><td>The parallel-list failure is '
              'taught first, then the fix.</td></tr>'
-             '<tr><td><code>.find()</code></td><td>Session 8</td><td>Revealed after the '
+             '<tr><td><code>.find()</code></td><td>Session 9</td><td>Revealed after the '
              'hand-written rack scan.</td></tr>'
              '<tr><td>pygame from session 6 onward</td><td>Session 6</td><td>The only graphics library in the course. It replaces the turtle drawing session, which does not run in VS Code.</td></tr>'
-             '<tr><td>KEYDOWN, mouse, frame timers</td><td>Session 11</td><td>Without them a '
+             '<tr><td>KEYDOWN, mouse, frame timers</td><td>Session 12</td><td>Without them a '
              'game reads as a demo. A held key and a single press are different '
              'questions.</td></tr>'
              '<tr><td><code>random.seed</code>, <code>randint</code></td><td>Session 3</td>'
@@ -1176,7 +1200,7 @@ def render_constraints():
              'unpredictable.</td></tr>'
              '</table></section>')
 
-    b.append('<section><h2>Still excluded, all twelve sessions</h2>'
+    b.append('<section><h2>Still excluded, all thirteen sessions</h2>'
              '<ul>'
              '<li><b>Nested gates.</b> Flat <code>if</code>, <code>elif</code>, '
              '<code>else</code> only. If a student reaches for an if inside an if, hand them '
@@ -1191,7 +1215,7 @@ def render_constraints():
              '<li><b>Recursion, list comprehensions, lambda, <code>global</code>.</b></li>'
              '<li><b>Multi-file programs and importing your own module.</b> Advanced '
              'course.</li>'
-             '<li><b>File input and output.</b> Held as a float, not one of the twelve sessions.</li>'
+             '<li><b>File input and output.</b> Held as a float, not one of the thirteen sessions.</li>'
              '<li><b><code>pygame.font</code>.</b> Words go in the terminal and visuals go '
              'in the window. That split holds all term.</li>'
              '<li><b>turtle.</b> Not used anywhere in this course. It needs a library our '
@@ -1202,7 +1226,7 @@ def render_constraints():
     b.append('<section><h2>The frame loop, and only this one</h2>'
              '<p>This course uses one frame loop, everywhere, with no exceptions. Students '
              'first copy it in session 6 as a loop holding '
-             'a finished drawing on screen, and session 10 takes it apart.</p>')
+             'a finished drawing on screen, and session 11 takes it apart.</p>')
     b.append(code_block('running = 1\nwhile running:\n    for event in pygame.event.get():\n'
                         '        if event.type == pygame.QUIT:\n            running = 0\n'
                         '    screen.fill(BG)\n    # draw here\n    pygame.display.flip()\n'
@@ -1212,7 +1236,7 @@ def render_constraints():
              '<p>Two placements of the drawing, both legitimate, and students meet them in '
              'this order. In session 6 the drawing is done once onto a '
              '<code>pygame.Surface</code> above the loop, and the loop only blits it, '
-             'because the picture never changes. From session 10 on, the '
+             'because the picture never changes. From session 11 on, the '
              '<code>fill</code> and the drawing sit inside the loop, because the picture '
              'changes every frame.</p></section>')
 
@@ -1340,7 +1364,7 @@ def render_ledger():
              '<li>One stamp per session, in the box for that session number.</li>'
              '<li>At least one error message per term, copied out by hand.</li>'
              '<li>The card comes out again in the retrieval opener the following week.</li>'
-             '<li>Session 12 reads the card out loud. If a stamp is unreadable, that is the '
+             '<li>Session 13 reads the card out loud. If a stamp is unreadable, that is the '
              'first thing fixed that day.</li></ul></section>')
     b.append('<section><h2>Stamps</h2><div class="stampgrid">')
     for s in SESSIONS:
@@ -1376,6 +1400,7 @@ def render_ledger():
         '360 / sides             the turn that closes a shape\n'
         'math.radians(deg)       convert before cos and sin\n'
         'cos is across, sin down the far end of a step\n'
+        'draw.rect(c, col, r, 10)  r is (x, y, w, h); the 10 makes a border\n'
         'draw.line(c, col, a, b, 3)  canvas, colour, start, end, width\n'
         'while running:          pygame frame loop, QUIT sets running = 0\n'
         'x = x + vx              move once per frame\n'

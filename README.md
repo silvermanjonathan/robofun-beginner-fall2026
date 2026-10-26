@@ -2,8 +2,9 @@
 
 Beyond Vibe Coding, beginner semester. Python for grades 5 to 8, Robofun Fall 2026,
 110 West End Avenue. Two beginner sections, Monday and Friday, working through the
-same twelve required sessions. Friday has one extra date and spends it on a bonus
-session that nothing later depends on.
+same thirteen required sessions. Session 6, the Mondrian, was added in October 2026,
+so the last Monday session has no date yet and the Friday bonus session is no longer
+scheduled; it stays on the site for anyone who wants it.
 
 Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner_semester_hub.html
 (`beginner_semester_hub.html` at the repo root; there is no `index.html`)
@@ -15,7 +16,7 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | `beginner_semester_hub.html` | Course home. Session list, both calendars, how a session runs. |
 | `beginner_constraints.html` | The published code constraint list, dated 2026-09-12. One frame loop, one exclusion list. |
 | `standards_map.html` | Every standard code used, with its full statement and CASE identifier. |
-| `semester_ledger_card.html` | The printable one-page card. Twelve stamp boxes, a reference strip, an error-name table. |
+| `semester_ledger_card.html` | The printable one-page card. Thirteen stamp boxes, a reference strip, an error-name table. |
 | `session01_printing_names_input.html` | Printing, names, and input |
 | `session01_extra_cards.html` | Session 1 extra cards: silly story, age calculator, bug hunt. For a student who finishes the build early. |
 | `session01_extra_cards_key.html` | The session 1 extra cards' answer key. Linked from the session 1 teacher panel only. |
@@ -32,28 +33,30 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | `session05_functions_that_return.html` | Functions that return a value |
 | `session05_extra_cards.html` | Session 5 extra cards: letter grades, dice game, bug hunt. |
 | `session05_extra_cards_key.html` | The session 5 extra cards' answer key. Linked from the session 5 teacher panel only. |
-| `session06_angles_and_shapes.html` | Angles and shapes on screen |
-| `session07_strings_as_data.html` | Strings as data |
-| `session08_remainders_cipher_wheel.html` | Remainders and the cipher wheel |
-| `session09_dictionaries.html` | Dictionaries |
-| `session10_the_pygame_window.html` | The pygame window |
-| `session11_grids_keys_game_state.html` | Grids, keys, and game state |
-| `session12_commission_and_demo.html` | Commission and demo day |
+| `session06_mondrian_rectangles.html` | A Mondrian made of rectangles. The first pygame window: one `tile` function, written line by line, called once per tile. |
+| `session07_angles_and_shapes.html` | Angles and shapes on screen |
+| `session08_strings_as_data.html` | Strings as data |
+| `session09_remainders_cipher_wheel.html` | Remainders and the cipher wheel |
+| `session10_dictionaries.html` | Dictionaries |
+| `session11_the_pygame_window.html` | The pygame window |
+| `session12_grids_keys_game_state.html` | Grids, keys, and game state |
+| `session13_commission_and_demo.html` | Commission and demo day |
 | `friday_bonus_distance_and_bumpers.html` | Friday bonus: distance and bumpers |
 
 ## Environment
 
 VS Code on the desktop, throughout. One graphics library, pygame, from session 6
 onward: `pip install pygame`. There is no turtle in this course and no second
-graphics library, because turtle does not run in our VS Code setup. Session 6 is a
-pygame drawing session carrying the same angle arithmetic a turtle session would.
+graphics library, because turtle does not run in our VS Code setup. Session 6 draws a
+Mondrian out of rectangles and session 7 is a pygame drawing session carrying the
+same angle arithmetic a turtle session would.
 
 Students meet the frame loop twice, on purpose:
 
-- **Session 6** hands it over as a working harness whose only job is to hold a
+- **Sessions 6 and 7** hand it over as a working harness whose only job is to hold a
   finished drawing on screen. The drawing is done once onto a `pygame.Surface`
   above the loop, because the picture never changes.
-- **Session 10** takes the same eight lines apart and moves the `fill` and the
+- **Session 11** takes the same eight lines apart and moves the `fill` and the
   drawing inside the loop, because the picture now changes every frame. Its
   retrieval opener asks for those lines from memory.
 
@@ -63,8 +66,13 @@ which one a given page uses.
 If an earlier build was already uploaded, delete `session05_turtle_and_angles.html`,
 `session04_functions_that_return.html`, `session04_extra_cards.html`,
 `session04_extra_cards_key.html`, `session05_angles_and_shapes.html`,
-`session06_strings_as_data.html`, and `session07_debugging_clinic.html` from the live
-repo. None of them exist here and the hub no longer links to them.
+`session06_strings_as_data.html`, `session07_debugging_clinic.html`,
+`session06_angles_and_shapes.html`, `session07_strings_as_data.html`,
+`session08_remainders_cipher_wheel.html`, `session09_dictionaries.html`,
+`session10_the_pygame_window.html`, `session11_grids_keys_game_state.html`, and
+`session12_commission_and_demo.html` from the live repo. None of them exist here
+(the last seven were renumbered when the Mondrian session was added) and the hub no
+longer links to them.
 
 ## Look and behaviour
 
@@ -113,6 +121,16 @@ a phone (760px and under) code is 15px and a wide table scrolls inside itself, s
 page never scrolls sideways. In print the code keeps its old 15.5px, so printed pages
 and the PDFs do not reflow.
 
+**Hints nest.** Every hint on the site opens one inside the next, the way the
+Advanced course's ladders do: hint 2's button sits inside hint 1's box, and the
+button that shows the answer, the line, or the real output sits inside the last
+hint. So the hints come out in order and nothing can be opened out of turn. This
+holds for the per-line "What goes next?" ladders, the hints on predict questions, and
+the clues on the extra cards' bug hunts. `render.nest_hints` is the one function
+that builds them. The session 5 build brief writes its three tools (`total_of`,
+`tallest_of`, `average_of`) line by line this way, and session 6 writes `tile` the
+same way.
+
 **Reveals hide the real output.** Each chunk shows the code, then the prediction
 question, then a button reading "Run it first, then check here". The button reveals
 the verified terminal output *and* the explanation together. Nothing about what the
@@ -128,7 +146,7 @@ hidden `.ans` container.
   dependency.
 - No `localStorage`, no `sessionStorage`, no `indexedDB`. These pages are embedded
   in Google Sites by full-page URL and storage is blocked inside the iframe.
-- Internal links carry a version pin: `?v=6`. Bump the pin on every page whose
+- Internal links carry a version pin: `?v=13`. Bump the pin on every page whose
   content changes, so the embed does not serve a cached copy.
 - Re-upload the hub whenever a page is added, renamed, or removed, or the
   navigation will have gaps.
@@ -161,8 +179,9 @@ The HTML is generated. Edit the content files, not the HTML.
 ```
 build/standards.py     the resolved standards registry
 build/sessions_a.py    sessions 1 to 4
-build/sessions_b.py    sessions 5 to 8
-build/sessions_c.py    sessions 9 to 12 and the Friday bonus
+build/session06.py     session 6, the Mondrian (added October 2026)
+build/sessions_b.py    sessions 5, 7, 8, and 9
+build/sessions_c.py    sessions 10 to 13 and the Friday bonus
 build/render.py        runs every snippet, then writes the site
 build/validate.py      checks the written site
 build/hl.py            colors Python code the way VS Code does; copied from the Advanced course

@@ -139,18 +139,11 @@ def ask(idx, label, question, answer):
 
 
 def clues(idx, items):
-    """One button per clue, each with its own hidden block; the key leaves them out."""
+    """The clues, one inside the next, so clue 2 opens only after clue 1; the key leaves them out."""
     if KEY["on"]:
         return ""
-    out = ['<p><b>Clues, if you are stuck.</b> Open one at a time.</p><div class="hints">']
-    for k, text in enumerate(items):
-        hid = idx + "-clue" + str(k + 1)
-        label = "Show clue " + str(k + 1)
-        out.append('<button class="rev hint" data-target="' + hid + '" aria-controls="' + hid + '" '
-                   'aria-expanded="false" data-show="' + label + '" '
-                   'data-hide="Hide clue ' + str(k + 1) + '">' + label + '</button>'
-                   '<div class="ans" id="' + hid + '"><p>' + text + '</p></div>')
-    return "".join(out) + "</div>"
+    return ('<p><b>Clues, if you are stuck.</b> Open one at a time. The next clue is inside '
+            'the one before it.</p>' + render.nest_hints(idx, items, "", prefix="-clue", word="Clue"))
 
 
 def table(headers, rows, cls=""):
@@ -1025,7 +1018,7 @@ BUILDERS = {1: session1, 2: session2, 3: session3, 5: session5}
 def masthead(s, title, sub):
     return ('<header class="top"><div class="wrap">'
             '<p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session '
-            + str(s["num"]) + ' of 12</p><h1>' + esc(title) + '</h1>'
+            + str(s["num"]) + ' of 13</p><h1>' + esc(title) + '</h1>'
             '<p class="sub">' + sub + '</p><div class="dates">'
             '<span class="pill"><b>Monday section</b> ' + s["mon"] + '</span>'
             '<span class="pill"><b>Friday section</b> ' + s["fri"] + '</span>'

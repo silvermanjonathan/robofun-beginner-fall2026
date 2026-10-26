@@ -2,14 +2,14 @@ SESSIONS_C = [
 
 # =====================================================================
 {
- "num": 9,
- "slug": "session09_dictionaries",
+ "num": 10,
+ "slug": "session10_dictionaries",
  "title": "Dictionaries",
  "subtitle": "The fix for the problem you have had since session 3",
- "mon": "Mon Nov 23",
- "fri": "Fri Nov 13",
+ "mon": "Mon Nov 30",
+ "fri": "Fri Nov 20",
  "new": ["the parallel-list failure", "dict literals", "lookup by key", "adding and changing keys", "KeyError", "in on a dict", "looping over keys", "a tally dict", "a codebook"],
- "reuse": "Session 3: lists, and session 7: building up a result in a loop",
+ "reuse": "Session 3: lists, and session 8: building up a result in a loop",
  "reuse_note": "Do not skip the parallel-list chunk. The pain has to be felt before the fix means anything.",
  "opener": {
    "title": "Retrieval: find, and the counter",
@@ -74,7 +74,7 @@ SESSIONS_C = [
    "reveal": "The letters E, O and T tie at 2, and so does the space. In a longer message the space has the longest bar by far, and that is the first thing a code breaker looks for."},
 
   {"title": "A codebook is a dictionary",
-   "teach": "Session 8 shifted letters by arithmetic. A codebook does it by lookup instead, which means the substitution does not have to follow any pattern at all. The gate handles characters the book does not cover.",
+   "teach": "Session 9 shifted letters by arithmetic. A codebook does it by lookup instead, which means the substitution does not have to follow any pattern at all. The gate handles characters the book does not cover.",
    "code": 'book = {"A": "%", "E": "#", "M": "@", "N": "+", "O": "0", "T": "~"}\n\ndef encode(text):\n    out = ""\n    for ch in text:\n        if ch in book:\n            out = out + book[ch]\n        else:\n            out = out + ch\n    return out\n\nprint(encode("MEET AT NOON"))',
    "run": "py",
    "predict": "The book has six letters in it. What happens to the others?",
@@ -105,7 +105,7 @@ SESSIONS_C = [
    "middle": "The analyser: tally function, star chart, most common character, codebook encoding.",
    "stretch": "Build the reverse codebook in a loop from the forward one, then decode. The keys and values swap places, and you will discover what happens if two letters map to the same symbol.",
  },
- "ledger": "Stamp 9: <code>{key: value}</code>, <code>d[key]</code> to look up, assigning a new key creates it, KeyError, <code>in</code> checks keys, <code>for k in d:</code> gives you keys, the tally gate, <code>\"*\" * n</code>.",
+ "ledger": "Stamp 10: <code>{key: value}</code>, <code>d[key]</code> to look up, assigning a new key creates it, KeyError, <code>in</code> checks keys, <code>for k in d:</code> gives you keys, the tally gate, <code>\"*\" * n</code>.",
  "teacher": {
    "timing": [
      "0:00 retrieval opener, 10 min",
@@ -123,21 +123,21 @@ SESSIONS_C = [
      ["Uses a number as a key and thinks it is an index.", "<code>{0: \"a\"}</code> is a dictionary with a key of zero, not a list. Print both and compare what <code>len</code> says after adding key 5."],
    ],
    "standards": ["NY-8.F.1", "NY-6.SP.4", "MP7"],
-   "routing": "The codebook chunk is cuttable; the tally is not. If the room is thin on session 7 string work, replace the message with a list of words and tally those instead.",
+   "routing": "The codebook chunk is cuttable; the tally is not. If the room is thin on session 8 string work, replace the message with a list of words and tally those instead.",
  },
 },
 
 # =====================================================================
 {
- "num": 10,
- "slug": "session10_the_pygame_window",
+ "num": 11,
+ "slug": "session11_the_pygame_window",
  "title": "The pygame window",
  "subtitle": "One frame loop, coordinates that run downward, and a ball that bounces",
- "mon": "Mon Nov 30",
- "fri": "Fri Nov 20",
+ "mon": "Mon Dec 7",
+ "fri": "Fri Dec 4",
  "new": ["the frame loop taken apart", "draw order", "velocity as two numbers", "bouncing with flat gates", "clock.tick", "the knob block"],
- "reuse": "Session 6: the loop that held your drawing still, now doing work every frame",
- "reuse_note": "The window and the frame loop are not new. Students copied both in session 6 as a loop whose only job was to keep a finished picture on screen. Today the same eight lines get taken apart, and the drawing moves inside the loop so it can change. Say that this is the same code they already ran, because the page otherwise looks like a fresh start.",
+ "reuse": "Session 7: the loop that held your drawing still, now doing work every frame",
+ "reuse_note": "The window and the frame loop are not new. Students copied both in session 7 as a loop whose only job was to keep a finished picture on screen. Today the same eight lines get taken apart, and the drawing moves inside the loop so it can change. Say that this is the same code they already ran, because the page otherwise looks like a fresh start.",
  "env_note": True,
  "opener": {
    "title": "Retrieval: gates and counters, in a new place",
@@ -147,26 +147,26 @@ SESSIONS_C = [
      {"q": "Write a gate that flips a variable called <code>vx</code> from positive to negative.",
       "code_a": 'if x > WIDTH - R:\n    vx = -vx',
       "a": "Putting a minus sign in front flips the sign: 4 becomes negative 4. Flip it again and it is 4 once more, which is why the same line works for both walls."},
-     {"q": "In session 6 you copied a loop that held a drawing on screen. Name the one thing that could make that loop stop, and the name of the variable it changed.",
+     {"q": "In session 7 you copied a loop that held a drawing on screen. Name the one thing that could make that loop stop, and the name of the variable it changed.",
       "a": "Clicking the window's close button. That puts a QUIT event in the queue and the gate sets <code>running</code> to 0. You copied those lines four weeks ago; today you find out why each one is there."},
    ],
  },
  "chunks": [
   {"title": "The window has its own coordinates",
-   "teach": "A callback to session 6, where a heading of 90 degrees pointed at the floor. The top left corner is 0, 0. The first number moves right and the second moves <em>down</em>, which is upside down from the graph paper you use in maths class. Everything else about ordered pairs is the same.",
+   "teach": "A callback to session 7, where a heading of 90 degrees pointed at the floor. The top left corner is 0, 0. The first number moves right and the second moves <em>down</em>, which is upside down from the graph paper you use in maths class. Everything else about ordered pairs is the same.",
    "code": 'import pygame\n\npygame.init()\nWIDTH = 640\nHEIGHT = 480\nscreen = pygame.display.set_mode((WIDTH, HEIGHT))\n\nprint("top left    ", (0, 0))\nprint("top right   ", (WIDTH, 0))\nprint("bottom left ", (0, HEIGHT))\nprint("centre      ", (WIDTH / 2, HEIGHT / 2))\npygame.quit()',
    "run": "headless",
    "frames": 0,
    "predict": "Which corner holds the pair 0, 480?",
-   "reveal": "The bottom left. Larger second numbers are lower on the screen. Write this on the ledger card. Most position bugs in sessions 10 to 12 come from getting this backwards."},
+   "reveal": "The bottom left. Larger second numbers are lower on the screen. Write this on the ledger card. Most position bugs in sessions 11 to 13 come from getting this backwards."},
 
   {"title": "The frame loop, taken apart",
-   "teach": "You have run this before. In session 6 it sat under your drawing and you were told to copy it. Here is what each line does. The loop runs until <code>running</code> becomes 0, nothing else ends it, and the window never closes itself. <code>clock.tick(60)</code> holds the speed steady at sixty passes a second. The difference from session 6 is that the drawing now happens inside the loop, which is what lets it change.",
+   "teach": "You have run this before. In session 7 it sat under your drawing and you were told to copy it. Here is what each line does. The loop runs until <code>running</code> becomes 0, nothing else ends it, and the window never closes itself. <code>clock.tick(60)</code> holds the speed steady at sixty passes a second. The difference from session 7 is that the drawing now happens inside the loop, which is what lets it change.",
    "code": 'import pygame\n\npygame.init()\nscreen = pygame.display.set_mode((640, 480))\nclock = pygame.time.Clock()\n\nrunning = 1\nwhile running:\n    for event in pygame.event.get():\n        if event.type == pygame.QUIT:\n            running = 0\n    screen.fill((27, 41, 81))\n    pygame.draw.circle(screen, (252, 211, 77), (320, 240), 30)\n    pygame.display.flip()\n    clock.tick(60)\n\npygame.quit()',
    "run": "headless",
    "frames": 5,
    "predict": "Name the one thing that can make this loop stop.",
-   "reveal": "Clicking the window's close button, which puts a QUIT event in the queue and sets <code>running</code> to 0. That is the stopping condition, the way every while loop has had one since session 2. Compare this to session 6: there the <code>fill</code> and the drawing sat above the loop and ran once, and here they sit inside it and run sixty times a second."},
+   "reveal": "Clicking the window's close button, which puts a QUIT event in the queue and sets <code>running</code> to 0. That is the stopping condition, the way every while loop has had one since session 2. Compare this to session 7: there the <code>fill</code> and the drawing sat above the loop and ran once, and here they sit inside it and run sixty times a second."},
 
   {"title": "Draw order: last one wins",
    "teach": "Drawing paints over whatever is already there. The fill goes first because it wipes the previous frame. Whatever you draw last sits on top.",
@@ -193,11 +193,11 @@ SESSIONS_C = [
    "reveal": "On frame 2, when x lands on 624. The test fires after the move, so the ball is drawn once at 624, which is four pixels past the 620 limit, and only then turns around. That single frame of overshoot is why a ball appears to touch the wall rather than stop short of it. If the speed is larger than the ball, the ball can pass right through the wall in one frame, and the gate never fires."},
 
   {"title": "The knob block",
-   "teach": "Every number you might want to change goes at the top with a capitalised name. Nothing below the block has a raw number in it. This is what makes the commission in session 12 possible: you will be handed an engine and asked to change its behaviour without reading all of it.",
+   "teach": "Every number you might want to change goes at the top with a capitalised name. Nothing below the block has a raw number in it. This is what makes the commission in session 13 possible: you will be handed an engine and asked to change its behaviour without reading all of it.",
    "code": 'WIDTH = 640\nHEIGHT = 480\nR = 20\nSPEED_X = 12\nSPEED_Y = 7\nBG = (27, 41, 81)\nBALL = (252, 211, 77)\nFPS = 60',
    "run": "py",
    "predict": "Nothing runs here. Why put the block at the top rather than next to the code that uses each number?",
-   "reveal": "So that changing the behaviour takes one visit to one place. A number written in the middle of a loop is a number nobody will find in session 12, including you."},
+   "reveal": "So that changing the behaviour takes one visit to one place. A number written in the middle of a loop is a number nobody will find in session 13, including you."},
  ],
  "hinge": {"q": "From session 5: rewrite the four bounce gates as a function <code>bounce(pos, vel, low, high)</code> that returns the new velocity. Then say why the function has to return rather than print.",
            "code_a": 'def bounce(pos, vel, low, high):\n    if pos < low:\n        vel = -vel\n    if pos > high:\n        vel = -vel\n    return vel\n\nvx = bounce(x, vx, R, WIDTH - R)\nvy = bounce(y, vy, R, HEIGHT - R)',
@@ -224,7 +224,7 @@ SESSIONS_C = [
    "middle": "The bouncing cabinet with four working walls, a knob block, and a probe.",
    "stretch": "Add gravity: increase vy by a small amount every frame, and take a little speed away at each floor bounce. Then find the value of that speed loss where the ball settles instead of jittering.",
  },
- "ledger": "Stamp 10: <code>set_mode((w, h))</code>, y grows downward, <code>while running:</code> with a QUIT gate, <code>fill</code> then draw then <code>flip</code>, <code>clock.tick(60)</code>, position plus velocity each frame, <code>v = -v</code> to bounce, the knob block.",
+ "ledger": "Stamp 11: <code>set_mode((w, h))</code>, y grows downward, <code>while running:</code> with a QUIT gate, <code>fill</code> then draw then <code>flip</code>, <code>clock.tick(60)</code>, position plus velocity each frame, <code>v = -v</code> to bounce, the knob block.",
  "teacher": {
    "timing": [
      "0:00 retrieval opener, 10 min",
@@ -237,7 +237,7 @@ SESSIONS_C = [
      "1:25 exits, ledger stamp, 5 min",
    ],
    "misconceptions": [
-     ["Keeps session 6's canvas surface and cannot work out why the ball leaves a trail, or why it does not move.",
+     ["Keeps session 7's canvas surface and cannot work out why the ball leaves a trail, or why it does not move.",
       "The canvas was for a picture that never changed. Today the drawing goes straight onto the screen and the <code>fill</code> inside the loop is what wipes the last frame. Have them delete the fill and watch the trail."],
      ["Leaves out <code>flip</code> and reports a blank or frozen window.", "Everything was drawn on a page that was never turned over. Add the line and say nothing else."],
      ["Puts <code>fill</code> after the draw calls.", "Blank screen, no error. A silent bug, and a fast one to find with a single comment toggle."],
@@ -251,14 +251,14 @@ SESSIONS_C = [
 
 # =====================================================================
 {
- "num": 11,
- "slug": "session11_grids_keys_game_state",
+ "num": 12,
+ "slug": "session12_grids_keys_game_state",
  "title": "Grids, keys, and game state",
  "subtitle": "A list of lists, a wall you cannot walk through, and a game that can end",
- "mon": "Mon Dec 7",
- "fri": "Fri Dec 4",
+ "mon": "Mon Dec 14",
+ "fri": "Fri Dec 11",
  "new": ["a list of lists", "row and column indexing", "tile to pixel arithmetic", "blocked movement", "get_pressed against KEYDOWN", "a spawn timer with %", "lives", "game over", "restart"],
- "reuse": "Session 9's lookups and session 10's frame loop, in the same program",
+ "reuse": "Session 10's lookups and session 11's frame loop, in the same program",
  "reuse_note": "Everything in this session is assembly. No new syntax except the two event patterns. Name that at the start, because the program is the longest one they have read and the length is intimidating on its own.",
  "env_note": True,
  "opener": {
@@ -304,7 +304,7 @@ SESSIONS_C = [
    "reveal": "The held counter, because it adds one on every frame the key is down while the press counter adds one per press. Use the first for walking and the second for stepping one tile at a time."},
 
   {"title": "A timer, built from a frame counter and a remainder",
-   "teach": "Sixty frames is one second. Count frames, and use the remainder to fire something on a schedule. This is session 8's operator doing a new job.",
+   "teach": "Sixty frames is one second. Count frames, and use the remainder to fire something on a schedule. This is session 9's operator doing a new job.",
    "code": 'FPS = 60\nSPAWN_EVERY = 90\nframe = 0\nspawns = 0\nfor i in range(361):\n    frame = frame + 1\n    if frame % SPAWN_EVERY == 0:\n        spawns = spawns + 1\n        print("spawn", spawns, "at frame", frame, "=", frame / FPS, "seconds")\nprint("total spawns in", frame, "frames:", spawns)',
    "run": "py",
    "predict": "Ninety frames between spawns, at sixty frames a second. How many spawns in six seconds?",
@@ -317,7 +317,7 @@ SESSIONS_C = [
    "predict": "Four hits, three lives. What is the state after the loop, and what does the restart do to it?",
    "reveal": "Over, then back to play with three lives and no score. A function that returns three values at once is the simplest restart to write."},
  ],
- "hinge": {"q": "From session 9: the level has coins on it. Would you store the coins in the list of lists, or in a separate dictionary keyed by row and column? Give one reason either way.",
+ "hinge": {"q": "From session 10: the level has coins on it. Would you store the coins in the list of lists, or in a separate dictionary keyed by row and column? Give one reason either way.",
            "a": "Either works. In the grid, a coin is a third tile value, so drawing and collecting are one lookup, but the level data now mixes walls with items. In a dictionary keyed by a pair, the coin list stays separate and can be emptied without touching the level, at the cost of a second lookup per frame. Saying one reason for and one reason against is the answer. Picking a side is not required."},
  "brief": {
    "title": "Build: a room with walls, coins, and lives",
@@ -342,7 +342,7 @@ SESSIONS_C = [
    "middle": "Player movement blocked by walls, coins collected, score shown in the terminal.",
    "stretch": "Add a spawn timer that drops a new coin on a random open tile every ninety frames, and lower that number by five each time the score rises.",
  },
- "ledger": "Stamp 11: <code>level[row][col]</code>, row first, <code>col * TILE</code> is horizontal, edge gates before the lookup, <code>get_pressed</code> for held and KEYDOWN for a single press, <code>frame % n == 0</code> is a timer, one state name with flat gates.",
+ "ledger": "Stamp 12: <code>level[row][col]</code>, row first, <code>col * TILE</code> is horizontal, edge gates before the lookup, <code>get_pressed</code> for held and KEYDOWN for a single press, <code>frame % n == 0</code> is a timer, one state name with flat gates.",
  "teacher": {
    "timing": [
      "0:00 retrieval opener, 10 min",
@@ -360,17 +360,17 @@ SESSIONS_C = [
      ["Collects the same coin every frame and the score climbs forever.", "The coin has to be removed when collected. This is the clearest reason to keep coins in their own structure."],
    ],
    "standards": ["NY-5.G.2", "NY-6.NS.8", "MP7"],
-   "routing": "This is the fullest session of the term and it will not finish, and nothing survives on the machines, so it cannot continue next week. Session 12 gives out a finished version of this program as the engine. Treat the spawn timer as the float it really is.",
+   "routing": "This is the fullest session of the term and it will not finish, and nothing survives on the machines, so it cannot continue next week. Session 13 gives out a finished version of this program as the engine. Treat the spawn timer as the float it really is.",
  },
 },
 
 # =====================================================================
 {
- "num": 12,
- "slug": "session12_commission_and_demo",
+ "num": 13,
+ "slug": "session13_commission_and_demo",
  "title": "Commission and demo day",
  "subtitle": "Two changes I ask for, one you choose, and sixty seconds in front of the room",
- "mon": "Mon Dec 14",
+ "mon": "Date to be decided",
  "fri": "Fri Dec 18",
  "new": [],
  "reuse": "Everything. No new syntax today",
@@ -381,14 +381,14 @@ SESSIONS_C = [
    "body": "Cards on the desk. Find the stamp for the thing you are about to change in your engine, and read it to the person next to you. If you cannot find it, that is the first thing to fix today.",
    "questions": [
      {"q": "Which stamp covers the numbers at the top of your engine?",
-      "a": "Stamp 10, the knob block. Every number you are about to change is there."},
+      "a": "Stamp 11, the knob block. Every number you are about to change is there."},
      {"q": "Where on the card does it say what to do when your change makes the program worse?",
       "a": "The line under the reference strip: one change per run. Undo the last change before trying the next."},
    ],
  },
  "chunks": [
   {"title": "The commission: two required changes",
-   "teach": "You are handed a working engine: the room from session 11, finished, with walls, a player that steps one tile per key press, coins, a spawn timer, a patrolling enemy, three lives, game over, and restart on R. The whole program is printed in the build section below, and it is already on your machine when you sit down. You do not rewrite it. You change its behaviour through the knob block and through one named function, and you keep it working the whole time. This is what most programming work actually looks like.",
+   "teach": "You are handed a working engine: the room from session 12, finished, with walls, a player that steps one tile per key press, coins, a spawn timer, a patrolling enemy, three lives, game over, and restart on R. The whole program is printed in the build section below, and it is already on your machine when you sit down. You do not rewrite it. You change its behaviour through the knob block and through one named function, and you keep it working the whole time. This is what most programming work actually looks like.",
    "code": '# CHANGE 1: through the knob block only.\n#   Make the game harder without touching any line below the block.\n#   Acceptable: speed, spawn interval, lives, tile size, colours.\n\n# CHANGE 2: through one function only.\n#   Add a rule the engine does not have yet. One function, one gate.\n#   Examples: a tile that costs a life, a coin worth five,\n#   a wall that opens once the score passes ten.',
    "run": None,
    "predict": "Change 1 forbids editing anything below the knob block. What does that tell you about how the engine was written?",
@@ -416,13 +416,13 @@ SESSIONS_C = [
    "reveal": "Because the person reading it next is you, in three months, with no memory of what <code>check</code> checked. A clear name is the shortest comment you can write, and it stays correct as long as the function does what it says."},
  ],
  "hinge": {"q": "Pick any stamp on your ledger card from sessions 1 to 7 and state the bug it was written to prevent.",
-           "a": "Accept any correct pairing. The common strong answers: stamp 1 and the int() trap, stamp 3 and the accumulator reset inside the loop, stamp 4 and a typo that counted as a lost round, stamp 5 and a function that prints instead of returning, stamp 7 and a strip whose result was never stored."},
+           "a": "Accept any correct pairing. The common strong answers: stamp 1 and the int() trap, stamp 3 and the accumulator reset inside the loop, stamp 4 and a typo that counted as a lost round, stamp 5 and a function that prints instead of returning, stamp 8 and a strip whose result was never stored."},
  "brief": {
    "title": "The commission",
    "minutes": 45,
    "cards": [
      {"title": "The engine", "run": "headless", "frames": 400,
-      "teach": "This is the whole program. It is already on your machine as <code>Jonathan_session12.py</code>, with your first name in place of Jonathan. Read the knob block first, then find the one function that decides what happens when the player lands on a tile.",
+      "teach": "This is the whole program. It is already on your machine as <code>Jonathan_session13.py</code>, with your first name in place of Jonathan. Read the knob block first, then find the one function that decides what happens when the player lands on a tile.",
       "inject": [[5, "KEYDOWN", "K_RIGHT"], [10, "KEYDOWN", "K_RIGHT"], [15, "KEYDOWN", "K_RIGHT"], [20, "KEYDOWN", "K_RIGHT"], [25, "KEYDOWN", "K_RIGHT"], [30, "KEYDOWN", "K_RIGHT"], [35, "KEYDOWN", "K_RIGHT"]],
       "code": 'import random\nimport pygame\n\n# ---- knob block: every number the game depends on ----\nTILE = 64\nCOLS = 10\nROWS = 7\nFPS = 60\nLIVES = 3\nCOIN_VALUE = 1\nSPAWN_EVERY = 90\nENEMY_EVERY = 20\nBG = (27, 41, 81)\nWALL = (110, 120, 150)\nFLOOR = (40, 56, 100)\nCOIN = (252, 211, 77)\nPLAYER = (248, 250, 252)\nENEMY = (220, 38, 38)\n\n# tile numbers: 0 floor, 1 wall, 2 coin\nlevel = [\n    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],\n    [1, 0, 0, 0, 0, 0, 0, 0, 2, 1],\n    [1, 0, 1, 1, 0, 0, 1, 1, 0, 1],\n    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],\n    [1, 0, 1, 1, 0, 0, 1, 1, 0, 1],\n    [1, 2, 0, 0, 0, 0, 0, 0, 0, 1],\n    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],\n]\n\ndef is_open(row, col):\n    if row < 0:\n        return False\n    if col < 0:\n        return False\n    if row > len(level) - 1:\n        return False\n    if col > len(level[0]) - 1:\n        return False\n    return level[row][col] != 1\n\ndef on_step(row, col):\n    # what happens when the player lands on a tile; returns the points earned\n    if level[row][col] == 2:\n        level[row][col] = 0\n        return COIN_VALUE\n    return 0\n\ndef new_game():\n    return "play", LIVES, 0, 1, 1\n\ndef open_tiles():\n    found = []\n    for row in range(ROWS):\n        for col in range(COLS):\n            if level[row][col] == 0:\n                found.append((row, col))\n    return found\n\npygame.init()\nscreen = pygame.display.set_mode((COLS * TILE, ROWS * TILE))\nclock = pygame.time.Clock()\n\nstate, lives, score, player_row, player_col = new_game()\nenemy_row = 3\nenemy_col = 8\nenemy_dir = -1\nframe = 0\nprint("lives", lives, "score", score)\n\nrunning = 1\nwhile running:\n    for event in pygame.event.get():\n        if event.type == pygame.QUIT:\n            running = 0\n        if event.type == pygame.KEYDOWN and state == "play":\n            next_row = player_row\n            next_col = player_col\n            if event.key == pygame.K_LEFT:\n                next_col = player_col - 1\n            if event.key == pygame.K_RIGHT:\n                next_col = player_col + 1\n            if event.key == pygame.K_UP:\n                next_row = player_row - 1\n            if event.key == pygame.K_DOWN:\n                next_row = player_row + 1\n            if is_open(next_row, next_col):\n                player_row = next_row\n                player_col = next_col\n                gained = on_step(player_row, player_col)\n                if gained > 0:\n                    score = score + gained\n                    print("score", score)\n        if event.type == pygame.KEYDOWN and event.key == pygame.K_r and state == "over":\n            state, lives, score, player_row, player_col = new_game()\n            print("restart: lives", lives, "score", score)\n\n    frame = frame + 1\n\n    if state == "play" and frame % ENEMY_EVERY == 0:\n        if is_open(enemy_row, enemy_col + enemy_dir):\n            enemy_col = enemy_col + enemy_dir\n        else:\n            enemy_dir = -enemy_dir\n\n    if state == "play" and frame % SPAWN_EVERY == 0:\n        spot = random.choice(open_tiles())\n        level[spot[0]][spot[1]] = 2\n\n    if state == "play" and enemy_row == player_row and enemy_col == player_col:\n        lives = lives - 1\n        player_row = 1\n        player_col = 1\n        print("hit! lives", lives)\n    if state == "play" and lives == 0:\n        state = "over"\n        print("game over, final score", score, "press R to restart")\n\n    screen.fill(BG)\n    for row in range(ROWS):\n        for col in range(COLS):\n            tile = level[row][col]\n            box = (col * TILE, row * TILE, TILE, TILE)\n            if tile == 1:\n                pygame.draw.rect(screen, WALL, box)\n            if tile == 0:\n                pygame.draw.rect(screen, FLOOR, box)\n            if tile == 2:\n                pygame.draw.rect(screen, FLOOR, box)\n                pygame.draw.circle(screen, COIN, (col * TILE + TILE / 2, row * TILE + TILE / 2), TILE / 4)\n    pygame.draw.rect(screen, PLAYER, (player_col * TILE + 8, player_row * TILE + 8, TILE - 16, TILE - 16))\n    pygame.draw.circle(screen, ENEMY, (enemy_col * TILE + TILE / 2, enemy_row * TILE + TILE / 2), TILE / 3)\n    pygame.display.flip()\n    clock.tick(FPS)\n\nprint("closed with score", score, "and", lives, "lives")\npygame.quit()',
       "predict": "Seven right-arrow presses from the start tile. Which function changes the score, and what does the terminal say when it does?",
@@ -448,16 +448,16 @@ SESSIONS_C = [
    "middle": "Both required changes plus one of the student's own, with a completed sheet and a rehearsed demo.",
    "stretch": "Write four lines at the top of the file explaining what the program does and what you changed, in the form of the README entry it would need if you published it.",
  },
- "ledger": "Stamp 12: signed off. Write one sentence on the back of the card naming the single hardest bug you fixed this term and how you found it.",
+ "ledger": "Stamp 13: signed off. Write one sentence on the back of the card naming the single hardest bug you fixed this term and how you found it.",
  "teacher": {
    "timing": [
-     "Before class: copy the engine onto every machine, named with that student's first name in the house style (Ada_session12.py), and run it once on each. This is the only session where a file is prepared ahead, because there is no other way to have 80 lines on every screen at 0:15.",
+     "Before class: copy the engine onto every machine, named with that student's first name in the house style (Ada_session13.py), and run it once on each. This is the only session where a file is prepared ahead, because there is no other way to have 80 lines on every screen at 0:15.",
      "0:00 ledger retrieval, out loud, 10 min",
      "0:10 the commission brief read together, 5 min",
      "0:15 commission work, 45 min (circulate; do not fix anything for them)",
      "1:00 rehearsal in pairs, 5 min",
      "1:05 demos, 20 min (sixty seconds each plus thirty to swap; fifteen students fit)",
-     "1:25 exits, ledger stamp 12 signed, 5 min",
+     "1:25 exits, ledger stamp 13 signed, 5 min",
    ],
    "misconceptions": [
      ["Starts a new program from scratch because the engine feels like someone else's.", "Redirect immediately. Working inside code you did not write is the skill being assessed today."],
@@ -465,22 +465,22 @@ SESSIONS_C = [
      ["Explains syntax during the tell beat.", "Ask what the player experiences differently. That is the answer, in one sentence."],
    ],
    "standards": ["5SL4", "5W2", "MP1"],
-   "routing": "Session 11's brief does not carry over; nothing does. The engine is session 11 finished, so a student who stopped at session 11's floor starts today from the same place as everyone else. The expected-and-got sheet and the three demo beats are the rubric: a completed sheet with at least one row where expected and got differ, and three beats delivered, is the middle exit. A student demoing a working room with one knob change has met the floor and should be told so plainly.",
+   "routing": "Session 12's brief does not carry over; nothing does. The engine is session 12 finished, so a student who stopped at session 12's floor starts today from the same place as everyone else. The expected-and-got sheet and the three demo beats are the rubric: a completed sheet with at least one row where expected and got differ, and three beats delivered, is the middle exit. A student demoing a working room with one knob change has met the floor and should be told so plainly.",
  },
 },
 
 # =====================================================================
 {
- "num": 13,
+ "num": 14,
  "slug": "friday_bonus_distance_and_bumpers",
  "title": "Friday bonus: distance and bumpers",
  "subtitle": "Pythagoras in a game loop, and a collision that is not a rectangle",
  "mon": "Not scheduled",
- "fri": "Fri Dec 11",
+ "fri": "Not scheduled",
  "bonus": True,
  "new": ["the distance formula", "a distance function that returns", "circle overlap", "comparing squares to avoid a square root", "a bumper that scores"],
- "reuse": "Session 10's frame loop and session 5's functions",
- "reuse_note": "Friday has one more session than Monday. This is a bonus and it is not required anywhere later, so nothing in session 12 depends on it. Monday students who want it can read this page on their own.",
+ "reuse": "Session 11's frame loop and session 5's functions",
+ "reuse_note": "This is a bonus page with no date of its own since session 6, the Mondrian, took the spare Friday. It is not required anywhere later, so nothing in session 13 depends on it. Any student who wants it can read this page on their own, or it can be taught on a free date.",
  "env_note": True,
  "opener": {
    "title": "Retrieval: the frame loop",
@@ -529,9 +529,9 @@ SESSIONS_C = [
    "run": "headless",
    "frames": 240,
    "predict": "Take out <code>was_touching</code> and the gate that uses it. What happens to the score on a single hit?",
-   "reveal": "It climbs every frame the ball is inside the bumper, which is several hundred points for one hit. The <code>was_touching</code> name is there so the score changes on the frame the contact begins and not again until contact ends. This is the same problem as a coin collected once per frame in session 11."},
+   "reveal": "It climbs every frame the ball is inside the bumper, which is several hundred points for one hit. The <code>was_touching</code> name is there so the score changes on the frame the contact begins and not again until contact ends. This is the same problem as a coin collected once per frame in session 12."},
  ],
- "hinge": {"q": "From session 10: why does flipping both velocities look wrong when the ball hits the bumper straight on from the side?",
+ "hinge": {"q": "From session 11: why does flipping both velocities look wrong when the ball hits the bumper straight on from the side?",
            "a": "Because a real bounce only reverses the direction that ran into the surface. Flipping both sends the ball back along its exact incoming path, which looks like the bumper grabbed it. Doing it properly means working out the direction from the centre outward, which is why this page stops here."},
  "brief": {
    "title": "Build: a three-bumper table",

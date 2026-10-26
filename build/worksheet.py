@@ -233,7 +233,7 @@ def masthead(s, title, covers):
     return (
         '<header class="top"><div class="wrap">'
         '<p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session '
-        + str(s["num"]) + ' of 12</p>'
+        + str(s["num"]) + ' of 13</p>'
         '<h1>' + esc(title) + '</h1>'
         '<div class="dates">'
         + ('<span class="pill"><b>Date</b> ' + sheet_date(s) + '</span>'

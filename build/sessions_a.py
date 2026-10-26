@@ -685,7 +685,7 @@ SESSIONS_A = [
      "1:25 exits, ledger stamp, 5 min",
    ],
    "misconceptions": [
-     ["Types Rock with a capital letter, gets asked again, and says the program is broken.", "It is not. <code>==</code> compares every character, and R is not r. Have them type it in lowercase. Session 7 teaches <code>lower</code>, which fixes this; do not teach it today."],
+     ["Types Rock with a capital letter, gets asked again, and says the program is broken.", "It is not. <code>==</code> compares every character, and R is not r. Have them type it in lowercase. Session 8 teaches <code>lower</code>, which fixes this; do not teach it today."],
      ["Writes <code>or</code> between the three tests in the asking loop and the program asks forever.", "Substitute rock into all three tests out loud. Two stay True, and <code>or</code> needs only one. This is the hinge question. If it happens before the hinge, let the room watch, and stop the program with Ctrl+C in the terminal."],
      ["Writes <code>you == \"rock\" and \"scissors\"</code>, and rock now beats paper.", "Each side of <code>and</code> has to be a whole comparison. The right side here is the text scissors on its own, which Python treats as True, so the branch runs whenever the player typed rock and the round was not a tie. Print the two halves separately and ask what the second one is."],
      ["Puts <code>your_wins = 0</code> inside the loop and the score never gets past 1.", "Session 3's accumulator bug in a new place. The score line already shows it resetting; ask them to read the score after each round out loud."],
