@@ -201,7 +201,7 @@ SESSION06 = {
       "line": 'def tile(color, x, y, w, h):'},
      {"label": "Line 2",
       "q": "What is the first thing the function draws, and how far in is the line indented?",
-      "hints": ["Chunk 3's first line, the filled rectangle, indented four spaces so it belongs to the <code>def</code>.",
+      "hints": ["Chunk 3's first line, the filled rectangle, indented one level so it belongs to the <code>def</code>.",
                 "In chunk 3 the colour was <code>RED</code> and the numbers were written in. Here they come from the parameters, so the line uses the parameter names instead.",
                 {"text": "Fill the blank.", "code": '    pygame.draw.rect(canvas, color, (____, y, w, h))'}],
       "line": '    pygame.draw.rect(canvas, color, (x, y, w, h))'},
