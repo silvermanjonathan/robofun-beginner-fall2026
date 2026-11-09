@@ -882,7 +882,7 @@ def render_session(s, prev_s, next_s):
         if tool.get("intro"):
             b.append('<p>' + tool["intro"] + '</p>')
         b.append(line_ladders(tag, tool["code"], tool["steps"], tool.get("start"),
-                              whole="Show the whole function and its test"))
+                              whole=tool.get("whole", "Show the whole function and its test")))
         if out:
             b.append(reveal(tag, tool["predict"], tool["reveal"], "Predict",
                             out_block(out, "What it actually prints"),
