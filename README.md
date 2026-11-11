@@ -4,7 +4,9 @@ Beyond Vibe Coding, beginner semester. Python for grades 5 to 8, Robofun Fall 20
 110 West End Avenue. Two beginner sections, Monday and Friday, working through the
 same thirteen required sessions. Session 6, the Mondrian, was added in October 2026,
 so the last Monday session has no date yet and the Friday bonus session is no longer
-scheduled; it stays on the site for anyone who wants it.
+scheduled; it stays on the site for anyone who wants it. Session 9 has been tic tac
+toe since November 2026; the cipher wheel, which had that date, is an extra page with
+no date.
 
 Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner_semester_hub.html
 (`beginner_semester_hub.html` at the repo root; there is no `index.html`)
@@ -36,12 +38,13 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | `session06_mondrian_rectangles.html` | A Mondrian made of rectangles. The first pygame window: one `tile` function, written line by line, called once per tile. |
 | `session07_angles_and_shapes.html` | Angles and shapes on screen |
 | `session08_strings_as_data.html` | Strings as data |
-| `session09_remainders_cipher_wheel.html` | Remainders and the cipher wheel |
+| `session09_tic_tac_toe.html` | Tic tac toe. A two-player game in the terminal, written one line at a time, with an extension: play against the computer. |
 | `session10_dictionaries.html` | Dictionaries |
 | `session11_the_pygame_window.html` | The pygame window |
 | `session12_grids_keys_game_state.html` | Grids, keys, and game state |
 | `session13_commission_and_demo.html` | Commission and demo day |
 | `friday_bonus_distance_and_bumpers.html` | Friday bonus: distance and bumpers |
+| `extra_remainders_cipher_wheel.html` | Extra, no date: remainders and the cipher wheel. Session 9 until November 2026. |
 
 ## Environment
 
@@ -69,10 +72,11 @@ If an earlier build was already uploaded, delete `session05_turtle_and_angles.ht
 `session06_strings_as_data.html`, `session07_debugging_clinic.html`,
 `session06_angles_and_shapes.html`, `session07_strings_as_data.html`,
 `session08_remainders_cipher_wheel.html`, `session09_dictionaries.html`,
-`session10_the_pygame_window.html`, `session11_grids_keys_game_state.html`, and
-`session12_commission_and_demo.html` from the live repo. None of them exist here
-(the last seven were renumbered when the Mondrian session was added) and the hub no
-longer links to them.
+`session10_the_pygame_window.html`, `session11_grids_keys_game_state.html`,
+`session12_commission_and_demo.html`, and `session09_remainders_cipher_wheel.html`
+from the live repo. None of them exist here (seven were renumbered when the Mondrian
+session was added, and the cipher wheel page is now `extra_remainders_cipher_wheel.html`)
+and the hub no longer links to them.
 
 ## Look and behaviour
 
@@ -156,7 +160,7 @@ hidden `.ans` container.
   dependency.
 - No `localStorage`, no `sessionStorage`, no `indexedDB`. These pages are embedded
   in Google Sites by full-page URL and storage is blocked inside the iframe.
-- Internal links carry a version pin: `?v=15`. Bump the pin on every page whose
+- Internal links carry a version pin: `?v=16`. Bump the pin on every page whose
   content changes, so the embed does not serve a cached copy.
 - Re-upload the hub whenever a page is added, renamed, or removed, or the
   navigation will have gaps.
@@ -190,7 +194,8 @@ The HTML is generated. Edit the content files, not the HTML.
 build/standards.py     the resolved standards registry
 build/sessions_a.py    sessions 1 to 4
 build/session06.py     session 6, the Mondrian (added October 2026)
-build/sessions_b.py    sessions 5, 7, 8, and 9
+build/session09.py     session 9, tic tac toe (added November 2026), and its two figures
+build/sessions_b.py    sessions 5, 7, and 8, and the cipher wheel extra page
 build/sessions_c.py    sessions 10 to 13 and the Friday bonus
 build/render.py        runs every snippet, then writes the site
 build/validate.py      checks the written site
@@ -410,3 +415,21 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   optical size): the same four pages and six embedded fonts, and against a render of
   the old page it differs only in the guide strips. It also now says "Session 2 of
   13", which the old PDF had as 12. Version pin `?v=15`.
+- **2026-11-10, v16.** A new session 9, tic tac toe, in the cipher wheel's date
+  (`build/session09.py`). Nine chunks write a two-player terminal game one line at a
+  time: the board as a list of nine strings, `show`, one move, `winner` with its
+  eight-way gate and test boards, the turn loop with `marks[turns % 2]`, the verdict,
+  and a gate that refuses a taken square and a typed mark (chunk 8's output box is the
+  real ValueError the first version of that gate gives). The build is a test sheet
+  and the players' names; the extension is a computer opponent that picks at random.
+  Two figures: the squares with their slot numbers, and the eight ways to win.
+  `board[4] = "X"` is new syntax, added to the constraints page and, in place of
+  `rack.find`, to the ledger card's reference strip. The cipher wheel becomes
+  `extra_remainders_cipher_wheel.html`, an extra page with no date (`bonus` with a
+  `tag` of Extra; `render.short` names such pages in lists); its line about the pair
+  swap, which session 8 no longer has, is gone. Session 7's remainder chunk points at
+  the new session 9, session 10's opener asks about a list slot instead of `find`,
+  its codebook chunk no longer leans on the cipher, and session 12's timer chunk
+  credits the remainder to sessions 7 and 9. Not done: the ledger card has no box for
+  the extra page, and no extra cards exist for session 9. Version pin `?v=16`.
+

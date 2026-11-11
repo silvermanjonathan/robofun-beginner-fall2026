@@ -12,12 +12,13 @@ SESSIONS_C = [
  "reuse": "Session 3: lists, and session 8: building up a result in a loop",
  "reuse_note": "Do not skip the parallel-list chunk. The pain has to be felt before the fix means anything.",
  "opener": {
-   "title": "Retrieval: find, and the counter",
+   "title": "Retrieval: a list slot, and the counter",
    "minutes": 10,
    "body": "Paper first.",
    "questions": [
-     {"q": "What does <code>rack.find(\"!\")</code> give, and why must you gate on it?",
-      "a": "Negative one. Used as an index it points at the last letter, so the bug is silent rather than loud."},
+     {"q": "In tic tac toe, <code>board</code> is a list of nine strings, <code>\"1\"</code> to <code>\"9\"</code>. Write the line that puts X in the middle square. Then say what <code>\"5\" in board</code> gives after that line has run.",
+      "code_a": 'board[4] = "X"',
+      "a": "The middle square is square 5, and its index is one less, so the line changes slot 4. After it has run, <code>\"5\" in board</code> gives False, because no item in the list is <code>\"5\"</code> any more. That is how the game knew a square was taken."},
      {"q": "Write the loop that counts how many items in <code>nums</code> are over 100.",
       "code_a": 'count = 0\nfor n in nums:\n    if n > 100:\n        count = count + 1',
       "a": "A counter with a gate, from session 3. The counter starts at 0 above the loop, and the gate inside the loop decides whether this pass adds 1."},
@@ -74,7 +75,7 @@ SESSIONS_C = [
    "reveal": "The letters E, O and T tie at 2, and so does the space. In a longer message the space has the longest bar by far, and that is the first thing a code breaker looks for."},
 
   {"title": "A codebook is a dictionary",
-   "teach": "Session 9 shifted letters by arithmetic. A codebook does it by lookup instead, which means the substitution does not have to follow any pattern at all. The gate handles characters the book does not cover.",
+   "teach": "A <b>codebook</b> is a table of swaps for writing a secret message: wherever the message has an A, write this symbol in its place, and so on. A dictionary stores one directly, with the letter as the key and its symbol as the value, and the swaps do not have to follow any pattern at all. The gate handles characters the book does not cover.",
    "code": 'book = {"A": "%", "E": "#", "M": "@", "N": "+", "O": "0", "T": "~"}\n\ndef encode(text):\n    out = ""\n    for ch in text:\n        if ch in book:\n            out = out + book[ch]\n        else:\n            out = out + ch\n    return out\n\nprint(encode("MEET AT NOON"))',
    "run": "py",
    "predict": "The book has six letters in it. What happens to the others?",
@@ -304,7 +305,7 @@ SESSIONS_C = [
    "reveal": "The held counter, because it adds one on every frame the key is down while the press counter adds one per press. Use the first for walking and the second for stepping one tile at a time."},
 
   {"title": "A timer, built from a frame counter and a remainder",
-   "teach": "Sixty frames is one second. Count frames, and use the remainder to fire something on a schedule. This is session 9's operator doing a new job.",
+   "teach": "Sixty frames is one second. Count frames, and use the remainder to fire something on a schedule. This is the remainder operator from sessions 7 and 9 doing a new job.",
    "code": 'FPS = 60\nSPAWN_EVERY = 90\nframe = 0\nspawns = 0\nfor i in range(361):\n    frame = frame + 1\n    if frame % SPAWN_EVERY == 0:\n        spawns = spawns + 1\n        print("spawn", spawns, "at frame", frame, "=", frame / FPS, "seconds")\nprint("total spawns in", frame, "frames:", spawns)',
    "run": "py",
    "predict": "Ninety frames between spawns, at sixty frames a second. How many spawns in six seconds?",

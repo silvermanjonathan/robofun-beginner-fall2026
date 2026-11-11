@@ -13,17 +13,24 @@ from standards import STANDARDS, RESOLVED_ON, CONNECTOR
 from hl import highlight
 from sessions_a import SESSIONS_A
 from session06 import SESSION06
+from session09 import SESSION09
 from sessions_b import SESSIONS_B
 from sessions_c import SESSIONS_C
 
-# session 6, the Mondrian, was added in October 2026 and lives in its own file
-SESSIONS = sorted(SESSIONS_A + [SESSION06] + SESSIONS_B + SESSIONS_C, key=lambda s: s["num"])
+# session 6, the Mondrian, was added in October 2026 and lives in its own file; so
+# does session 9, tic tac toe, added in November 2026
+SESSIONS = sorted(SESSIONS_A + [SESSION06, SESSION09] + SESSIONS_B + SESSIONS_C, key=lambda s: s["num"])
+
+
+def short(s):
+    """What a page is called in a list: its number, or Bonus or Extra for a page with no date."""
+    return s.get("tag", "Bonus") if s.get("bonus") else str(s["num"])
 # Paths are relative to this file, so the repo runs from wherever it is cloned.
 # The pages live in the repo root, one level up from build/.
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "15"
+VERSION = "16"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -201,6 +208,8 @@ def verify(chunk, tag):
     num = tag.split("-")[0].replace("s", "")
     if num == "14":
         fname = "Jonathan_friday_bonus.py"
+    elif num == "15":
+        fname = "Jonathan_cipher_wheel.py"
     else:
         fname = "Jonathan_session%02d.py" % int(num)
     if mode == "compile":
@@ -736,7 +745,7 @@ def standards_table(codes):
 def render_session(s, prev_s, next_s):
     n = s["num"]
     bonus = s.get("bonus", False)
-    label = "Bonus session" if bonus else "Session " + str(n) + " of 13"
+    label = short(s) + " session" if bonus else "Session " + str(n) + " of 13"
 
     b = ['<header class="top"><div class="wrap">']
     b.append('<p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; ' + label + '</p>')
@@ -1106,7 +1115,7 @@ def render_hub():
     b.append('<section><h2>The thirteen sessions</h2><ul class="sessionlist">')
     for s in SESSIONS:
         cls = ' class="bonus"' if s.get("bonus") else ''
-        num = "B" if s.get("bonus") else str(s["num"])
+        num = short(s)[0] if s.get("bonus") else str(s["num"])
         b.append('<li' + cls + '><span class="n">' + num + '</span><div>'
                  '<a href="' + link(s["slug"]) + '">' + html.escape(s["title"]) + '</a>'
                  '<span class="meta">' + s["mon"] + ' &middot; ' + s["fri"] + '</span>'
@@ -1153,11 +1162,11 @@ def render_hub():
     b.append('<div class="card"><h3>Friday, 13 sessions</h3><table>'
              '<tr><th>Date</th><th>Session</th></tr>')
     fri = sorted(SESSIONS, key=lambda s: ("Dec" in s["fri"], s["fri"]))
-    order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     by_num = {s["num"]: s for s in SESSIONS}
     for num in order:
         s = by_num[num]
-        tag = "Bonus. " if s.get("bonus") else str(s["num"]) + ". "
+        tag = short(s) + ". "
         b.append('<tr><td>' + s["fri"] + '</td><td>' + tag + html.escape(s["title"])
                  + '</td></tr>')
     b.append('</table></div></div>')
@@ -1166,7 +1175,9 @@ def render_hub():
              'Monday session, the demo, needs a date after Dec 14 or a session merged into '
              'another; that date is still to be decided. Friday has thirteen dates, so every '
              'Friday session has one, and the bonus session is no longer scheduled. It stays on '
-             'the site for anyone who wants it. If a parent compares the two classes, the '
+             'the site for anyone who wants it. Session 9 is tic tac toe since November; the '
+             'cipher wheel, which had that date, is now an extra page with no date, for the '
+             'end of the course if there is time. If a parent compares the two classes, the '
              'required content is identical.</p>'
              '<p class="note">From session 4 on, Friday runs one to two sessions ahead of '
              'Monday, so in most weeks the two sections are on different pages. Each page '
@@ -1233,7 +1244,9 @@ def render_constraints():
              'not clean their own input, which forced capitals-and-spaces workarounds.</td></tr>'
              '<tr><td>Dictionaries</td><td>Session 10</td><td>The parallel-list failure is '
              'taught first, then the fix.</td></tr>'
-             '<tr><td><code>.find()</code></td><td>Session 9</td><td>Revealed after the '
+             '<tr><td>Changing a list slot, <code>board[4] = "X"</code></td><td>Session 9</td>'
+             '<td>A tic tac toe board is a list whose slots change as the game is played.</td></tr>'
+             '<tr><td><code>.find()</code></td><td>Extra: the cipher wheel</td><td>Revealed after the '
              'hand-written rack scan.</td></tr>'
              '<tr><td>pygame from session 6 onward</td><td>Session 6</td><td>The only graphics library in the course. It replaces the turtle drawing session, which does not run in VS Code.</td></tr>'
              '<tr><td>KEYDOWN, mouse, frame timers</td><td>Session 12</td><td>Without them a '
@@ -1337,7 +1350,7 @@ def render_standards():
              '<p>At most three per session, footered as mapped to rather than aligned '
              'with.</p><table><tr><th>Session</th><th>Mapped to</th></tr>')
     for s in SESSIONS:
-        name = ("Bonus" if s.get("bonus") else str(s["num"])) + '. ' + html.escape(s["title"])
+        name = short(s) + '. ' + html.escape(s["title"])
         codes = " ".join('<code>' + c + '</code>' for c in s["teacher"]["standards"])
         b.append('<tr><td><a href="' + link(s["slug"]) + '">' + name + '</a></td><td>'
                  + codes + '</td></tr>')
@@ -1356,8 +1369,7 @@ def render_standards():
         b.append('<section><h2>' + title + '</h2>')
         for c in sorted(codes):
             s = STANDARDS[c]
-            sess = ", ".join(("Bonus" if x.get("bonus") else str(x["num"]))
-                             for x in used[c])
+            sess = ", ".join(short(x) for x in used[c])
             b.append('<div class="card" style="margin-bottom:12px"><h3><code>' + c
                      + '</code> &middot; grade ' + s["grades"] + '</h3>')
             b.append('<p>' + html.escape(s["statement"]) + '</p>')
@@ -1440,7 +1452,7 @@ def render_ledger():
         'd = {"key": value}      look up with d["key"]\n'
         'key in d                True or False, checks keys\n'
         'a % b                   remainder; wraps a counter\n'
-        'rack.find(ch)           a slot, or -1 for not found\n'
+        'board[4] = "X"          change one slot of a list\n'
         '360 / sides             the turn that closes a shape\n'
         'math.radians(deg)       convert before cos and sin\n'
         'cos is across, sin down the far end of a step\n'

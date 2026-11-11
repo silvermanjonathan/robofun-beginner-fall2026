@@ -337,7 +337,7 @@ SESSIONS_B = [
    "reveal": "330 degrees. Twelve thirties make 360, so a thirteenth copy would land back on the first one. Change 12 to 10 and leave the 30 alone, and the rosette has a gap in it, because ten thirties only add up to 300."},
 
   {"title": "Cycling colours with a remainder",
-   "teach": "Three colours and twelve shapes, so the colours have to repeat. <code>%</code> gives the <b>remainder</b> after dividing: <code>7 % 3</code> is 1, because 3 goes into 7 twice with 1 left over. Dividing by 3 can only leave a remainder of 0, 1, or 2, and those are exactly the three indexes the list has. So <code>i % 3</code> turns the loop variable, whatever it has reached, into an index that fits the list, and shape 3 comes back to colour 0. Session 9 spends a whole session on this operator.",
+   "teach": "Three colours and twelve shapes, so the colours have to repeat. <code>%</code> gives the <b>remainder</b> after dividing: <code>7 % 3</code> is 1, because 3 goes into 7 twice with 1 left over. Dividing by 3 can only leave a remainder of 0, 1, or 2, and those are exactly the three indexes the list has. So <code>i % 3</code> turns the loop variable, whatever it has reached, into an index that fits the list, and shape 3 comes back to colour 0. Session 9 uses it again, to decide whose turn it is in a game.",
    "code": 'RED = (220, 38, 38)\nYELLOW = (252, 211, 77)\nCREAM = (248, 250, 252)\ncolors = [RED, YELLOW, CREAM]\nfor i in range(12):\n    print(f"shape {i} uses colour index {i % 3}, which is {colors[i % 3]}")',
    "run": "py",
    "predict": 'Twelve shapes, three colours. Which colour index does shape number 11 use?',
@@ -659,16 +659,20 @@ SESSIONS_B = [
 },
 
 # =====================================================================
+# The cipher wheel was session 9 until November 2026, when tic tac toe (session09.py)
+# took its date. It is an extra page now, with no date, for the end of the course.
 {
- "num": 9,
- "slug": "session09_remainders_cipher_wheel",
+ "num": 15,
+ "slug": "extra_remainders_cipher_wheel",
  "title": "Remainders and the cipher wheel",
  "subtitle": "Clock arithmetic, a 26-slot rack, and a message that comes back",
- "mon": "Mon Nov 23",
- "fri": "Fri Nov 13",
+ "mon": "Not scheduled",
+ "fri": "Not scheduled",
+ "bonus": True,
+ "tag": "Extra",
  "new": ["the remainder operator", "wrapping a counter with %", "scanning a rack with a loop", "find as the reveal", "encode then decode", "negative numbers under %"],
  "reuse": "Session 8: the string index, and session 3: the loop scan",
- "reuse_note": "The rack scan is a loop over a string looking for a slot. It is session 3's pattern applied to session 8's data type, which makes this session mostly assembly rather than new material.",
+ "reuse_note": "This is an extra page with no date of its own since tic tac toe took session 9 in November. Nothing in sessions 10 to 13 depends on it. It can be taught at the end of the course if there is a free date, or a student who wants it can read it alone. The rack scan is a loop over a string looking for a slot. It is session 3's pattern applied to session 8's data type, which makes this session mostly assembly rather than new material.",
  "opener": {
    "title": "Retrieval: slots and a remainder",
    "minutes": 10,
@@ -728,7 +732,7 @@ SESSIONS_B = [
    "code": 'rack = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"\n\ndef shift(text, key):\n    out = ""\n    for ch in text:\n        slot = rack.find(ch)\n        if slot < 0:\n            out = out + ch\n        else:\n            out = out + rack[(slot + key) % 26]\n    return out\n\nsecret = shift("MEET AT NOON", 3)\nprint(secret)',
    "run": "py",
    "predict": "The space is not in the rack. Which branch of the gate handles it?",
-   "reveal": "The first one, because <code>find</code> gives negative one for a space. The space comes through unchanged, which is why word shapes still show in the output. Hiding them is what the pair swap from session 8 does."},
+   "reveal": "The first one, because <code>find</code> gives negative one for a space. The space comes through unchanged, which is why word shapes still show in the output."},
 
   {"title": "Decoding is a negative key",
    "teach": "To undo a shift of 3, shift by 3 in the other direction. Python's remainder operator handles negative numbers the way a clock does, so the same function decodes with no changes at all.",
@@ -762,7 +766,7 @@ SESSIONS_B = [
    "middle": "<code>shift</code> working both ways on a typed message, with spaces preserved.",
    "stretch": "Make the key a word instead of a number: shift the first letter by the first letter of the key, the second by the second, and wrap the key with a remainder when it runs out.",
  },
- "ledger": "Stamp 9: <code>a % b</code> is the remainder, <code>(slot + key) % 26</code> wraps the rack, <code>rack.find(ch)</code> gives an index or negative one, a negative key decodes, shifts add.",
+ "ledger": "Extra stamp, on the back of the card: <code>a % b</code> is the remainder, <code>(slot + key) % 26</code> wraps the rack, <code>rack.find(ch)</code> gives an index or negative one, a negative key decodes, shifts add.",
  "teacher": {
    "timing": [
      "0:00 retrieval opener, 10 min",
