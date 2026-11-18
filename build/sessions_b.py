@@ -91,7 +91,7 @@ SESSIONS_B = [
    ],
    "tools": [
      {"title": "Tool 1: total_of, one line at a time",
-      "intro": "Each line of the function is a question for the room before it goes on the screen. Ask the room first. Open a hint only when the room is stuck, and open the line last. The four lines inside the function are the accumulator from the opener, so most of the room has already written them once today.",
+      "intro": "Each line of the function is a question for the room before it goes on the screen. Each question shows the line with a blank and three choices. Ask the room to pick before you click. A wrong choice says why it does not fit, and the right choice shows the finished line and why it is right. The four lines inside the function are the accumulator from the opener, so most of the room has already written them once today.",
       "steps": [
         {"label": "Line 1",
          "q": "The function is called <code>total_of</code> and it takes one list. Which line starts it?",
@@ -477,7 +477,7 @@ SESSIONS_B = [
  "brief": {
    "title": "Build: hangman",
    "minutes": 25,
-   "intro": "One player knows a word. The other guesses it one letter at a time. Every letter that is in the word appears in its slot; every letter that is not costs a miss, and six misses ends the game. The word is a string, the guesses are a string that grows, and the row of blanks is built with the accumulator from chunk 6. The program is written below one line at a time. Each line is a question for the room before it goes on the screen. Ask the room first. Open a hint only when the room is stuck, and open the line last.",
+   "intro": "One player knows a word. The other guesses it one letter at a time. Every letter that is in the word appears in its slot; every letter that is not costs a miss, and six misses ends the game. The word is a string, the guesses are a string that grows, and the row of blanks is built with the accumulator from chunk 6. The program is written below one line at a time. Each line is a question for the room before it goes on the screen. Each question shows the line with a blank and three choices. Ask the room to pick before you click. A wrong choice says why it does not fit, and the right choice shows the finished line and why it is right.",
    "steps": [
      "Write <code>show(secret, guessed)</code> that returns the secret word with a blank for every letter not yet guessed.",
      "Write the game loop: show the word, ask for a letter, and sort the guess into already tried, a hit, or a miss.",

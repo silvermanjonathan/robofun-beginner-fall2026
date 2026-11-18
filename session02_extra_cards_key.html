@@ -166,6 +166,18 @@ button.rev.hint:hover{background:var(--ochre-tint)}
 .ladder .ans p{margin:0 0 12px}
 .ladder .ans pre{margin:0 0 12px}
 .ladder .q b{color:var(--clay)}
+/* a What goes next? question: the line with a blank, then one button for each choice */
+.choices button.rev{
+  display:block; width:100%; text-align:left; margin:0 0 10px;
+  background:var(--card); color:var(--ink); border:2px solid var(--teal);
+  font-size:18px; padding:12px 16px; white-space:pre-wrap;
+}
+.choices.code button.rev{font-family:'JetBrains Mono',monospace; font-variant-ligatures:none}
+.choices button.rev:hover{background:var(--ochre-tint)}
+.choices button.rev[aria-expanded="true"]{border-width:4px}
+.ladder .choices .ans{margin:0 0 14px; padding:10px 0 2px 14px; border-top:0}
+.ladder .choices .ans.yes{border-left:8px solid var(--green)}
+.ladder .choices .ans.no{border-left:8px solid var(--clay)}
 .sofar,.whole{margin:0 0 16px}
 .sofar .ans,.whole .ans{margin-top:12px; padding-top:0; border-top:0}
 .ans{display:none; margin-top:16px; padding-top:16px; border-top:2px solid var(--rule)}
@@ -322,7 +334,7 @@ section.xcard h3{margin-top:20px}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 2 of 13</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Sep 28</span><span class="pill"><b>Friday section</b> Fri Sep 25</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session02_comparisons_and_gates.html?v=18">Back to the session 2 page</a><a class="btn quiet" href="session02_extra_cards.html?v=18">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 20 minutes</p><h2>Three-question quiz</h2><pre class="py"><code><span class="hv">score</span> = <span class="hd">0</span>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 2 of 13</p><h1>Extra cards: answer key</h1><p class="sub">Teacher copy. The finished program for each card, what it prints, and the bugs in the order a student meets them.</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Sep 28</span><span class="pill"><b>Friday section</b> Fri Sep 25</span><span class="pill"><b>Cards</b> 3</span></div></div></header><main><div class="wrap"><div class="toolbar"><a class="btn quiet" href="session02_comparisons_and_gates.html?v=19">Back to the session 2 page</a><a class="btn quiet" href="session02_extra_cards.html?v=19">The cards</a></div><section class="chunk xcard"><p class="chunk-no">Card A &middot; build it from the steps &middot; about 20 minutes</p><h2>Three-question quiz</h2><pre class="py"><code><span class="hv">score</span> = <span class="hd">0</span>
 
 <span class="hv">answer</span> = <span class="hf">input</span>(<span class="hq">"How many legs does a spider have? "</span>)
 <span class="hk">if</span> <span class="hv">answer</span> == <span class="hq">"8"</span>:
@@ -392,7 +404,7 @@ Sharp guessing.</pre></section><section class="hinge xcard"><p class="chunk-no">
 <span class="ig">    </span><span class="hf">print</span>(<span class="hq">"Come in."</span>)
 <span class="hk">else</span>:
 <span class="ig">    </span><span class="hf">print</span>(<span class="hq">"Not today."</span>)
-</code></pre></section></div></main><nav class="pager"><a href="session02_comparisons_and_gates.html?v=18">&larr; Session 2: Comparisons and gates</a><a href="beginner_semester_hub.html?v=18">Course home</a><a href="session03_loops_counters_lists.html?v=18">Session 3: Loops, counters, and lists &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 2, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
+</code></pre></section></div></main><nav class="pager"><a href="session02_comparisons_and_gates.html?v=19">&larr; Session 2: Comparisons and gates</a><a href="beginner_semester_hub.html?v=19">Course home</a><a href="session03_loops_counters_lists.html?v=19">Session 3: Loops, counters, and lists &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Fall 2026. Extra cards for session 2, written by a generator in <code>build/</code>. Every finished run and every error message on these cards comes from running the program when the site was built.</p></div></footer>
 <script>
 document.addEventListener('click', function(e){
   var b = e.target.closest('button.rev');
@@ -402,6 +414,14 @@ document.addEventListener('click', function(e){
   var open = t.classList.toggle('open');
   b.setAttribute('aria-expanded', open ? 'true' : 'false');
   b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+  var group = b.closest('.choices');
+  if(!group || !open) return;
+  group.querySelectorAll('button.rev').forEach(function(o){
+    if(o === b) return;
+    var ot = document.getElementById(o.getAttribute('data-target'));
+    if(ot){ ot.classList.remove('open'); }
+    o.setAttribute('aria-expanded', 'false');
+  });
 });
 </script>
 </body>

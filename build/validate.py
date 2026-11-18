@@ -51,7 +51,7 @@ def check(name, text, all_names):
         fail.append("unclosed tags: " + ", ".join(t for t, _ in p.stack))
 
     buttons = re.findall(r'<button class="rev(?: hint)?" data-target="([^"]+)"', text)
-    answers = re.findall(r'<div class="ans" id="([^"]+)">', text)
+    answers = re.findall(r'<div class="ans(?: yes| no)?" id="([^"]+)">', text)
     if sorted(buttons) != sorted(answers):
         fail.append("reveal parity: %d buttons, %d answer blocks; unmatched %s"
                     % (len(buttons), len(answers),

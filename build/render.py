@@ -16,6 +16,7 @@ from session06 import SESSION06
 from session09 import SESSION09
 from sessions_b import SESSIONS_B
 from sessions_c import SESSIONS_C
+from picks import PICKS
 
 # session 6, the Mondrian, was added in October 2026 and lives in its own file; so
 # does session 9, tic tac toe, added in November 2026
@@ -30,7 +31,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "18"
+VERSION = "19"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -405,6 +406,18 @@ button.rev.hint:hover{background:var(--ochre-tint)}
 .ladder .ans p{margin:0 0 12px}
 .ladder .ans pre{margin:0 0 12px}
 .ladder .q b{color:var(--clay)}
+/* a What goes next? question: the line with a blank, then one button for each choice */
+.choices button.rev{
+  display:block; width:100%; text-align:left; margin:0 0 10px;
+  background:var(--card); color:var(--ink); border:2px solid var(--teal);
+  font-size:18px; padding:12px 16px; white-space:pre-wrap;
+}
+.choices.code button.rev{font-family:'JetBrains Mono',monospace; font-variant-ligatures:none}
+.choices button.rev:hover{background:var(--ochre-tint)}
+.choices button.rev[aria-expanded="true"]{border-width:4px}
+.ladder .choices .ans{margin:0 0 14px; padding:10px 0 2px 14px; border-top:0}
+.ladder .choices .ans.yes{border-left:8px solid var(--green)}
+.ladder .choices .ans.no{border-left:8px solid var(--clay)}
 .sofar,.whole{margin:0 0 16px}
 .sofar .ans,.whole .ans{margin-top:12px; padding-top:0; border-top:0}
 .ans{display:none; margin-top:16px; padding-top:16px; border-top:2px solid var(--rule)}
@@ -537,6 +550,14 @@ document.addEventListener('click', function(e){
   var open = t.classList.toggle('open');
   b.setAttribute('aria-expanded', open ? 'true' : 'false');
   b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+  var group = b.closest('.choices');
+  if(!group || !open) return;
+  group.querySelectorAll('button.rev').forEach(function(o){
+    if(o === b) return;
+    var ot = document.getElementById(o.getAttribute('data-target'));
+    if(ot){ ot.classList.remove('open'); }
+    o.setAttribute('aria-expanded', 'false');
+  });
 });
 """
 
@@ -714,13 +735,100 @@ def check_plan(tag, plan, steps):
     assert sorted(set(seen)) == list(range(1, len(plan) + 1)), tag + ": a part has no step"
 
 
+ORDINALS = ["first", "second", "third"]
+
+
+def fill_blanks(blank, fills):
+    """Put one fill in each ____ of a blanked line, in order."""
+    parts = blank.split("____")
+    assert len(parts) - 1 == len(fills), "%r has %d blanks, not %d" % (blank, len(parts) - 1, len(fills))
+    out = parts[0]
+    for fill, rest in zip(fills, parts[1:]):
+        out += fill + rest
+    return out
+
+
+def next_pick(tag, nx, program, answer_html):
+    """A chunk's or card's single What goes next? question, with three choices.
+
+    The line with the blank filled in must be in the program the question is about.
+    """
+    pick = PICKS.get(tag)
+    assert pick and len(pick) == 1, tag + ": picks.py needs one entry for this question"
+    pick = pick[0]
+    blank = pick.get("blank") or nx["hints"][-1]["code"]
+    line = fill_blanks(blank, pick["right"] if isinstance(pick["right"], tuple) else (pick["right"],))
+    have = [h.strip() for h in program.split("\n")]
+    for ln in line.split("\n"):
+        assert ln.strip() in have, tag + ": the right choice gives a line the program does not have: " + ln
+    step = {"q": nx["q"], "hints": nx["hints"], "line": line}
+    return pick_block(tag, step, pick, program, "What goes next?", after=answer_html)
+
+
+def pick_block(sid, step, pick, program, label, after=""):
+    """A What goes next? question as a line with blanks and three choices.
+
+    A wrong choice opens one sentence that says why it does not fit. The right choice
+    opens the finished line, why it is right for this program, and the step's note.
+    The build stops unless the right choice gives exactly the step's line and every
+    wrong choice gives something else. The choices are put in an order worked out
+    from the question's id, so the right one is not always in the same place.
+    """
+    tuples = lambda f: f if isinstance(f, tuple) else (f,)
+    right = tuples(pick["right"])
+    wrong = [(tuples(f), why) for f, why in pick["wrong"]]
+    assert len(wrong) == 2 and len({right} | {f for f, _ in wrong}) == 3, sid + ": choices repeat"
+    for text in [pick["why"]] + [why for _, why in wrong]:
+        assert text.strip().endswith((".", "!", "?")), sid + ": " + text
+    head = ""
+    if pick.get("text"):
+        how = "Pick one answer."
+    else:
+        blank = pick.get("blank")
+        if blank is None:
+            last = step["hints"][-1]
+            blank = last.get("code") if isinstance(last, dict) else None
+        if callable(blank):
+            blank = blank(step["line"])
+        assert blank and "____" in blank, sid + ": no line with a blank"
+        assert fill_blanks(blank, right) == step["line"], sid + ": the right choice does not give the line"
+        for fills, _ in wrong:
+            assert fill_blanks(blank, fills) != step["line"], sid + ": a wrong choice gives the line"
+        n = blank.count("____")
+        assert n == len(right) and n <= 2, sid + ": at most two blanks"
+        head = code_block(blank, context=program)
+        how = ("Pick what goes in the blank." if n == 1
+               else "Pick what goes in the two blanks.")
+    yes = '<p><b>Yes.</b></p>' + code_block(step["line"], context=program) + '<p>' + pick["why"] + '</p>'
+    if step.get("note"):
+        yes += '<p>' + step["note"] + '</p>'
+    yes += after
+    options = [(right, "yes", yes)] + [(f, "no", '<p><b>Not this one.</b> ' + why + '</p>') for f, why in wrong]
+    shift = sum(ord(c) for c in sid) % 3
+    options = options[shift:] + options[:shift]
+    buttons = []
+    for letter, (fills, kind, body) in zip("ABC", options):
+        if len(fills) == 1:
+            text = letter + ".  " + fills[0]
+        else:
+            text = letter + ".  " + "    ".join(ORDINALS[k] + " blank: " + f for k, f in enumerate(fills))
+        cid = sid + "-" + letter.lower()
+        shown = html.escape(text, quote=True)
+        buttons.append('<button class="rev" data-target="' + cid + '" aria-controls="' + cid + '" '
+                       'aria-expanded="false" data-show="' + shown + '" data-hide="' + shown + '">'
+                       + shown + '</button><div class="ans ' + kind + '" id="' + cid + '">' + body + '</div>')
+    return ('<div class="predict ladder"><p class="q"><b>' + label + '</b> ' + step["q"] + '</p>'
+            + head + '<p>' + how + '</p><div class="choices' + ("" if pick.get("text") else " code") + '">'
+            + "".join(buttons) + '</div></div>')
+
+
 def line_ladders(tag, program, steps, start=None, whole="Show the whole program", plan=None):
-    """One question per new line of a program, each behind a ladder of hints.
+    """One question per new line of a program, each with three choices.
 
     The program so far sits behind a button, then each step is a What goes next?
-    ladder whose last button shows the line, then the whole program sits behind a
-    button. Every step's line is checked against the program at the line its label
-    names, so a label cannot drift from the code.
+    question that shows the line with a blank and three choices (picks.py), then the
+    whole program sits behind a button. Every step's line is checked against the
+    program at the line its label names, so a label cannot drift from the code.
     """
     out = []
     if start:
@@ -728,6 +836,8 @@ def line_ladders(tag, program, steps, start=None, whole="Show the whole program"
                    "Hide the program so far", code_block(start)) + '</div>')
     if plan:
         check_plan(tag, plan, steps)
+    picks = PICKS.get(tag)
+    assert picks and len(picks) == len(steps), tag + ": picks.py needs one entry for each step"
     for j, st in enumerate(steps):
         check_step(st, program, tag)
         if plan and (j == 0 or steps[j - 1]["part"] != st["part"]):
@@ -735,13 +845,7 @@ def line_ladders(tag, program, steps, start=None, whole="Show the whole program"
             out.append('<p class="chunk-no part">Part ' + str(st["part"]) + ' of ' + str(len(plan))
                        + ' &middot; ' + html.escape(plan[st["part"] - 1][0]) + '</p>')
         sid = tag + "-l" + str(j + 1)
-        ans = code_block(st["line"], context=program)
-        if st.get("note"):
-            ans += '<p>' + st["note"] + '</p>'
-        low = st["label"][0].lower() + st["label"][1:]
-        out.append(ladder(sid, st["q"], st["hints"], ans,
-                          label=st["label"] + ". What goes next?",
-                          show="Show " + low, hide="Hide " + low))
+        out.append(pick_block(sid, st, picks[j], program, st["label"] + ". What goes next?"))
     out.append('<div class="whole">' + toggle(tag + "-whole", whole,
                whole.replace("Show", "Hide", 1), code_block(program)) + '</div>')
     return "".join(out)
@@ -843,8 +947,8 @@ def render_session(s, prev_s, next_s):
             b.append(line_ladders(tag, ch["code"], steps, start))
             b.extend(shown[1:])  # the note saying where the lines go, when there is one
         elif nx:
-            b.append(ladder(tag + "-next", nx["q"], nx["hints"],
-                            "".join(shown) + '<p>' + nx["a"] + '</p>'))
+            b.append(next_pick(tag + "-next", nx, ch["code"],
+                               "".join(shown) + '<p>' + nx["a"] + '</p>'))
         else:
             b.extend(shown)
         loops = "while running" in ch["code"]
@@ -985,8 +1089,8 @@ def render_session(s, prev_s, next_s):
                 b.append(card["figure"])
             nx = card.get("next")
             if nx:
-                b.append(ladder(tag + "-next", nx["q"], nx["hints"],
-                                code_block(card["code"]) + '<p>' + nx["a"] + '</p>'))
+                b.append(next_pick(tag + "-next", nx, card["code"],
+                                   code_block(card["code"]) + '<p>' + nx["a"] + '</p>'))
             else:
                 b.append(code_block(card["code"]))
             extra = ""

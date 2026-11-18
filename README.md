@@ -210,6 +210,7 @@ build/worksheet.py     the worksheet CSS, blocks, and projector typing script, s
 build/ws02.py          the session 2 worksheet and its answer key
 build/ws08.py          the session 8 worksheet (hangman trace tables) and its answer key
 build/ws09.py          the session 9 worksheet (tic tac toe trace tables) and its answer key
+build/picks.py         the three choices and the explanation for every What goes next? question
 build/extras.py        the extra cards and their answer keys, sessions 1 to 3 and 5
 build/graphs.py        session 4's figures: the rules as arrows, and the tree of pairs
 build/pdf.py           renders the worksheets to PDF
@@ -479,3 +480,23 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   sideways scroll on the session 9 page, the sheet, or the key. The PDF was rendered
   with WeasyPrint with Bricolage Grotesque, DM Sans, and JetBrains Mono embedded.
   The session 2 and session 8 PDFs were not re-rendered. Version pin `?v=18`.
+- **2026-11-18, v19.** Every What goes next? question is now a line with a blank and
+  three choices, in place of the hint ladder. There are 110: the 107 line questions
+  in sessions 4, 5, 6, 8, and 9, and the three single questions in session 4's
+  extension, session 6's chunk 5, and session 9's extension. The line is on screen
+  with one or two blanks from the start. A wrong choice opens one sentence that says
+  why it does not fit. The right choice opens the finished line, a short explanation
+  of why that code is right for this program, and the step's note. Opening one
+  choice closes the others. The choices and explanations are in `build/picks.py`,
+  one entry for each step; `render.py` fills the blank with each choice and stops
+  the build unless the right one gives exactly the step's line and each wrong one
+  gives something else, and unless every step has an entry. Lines that had three or
+  more blanks now have two. The two "move these lines" questions (session 4 chunk 5,
+  session 9 chunk 8) have sentences as choices and no blank. The right choice is
+  not always in the same place: its position is worked out from the question's id.
+  The teacher text that said to open hints in order now says to ask the room to
+  pick before clicking. The hint text is still in the generators' `hints` entries
+  and is not shown; hints on prediction questions and on the extra cards are
+  unchanged. Checked in Chrome at 1280px and 390px with every answer open: no
+  sideways scroll on the five session pages. The worksheets and their PDFs are
+  unchanged. Version pin `?v=19`.

@@ -141,7 +141,7 @@ SESSION06 = {
  "fri": "Fri Oct 23",
  "new": ["a window", "a colour as three numbers", "pygame.draw.rect", "x, y, width, height", "a border with a thickness", "a function that draws", "tiles that touch", "a picture made by calling one function many times"],
  "reuse": "Session 5: def, a parameter, an argument, and a function called more than once",
- "reuse_note": "Piet Mondrian was a Dutch painter who, about a hundred years ago, made paintings out of nothing but rectangles: red, blue, yellow, and white, with thick black lines between them. Today the class makes one in a window. The function that draws one tile is three lines long and the students write it one line at a time, with the hints opening one inside the next. After that they copy the calls and change the numbers. Every number a student changes moves something they can see, which is the point of the session. The window code at the top and bottom of the file is copied, not taught; session 11 takes it apart. Nobody needs to understand the loop today.",
+ "reuse_note": "Piet Mondrian was a Dutch painter who, about a hundred years ago, made paintings out of nothing but rectangles: red, blue, yellow, and white, with thick black lines between them. Today the class makes one in a window. The function that draws one tile is three lines long and the students write it one line at a time. Each line is a question with a blank and three choices. After that they copy the calls and change the numbers. Every number a student changes moves something they can see, which is the point of the session. The window code at the top and bottom of the file is copied, not taught; session 11 takes it apart. Nobody needs to understand the loop today.",
  "env_note": True,
  "opener": {
    "title": "Retrieval: a function with parameters",
@@ -291,7 +291,7 @@ SESSION06 = {
      "0:00 retrieval opener, 10 min",
      "0:10 chunk 1, the window, typed and run, 10 min (the window opens behind VS Code; say so before anyone runs)",
      "0:20 chunks 2 and 3, one rectangle and its border, 15 min (project the figure; most of the room will want to change the numbers already, and that is fine)",
-     "0:35 chunk 4, the tile function, 20 min (the core of the session; ask the room for every line before opening a hint)",
+     "0:35 chunk 4, the tile function, 20 min (the core of the session; ask the room to pick for every line before clicking a choice)",
      "0:55 chunk 5, the six calls, 10 min (read the plan out loud first; the calls are copied)",
      "1:05 chunk 6, one number per run, 5 min",
      "1:10 build brief, 15 min (the paper plan takes most rooms five minutes; do not let anyone type before the plan has numbers on it)",
