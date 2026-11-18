@@ -1,3 +1,5 @@
+from session12_build import TOOLS12
+
 SESSIONS_C = [
 
 # =====================================================================
@@ -323,6 +325,8 @@ SESSIONS_C = [
  "brief": {
    "title": "Build: a room with walls, coins, and lives",
    "minutes": 30,
+   "intro": "You are making a small game. It is a room of square tiles with walls around it. The arrow keys move a player one tile for each press, and walls stop it. Coins on the floor add to a score, and a trap costs a life. The build is one program, written in four tools. Each tool starts from the program the tool before it finished, and each new line is a question for the room before it goes on the screen. Each question shows the line with a blank and three choices. Ask the room to pick before you click. A wrong choice says why it does not fit, and the right choice shows the finished line and why it is right.",
+   "tools": TOOLS12,
    "steps": [
      "Draw the level from a list of lists, using tile arithmetic and two nested loops.",
      "Put a player on an open tile and move it one tile per KEYDOWN.",
@@ -361,7 +365,7 @@ SESSIONS_C = [
      ["Collects the same coin every frame and the score climbs forever.", "The coin has to be removed when collected. This is the clearest reason to keep coins in their own structure."],
    ],
    "standards": ["NY-5.G.2", "NY-6.NS.8", "MP7"],
-   "routing": "This is the fullest session of the term and it will not finish, and nothing survives on the machines, so it cannot continue next week. Session 13 gives out a finished version of this program as the engine. Treat the spawn timer as the float it really is.",
+   "routing": "This is the fullest session of the term and it will not finish, and nothing survives on the machines, so it cannot continue next week. Session 13 gives out a finished version of this program as the engine. Treat the spawn timer as the float it really is. The build is written out as four tools. Tool 1 is the floor exit, tools 2 and 3 together are the middle exit, and tool 4 is step 5 of the brief. Tools 2 to 4 each have their finished program behind a button, so a room that runs short can read the finished program and run it.",
  },
 },
 

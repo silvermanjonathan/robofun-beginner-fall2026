@@ -211,6 +211,7 @@ build/ws02.py          the session 2 worksheet and its answer key
 build/ws08.py          the session 8 worksheet (hangman trace tables) and its answer key
 build/ws09.py          the session 9 worksheet (tic tac toe trace tables) and its answer key
 build/picks.py         the three choices and the explanation for every What goes next? question
+build/session12_build.py  session 12's build as four programs written one line at a time
 build/extras.py        the extra cards and their answer keys, sessions 1 to 3 and 5
 build/graphs.py        session 4's figures: the rules as arrows, and the tree of pairs
 build/pdf.py           renders the worksheets to PDF
@@ -500,3 +501,22 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   unchanged. Checked in Chrome at 1280px and 390px with every answer open: no
   sideways scroll on the five session pages. The worksheets and their PDFs are
   unchanged. Version pin `?v=19`.
+- **2026-11-18, v20.** Session 12's build is now written out one line at a time, the
+  way sessions 8 and 9 are (`build/session12_build.py`). Four tools, each a whole
+  program that starts from the one before: the level printed in the terminal (the
+  floor exit); the room in a window with a player that moves one tile for each press
+  and is stopped by walls; coins and a score (with tool 2, the middle exit); and a
+  trap tile, three lives, game over, and restart. 33 What goes next? questions, each
+  a line with a blank and three choices in `build/picks.py`. Line labels are worked
+  out from the programs. Each program is run at build time, tools 2 to 4 headless
+  with key presses fed in, and each tool's prediction is answered from that run.
+  Choices made to fit the course's rules: the level is 5 rows by 7 columns; coins
+  are tile value 2 and the trap is tile value 3; movement works out `next_row` and
+  `next_col` first, so every gate is flat; restart reads the R key with
+  `get_pressed`, which keeps every line under 73 characters. The brief keeps its
+  five steps, its expected and got sheet, and its exits, and gains an intro that
+  sets the scene. The teacher panel's minutes are unchanged; its If time runs out
+  note says which tool is which exit. Session 13's engine is unchanged, and it
+  differs from this program (a larger level, a patrolling enemy, a spawn timer).
+  Checked in Chrome at 1280px and 390px with every answer open: no sideways scroll
+  on the session 12 page. Version pin `?v=20`.
