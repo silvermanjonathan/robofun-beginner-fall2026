@@ -212,6 +212,7 @@ build/ws08.py          the session 8 worksheet (hangman trace tables) and its an
 build/ws09.py          the session 9 worksheet (tic tac toe trace tables) and its answer key
 build/picks.py         the three choices and the explanation for every What goes next? question
 build/session12_build.py  session 12's build as four programs written one line at a time
+build/builds.py        the other builds written one line at a time, with their questions and choices
 build/extras.py        the extra cards and their answer keys, sessions 1 to 3 and 5
 build/graphs.py        session 4's figures: the rules as arrows, and the tree of pairs
 build/pdf.py           renders the worksheets to PDF
@@ -520,3 +521,20 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   differs from this program (a larger level, a patrolling enemy, a spawn timer).
   Checked in Chrome at 1280px and 390px with every answer open: no sideways scroll
   on the session 12 page. Version pin `?v=20`.
+- **2026-11-18, v21.** Every build that is a program is now written out one line at
+  a time, the way sessions 5, 8, and 12 are. New in `build/builds.py`: sessions 1,
+  2, 3, 4, 6, 7, 9, 10, and 11, the Friday bonus, and the cipher wheel extra page.
+  97 more What goes next? questions, each a line with a blank and three choices,
+  kept beside its step. Each build has a finished program (two for session 10),
+  written here to fit its brief, its exits, and the course's rules, and run when
+  the site is built. Line labels are worked out from the program, and each tool's
+  prediction is answered from the real run. Where a build starts from an earlier
+  program (session 4's chunk 8, session 9's chunk 9, the window files of sessions
+  6, 7, and 11, the bonus page's bouncing ball), that program is behind a Show
+  the program so far button. Session 6's build is a student's own picture, so its
+  tool works through one example plan. Session 9's tool covers the names; the
+  test sheet is unchanged. Session 13 has no tool, because it is a commission on
+  a finished program. The briefs keep their steps, sheets, and exits, and the
+  teacher panels' minutes are unchanged. Checked in Chrome at 1280px and 390px
+  with every answer open: no sideways scroll on the 14 pages that have questions,
+  and no question's code is wider than its box. Version pin `?v=21`.

@@ -17,10 +17,16 @@ from session09 import SESSION09
 from sessions_b import SESSIONS_B
 from sessions_c import SESSIONS_C
 from picks import PICKS
+from builds import BUILD_TOOLS
 
 # session 6, the Mondrian, was added in October 2026 and lives in its own file; so
 # does session 9, tic tac toe, added in November 2026
 SESSIONS = sorted(SESSIONS_A + [SESSION06, SESSION09] + SESSIONS_B + SESSIONS_C, key=lambda s: s["num"])
+# the builds written out one line at a time (builds.py); sessions 5, 8 and 12 carry their own
+for _s in SESSIONS:
+    if _s["num"] in BUILD_TOOLS:
+        assert "tools" not in _s["brief"], _s["num"]
+        _s["brief"]["tools"] = BUILD_TOOLS[_s["num"]]
 
 
 def short(s):
@@ -31,7 +37,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "20"
+VERSION = "21"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -836,8 +842,8 @@ def line_ladders(tag, program, steps, start=None, whole="Show the whole program"
                    "Hide the program so far", code_block(start)) + '</div>')
     if plan:
         check_plan(tag, plan, steps)
-    picks = PICKS.get(tag)
-    assert picks and len(picks) == len(steps), tag + ": picks.py needs one entry for each step"
+    picks = PICKS.get(tag) or [st.get("pick") for st in steps]
+    assert all(picks) and len(picks) == len(steps), tag + ": every step needs its three choices"
     for j, st in enumerate(steps):
         check_step(st, program, tag)
         if plan and (j == 0 or steps[j - 1]["part"] != st["part"]):
