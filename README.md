@@ -38,6 +38,9 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | `session06_mondrian_rectangles.html` | A Mondrian made of rectangles. The first pygame window: one `tile` function, written line by line, called once per tile. |
 | `session07_angles_and_shapes.html` | Angles and shapes on screen |
 | `session08_strings_as_data.html` | Strings as data |
+| `session08_worksheet.html` | Session 8 worksheet: trace hangman before you run it (the build, tools 1 and 2). Printed, and typed into on the projector. |
+| `session08_worksheet.pdf` | The same worksheet as a PDF for printing: three pages, US letter. |
+| `session08_worksheet_key.html` | The session 8 worksheet's answer key. Linked from the session 8 teacher panel only. |
 | `session09_tic_tac_toe.html` | Tic tac toe. A two-player game in the terminal, written one line at a time, with an extension: play against the computer. |
 | `session10_dictionaries.html` | Dictionaries |
 | `session11_the_pygame_window.html` | The pygame window |
@@ -202,6 +205,7 @@ build/validate.py      checks the written site
 build/hl.py            colors Python code the way VS Code does; copied from the Advanced course
 build/worksheet.py     the worksheet CSS, blocks, and projector typing script, shared by every sheet
 build/ws02.py          the session 2 worksheet and its answer key
+build/ws08.py          the session 8 worksheet (hangman trace tables) and its answer key
 build/extras.py        the extra cards and their answer keys, sessions 1 to 3 and 5
 build/graphs.py        session 4's figures: the rules as arrows, and the tree of pairs
 build/pdf.py           renders the worksheets to PDF
@@ -432,4 +436,24 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   its codebook chunk no longer leans on the cipher, and session 12's timer chunk
   credits the remainder to sessions 7 and 9. Not done: the ledger card has no box for
   the extra page, and no extra cards exist for session 9. Version pin `?v=16`.
-
+- **2026-11-18, v17.** A trial on session 8 only, of two study methods: saying a
+  program's parts out loud, and tracing by hand. Tools 1 and 2 of the hangman build
+  each get a plan, five named parts with one sentence each, shown above the line
+  questions; each question is labelled with its part ("Part 3 of 5 · Gate"), and a
+  "Say it back" box after the run asks the room to say the parts in order with the
+  plan off the screen. `render.py` checks that every step names a part, that the
+  parts come in order, and that no part is without a step. Tool 3, the picture, has
+  no plan. New worksheet (`build/ws08.py`): one trace table for each tool, a row for
+  each pass of `show`'s `for` loop on the page's own test call, and a row for each
+  turn of the game on the page's own typed letters, with three worked rows each and
+  three written questions. Every row is worked out with the page's own `show`
+  function and checked against a real run of the page's program. Sheet, answer key,
+  and a three-page PDF: tool 1 on page 1 beside its program, tool 2's program on
+  page 2 facing its table on page 3. The session 8 page gets the worksheet toolbar, a
+  line under each tool pointing at its table, and a Files note in its teacher panel.
+  The teacher panel's minutes are unchanged; its If time runs out note says the
+  tool 2 table can be done from the front. Checked in Chrome at 1280px and 390px
+  with every reveal open: no sideways scroll on the session 8 page, the sheet, or the
+  key. The PDF was rendered with WeasyPrint with Bricolage Grotesque, DM Sans, and
+  JetBrains Mono embedded. `session02_worksheet.pdf` was not re-rendered. Version
+  pin `?v=17`.

@@ -30,7 +30,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "16"
+VERSION = "17"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-09-12"
 TMP = os.environ.get("BVC_TMP",
@@ -319,6 +319,8 @@ section.extension{border-left:8px solid var(--clay)}
   font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.12em;
   text-transform:uppercase; color:var(--ochre); margin:0 0 8px; font-weight:700;
 }
+/* the label above the first question of each part of a program written line by line */
+.chunk-no.part{margin:24px 0 8px}
 p{margin:0 0 14px}
 ul,ol{margin:0 0 14px; padding-left:24px}
 li{margin:0 0 8px}
@@ -695,7 +697,24 @@ def check_step(step, code, tag):
         assert lines[n - 1] in wanted, "%s: %s names line %d, which is %r" % (tag, label, n, lines[n - 1])
 
 
-def line_ladders(tag, program, steps, start=None, whole="Show the whole program"):
+NUMBER_WORDS = {2: "two", 3: "three", 4: "four", 5: "five", 6: "six"}
+
+
+def plan_list(plan):
+    """A program's parts, in order: each part's name in bold, then one plain sentence."""
+    return ('<ol class="plan">' + "".join('<li><b>' + html.escape(name) + '.</b> ' + says + '</li>'
+                                          for name, says in plan) + '</ol>')
+
+
+def check_plan(tag, plan, steps):
+    """Every step names its part, the parts come in order, and no part is left without a step."""
+    seen = [st.get("part") for st in steps]
+    assert all(isinstance(n, int) for n in seen), tag + ": a step has no part"
+    assert seen == sorted(seen), tag + ": the steps' parts are out of order"
+    assert sorted(set(seen)) == list(range(1, len(plan) + 1)), tag + ": a part has no step"
+
+
+def line_ladders(tag, program, steps, start=None, whole="Show the whole program", plan=None):
     """One question per new line of a program, each behind a ladder of hints.
 
     The program so far sits behind a button, then each step is a What goes next?
@@ -707,8 +726,14 @@ def line_ladders(tag, program, steps, start=None, whole="Show the whole program"
     if start:
         out.append('<div class="sofar">' + toggle(tag + "-start", "Show the program so far",
                    "Hide the program so far", code_block(start)) + '</div>')
+    if plan:
+        check_plan(tag, plan, steps)
     for j, st in enumerate(steps):
         check_step(st, program, tag)
+        if plan and (j == 0 or steps[j - 1]["part"] != st["part"]):
+            # the part's label sits above the first question that belongs to it
+            out.append('<p class="chunk-no part">Part ' + str(st["part"]) + ' of ' + str(len(plan))
+                       + ' &middot; ' + html.escape(plan[st["part"] - 1][0]) + '</p>')
         sid = tag + "-l" + str(j + 1)
         ans = code_block(st["line"], context=program)
         if st.get("note"):
@@ -890,12 +915,27 @@ def render_session(s, prev_s, next_s):
         b.append('<h3>' + html.escape(tool["title"]) + '</h3>')
         if tool.get("intro"):
             b.append('<p>' + tool["intro"] + '</p>')
+        plan = tool.get("plan")
+        if plan:
+            b.append('<p><b>The plan.</b> This program has ' + NUMBER_WORDS[len(plan)]
+                     + ' parts. Each question below is labelled with its part.</p>' + plan_list(plan))
         b.append(line_ladders(tag, tool["code"], tool["steps"], tool.get("start"),
-                              whole=tool.get("whole", "Show the whole function and its test")))
+                              whole=tool.get("whole", "Show the whole function and its test"),
+                              plan=plan))
+        if tool.get("trace"):
+            b.append('<p>' + tool["trace"] + ' <a href="' + link(ws["slug"])
+                     + '">Open the worksheet</a></p>')
         if out:
             b.append(reveal(tag, tool["predict"], tool["reveal"], "Predict",
                             out_block(out, "What it actually prints"),
                             "Run it first, then check here", "Hide", tool.get("hint")))
+        if plan:
+            b.append(reveal(tag + "-plan", 'Scroll until the plan is off the screen. Say the '
+                            + NUMBER_WORDS[len(plan)] + ' parts of this program to your neighbour, '
+                            'in order, one sentence for each part.',
+                            'Each part is one sentence. The order of the parts is the order of '
+                            'the lines in the program.', "Say it back", plan_list(plan),
+                            "Show the parts", "Hide the parts"))
     for j, card in enumerate(br.get("cards", [])):
         tag = "s%d-card%d" % (n, j + 1)
         out, mode = verify(card, tag)

@@ -13,7 +13,7 @@ from weasyprint import HTML
 HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.environ.get("BVC_OUT", os.path.dirname(HERE))
 
-PAGES = ["session02_worksheet.html"]
+PAGES = ["session02_worksheet.html", "session08_worksheet.html"]
 
 for name in PAGES:
     src = os.path.join(SITE, name)
