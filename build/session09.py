@@ -233,6 +233,7 @@ def lines_figure():
 SESSION09 = {
  "num": 9,
  "slug": "session09_tic_tac_toe",
+ "worksheet": {"slug": "session09_worksheet", "covers": "chunks 5 and 9"},
  "title": "Tic tac toe",
  "subtitle": "A two-player game in the terminal, one line at a time",
  "mon": "Mon Nov 23",
@@ -631,6 +632,6 @@ SESSION09 = {
      ["Indents the last <code>show(board)</code> and the verdict so they are inside the loop.", "The verdict then prints every turn. Lines that run once, after the game, start at the left edge."],
    ],
    "standards": ["MP1", "MP7", "MP8"],
-   "routing": "The game is complete at chunk 7, and that is the middle exit. If it runs long, stop the chunks there, play the game in pairs, and use the build's test sheet. Chunks 8 and 9 can be done from the front as a demonstration: type a taken square, then type X, and show the two fixes. The names in the build and the computer player in the extension can both be dropped without loss.",
+   "routing": "The game is complete at chunk 7, and that is the middle exit. If it runs long, stop the chunks there, play the game in pairs, and use the build's test sheet. Chunks 8 and 9 can be done from the front as a demonstration: type a taken square, then type X, and show the two fixes. The names in the build and the computer player in the extension can both be dropped without loss. The worksheet's chunk 5 table is filled in before chunk 5 is run. Its chunk 9 table can be filled in from the front of the room, or left for a student who finishes early.",
  },
 }

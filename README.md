@@ -42,6 +42,9 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | `session08_worksheet.pdf` | The same worksheet as a PDF for printing: three pages, US letter. |
 | `session08_worksheet_key.html` | The session 8 worksheet's answer key. Linked from the session 8 teacher panel only. |
 | `session09_tic_tac_toe.html` | Tic tac toe. A two-player game in the terminal, written one line at a time, with an extension: play against the computer. |
+| `session09_worksheet.html` | Session 9 worksheet: trace tic tac toe before you run it (chunks 5 and 9). Printed, and typed into on the projector. |
+| `session09_worksheet.pdf` | The same worksheet as a PDF for printing: three pages, US letter. |
+| `session09_worksheet_key.html` | The session 9 worksheet's answer key. Linked from the session 9 teacher panel only. |
 | `session10_dictionaries.html` | Dictionaries |
 | `session11_the_pygame_window.html` | The pygame window |
 | `session12_grids_keys_game_state.html` | Grids, keys, and game state |
@@ -206,6 +209,7 @@ build/hl.py            colors Python code the way VS Code does; copied from the 
 build/worksheet.py     the worksheet CSS, blocks, and projector typing script, shared by every sheet
 build/ws02.py          the session 2 worksheet and its answer key
 build/ws08.py          the session 8 worksheet (hangman trace tables) and its answer key
+build/ws09.py          the session 9 worksheet (tic tac toe trace tables) and its answer key
 build/extras.py        the extra cards and their answer keys, sessions 1 to 3 and 5
 build/graphs.py        session 4's figures: the rules as arrows, and the tree of pairs
 build/pdf.py           renders the worksheets to PDF
@@ -457,3 +461,21 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   key. The PDF was rendered with WeasyPrint with Bricolage Grotesque, DM Sans, and
   JetBrains Mono embedded. `session02_worksheet.pdf` was not re-rendered. Version
   pin `?v=17`.
+- **2026-11-18, v18.** A trace worksheet for session 9, tic tac toe (`build/ws09.py`),
+  built the way session 8's was. Chunk 5: the eight tests of the gate in `winner`, one
+  row for each, on the chunk's own test board after its typed 9. Each row carries its
+  own line of the gate, so the function is not printed a second time; the lines are
+  read out of `session09.py`. Students write the three strings each test compares and
+  True or False, and "not made" for the test Python never reaches. Chunk 9: one row
+  for each pass of the finished game's loop on the chunk's own typed moves, with the
+  player, the branch that runs, `turns`, and what `winner(board)` returns. Three
+  worked rows in each table and four written questions. Every row is worked out with
+  the page's own `winner` function and checked against a real run of the page's
+  program. Sheet, answer key, and a three-page PDF: chunk 5 on page 1, chunk 9's
+  program on page 2 facing its table on page 3. The session 9 page gets the worksheet
+  toolbar and a Files note in its teacher panel; its minutes are unchanged, and its
+  If time runs out note says when each table is used. The session 9 page has no plan
+  or part labels. Checked in Chrome at 1280px and 390px with every reveal open: no
+  sideways scroll on the session 9 page, the sheet, or the key. The PDF was rendered
+  with WeasyPrint with Bricolage Grotesque, DM Sans, and JetBrains Mono embedded.
+  The session 2 and session 8 PDFs were not re-rendered. Version pin `?v=18`.
