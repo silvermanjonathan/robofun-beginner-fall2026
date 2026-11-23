@@ -1018,7 +1018,7 @@ BUILDERS = {1: session1, 2: session2, 3: session3, 5: session5}
 def masthead(s, title, sub):
     return ('<header class="top"><div class="wrap">'
             '<p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session '
-            + str(s["num"]) + ' of 13</p><h1>' + esc(title) + '</h1>'
+            + str(s["num"]) + ' of 14</p><h1>' + esc(title) + '</h1>'
             '<p class="sub">' + sub + '</p><div class="dates">'
             '<span class="pill"><b>Monday section</b> ' + s["mon"] + '</span>'
             '<span class="pill"><b>Friday section</b> ' + s["fri"] + '</span>'

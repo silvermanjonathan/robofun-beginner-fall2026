@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coin grab | Beyond Vibe Coding beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Lecture Light: built for a projector in a room with the lights on.
+   Light ground, near-black text, few accents, no hairlines. */
+:root{
+  --paper:#F4F0E6;
+  --card:#FFFDF7;
+  --ink:#17181B;
+  --ink-soft:#4A4D53;
+  --rule:#D3CBB8;
+  --teal:#0E4D52;
+  --teal-deep:#0A3A3E;
+  --clay:#9C2B22;
+  --ochre:#8A5A00;
+  --ochre-line:#D99B12;
+  --ochre-tint:#FBF2DC;
+  --green:#1D5B39;
+  --green-tint:#E8F1E9;
+  --green-ink:#122B1C;
+  --code-bg:#EDE7D9;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'DM Sans',system-ui,sans-serif; font-size:18px; font-weight:500;
+  line-height:1.65;
+}
+header.top{
+  background:var(--teal); color:#FFFDF7;
+  border-bottom:6px solid var(--ochre-line); padding:30px 22px 26px;
+}
+.wrap{max-width:1080px; margin:0 auto}
+/* prose lines stay at reading length inside the wider column; code gets the width */
+p,li{max-width:72ch}
+.dates,.sessionlist li,.toolbar,.legend,.exits p,.card p,.stamp,.pill{max-width:none}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.14em;
+  text-transform:uppercase; color:#F2D89B; margin:0 0 10px; font-weight:700;
+}
+h1{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(29px,4.8vw,44px); line-height:1.1; margin:0 0 10px;
+}
+h2{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:25px; line-height:1.2; margin:0 0 12px; color:var(--teal-deep);
+}
+h3{
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:700;
+  font-size:20px; margin:0 0 8px; color:var(--teal-deep);
+}
+header.top h1,header.top h2{color:#FFFDF7}
+.sub{color:#EAE3D2; margin:0 0 16px; font-size:19px; font-weight:400}
+.dates{
+  display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;
+  font-family:'JetBrains Mono',monospace; font-size:13.5px;
+}
+.pill{
+  border:2px solid rgba(255,253,247,.4); border-radius:999px; padding:5px 13px;
+  background:rgba(255,253,247,.08);
+}
+.pill b{color:#F2D89B; font-weight:700}
+main{padding:28px 22px 12px}
+section{
+  background:var(--card); border:2px solid var(--rule); border-radius:6px;
+  padding:22px 24px; margin:0 0 20px;
+}
+section.opener{border-left:8px solid var(--green)}
+section.chunk{border-left:8px solid var(--ochre-line)}
+section.hinge{border-left:8px solid var(--clay)}
+section.brief{border-left:8px solid var(--teal)}
+section.extension{border-left:8px solid var(--clay)}
+.chunk-no{
+  font-family:'JetBrains Mono',monospace; font-size:13px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ochre); margin:0 0 8px; font-weight:700;
+}
+/* the label above the first question of each part of a program written line by line */
+.chunk-no.part{margin:24px 0 8px}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 14px; padding-left:24px}
+li{margin:0 0 8px}
+.sessionlist li{max-width:none}
+code,pre{
+  /* JetBrains Mono ligatures turn != into a slashed equals and <= into a single
+     glyph; students then type a character that does not exist. Keep every
+     operator as the keys that produce it. */
+  font-variant-ligatures:none; font-feature-settings:"liga" 0,"calt" 0,"dlig" 0;
+}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:.9em; font-weight:700;
+  background:var(--code-bg); color:#1E2A2B;
+  padding:2px 6px; border-radius:3px;
+}
+pre{
+  /* 19px, a little over the 18px prose, so code reads from the back of the room */
+  font-family:'JetBrains Mono',monospace; font-size:19px; line-height:1.6;
+  background:var(--code-bg); color:var(--ink); border:2px solid var(--rule);
+  border-left:6px solid #B9AF96; border-radius:4px;
+  padding:16px 18px; overflow-x:auto; margin:0 0 16px; font-weight:500;
+}
+pre code{background:none; padding:0; border-radius:0; font-size:inherit; font-weight:inherit; color:inherit}
+/* Python code, colored the way VS Code's light theme colors it, on white. Each color
+   clears 7:1 on white (render.py checks), and the same colors print. Color only, never
+   bold or italic, so every character keeps its width. */
+pre.py{background:#FFFFFF; color:#1F1F1F}
+pre.py .hk{color:#8A00B0} pre.py .hs{color:#0000FF} pre.py .hf{color:#6A4E14} pre.py .hc{color:#135C70} pre.py .hv{color:#001080} pre.py .hn{color:#00579A} pre.py .hq{color:#A31515} pre.py .he{color:#B00000} pre.py .hd{color:#035F3E} pre.py .hm{color:#006400}
+/* Indent guides on every code block, the lines VS Code draws down each step of
+   indentation, so even a line shown on its own shows how far in it goes. Each
+   four-space step is one box with a thick dark bar down its left edge. The box holds
+   the step's four spaces, or on a blank line one space drawn by the CSS and not part
+   of the text, so it is exactly as tall as a line wherever it sits and the bars join
+   up from line to line. The spaces never wrap, even where the printed worksheets let
+   code wrap. A border rather than a shadow, so the bars print. */
+pre.py .ig{
+  display:inline-block; width:4ch; vertical-align:top; white-space:pre;
+  border-left:6px solid #595959;
+}
+pre.py .ig:empty::before{content:" "}
+pre.anatomy{background:#FFFDF7; border-left:6px solid var(--teal)}
+pre.anatomy .cond{background:#FBF2DC; border-bottom:3px solid var(--ochre-line); padding:1px 2px}
+pre.anatomy .blk{background:#E8F1E9; border-left:3px solid var(--green); padding:1px 2px}
+pre.anatomy .nm{background:#E3EDEE; border-bottom:3px solid var(--teal); padding:1px 2px}
+pre.anatomy .arg{background:#F7E4E1; border-bottom:3px solid var(--clay); padding:1px 2px}
+pre.anatomy .lbl{color:var(--ink-soft); font-weight:700}
+pre.anatomy .lbl-n{color:var(--teal)}
+pre.anatomy .lbl-a{color:var(--clay)}
+.legend i.n{background:#E3EDEE; border-bottom:3px solid var(--teal)}
+.legend i.a{background:#F7E4E1; border-bottom:3px solid var(--clay)}
+pre.anatomy .lbl-c{color:var(--ochre)}
+pre.anatomy .lbl-b{color:var(--green)}
+.legend{display:flex; flex-wrap:wrap; gap:10px 22px; font-size:16px; margin:0 0 16px}
+.legend span{display:inline-flex; align-items:center; gap:8px; margin-right:18px}
+.legend i{display:inline-block; width:22px; height:16px; border-radius:2px; margin-right:8px}
+.legend i.c{background:#FBF2DC; border-bottom:3px solid var(--ochre-line)}
+.legend i.b{background:#E8F1E9; border-left:3px solid var(--green)}
+pre.out{
+  background:var(--green-tint); border-color:#A9C6B2;
+  border-left:6px solid var(--green); color:var(--green-ink);
+}
+.outlabel{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--green); margin:0 0 7px; font-weight:700;
+}
+.predict{
+  border:2px dashed var(--ochre); border-radius:5px;
+  padding:16px 18px; margin:0 0 16px; background:var(--ochre-tint);
+}
+.predict p{margin:0 0 12px}
+.predict .q{font-weight:700}
+button.rev{
+  font-family:'DM Sans',sans-serif; font-size:16px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; border:0; border-radius:4px;
+  padding:10px 18px; cursor:pointer;
+}
+button.rev:hover{background:var(--teal-deep)}
+button.rev.hint{background:var(--card); color:var(--ochre); border:2px solid var(--ochre-line); margin:0 10px 10px 0}
+button.rev.hint:hover{background:var(--ochre-tint)}
+.hints .ans{margin:0 0 12px; padding-top:10px; border-top:2px solid var(--ochre-line)}
+.ladder .ans{margin:12px 0 0; padding-top:12px; border-top:2px solid var(--ochre-line)}
+.ladder .ans p{margin:0 0 12px}
+.ladder .ans pre{margin:0 0 12px}
+.ladder .q b{color:var(--clay)}
+/* a What goes next? question: the line with a blank, then one button for each choice */
+.choices button.rev{
+  display:block; width:100%; text-align:left; margin:0 0 10px;
+  background:var(--card); color:var(--ink); border:2px solid var(--teal);
+  font-size:18px; padding:12px 16px; white-space:pre-wrap;
+}
+.choices.code button.rev{font-family:'JetBrains Mono',monospace; font-variant-ligatures:none}
+.choices button.rev:hover{background:var(--ochre-tint)}
+.choices button.rev[aria-expanded="true"]{border-width:4px}
+.ladder .choices .ans{margin:0 0 14px; padding:10px 0 2px 14px; border-top:0}
+.ladder .choices .ans.yes{border-left:8px solid var(--green)}
+.ladder .choices .ans.no{border-left:8px solid var(--clay)}
+.sofar,.whole{margin:0 0 16px}
+.sofar .ans,.whole .ans{margin-top:12px; padding-top:0; border-top:0}
+.ans{display:none; margin-top:16px; padding-top:16px; border-top:2px solid var(--rule)}
+.ans.open{display:block}
+table{border-collapse:collapse; width:100%; margin:0 0 16px; font-size:16.5px}
+th,td{border:2px solid var(--rule); padding:9px 11px; text-align:left; vertical-align:top}
+th{background:#EFE9DA; font-weight:700; font-size:15px; color:var(--teal-deep)}
+td.fill{background:#FBF9F3; min-width:100px}
+.exits{display:grid; gap:14px; grid-template-columns:1fr}
+@media(min-width:760px){.exits{grid-template-columns:repeat(3,1fr)}}
+.exit{border:2px solid var(--rule); border-radius:5px; padding:16px}
+.exit .tag{
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:.1em;
+  text-transform:uppercase; margin:0 0 8px; font-weight:700;
+}
+.exit.floor{border-top:6px solid var(--green)}
+.exit.floor .tag{color:var(--green)}
+.exit.middle{border-top:6px solid var(--ochre-line)}
+.exit.middle .tag{color:var(--ochre)}
+.exit.stretch{border-top:6px solid var(--clay)}
+.exit.stretch .tag{color:var(--clay)}
+details.teacher{
+  background:var(--card); border:2px solid var(--rule);
+  border-left:8px solid var(--clay); border-radius:6px;
+  padding:18px 22px; margin:0 0 20px;
+}
+details.teacher summary{
+  cursor:pointer; font-family:'Bricolage Grotesque','DM Sans',sans-serif;
+  font-weight:700; font-size:21px; color:var(--clay);
+}
+details.teacher[open] summary{margin-bottom:14px}
+.note{
+  font-size:16.5px; color:var(--ink-soft); border-left:4px solid var(--rule);
+  padding-left:14px; margin:0 0 14px;
+}
+.pager{
+  max-width:1080px; margin:0 auto; padding:8px 22px 34px;
+  display:flex; justify-content:space-between; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:14px;
+}
+.pager a{
+  color:var(--teal); text-decoration:none; font-weight:700;
+  border:2px solid var(--rule); background:var(--card);
+  border-radius:4px; padding:10px 14px;
+}
+.pager a:hover{background:#EFE9DA}
+footer{
+  background:#EAE4D5; border-top:4px solid var(--teal); padding:22px 22px 36px;
+  font-size:15px; color:var(--ink-soft);
+}
+footer a{color:var(--teal); font-weight:700}
+a{color:var(--teal)}
+.toolbar{display:flex; gap:12px; flex-wrap:wrap; margin:0 0 20px}
+a.btn{
+  display:inline-block; font-family:'DM Sans',sans-serif; font-size:17px; font-weight:700;
+  background:var(--teal); color:#FFFDF7; text-decoration:none; border-radius:4px;
+  padding:12px 20px; border:2px solid var(--teal);
+}
+a.btn:hover{background:var(--teal-deep)}
+a.btn.quiet{background:var(--card); color:var(--teal)}
+a.btn.quiet:hover{background:#EFE9DA}
+.grid2{display:grid; gap:16px; grid-template-columns:1fr}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.card{border:2px solid var(--rule); border-radius:5px; padding:16px; background:#FFFDF7}
+.card h3{margin-bottom:8px}
+.sessionlist{list-style:none; padding:0; margin:0}
+.sessionlist li{
+  border:2px solid var(--rule); border-left:8px solid var(--teal);
+  border-radius:5px; margin:0 0 12px; padding:14px 16px;
+  display:flex; gap:16px; align-items:flex-start; background:#FFFDF7;
+}
+.sessionlist .n{
+  font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700;
+  color:var(--teal); min-width:38px;
+}
+.sessionlist a{font-weight:700; text-decoration:none; font-size:19px}
+.sessionlist .meta{
+  font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--ink-soft);
+  display:block; margin-top:4px;
+}
+.bonus{border-left-color:var(--clay)}
+.bonus .n{color:var(--clay)}
+.flag{
+  background:#F7E4E1; border:2px solid var(--clay); border-left:8px solid var(--clay);
+  border-radius:5px; padding:14px 16px; margin:0 0 18px; font-size:16.5px;
+  color:#3A1512;
+}
+.stamp{
+  border:3px dashed #BFB49A; border-radius:5px; padding:14px;
+  font-size:15px; min-height:100px; background:#FFFDF7;
+}
+.stampgrid{display:grid; gap:12px; grid-template-columns:1fr 1fr}
+@media(min-width:820px){.stampgrid{grid-template-columns:repeat(3,1fr)}}
+.stamp .no{
+  font-family:'JetBrains Mono',monospace; color:var(--ochre); font-size:12.5px;
+  letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px;
+  font-weight:700;
+}
+@media (max-width:760px){
+  pre{font-size:15px}
+  /* a wide table scrolls inside itself instead of widening the page */
+  table{display:block; overflow-x:auto; max-width:100%}
+  table tbody{display:table; width:100%}
+}
+@media print{
+  body{background:#fff; font-size:11pt}
+  header.top{background:#fff; color:#111; border-bottom:3px solid #111}
+  header.top h1,header.top .sub,header.top .eyebrow,.pill b{color:#111}
+  .pill{border-color:#666}
+  footer,.pager,details.teacher{background:#fff}
+  section,.stamp,.card{background:#fff; break-inside:avoid}
+  .noprint,.toolbar{display:none}
+  a{color:#111}
+  /* printed code keeps its old size, so printed pages and PDFs do not reflow */
+  pre{font-size:15.5px}
+  pre.py{background:#fff; border:1px solid #999}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; Session 12 of 14</p><h1>Coin grab</h1><p class="sub">A square that follows the mouse, a coin that jumps when you touch it, and a score</p><div class="dates"><span class="pill"><b>Monday section</b> Mon Dec 14</span><span class="pill"><b>Friday section</b> Fri Dec 11</span><span class="pill"><b>Length</b> 90 minutes</span><span class="pill"><b>New</b> 7 items</span></div></div></header><main><div class="wrap"><section><h2>What is new today</h2><p>pygame.Rect, left, right, top, and bottom, the overlap test written by hand, colliderect, the mouse position, a random spot inside the window, a score that counts each coin once.</p><p><b>Deliberately re-used:</b> Session 11&#x27;s frame loop and knob block, session 3&#x27;s counter and randint, and session 2&#x27;s two tests joined with and.</p><p class="note">Today is the first whole game in a window, and it is short on purpose: the floor program is 33 lines of code. Chunk 4's file is 24 of them, and most of those are the knob block and the frame loop from session 11. Tool 1 adds nine. Chunks 1 to 3 run in the terminal and are a few lines each, so they can be typed by everyone or run once on the projector while the room predicts. The typing starts at chunk 4. Nothing here needs the keyboard during play: the mouse moves the player.</p></section><section class="opener"><p class="chunk-no">Opener &middot; 10 minutes</p><h2>Retrieval: the frame loop, and a gate on a dictionary</h2><p>Paper first.</p><div class="predict"><p class="q">Question: Inside the frame loop, three things happen to the picture on every frame, in this order: <code>screen.fill</code>, the drawing, <code>pygame.display.flip</code>. A ball is moving. What do you see if the <code>fill</code> line is deleted?</p><button class="rev" data-target="s12-op0" aria-controls="s12-op0" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s12-op0"><p>A trail. The fill paints over the last frame. Without it every old ball stays on the screen, and the new ball is drawn beside them.</p></div></div><div class="predict"><p class="q">Question: <code>scores = {"Ada": 15}</code>. What does <code>"Grace" in scores</code> give? What happens on the line <code>print(scores["Grace"])</code> if no gate checks first?</p><button class="rev" data-target="s12-op1" aria-controls="s12-op1" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s12-op1"><p>The first one: False, because <code>in</code> checks the keys and Grace is not a key. The second one: a KeyError. A gate with <code>in</code> in front of the lookup stops that.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 1 of 4</p><h2>A Rect is four numbers with names</h2><p>In session 6 a rectangle was four numbers in parentheses: x, y, width, and height. <b><code>pygame.Rect</code></b> keeps those four numbers together under one name. It is written with a capital R. A Rect also works out its own edges. <code>left</code> is x, and <code>right</code> is x plus the width. <code>top</code> is y, and <code>bottom</code> is y plus the height. <code>center</code> is the pair of numbers in the middle of the rectangle; pygame spells it with <code>er</code> at the end.</p><p>This program opens no window. A Rect is only numbers, so the terminal can print them.</p><svg viewBox="0 0 660 300" width="100%" role="img" aria-label="A square coin that starts at x = 300, y = 200 and is 30 wide and 30 tall. Its left edge is at 300, its right edge at 330, its top edge at 200, its bottom edge at 230, and its centre at 315, 215" style="max-width:660px;display:block;margin:0 0 16px;font-family:JetBrains Mono,monospace;font-size:13px"><rect x="150" y="70" width="180" height="180" fill="#FCD34D" stroke="#17181B" stroke-width="5"/><circle cx="150" cy="70" r="5" fill="#17181B"/><text x="20" y="34" fill="#17181B" font-weight="700">starts at x = 300, y = 200</text><circle cx="240" cy="160" r="5" fill="#17181B"/><text x="170" y="184" fill="#17181B" font-weight="700">center (315, 215)</text><text x="196" y="56" fill="#9C2B22" font-weight="700">top 200</text><text x="182" y="272" fill="#9C2B22" font-weight="700">bottom 230</text><text x="64" y="164" fill="#1D5B39" font-weight="700">left 300</text><text x="342" y="164" fill="#1D5B39" font-weight="700">right 330</text><text x="450" y="80" fill="#17181B" font-weight="700">Rect(x, y, w, h)</text><text x="450" y="110" fill="#4A4D53">left = x</text><text x="450" y="132" fill="#4A4D53">right = x + w</text><text x="450" y="154" fill="#4A4D53">top = y</text><text x="450" y="176" fill="#4A4D53">bottom = y + h</text><text x="450" y="216" fill="#4A4D53">the picture is six</text><text x="450" y="238" fill="#4A4D53">times the real size</text></svg><pre class="py"><code><span class="hk">import</span> <span class="hc">pygame</span>
+
+<span class="hv">coin</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">200</span>, <span class="hd">30</span>, <span class="hd">30</span>)
+<span class="hf">print</span>(<span class="hv">coin</span>.<span class="hv">left</span>, <span class="hv">coin</span>.<span class="hv">right</span>)
+<span class="hf">print</span>(<span class="hv">coin</span>.<span class="hv">top</span>, <span class="hv">coin</span>.<span class="hv">bottom</span>)
+<span class="hf">print</span>(<span class="hv">coin</span>.<span class="hv">center</span>)</code></pre><div class="predict"><p class="q">Predict: The coin starts 300 across and is 30 wide. What does <code>coin.right</code> print? The coin starts 200 down and is 30 tall. What does <code>coin.bottom</code> print?</p><button class="rev" data-target="s12-c1" aria-controls="s12-c1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s12-c1"><p class="outlabel">What it actually prints</p><pre class="out">300 330
+200 230
+(315, 215)</pre><p>The first one: 330, because 300 + 30 is 330. The second one: 230, because 200 + 30 is 230. The last line prints the middle of the coin. Half of 30 is 15, and 15 across and 15 down from the corner at 300, 200 is <code>(315, 215)</code>.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 2 of 4</p><h2>Are two rectangles touching? The test, written by hand</h2><p>Two rectangles are <b>touching</b> when they overlap: part of one is on top of part of the other. Checking that takes two tests. Across: each rectangle starts before the other one ends, so its <code>left</code> is less than the other one's <code>right</code>. Down: the same test with <code>top</code> and <code>bottom</code>. Both tests have to be True, and <code>and</code> joins them.</p><p>The player here is a square from 280 to 330 across and from 190 to 240 down. The coin starts below it. Then <code>coin.y = 200</code> moves the coin up, and the down test is worked out again.</p><svg viewBox="0 0 660 330" width="100%" role="img" aria-label="The player is a square from 280 to 330 across and from 190 to 240 down. A coin from 300 to 330 across is drawn twice: at y = 280, below the player, where the two do not touch, and at y = 200, inside the player, where they overlap" style="max-width:660px;display:block;margin:0 0 16px;font-family:JetBrains Mono,monospace;font-size:13px"><rect x="80" y="50" width="100" height="100" fill="#F8FAFC" stroke="#17181B" stroke-width="5"/><text x="80" y="40" fill="#17181B" font-weight="700">player</text><rect x="120" y="70" width="60" height="60" fill="#FCD34D" stroke="#17181B" stroke-width="3"/><rect x="120" y="230" width="60" height="60" fill="#FCD34D" stroke="#17181B" stroke-width="3"/><text x="204" y="64" fill="#17181B" font-weight="700">player: 280 to 330 across, 190 to 240 down</text><text x="204" y="100" fill="#1D5B39" font-weight="700">coin at y = 200: 200 to 230 down</text><text x="204" y="120" fill="#1D5B39">inside 190 to 240, so they overlap</text><text x="204" y="254" fill="#9C2B22" font-weight="700">coin at y = 280: 280 to 310 down</text><text x="204" y="274" fill="#9C2B22">it starts after 240, so they do not touch</text><text x="40" y="316" fill="#4A4D53">both coins: 300 to 330 across. The picture is twice the real size.</text></svg><pre class="py"><code><span class="hk">import</span> <span class="hc">pygame</span>
+
+<span class="hv">player</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">280</span>, <span class="hd">190</span>, <span class="hd">50</span>, <span class="hd">50</span>)
+<span class="hv">coin</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">280</span>, <span class="hd">30</span>, <span class="hd">30</span>)
+
+<span class="hv">across</span> = <span class="hv">player</span>.<span class="hv">left</span> &lt; <span class="hv">coin</span>.<span class="hv">right</span> <span class="hs">and</span> <span class="hv">coin</span>.<span class="hv">left</span> &lt; <span class="hv">player</span>.<span class="hv">right</span>
+<span class="hv">down</span> = <span class="hv">player</span>.<span class="hv">top</span> &lt; <span class="hv">coin</span>.<span class="hv">bottom</span> <span class="hs">and</span> <span class="hv">coin</span>.<span class="hv">top</span> &lt; <span class="hv">player</span>.<span class="hv">bottom</span>
+<span class="hf">print</span>(<span class="hs">f</span><span class="hq">"across </span><span class="hs">{</span><span class="hv">across</span><span class="hs">}</span><span class="hq">, down </span><span class="hs">{</span><span class="hv">down</span><span class="hs">}</span><span class="hq">, touching </span><span class="hs">{</span><span class="hv">across</span> <span class="hs">and</span> <span class="hv">down</span><span class="hs">}</span><span class="hq">"</span>)
+
+<span class="hv">coin</span>.<span class="hv">y</span> = <span class="hd">200</span>
+<span class="hv">down</span> = <span class="hv">player</span>.<span class="hv">top</span> &lt; <span class="hv">coin</span>.<span class="hv">bottom</span> <span class="hs">and</span> <span class="hv">coin</span>.<span class="hv">top</span> &lt; <span class="hv">player</span>.<span class="hv">bottom</span>
+<span class="hf">print</span>(<span class="hs">f</span><span class="hq">"across </span><span class="hs">{</span><span class="hv">across</span><span class="hs">}</span><span class="hq">, down </span><span class="hs">{</span><span class="hv">down</span><span class="hs">}</span><span class="hq">, touching </span><span class="hs">{</span><span class="hv">across</span> <span class="hs">and</span> <span class="hv">down</span><span class="hs">}</span><span class="hq">"</span>)</code></pre><div class="predict"><p class="q">Predict: The first print runs with the coin at y = 280. Will <code>across</code> be True or False, and will <code>down</code> be True or False? Then say what changes in the second print, after the coin has moved to y = 200.</p><button class="rev" data-target="s12-c2" aria-controls="s12-c2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s12-c2"><p class="outlabel">What it actually prints</p><pre class="out">across True, down False, touching False
+across True, down True, touching True</pre><p>The first one: <code>across</code> is True. The player goes from 280 to 330 and the coin from 300 to 330, so each one starts before the other ends. <code>down</code> is False. The player ends at 240 and the coin starts at 280, so <code>coin.top &lt; player.bottom</code> is False. Being lined up across is not enough, so touching is False.</p><p>The second one: at y = 200 the coin goes from 200 to 230 down, which is inside the player's 190 to 240. Now <code>down</code> is True, and touching is True.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 3 of 4</p><h2>colliderect asks the same question in one call</h2><p>A Rect can make that whole test itself. <b><code>player.colliderect(coin)</code></b> gives True when the two rectangles overlap and False when they do not. It is chunk 2's test, already written for you. The name is two words joined: collide, which means to bump into something, and rect.</p><p>This program asks the question three times. The first time, the coin is where chunk 2 left it, inside the player. Before the second and third times, it moves the coin by changing <code>coin.x</code>.</p><pre class="py"><code><span class="hk">import</span> <span class="hc">pygame</span>
+
+<span class="hv">player</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">280</span>, <span class="hd">190</span>, <span class="hd">50</span>, <span class="hd">50</span>)
+<span class="hv">coin</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">200</span>, <span class="hd">30</span>, <span class="hd">30</span>)
+<span class="hf">print</span>(<span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>))
+
+<span class="hv">coin</span>.<span class="hv">x</span> = <span class="hd">330</span>
+<span class="hf">print</span>(<span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>))
+
+<span class="hv">coin</span>.<span class="hv">x</span> = <span class="hd">329</span>
+<span class="hf">print</span>(<span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>))</code></pre><div class="predict"><p class="q">Predict: The player's right edge is at 330. The line <code>coin.x = 330</code> puts the coin's left edge at 330 too, so the two rectangles share an edge. Will the second print say True or False? And the third print, with the coin one pixel further left?</p><button class="rev" data-target="s12-c3" aria-controls="s12-c3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s12-c3"><p class="outlabel">What it actually prints</p><pre class="out">True
+False
+True</pre><p>The first one: False. Chunk 2's test is <code>coin.left &lt; player.right</code>, and 330 is not less than 330. Sharing an edge is not overlapping. The second one: True. At 329 the coin's left edge is one pixel inside the player, and one pixel is enough.</p></div></div></section><section class="chunk"><p class="chunk-no">Chunk 4 of 4</p><h2>A square that follows the mouse</h2><p>This is the first window of the day. Most of it is the knob block and the frame loop from session 11, and three lines are new.</p><p>The line <code>player = pygame.Rect(0, 0, PLAYER_SIZE, PLAYER_SIZE)</code> makes the player, a Rect 50 across and 50 down. It is above the loop, so it runs once.</p><p>The line <code>player.center = pygame.mouse.get_pos()</code> is inside the loop, so it runs on every frame. <b><code>pygame.mouse.get_pos()</code></b> gives the position of the mouse in the window as a pair of numbers, across and then down. Storing that pair in <code>player.center</code> moves the whole square, so that its middle is on the mouse.</p><p>The line <code>pygame.draw.rect(screen, PLAYER, player)</code> draws the square. In session 6 the third thing given to <code>draw.rect</code> was four numbers in parentheses. A Rect works in the same place.</p><p>The last print runs when you close the window.</p><pre class="py"><code><span class="hk">import</span> <span class="hc">pygame</span>
+
+<span class="hm"># ---- knob block: every number the game depends on ----</span>
+<span class="hn">WIDTH</span> = <span class="hd">600</span>
+<span class="hn">HEIGHT</span> = <span class="hd">400</span>
+<span class="hn">PLAYER_SIZE</span> = <span class="hd">50</span>
+<span class="hn">BG</span> = (<span class="hd">27</span>, <span class="hd">41</span>, <span class="hd">81</span>)
+<span class="hn">PLAYER</span> = (<span class="hd">248</span>, <span class="hd">250</span>, <span class="hd">252</span>)
+<span class="hn">FPS</span> = <span class="hd">60</span>
+
+<span class="hc">pygame</span>.<span class="hf">init</span>()
+<span class="hv">screen</span> = <span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">set_mode</span>((<span class="hn">WIDTH</span>, <span class="hn">HEIGHT</span>))
+<span class="hv">clock</span> = <span class="hc">pygame</span>.<span class="hc">time</span>.<span class="hc">Clock</span>()
+
+<span class="hv">player</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">0</span>, <span class="hd">0</span>, <span class="hn">PLAYER_SIZE</span>, <span class="hn">PLAYER_SIZE</span>)
+
+<span class="hv">running</span> = <span class="hd">1</span>
+<span class="hk">while</span> <span class="hv">running</span>:
+<span class="ig">    </span><span class="hk">for</span> <span class="hv">event</span> <span class="hs">in</span> <span class="hc">pygame</span>.<span class="hc">event</span>.<span class="hf">get</span>():
+<span class="ig">    </span><span class="ig">    </span><span class="hk">if</span> <span class="hv">event</span>.<span class="hv">type</span> == <span class="hc">pygame</span>.<span class="hn">QUIT</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">running</span> = <span class="hd">0</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">player</span>.<span class="hv">center</span> = <span class="hc">pygame</span>.<span class="hc">mouse</span>.<span class="hf">get_pos</span>()
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">screen</span>.<span class="hf">fill</span>(<span class="hn">BG</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">PLAYER</span>, <span class="hv">player</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">flip</span>()
+<span class="ig">    </span><span class="hv">clock</span>.<span class="hf">tick</span>(<span class="hn">FPS</span>)
+
+<span class="hf">print</span>(<span class="hs">f</span><span class="hq">"centre </span><span class="hs">{</span><span class="hv">player</span>.<span class="hv">center</span><span class="hs">}</span><span class="hq">, left </span><span class="hs">{</span><span class="hv">player</span>.<span class="hv">left</span><span class="hs">}</span><span class="hq">, top </span><span class="hs">{</span><span class="hv">player</span>.<span class="hv">top</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="hc">pygame</span>.<span class="hf">quit</span>()</code></pre><div class="predict"><p class="q">Predict: Suppose the mouse is at (300, 200) when you close the window. The player is 50 across and 50 down, and its middle is on the mouse. What will the last line print for <code>left</code> and for <code>top</code>?</p><button class="rev" data-target="s12-c4" aria-controls="s12-c4" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s12-c4"><p class="outlabel">What it actually prints (run without a screen, quit after 6 frames)</p><pre class="out">centre (300, 200), left 275, top 175</pre><p><code>left</code> is 275 and <code>top</code> is 175. Half of 50 is 25, so the left edge is 25 to the left of the mouse and the top edge is 25 above it.</p><p>The run on this page had no real mouse. It was given a mouse position of (300, 200). Your numbers depend on where your mouse is when you close the window, so they will be different. If your square sits in the top left corner and does not move, the mouse is outside the window.</p></div></div></section><section class="hinge"><p class="chunk-no">Hinge question &middot; from today's chunks</p><h2>Before you build</h2><pre class="py"><code><span class="hv">score</span> = <span class="hd">0</span>
+<span class="hv">touching</span> = <span class="hs">True</span>
+<span class="hk">for</span> <span class="hv">frame</span> <span class="hs">in</span> <span class="hc">range</span>(<span class="hd">60</span>):
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">touching</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">score</span> = <span class="hv">score</span> + <span class="hd">1</span>
+<span class="hf">print</span>(<span class="hv">score</span>)</code></pre><div class="predict"><p class="q">Question: This is one second of a frame loop, 60 frames, without the window. The player is on the coin, so <code>touching</code> is True, and no line in the gate moves the coin. What does the program print? Then say which one line, added inside the gate, would make it print 1.</p><button class="rev" data-target="s12-hinge" aria-controls="s12-hinge" aria-expanded="false" data-show="Show the answer" data-hide="Hide the answer">Show the answer</button><div class="ans" id="s12-hinge"><p class="outlabel">What it actually prints</p><pre class="out">60</pre><pre class="py"><code><span class="ig">    </span><span class="hk">if</span> <span class="hv">touching</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">score</span> = <span class="hv">score</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hv">touching</span> = <span class="hs">False</span></code></pre><p>The first one: 60. The gate is asked on every frame and it is True on every frame, so the score goes up 60 times in one second. The second one: <code>touching = False</code>, inside the gate. After the first frame the test is False, and the score stays at 1. In the game, moving the coin does that job. Once the coin has jumped away, <code>player.colliderect(coin)</code> is False on the next frame.</p></div></div></section><section class="brief"><p class="chunk-no">Build &middot; 30 minutes</p><h2>Build: coin grab</h2><p>You are making a small game called coin grab. A white square follows the mouse. A gold coin sits in the window. When the square touches the coin, the coin jumps to a new spot picked at random, and the terminal counts it. Ten coins wins the game. The build is one program, written in three tools. Each tool starts from the program the tool before it finished.</p><ol><li>Start from chunk 4's file, <code>Jonathan_session12.py</code> with your first name in place of Jonathan: the square that follows the mouse.</li><li>Add a coin, and make it jump to a random spot when the player touches it.</li><li>Add a score that goes up by 1 for each coin, printed in the terminal.</li><li>End the game at ten coins: the window turns green and the coin stops jumping.</li><li>Put three coins in a list, and add a 30 second time limit that turns the window red.</li></ol><h3>Tool 1: the coin jumps when you touch it</h3><p>The starting file is chunk 4's program, the square that follows the mouse. It is behind the button below. Now the window gets a coin: a gold square that stays still until the player touches it, then jumps to a spot picked at random. The terminal says where it went. Each new line is a question for the room before it goes on the screen. Each question shows the line with a blank and three choices. Ask the room to pick before you click. A wrong choice says why it does not fit, and the right choice shows the finished line and why it is right.</p><div class="sofar"><button class="rev" data-target="s12-tool1-start" aria-controls="s12-tool1-start" aria-expanded="false" data-show="Show the program so far" data-hide="Hide the program so far">Show the program so far</button><div class="ans" id="s12-tool1-start"><pre class="py"><code><span class="hk">import</span> <span class="hc">pygame</span>
+
+<span class="hm"># ---- knob block: every number the game depends on ----</span>
+<span class="hn">WIDTH</span> = <span class="hd">600</span>
+<span class="hn">HEIGHT</span> = <span class="hd">400</span>
+<span class="hn">PLAYER_SIZE</span> = <span class="hd">50</span>
+<span class="hn">BG</span> = (<span class="hd">27</span>, <span class="hd">41</span>, <span class="hd">81</span>)
+<span class="hn">PLAYER</span> = (<span class="hd">248</span>, <span class="hd">250</span>, <span class="hd">252</span>)
+<span class="hn">FPS</span> = <span class="hd">60</span>
+
+<span class="hc">pygame</span>.<span class="hf">init</span>()
+<span class="hv">screen</span> = <span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">set_mode</span>((<span class="hn">WIDTH</span>, <span class="hn">HEIGHT</span>))
+<span class="hv">clock</span> = <span class="hc">pygame</span>.<span class="hc">time</span>.<span class="hc">Clock</span>()
+
+<span class="hv">player</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">0</span>, <span class="hd">0</span>, <span class="hn">PLAYER_SIZE</span>, <span class="hn">PLAYER_SIZE</span>)
+
+<span class="hv">running</span> = <span class="hd">1</span>
+<span class="hk">while</span> <span class="hv">running</span>:
+<span class="ig">    </span><span class="hk">for</span> <span class="hv">event</span> <span class="hs">in</span> <span class="hc">pygame</span>.<span class="hc">event</span>.<span class="hf">get</span>():
+<span class="ig">    </span><span class="ig">    </span><span class="hk">if</span> <span class="hv">event</span>.<span class="hv">type</span> == <span class="hc">pygame</span>.<span class="hn">QUIT</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">running</span> = <span class="hd">0</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">player</span>.<span class="hv">center</span> = <span class="hc">pygame</span>.<span class="hc">mouse</span>.<span class="hf">get_pos</span>()
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">screen</span>.<span class="hf">fill</span>(<span class="hn">BG</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">PLAYER</span>, <span class="hv">player</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">flip</span>()
+<span class="ig">    </span><span class="hv">clock</span>.<span class="hf">tick</span>(<span class="hn">FPS</span>)
+
+<span class="hf">print</span>(<span class="hs">f</span><span class="hq">"centre </span><span class="hs">{</span><span class="hv">player</span>.<span class="hv">center</span><span class="hs">}</span><span class="hq">, left </span><span class="hs">{</span><span class="hv">player</span>.<span class="hv">left</span><span class="hs">}</span><span class="hq">, top </span><span class="hs">{</span><span class="hv">player</span>.<span class="hv">top</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="hc">pygame</span>.<span class="hf">quit</span>()</code></pre></div></div><div class="predict ladder"><p class="q"><b>Line 1. What goes next?</b> The coin will jump to a spot picked at random. Which line lets the program pick random numbers?</p><pre class="py"><code><span class="hk">import</span> <span class="hc">____</span></code></pre><p>Pick what goes in the blank.</p><div class="choices code"><button class="rev" data-target="s12-tool1-l1-a" aria-controls="s12-tool1-l1-a" aria-expanded="false" data-show="A.  pygame" data-hide="A.  pygame">A.  pygame</button><div class="ans no" id="s12-tool1-l1-a"><p><b>Not this one.</b> <code>pygame</code> is already imported, on the next line. The random numbers come from a different library.</p></div><button class="rev" data-target="s12-tool1-l1-b" aria-controls="s12-tool1-l1-b" aria-expanded="false" data-show="B.  random" data-hide="B.  random">B.  random</button><div class="ans yes" id="s12-tool1-l1-b"><p><b>Yes.</b></p><pre class="py"><code><span class="hk">import</span> <span class="hc">random</span></code></pre><p><code>random</code> is the library from session 3. Importing it lets the program call <code>random.randint</code> further down.</p><p>This is the new first line of the file, above <code>import pygame</code>.</p></div><button class="rev" data-target="s12-tool1-l1-c" aria-controls="s12-tool1-l1-c" aria-expanded="false" data-show="C.  randint" data-hide="C.  randint">C.  randint</button><div class="ans no" id="s12-tool1-l1-c"><p><b>Not this one.</b> Python has no library called <code>randint</code>. <code>randint</code> is a function inside the <code>random</code> library.</p></div></div></div><div class="predict ladder"><p class="q"><b>Lines 8 and 11. What goes next?</b> The coin is a square 30 across, and it is gold. Both get a name in the knob block. Which name holds the size, and which holds the colour?</p><pre class="py"><code><span class="hv">____</span> = <span class="hd">30</span>
+<span class="hv">____</span> = (<span class="hd">252</span>, <span class="hd">211</span>, <span class="hd">77</span>)</code></pre><p>Pick what goes in the two blanks.</p><div class="choices code"><button class="rev" data-target="s12-tool1-l2-a" aria-controls="s12-tool1-l2-a" aria-expanded="false" data-show="A.  first blank: COIN_SIZE    second blank: COIN" data-hide="A.  first blank: COIN_SIZE    second blank: COIN">A.  first blank: COIN_SIZE    second blank: COIN</button><div class="ans yes" id="s12-tool1-l2-a"><p><b>Yes.</b></p><pre class="py"><code><span class="hn">COIN_SIZE</span> = <span class="hd">30</span>
+<span class="hn">COIN</span> = (<span class="hd">252</span>, <span class="hd">211</span>, <span class="hd">77</span>)</code></pre><p><code>COIN_SIZE</code> is how wide and how tall the coin is. <code>COIN</code> is its colour: a lot of red, a lot of green, and a little blue make gold.</p><p><code>COIN_SIZE</code> goes under <code>PLAYER_SIZE</code>, and <code>COIN</code> goes under <code>PLAYER</code>.</p></div><button class="rev" data-target="s12-tool1-l2-b" aria-controls="s12-tool1-l2-b" aria-expanded="false" data-show="B.  first blank: COIN    second blank: COIN_SIZE" data-hide="B.  first blank: COIN    second blank: COIN_SIZE">B.  first blank: COIN    second blank: COIN_SIZE</button><div class="ans no" id="s12-tool1-l2-b"><p><b>Not this one.</b> Those are swapped. The size is one number, and the colour is three.</p></div><button class="rev" data-target="s12-tool1-l2-c" aria-controls="s12-tool1-l2-c" aria-expanded="false" data-show="C.  first blank: coin_size    second blank: coin" data-hide="C.  first blank: coin_size    second blank: coin">C.  first blank: coin_size    second blank: coin</button><div class="ans no" id="s12-tool1-l2-c"><p><b>Not this one.</b> Knob names are written in capitals, so they stand out from the variables that change. The small name <code>coin</code> is needed for the coin's Rect.</p></div></div></div><div class="predict ladder"><p class="q"><b>Line 19. What goes next?</b> The coin is a Rect, like the player. It starts at x = 300, y = 200. What are its width and its height?</p><pre class="py"><code><span class="hv">coin</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">200</span>, <span class="hv">____</span>, <span class="hv">____</span>)</code></pre><p>Pick what goes in the two blanks.</p><div class="choices code"><button class="rev" data-target="s12-tool1-l3-a" aria-controls="s12-tool1-l3-a" aria-expanded="false" data-show="A.  first blank: PLAYER_SIZE    second blank: PLAYER_SIZE" data-hide="A.  first blank: PLAYER_SIZE    second blank: PLAYER_SIZE">A.  first blank: PLAYER_SIZE    second blank: PLAYER_SIZE</button><div class="ans no" id="s12-tool1-l3-a"><p><b>Not this one.</b> Then the coin would be 50 across, as big as the player.</p></div><button class="rev" data-target="s12-tool1-l3-b" aria-controls="s12-tool1-l3-b" aria-expanded="false" data-show="B.  first blank: 330    second blank: 230" data-hide="B.  first blank: 330    second blank: 230">B.  first blank: 330    second blank: 230</button><div class="ans no" id="s12-tool1-l3-b"><p><b>Not this one.</b> The last two numbers are the width and the height, not the right edge and the bottom edge. That coin would be 330 wide.</p></div><button class="rev" data-target="s12-tool1-l3-c" aria-controls="s12-tool1-l3-c" aria-expanded="false" data-show="C.  first blank: COIN_SIZE    second blank: COIN_SIZE" data-hide="C.  first blank: COIN_SIZE    second blank: COIN_SIZE">C.  first blank: COIN_SIZE    second blank: COIN_SIZE</button><div class="ans yes" id="s12-tool1-l3-c"><p><b>Yes.</b></p><pre class="py"><code><span class="hv">coin</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">200</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>)</code></pre><p>The four numbers are x, y, width, and height. The coin is a square, so its width and its height are the same knob.</p><p>Under the <code>player</code> line, above the loop. Above the loop, it runs once. Inside the loop, the coin would be put back at 300, 200 on every frame.</p></div></div></div><div class="predict ladder"><p class="q"><b>Line 28. What goes next?</b> On every frame, after the player has moved, the program asks one question: is the player touching the coin? Which gate asks it?</p><pre class="py"><code><span class="ig">    </span><span class="hk">if</span> <span class="hv">____</span>.<span class="hf">colliderect</span>(<span class="hv">____</span>):</code></pre><p>Pick what goes in the two blanks.</p><div class="choices code"><button class="rev" data-target="s12-tool1-l4-a" aria-controls="s12-tool1-l4-a" aria-expanded="false" data-show="A.  first blank: screen    second blank: coin" data-hide="A.  first blank: screen    second blank: coin">A.  first blank: screen    second blank: coin</button><div class="ans no" id="s12-tool1-l4-a"><p><b>Not this one.</b> <code>screen</code> is the window, not a Rect. It has no <code>colliderect</code>, so Python gives an error.</p></div><button class="rev" data-target="s12-tool1-l4-b" aria-controls="s12-tool1-l4-b" aria-expanded="false" data-show="B.  first blank: player    second blank: coin" data-hide="B.  first blank: player    second blank: coin">B.  first blank: player    second blank: coin</button><div class="ans yes" id="s12-tool1-l4-b"><p><b>Yes.</b></p><pre class="py"><code><span class="ig">    </span><span class="hk">if</span> <span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>):</code></pre><p><code>colliderect</code> is the test from chunk 3. It gives True when the two rectangles overlap. The gate is inside the frame loop, so the question is asked 60 times a second.</p><p>Under <code>player.center = pygame.mouse.get_pos()</code>, lined up with it.</p></div><button class="rev" data-target="s12-tool1-l4-c" aria-controls="s12-tool1-l4-c" aria-expanded="false" data-show="C.  first blank: player    second blank: player" data-hide="C.  first blank: player    second blank: player">C.  first blank: player    second blank: player</button><div class="ans no" id="s12-tool1-l4-c"><p><b>Not this one.</b> A rectangle overlaps itself, so this is True on every frame.</p></div></div></div><div class="predict ladder"><p class="q"><b>Lines 29 and 30. What goes next?</b> The player is touching the coin. The coin jumps to a new spot. The window is 600 wide and 400 tall. Which knob limits x, and which limits y?</p><pre class="py"><code><span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">x</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hv">____</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">y</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hv">____</span> - <span class="hn">COIN_SIZE</span>)</code></pre><p>Pick what goes in the two blanks.</p><div class="choices code"><button class="rev" data-target="s12-tool1-l5-a" aria-controls="s12-tool1-l5-a" aria-expanded="false" data-show="A.  first blank: WIDTH    second blank: HEIGHT" data-hide="A.  first blank: WIDTH    second blank: HEIGHT">A.  first blank: WIDTH    second blank: HEIGHT</button><div class="ans yes" id="s12-tool1-l5-a"><p><b>Yes.</b></p><pre class="py"><code><span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">x</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">WIDTH</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">y</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">HEIGHT</span> - <span class="hn">COIN_SIZE</span>)</code></pre><p><code>WIDTH - COIN_SIZE</code> is 570. A coin whose left edge is at 570 has its right edge at 600, the right edge of the window. A larger x would put part of the coin outside. The same goes for y: <code>HEIGHT - COIN_SIZE</code> is 370.</p></div><button class="rev" data-target="s12-tool1-l5-b" aria-controls="s12-tool1-l5-b" aria-expanded="false" data-show="B.  first blank: HEIGHT    second blank: WIDTH" data-hide="B.  first blank: HEIGHT    second blank: WIDTH">B.  first blank: HEIGHT    second blank: WIDTH</button><div class="ans no" id="s12-tool1-l5-b"><p><b>Not this one.</b> Those are swapped. x goes across, so the width limits it. With y as large as 570, the coin could land below the bottom of the window, which is at 400.</p></div><button class="rev" data-target="s12-tool1-l5-c" aria-controls="s12-tool1-l5-c" aria-expanded="false" data-show="C.  first blank: COIN_SIZE    second blank: COIN_SIZE" data-hide="C.  first blank: COIN_SIZE    second blank: COIN_SIZE">C.  first blank: COIN_SIZE    second blank: COIN_SIZE</button><div class="ans no" id="s12-tool1-l5-c"><p><b>Not this one.</b> <code>COIN_SIZE - COIN_SIZE</code> is 0. <code>random.randint(0, 0)</code> gives 0 every time, so the coin would go to the top left corner and stay there.</p></div></div></div><div class="predict ladder"><p class="q"><b>Line 31. What goes next?</b> Words go in the terminal. Which line says where the coin went?</p><pre class="py"><code><span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"grabbed, the coin is now at </span><span class="hs">{</span><span class="hv">____</span><span class="hs">}</span><span class="hq">, </span><span class="hs">{</span><span class="hv">____</span><span class="hs">}</span><span class="hq">"</span>)</code></pre><p>Pick what goes in the two blanks.</p><div class="choices code"><button class="rev" data-target="s12-tool1-l6-a" aria-controls="s12-tool1-l6-a" aria-expanded="false" data-show="A.  first blank: player.x    second blank: player.y" data-hide="A.  first blank: player.x    second blank: player.y">A.  first blank: player.x    second blank: player.y</button><div class="ans no" id="s12-tool1-l6-a"><p><b>Not this one.</b> That prints where the player's top left corner is, not where the coin went.</p></div><button class="rev" data-target="s12-tool1-l6-b" aria-controls="s12-tool1-l6-b" aria-expanded="false" data-show="B.  first blank: x    second blank: y" data-hide="B.  first blank: x    second blank: y">B.  first blank: x    second blank: y</button><div class="ans no" id="s12-tool1-l6-b"><p><b>Not this one.</b> This program has no variables called <code>x</code> and <code>y</code>. Python gives a NameError.</p></div><button class="rev" data-target="s12-tool1-l6-c" aria-controls="s12-tool1-l6-c" aria-expanded="false" data-show="C.  first blank: coin.x    second blank: coin.y" data-hide="C.  first blank: coin.x    second blank: coin.y">C.  first blank: coin.x    second blank: coin.y</button><div class="ans yes" id="s12-tool1-l6-c"><p><b>Yes.</b></p><pre class="py"><code><span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"grabbed, the coin is now at </span><span class="hs">{</span><span class="hv">coin</span>.<span class="hv">x</span><span class="hs">}</span><span class="hq">, </span><span class="hs">{</span><span class="hv">coin</span>.<span class="hv">y</span><span class="hs">}</span><span class="hq">"</span>)</code></pre><p>The print is inside the gate, after the two lines that move the coin, so it prints the new spot, once for each grab.</p></div></div></div><div class="predict ladder"><p class="q"><b>Line 34. What goes next?</b> The coin has to be drawn on every frame. Which line draws it?</p><pre class="py"><code><span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hv">____</span>, <span class="hv">____</span>)</code></pre><p>Pick what goes in the two blanks.</p><div class="choices code"><button class="rev" data-target="s12-tool1-l7-a" aria-controls="s12-tool1-l7-a" aria-expanded="false" data-show="A.  first blank: COIN    second blank: player" data-hide="A.  first blank: COIN    second blank: player">A.  first blank: COIN    second blank: player</button><div class="ans no" id="s12-tool1-l7-a"><p><b>Not this one.</b> That draws a gold square where the player is. The coin itself is never drawn.</p></div><button class="rev" data-target="s12-tool1-l7-b" aria-controls="s12-tool1-l7-b" aria-expanded="false" data-show="B.  first blank: COIN    second blank: coin" data-hide="B.  first blank: COIN    second blank: coin">B.  first blank: COIN    second blank: coin</button><div class="ans yes" id="s12-tool1-l7-b"><p><b>Yes.</b></p><pre class="py"><code><span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">COIN</span>, <span class="hv">coin</span>)</code></pre><p><code>COIN</code> in capitals is the colour, and <code>coin</code> in small letters is the Rect. Python treats them as two different names.</p><p>Under <code>screen.fill(BG)</code> and above the line that draws the player. The player is drawn after the coin, so the player is on top.</p></div><button class="rev" data-target="s12-tool1-l7-c" aria-controls="s12-tool1-l7-c" aria-expanded="false" data-show="C.  first blank: coin    second blank: COIN" data-hide="C.  first blank: coin    second blank: COIN">C.  first blank: coin    second blank: COIN</button><div class="ans no" id="s12-tool1-l7-c"><p><b>Not this one.</b> Those are swapped. The colour goes second and the rectangle goes third. Swapped, Python gives an error.</p></div></div></div><div class="whole"><button class="rev" data-target="s12-tool1-whole" aria-controls="s12-tool1-whole" aria-expanded="false" data-show="Show the whole program" data-hide="Hide the whole program">Show the whole program</button><div class="ans" id="s12-tool1-whole"><pre class="py"><code><span class="hk">import</span> <span class="hc">random</span>
+<span class="hk">import</span> <span class="hc">pygame</span>
+
+<span class="hm"># ---- knob block: every number the game depends on ----</span>
+<span class="hn">WIDTH</span> = <span class="hd">600</span>
+<span class="hn">HEIGHT</span> = <span class="hd">400</span>
+<span class="hn">PLAYER_SIZE</span> = <span class="hd">50</span>
+<span class="hn">COIN_SIZE</span> = <span class="hd">30</span>
+<span class="hn">BG</span> = (<span class="hd">27</span>, <span class="hd">41</span>, <span class="hd">81</span>)
+<span class="hn">PLAYER</span> = (<span class="hd">248</span>, <span class="hd">250</span>, <span class="hd">252</span>)
+<span class="hn">COIN</span> = (<span class="hd">252</span>, <span class="hd">211</span>, <span class="hd">77</span>)
+<span class="hn">FPS</span> = <span class="hd">60</span>
+
+<span class="hc">pygame</span>.<span class="hf">init</span>()
+<span class="hv">screen</span> = <span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">set_mode</span>((<span class="hn">WIDTH</span>, <span class="hn">HEIGHT</span>))
+<span class="hv">clock</span> = <span class="hc">pygame</span>.<span class="hc">time</span>.<span class="hc">Clock</span>()
+
+<span class="hv">player</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">0</span>, <span class="hd">0</span>, <span class="hn">PLAYER_SIZE</span>, <span class="hn">PLAYER_SIZE</span>)
+<span class="hv">coin</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">200</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>)
+
+<span class="hv">running</span> = <span class="hd">1</span>
+<span class="hk">while</span> <span class="hv">running</span>:
+<span class="ig">    </span><span class="hk">for</span> <span class="hv">event</span> <span class="hs">in</span> <span class="hc">pygame</span>.<span class="hc">event</span>.<span class="hf">get</span>():
+<span class="ig">    </span><span class="ig">    </span><span class="hk">if</span> <span class="hv">event</span>.<span class="hv">type</span> == <span class="hc">pygame</span>.<span class="hn">QUIT</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">running</span> = <span class="hd">0</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">player</span>.<span class="hv">center</span> = <span class="hc">pygame</span>.<span class="hc">mouse</span>.<span class="hf">get_pos</span>()
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>):
+<span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">x</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">WIDTH</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">y</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">HEIGHT</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"grabbed, the coin is now at </span><span class="hs">{</span><span class="hv">coin</span>.<span class="hv">x</span><span class="hs">}</span><span class="hq">, </span><span class="hs">{</span><span class="hv">coin</span>.<span class="hv">y</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">screen</span>.<span class="hf">fill</span>(<span class="hn">BG</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">COIN</span>, <span class="hv">coin</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">PLAYER</span>, <span class="hv">player</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">flip</span>()
+<span class="ig">    </span><span class="hv">clock</span>.<span class="hf">tick</span>(<span class="hn">FPS</span>)
+
+<span class="hf">print</span>(<span class="hs">f</span><span class="hq">"centre </span><span class="hs">{</span><span class="hv">player</span>.<span class="hv">center</span><span class="hs">}</span><span class="hq">, left </span><span class="hs">{</span><span class="hv">player</span>.<span class="hv">left</span><span class="hs">}</span><span class="hq">, top </span><span class="hs">{</span><span class="hv">player</span>.<span class="hv">top</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="hc">pygame</span>.<span class="hf">quit</span>()</code></pre></div></div><div class="predict"><p class="q">Predict: In this run the mouse goes to the middle of the coin, at (315, 215), and stays there, without moving, for about half a second, until the window closes. How many times does the terminal print grabbed?</p><button class="rev" data-target="s12-tool1" aria-controls="s12-tool1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s12-tool1"><p class="outlabel">What it actually prints, on one run</p><pre class="out">grabbed, the coin is now at 57, 46
+centre (315, 215), left 290, top 190</pre><p>Once. On the frame the mouse arrives, the gate is True and the coin jumps to 57, 46. On every frame after that the player is in the same place and the coin is somewhere else, so the gate is False. The last line shows that the player did not move: its centre is (315, 215) when the window closes.</p><p>The spot is picked at random, so on your machine the numbers after grabbed will be different. A new spot can land under the player. When that happens, the coin jumps again on the next frame. This is the floor exit.</p></div></div><h3>Tool 2: a score, and a win at ten coins</h3><p>The game needs a score and a way to end. Every grab adds 1 to the score, and the terminal prints it. At ten coins the game is won: the window turns green, and touching the coin does nothing any more.</p><div class="sofar"><button class="rev" data-target="s12-tool2-start" aria-controls="s12-tool2-start" aria-expanded="false" data-show="Show the program so far" data-hide="Hide the program so far">Show the program so far</button><div class="ans" id="s12-tool2-start"><pre class="py"><code><span class="hk">import</span> <span class="hc">random</span>
+<span class="hk">import</span> <span class="hc">pygame</span>
+
+<span class="hm"># ---- knob block: every number the game depends on ----</span>
+<span class="hn">WIDTH</span> = <span class="hd">600</span>
+<span class="hn">HEIGHT</span> = <span class="hd">400</span>
+<span class="hn">PLAYER_SIZE</span> = <span class="hd">50</span>
+<span class="hn">COIN_SIZE</span> = <span class="hd">30</span>
+<span class="hn">BG</span> = (<span class="hd">27</span>, <span class="hd">41</span>, <span class="hd">81</span>)
+<span class="hn">PLAYER</span> = (<span class="hd">248</span>, <span class="hd">250</span>, <span class="hd">252</span>)
+<span class="hn">COIN</span> = (<span class="hd">252</span>, <span class="hd">211</span>, <span class="hd">77</span>)
+<span class="hn">FPS</span> = <span class="hd">60</span>
+
+<span class="hc">pygame</span>.<span class="hf">init</span>()
+<span class="hv">screen</span> = <span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">set_mode</span>((<span class="hn">WIDTH</span>, <span class="hn">HEIGHT</span>))
+<span class="hv">clock</span> = <span class="hc">pygame</span>.<span class="hc">time</span>.<span class="hc">Clock</span>()
+
+<span class="hv">player</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">0</span>, <span class="hd">0</span>, <span class="hn">PLAYER_SIZE</span>, <span class="hn">PLAYER_SIZE</span>)
+<span class="hv">coin</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">200</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>)
+
+<span class="hv">running</span> = <span class="hd">1</span>
+<span class="hk">while</span> <span class="hv">running</span>:
+<span class="ig">    </span><span class="hk">for</span> <span class="hv">event</span> <span class="hs">in</span> <span class="hc">pygame</span>.<span class="hc">event</span>.<span class="hf">get</span>():
+<span class="ig">    </span><span class="ig">    </span><span class="hk">if</span> <span class="hv">event</span>.<span class="hv">type</span> == <span class="hc">pygame</span>.<span class="hn">QUIT</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">running</span> = <span class="hd">0</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">player</span>.<span class="hv">center</span> = <span class="hc">pygame</span>.<span class="hc">mouse</span>.<span class="hf">get_pos</span>()
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>):
+<span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">x</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">WIDTH</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">y</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">HEIGHT</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"grabbed, the coin is now at </span><span class="hs">{</span><span class="hv">coin</span>.<span class="hv">x</span><span class="hs">}</span><span class="hq">, </span><span class="hs">{</span><span class="hv">coin</span>.<span class="hv">y</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">screen</span>.<span class="hf">fill</span>(<span class="hn">BG</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">COIN</span>, <span class="hv">coin</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">PLAYER</span>, <span class="hv">player</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">flip</span>()
+<span class="ig">    </span><span class="hv">clock</span>.<span class="hf">tick</span>(<span class="hn">FPS</span>)
+
+<span class="hf">print</span>(<span class="hs">f</span><span class="hq">"centre </span><span class="hs">{</span><span class="hv">player</span>.<span class="hv">center</span><span class="hs">}</span><span class="hq">, left </span><span class="hs">{</span><span class="hv">player</span>.<span class="hv">left</span><span class="hs">}</span><span class="hq">, top </span><span class="hs">{</span><span class="hv">player</span>.<span class="hv">top</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="hc">pygame</span>.<span class="hf">quit</span>()</code></pre></div></div><div class="predict ladder"><p class="q"><b>Lines 9 and 13. What goes next?</b> Ten coins wins the game. That number gets a name in the knob block, and so does the colour of the window after a win. What does <code>GOAL</code> hold?</p><pre class="py"><code><span class="hn">GOAL</span> = <span class="hv">____</span>
+<span class="hn">WIN</span> = (<span class="hd">29</span>, <span class="hd">91</span>, <span class="hd">57</span>)</code></pre><p>Pick what goes in the blank.</p><div class="choices code"><button class="rev" data-target="s12-tool2-l1-a" aria-controls="s12-tool2-l1-a" aria-expanded="false" data-show="A.  10" data-hide="A.  10">A.  10</button><div class="ans yes" id="s12-tool2-l1-a"><p><b>Yes.</b></p><pre class="py"><code><span class="hn">GOAL</span> = <span class="hd">10</span>
+<span class="hn">WIN</span> = (<span class="hd">29</span>, <span class="hd">91</span>, <span class="hd">57</span>)</code></pre><p>The goal has a name, so it can be changed in one place. <code>WIN</code> is a dark green.</p><p><code>GOAL</code> goes under <code>COIN_SIZE</code>, and <code>WIN</code> goes under <code>COIN</code>.</p></div><button class="rev" data-target="s12-tool2-l1-b" aria-controls="s12-tool2-l1-b" aria-expanded="false" data-show="B.  0" data-hide="B.  0">B.  0</button><div class="ans no" id="s12-tool2-l1-b"><p><b>Not this one.</b> The score starts at 0, so with a goal of 0 the game would be won on the first frame, before any coin is grabbed.</p></div><button class="rev" data-target="s12-tool2-l1-c" aria-controls="s12-tool2-l1-c" aria-expanded="false" data-show="C.  &quot;10&quot;" data-hide="C.  &quot;10&quot;">C.  &quot;10&quot;</button><div class="ans no" id="s12-tool2-l1-c"><p><b>Not this one.</b> With quote marks it is text. Comparing the score with text gives an error.</p></div></div></div><div class="predict ladder"><p class="q"><b>Lines 23 to 25. What goes next?</b> Three variables start the game. <code>score</code> counts coins. <code>playing</code> is 1 while the game is being played and 0 when it is over. <code>background</code> is the colour the window is filled with. What do the first two start as?</p><pre class="py"><code><span class="hv">score</span> = <span class="hv">____</span>
+<span class="hv">playing</span> = <span class="hv">____</span>
+<span class="hv">background</span> = <span class="hn">BG</span></code></pre><p>Pick what goes in the two blanks.</p><div class="choices code"><button class="rev" data-target="s12-tool2-l2-a" aria-controls="s12-tool2-l2-a" aria-expanded="false" data-show="A.  first blank: 1    second blank: 1" data-hide="A.  first blank: 1    second blank: 1">A.  first blank: 1    second blank: 1</button><div class="ans no" id="s12-tool2-l2-a"><p><b>Not this one.</b> No coin has been grabbed yet, so the score cannot start at 1.</p></div><button class="rev" data-target="s12-tool2-l2-b" aria-controls="s12-tool2-l2-b" aria-expanded="false" data-show="B.  first blank: 0    second blank: 0" data-hide="B.  first blank: 0    second blank: 0">B.  first blank: 0    second blank: 0</button><div class="ans no" id="s12-tool2-l2-b"><p><b>Not this one.</b> <code>playing = 0</code> means the game is over. No coin could be grabbed.</p></div><button class="rev" data-target="s12-tool2-l2-c" aria-controls="s12-tool2-l2-c" aria-expanded="false" data-show="C.  first blank: 0    second blank: 1" data-hide="C.  first blank: 0    second blank: 1">C.  first blank: 0    second blank: 1</button><div class="ans yes" id="s12-tool2-l2-c"><p><b>Yes.</b></p><pre class="py"><code><span class="hv">score</span> = <span class="hd">0</span>
+<span class="hv">playing</span> = <span class="hd">1</span>
+<span class="hv">background</span> = <span class="hn">BG</span></code></pre><p>The three lines are above the frame loop, so they run once. Inside the loop, the score would go back to 0 on every frame. <code>playing</code> works the way <code>running</code> does: 1 for yes, 0 for no.</p><p>Under the <code>coin</code> line, with an empty line above.</p></div></div></div><div class="predict ladder"><p class="q"><b>Line 34. What goes next?</b> After a win, touching the coin must do nothing. So the gate needs two tests: the game is being played, and the player is touching the coin. Which word joins two tests on one line?</p><pre class="py"><code><span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hv">____</span> <span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>):</code></pre><p>Pick what goes in the blank.</p><div class="choices code"><button class="rev" data-target="s12-tool2-l3-a" aria-controls="s12-tool2-l3-a" aria-expanded="false" data-show="A.  if" data-hide="A.  if">A.  if</button><div class="ans no" id="s12-tool2-l3-a"><p><b>Not this one.</b> One gate has one <code>if</code>. Two tests on the same line are joined with <code>and</code>.</p></div><button class="rev" data-target="s12-tool2-l3-b" aria-controls="s12-tool2-l3-b" aria-expanded="false" data-show="B.  and" data-hide="B.  and">B.  and</button><div class="ans yes" id="s12-tool2-l3-b"><p><b>Yes.</b></p><pre class="py"><code><span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>):</code></pre><p>Both tests have to be True. When <code>playing</code> is 0 the first test is False, so the coin stays where it is. This is one flat gate, not a gate inside a gate.</p></div><button class="rev" data-target="s12-tool2-l3-c" aria-controls="s12-tool2-l3-c" aria-expanded="false" data-show="C.  or" data-hide="C.  or">C.  or</button><div class="ans no" id="s12-tool2-l3-c"><p><b>Not this one.</b> With <code>or</code>, one True test is enough. The gate would be True on every frame of the game, touching or not, and the coin would jump 60 times a second.</p></div></div></div><div class="predict ladder"><p class="q"><b>Lines 37 and 38. What goes next?</b> The print that said grabbed is replaced by two lines. What happens to the score, and what does the terminal print?</p><pre class="py"><code><span class="ig">    </span><span class="ig">    </span><span class="hv">score</span> = <span class="hv">score</span> <span class="hv">____</span> <span class="hd">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"score </span><span class="hs">{</span><span class="hv">____</span><span class="hs">}</span><span class="hq">"</span>)</code></pre><p>Pick what goes in the two blanks.</p><div class="choices code"><button class="rev" data-target="s12-tool2-l4-a" aria-controls="s12-tool2-l4-a" aria-expanded="false" data-show="A.  first blank: +    second blank: score" data-hide="A.  first blank: +    second blank: score">A.  first blank: +    second blank: score</button><div class="ans yes" id="s12-tool2-l4-a"><p><b>Yes.</b></p><pre class="py"><code><span class="ig">    </span><span class="ig">    </span><span class="hv">score</span> = <span class="hv">score</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"score </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq">"</span>)</code></pre><p>It is the counter from session 3, inside a gate. The two lines are inside the gate, after the lines that move the coin. The coin has jumped away, so the gate is False on the next frame, and one grab adds one point.</p></div><button class="rev" data-target="s12-tool2-l4-b" aria-controls="s12-tool2-l4-b" aria-expanded="false" data-show="B.  first blank: +    second blank: GOAL" data-hide="B.  first blank: +    second blank: GOAL">B.  first blank: +    second blank: GOAL</button><div class="ans no" id="s12-tool2-l4-b"><p><b>Not this one.</b> <code>GOAL</code> is 10, so the terminal would say 10 after every grab.</p></div><button class="rev" data-target="s12-tool2-l4-c" aria-controls="s12-tool2-l4-c" aria-expanded="false" data-show="C.  first blank: *    second blank: score" data-hide="C.  first blank: *    second blank: score">C.  first blank: *    second blank: score</button><div class="ans no" id="s12-tool2-l4-c"><p><b>Not this one.</b> The score starts at 0, and 0 times 1 is 0. The score would stay at 0.</p></div></div></div><div class="predict ladder"><p class="q"><b>Lines 39 to 42. What goes next?</b> After the coin gate comes a second gate: has the player won? What is the test, and what does <code>playing</code> become?</p><pre class="py"><code><span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">score</span> <span class="hv">____</span> <span class="hn">GOAL</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">playing</span> = <span class="hv">____</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hv">background</span> = <span class="hn">WIN</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"You win with </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq"> coins."</span>)</code></pre><p>Pick what goes in the two blanks.</p><div class="choices code"><button class="rev" data-target="s12-tool2-l5-a" aria-controls="s12-tool2-l5-a" aria-expanded="false" data-show="A.  first blank: &lt;    second blank: 0" data-hide="A.  first blank: &lt;    second blank: 0">A.  first blank: &lt;    second blank: 0</button><div class="ans no" id="s12-tool2-l5-a"><p><b>Not this one.</b> The score starts below the goal, so the game would be won on the first frame.</p></div><button class="rev" data-target="s12-tool2-l5-b" aria-controls="s12-tool2-l5-b" aria-expanded="false" data-show="B.  first blank: &gt;=    second blank: 1" data-hide="B.  first blank: &gt;=    second blank: 1">B.  first blank: &gt;=    second blank: 1</button><div class="ans no" id="s12-tool2-l5-b"><p><b>Not this one.</b> <code>playing</code> is already 1. Nothing would stop, and the message would print on every frame.</p></div><button class="rev" data-target="s12-tool2-l5-c" aria-controls="s12-tool2-l5-c" aria-expanded="false" data-show="C.  first blank: &gt;=    second blank: 0" data-hide="C.  first blank: &gt;=    second blank: 0">C.  first blank: &gt;=    second blank: 0</button><div class="ans yes" id="s12-tool2-l5-c"><p><b>Yes.</b></p><pre class="py"><code><span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">score</span> &gt;= <span class="hn">GOAL</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">playing</span> = <span class="hd">0</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hv">background</span> = <span class="hn">WIN</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"You win with </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq"> coins."</span>)</code></pre><p><code>&gt;=</code> means is greater than or equal to: the score is 10 or more. The gate sets <code>playing</code> to 0, so it runs once. After that its own first test is False.</p><p>Under the coin gate, lined up with its <code>if</code>. It is a second flat gate, not inside the first one.</p></div></div></div><div class="predict ladder"><p class="q"><b>Line 44. What goes next?</b> The window should change colour when the game is won. Which name does <code>fill</code> use now?</p><pre class="py"><code><span class="ig">    </span><span class="hv">screen</span>.<span class="hf">fill</span>(<span class="hv">____</span>)</code></pre><p>Pick what goes in the blank.</p><div class="choices code"><button class="rev" data-target="s12-tool2-l6-a" aria-controls="s12-tool2-l6-a" aria-expanded="false" data-show="A.  WIN" data-hide="A.  WIN">A.  WIN</button><div class="ans no" id="s12-tool2-l6-a"><p><b>Not this one.</b> Then the window would be green from the first frame.</p></div><button class="rev" data-target="s12-tool2-l6-b" aria-controls="s12-tool2-l6-b" aria-expanded="false" data-show="B.  background" data-hide="B.  background">B.  background</button><div class="ans yes" id="s12-tool2-l6-b"><p><b>Yes.</b></p><pre class="py"><code><span class="ig">    </span><span class="hv">screen</span>.<span class="hf">fill</span>(<span class="hv">background</span>)</code></pre><p><code>background</code> starts as <code>BG</code>, and the win gate changes it to <code>WIN</code>. The fill uses whatever colour the variable holds on that frame.</p></div><button class="rev" data-target="s12-tool2-l6-c" aria-controls="s12-tool2-l6-c" aria-expanded="false" data-show="C.  BG" data-hide="C.  BG">C.  BG</button><div class="ans no" id="s12-tool2-l6-c"><p><b>Not this one.</b> <code>BG</code> never changes, so the window would stay dark blue after a win.</p></div></div></div><div class="predict ladder"><p class="q"><b>Line 50. What goes next?</b> When the window closes, the terminal should say the score. The last print is replaced. What goes in the braces?</p><pre class="py"><code><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"final score </span><span class="hs">{</span><span class="hv">____</span><span class="hs">}</span><span class="hq">"</span>)</code></pre><p>Pick what goes in the blank.</p><div class="choices code"><button class="rev" data-target="s12-tool2-l7-a" aria-controls="s12-tool2-l7-a" aria-expanded="false" data-show="A.  score" data-hide="A.  score">A.  score</button><div class="ans yes" id="s12-tool2-l7-a"><p><b>Yes.</b></p><pre class="py"><code><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"final score </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq">"</span>)</code></pre><p>The line is after the loop, at the left edge, so it runs once, when the window is closed.</p></div><button class="rev" data-target="s12-tool2-l7-b" aria-controls="s12-tool2-l7-b" aria-expanded="false" data-show="B.  GOAL" data-hide="B.  GOAL">B.  GOAL</button><div class="ans no" id="s12-tool2-l7-b"><p><b>Not this one.</b> That prints 10 every time, even if the player grabbed two coins.</p></div><button class="rev" data-target="s12-tool2-l7-c" aria-controls="s12-tool2-l7-c" aria-expanded="false" data-show="C.  playing" data-hide="C.  playing">C.  playing</button><div class="ans no" id="s12-tool2-l7-c"><p><b>Not this one.</b> That prints 1 or 0, not the number of coins.</p></div></div></div><div class="whole"><button class="rev" data-target="s12-tool2-whole" aria-controls="s12-tool2-whole" aria-expanded="false" data-show="Show the whole program" data-hide="Hide the whole program">Show the whole program</button><div class="ans" id="s12-tool2-whole"><pre class="py"><code><span class="hk">import</span> <span class="hc">random</span>
+<span class="hk">import</span> <span class="hc">pygame</span>
+
+<span class="hm"># ---- knob block: every number the game depends on ----</span>
+<span class="hn">WIDTH</span> = <span class="hd">600</span>
+<span class="hn">HEIGHT</span> = <span class="hd">400</span>
+<span class="hn">PLAYER_SIZE</span> = <span class="hd">50</span>
+<span class="hn">COIN_SIZE</span> = <span class="hd">30</span>
+<span class="hn">GOAL</span> = <span class="hd">10</span>
+<span class="hn">BG</span> = (<span class="hd">27</span>, <span class="hd">41</span>, <span class="hd">81</span>)
+<span class="hn">PLAYER</span> = (<span class="hd">248</span>, <span class="hd">250</span>, <span class="hd">252</span>)
+<span class="hn">COIN</span> = (<span class="hd">252</span>, <span class="hd">211</span>, <span class="hd">77</span>)
+<span class="hn">WIN</span> = (<span class="hd">29</span>, <span class="hd">91</span>, <span class="hd">57</span>)
+<span class="hn">FPS</span> = <span class="hd">60</span>
+
+<span class="hc">pygame</span>.<span class="hf">init</span>()
+<span class="hv">screen</span> = <span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">set_mode</span>((<span class="hn">WIDTH</span>, <span class="hn">HEIGHT</span>))
+<span class="hv">clock</span> = <span class="hc">pygame</span>.<span class="hc">time</span>.<span class="hc">Clock</span>()
+
+<span class="hv">player</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">0</span>, <span class="hd">0</span>, <span class="hn">PLAYER_SIZE</span>, <span class="hn">PLAYER_SIZE</span>)
+<span class="hv">coin</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">200</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>)
+
+<span class="hv">score</span> = <span class="hd">0</span>
+<span class="hv">playing</span> = <span class="hd">1</span>
+<span class="hv">background</span> = <span class="hn">BG</span>
+
+<span class="hv">running</span> = <span class="hd">1</span>
+<span class="hk">while</span> <span class="hv">running</span>:
+<span class="ig">    </span><span class="hk">for</span> <span class="hv">event</span> <span class="hs">in</span> <span class="hc">pygame</span>.<span class="hc">event</span>.<span class="hf">get</span>():
+<span class="ig">    </span><span class="ig">    </span><span class="hk">if</span> <span class="hv">event</span>.<span class="hv">type</span> == <span class="hc">pygame</span>.<span class="hn">QUIT</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">running</span> = <span class="hd">0</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">player</span>.<span class="hv">center</span> = <span class="hc">pygame</span>.<span class="hc">mouse</span>.<span class="hf">get_pos</span>()
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>):
+<span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">x</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">WIDTH</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">y</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">HEIGHT</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="hv">score</span> = <span class="hv">score</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"score </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">score</span> &gt;= <span class="hn">GOAL</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">playing</span> = <span class="hd">0</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hv">background</span> = <span class="hn">WIN</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"You win with </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq"> coins."</span>)
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">screen</span>.<span class="hf">fill</span>(<span class="hv">background</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">COIN</span>, <span class="hv">coin</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">PLAYER</span>, <span class="hv">player</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">flip</span>()
+<span class="ig">    </span><span class="hv">clock</span>.<span class="hf">tick</span>(<span class="hn">FPS</span>)
+
+<span class="hf">print</span>(<span class="hs">f</span><span class="hq">"final score </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="hc">pygame</span>.<span class="hf">quit</span>()</code></pre></div></div><div class="predict"><p class="q">Predict: In this run the mouse goes to the middle of the coin eleven times, and each time the coin has jumped somewhere new. How many score lines does the terminal print, and what happens on the eleventh touch?</p><button class="rev" data-target="s12-tool2" aria-controls="s12-tool2" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s12-tool2"><p class="outlabel">What it actually prints, on one run</p><pre class="out">score 1
+score 2
+score 3
+score 4
+score 5
+score 6
+score 7
+score 8
+score 9
+score 10
+You win with 10 coins.
+final score 10</pre><p>The first one: ten score lines, from score 1 to score 10, and then <code>You win with 10 coins.</code> On the tenth grab the win gate sets <code>playing</code> to 0.</p><p>The second one: nothing happens on the eleventh touch. The coin gate's first test, <code>playing == 1</code>, is False, so the coin does not jump and the score stays at 10. The last line prints when the window closes. This is the middle exit.</p></div></div><h3>Tool 3: three coins in a list, and a time limit</h3><p>One coin is slow. Now there are three, kept in a list, and a loop asks the touching question once for each coin. There is also a time limit. The frame loop runs 60 times a second, so counting frames is counting time: when the counter reaches 30 seconds of frames and the player has not won, the window turns red and the game is over.</p><div class="sofar"><button class="rev" data-target="s12-tool3-start" aria-controls="s12-tool3-start" aria-expanded="false" data-show="Show the program so far" data-hide="Hide the program so far">Show the program so far</button><div class="ans" id="s12-tool3-start"><pre class="py"><code><span class="hk">import</span> <span class="hc">random</span>
+<span class="hk">import</span> <span class="hc">pygame</span>
+
+<span class="hm"># ---- knob block: every number the game depends on ----</span>
+<span class="hn">WIDTH</span> = <span class="hd">600</span>
+<span class="hn">HEIGHT</span> = <span class="hd">400</span>
+<span class="hn">PLAYER_SIZE</span> = <span class="hd">50</span>
+<span class="hn">COIN_SIZE</span> = <span class="hd">30</span>
+<span class="hn">GOAL</span> = <span class="hd">10</span>
+<span class="hn">BG</span> = (<span class="hd">27</span>, <span class="hd">41</span>, <span class="hd">81</span>)
+<span class="hn">PLAYER</span> = (<span class="hd">248</span>, <span class="hd">250</span>, <span class="hd">252</span>)
+<span class="hn">COIN</span> = (<span class="hd">252</span>, <span class="hd">211</span>, <span class="hd">77</span>)
+<span class="hn">WIN</span> = (<span class="hd">29</span>, <span class="hd">91</span>, <span class="hd">57</span>)
+<span class="hn">FPS</span> = <span class="hd">60</span>
+
+<span class="hc">pygame</span>.<span class="hf">init</span>()
+<span class="hv">screen</span> = <span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">set_mode</span>((<span class="hn">WIDTH</span>, <span class="hn">HEIGHT</span>))
+<span class="hv">clock</span> = <span class="hc">pygame</span>.<span class="hc">time</span>.<span class="hc">Clock</span>()
+
+<span class="hv">player</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">0</span>, <span class="hd">0</span>, <span class="hn">PLAYER_SIZE</span>, <span class="hn">PLAYER_SIZE</span>)
+<span class="hv">coin</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">200</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>)
+
+<span class="hv">score</span> = <span class="hd">0</span>
+<span class="hv">playing</span> = <span class="hd">1</span>
+<span class="hv">background</span> = <span class="hn">BG</span>
+
+<span class="hv">running</span> = <span class="hd">1</span>
+<span class="hk">while</span> <span class="hv">running</span>:
+<span class="ig">    </span><span class="hk">for</span> <span class="hv">event</span> <span class="hs">in</span> <span class="hc">pygame</span>.<span class="hc">event</span>.<span class="hf">get</span>():
+<span class="ig">    </span><span class="ig">    </span><span class="hk">if</span> <span class="hv">event</span>.<span class="hv">type</span> == <span class="hc">pygame</span>.<span class="hn">QUIT</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">running</span> = <span class="hd">0</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">player</span>.<span class="hv">center</span> = <span class="hc">pygame</span>.<span class="hc">mouse</span>.<span class="hf">get_pos</span>()
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>):
+<span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">x</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">WIDTH</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">y</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">HEIGHT</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="hv">score</span> = <span class="hv">score</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"score </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">score</span> &gt;= <span class="hn">GOAL</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">playing</span> = <span class="hd">0</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hv">background</span> = <span class="hn">WIN</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"You win with </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq"> coins."</span>)
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">screen</span>.<span class="hf">fill</span>(<span class="hv">background</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">COIN</span>, <span class="hv">coin</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">PLAYER</span>, <span class="hv">player</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">flip</span>()
+<span class="ig">    </span><span class="hv">clock</span>.<span class="hf">tick</span>(<span class="hn">FPS</span>)
+
+<span class="hf">print</span>(<span class="hs">f</span><span class="hq">"final score </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="hc">pygame</span>.<span class="hf">quit</span>()</code></pre></div></div><div class="predict ladder"><p class="q"><b>Lines 10 and 15. What goes next?</b> The time limit is 30 seconds. It gets a name in the knob block, and so does the colour of the window when time runs out. What is the name for the 30?</p><pre class="py"><code><span class="hv">____</span> = <span class="hd">30</span>
+<span class="hn">LOSE</span> = (<span class="hd">156</span>, <span class="hd">43</span>, <span class="hd">34</span>)</code></pre><p>Pick what goes in the blank.</p><div class="choices code"><button class="rev" data-target="s12-tool3-l1-a" aria-controls="s12-tool3-l1-a" aria-expanded="false" data-show="A.  seconds" data-hide="A.  seconds">A.  seconds</button><div class="ans no" id="s12-tool3-l1-a"><p><b>Not this one.</b> Knob names are written in capitals, so they stand out from the variables that change.</p></div><button class="rev" data-target="s12-tool3-l1-b" aria-controls="s12-tool3-l1-b" aria-expanded="false" data-show="B.  FPS" data-hide="B.  FPS">B.  FPS</button><div class="ans no" id="s12-tool3-l1-b"><p><b>Not this one.</b> <code>FPS</code> is set to 60 at the end of the knob block, so this line would do nothing, and the time limit would have no name.</p></div><button class="rev" data-target="s12-tool3-l1-c" aria-controls="s12-tool3-l1-c" aria-expanded="false" data-show="C.  SECONDS" data-hide="C.  SECONDS">C.  SECONDS</button><div class="ans yes" id="s12-tool3-l1-c"><p><b>Yes.</b></p><pre class="py"><code><span class="hn">SECONDS</span> = <span class="hd">30</span>
+<span class="hn">LOSE</span> = (<span class="hd">156</span>, <span class="hd">43</span>, <span class="hd">34</span>)</code></pre><p><code>SECONDS</code> is the time limit, in seconds. <code>LOSE</code> is a dark red.</p><p><code>SECONDS</code> goes under <code>GOAL</code>, and <code>LOSE</code> goes under <code>WIN</code>.</p></div></div></div><div class="predict ladder"><p class="q"><b>Lines 23 to 27. What goes next?</b> The one coin becomes a list of three coins. Each item in the list is a Rect. What goes in the blank?</p><pre class="py"><code><span class="hv">coins</span> = [
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">100</span>, <span class="hd">100</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>),
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">200</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>),
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hf">____</span>(<span class="hd">500</span>, <span class="hd">300</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>),
+]</code></pre><p>Pick what goes in the blank.</p><div class="choices code"><button class="rev" data-target="s12-tool3-l2-a" aria-controls="s12-tool3-l2-a" aria-expanded="false" data-show="A.  draw" data-hide="A.  draw">A.  draw</button><div class="ans no" id="s12-tool3-l2-a"><p><b>Not this one.</b> <code>pygame.draw</code> draws shapes. It does not make a Rect.</p></div><button class="rev" data-target="s12-tool3-l2-b" aria-controls="s12-tool3-l2-b" aria-expanded="false" data-show="B.  Rect" data-hide="B.  Rect">B.  Rect</button><div class="ans yes" id="s12-tool3-l2-b"><p><b>Yes.</b></p><pre class="py"><code><span class="hv">coins</span> = [
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">100</span>, <span class="hd">100</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>),
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">200</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>),
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">500</span>, <span class="hd">300</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>),
+]</code></pre><p>A list holds many values under one name, and here the values are three Rects. The list is written over five lines so each coin can be read by itself. The square brackets open on the first line and close on the last.</p><p>These five lines replace the <code>coin = pygame.Rect(...)</code> line.</p></div><button class="rev" data-target="s12-tool3-l2-c" aria-controls="s12-tool3-l2-c" aria-expanded="false" data-show="C.  rect" data-hide="C.  rect">C.  rect</button><div class="ans no" id="s12-tool3-l2-c"><p><b>Not this one.</b> The name has a capital R. <code>pygame.rect</code> with a small r is something else, and calling it gives an error.</p></div></div></div><div class="predict ladder"><p class="q"><b>Lines 32 and 41. What goes next?</b> Time is counted in frames. Where does the frame counter start, and what is added to it on every frame?</p><pre class="py"><code><span class="hv">frame</span> = <span class="hv">____</span>
+<span class="ig">    </span><span class="hv">frame</span> = <span class="hv">frame</span> + <span class="hv">____</span></code></pre><p>Pick what goes in the two blanks.</p><div class="choices code"><button class="rev" data-target="s12-tool3-l3-a" aria-controls="s12-tool3-l3-a" aria-expanded="false" data-show="A.  first blank: 0    second blank: 1" data-hide="A.  first blank: 0    second blank: 1">A.  first blank: 0    second blank: 1</button><div class="ans yes" id="s12-tool3-l3-a"><p><b>Yes.</b></p><pre class="py"><code><span class="hv">frame</span> = <span class="hd">0</span>
+<span class="ig">    </span><span class="hv">frame</span> = <span class="hv">frame</span> + <span class="hd">1</span></code></pre><p>The counter starts at 0 above the loop and goes up by 1 on every frame. After one second it is 60.</p><p><code>frame = 0</code> goes under <code>background = BG</code>. <code>frame = frame + 1</code> goes inside the loop, under the line that moves the player.</p></div><button class="rev" data-target="s12-tool3-l3-b" aria-controls="s12-tool3-l3-b" aria-expanded="false" data-show="B.  first blank: 1    second blank: 1" data-hide="B.  first blank: 1    second blank: 1">B.  first blank: 1    second blank: 1</button><div class="ans no" id="s12-tool3-l3-b"><p><b>Not this one.</b> Then the first frame would be counted as frame 2.</p></div><button class="rev" data-target="s12-tool3-l3-c" aria-controls="s12-tool3-l3-c" aria-expanded="false" data-show="C.  first blank: 0    second blank: 0" data-hide="C.  first blank: 0    second blank: 0">C.  first blank: 0    second blank: 0</button><div class="ans no" id="s12-tool3-l3-c"><p><b>Not this one.</b> Adding 0 changes nothing, so the counter would stay at 0 and time would never run out.</p></div></div></div><div class="predict ladder"><p class="q"><b>Lines 42 to 47. What goes next?</b> The touching question now has to be asked for every coin in the list. Which loop does that?</p><pre class="py"><code><span class="ig">    </span><span class="hk">for</span> <span class="hv">____</span> <span class="hs">in</span> <span class="hv">____</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>):
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">x</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">WIDTH</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">y</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">HEIGHT</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">score</span> = <span class="hv">score</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"score </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq">"</span>)</code></pre><p>Pick what goes in the two blanks.</p><div class="choices code"><button class="rev" data-target="s12-tool3-l4-a" aria-controls="s12-tool3-l4-a" aria-expanded="false" data-show="A.  first blank: coins    second blank: coin" data-hide="A.  first blank: coins    second blank: coin">A.  first blank: coins    second blank: coin</button><div class="ans no" id="s12-tool3-l4-a"><p><b>Not this one.</b> Those are swapped. The list is called <code>coins</code>, and the program no longer has a variable called <code>coin</code> to loop over, so Python gives a NameError.</p></div><button class="rev" data-target="s12-tool3-l4-b" aria-controls="s12-tool3-l4-b" aria-expanded="false" data-show="B.  first blank: coin    second blank: range(3)" data-hide="B.  first blank: coin    second blank: range(3)">B.  first blank: coin    second blank: range(3)</button><div class="ans no" id="s12-tool3-l4-b"><p><b>Not this one.</b> Then <code>coin</code> would be the numbers 0, 1, and 2. A number is not a Rect, so <code>colliderect</code> gives an error.</p></div><button class="rev" data-target="s12-tool3-l4-c" aria-controls="s12-tool3-l4-c" aria-expanded="false" data-show="C.  first blank: coin    second blank: coins" data-hide="C.  first blank: coin    second blank: coins">C.  first blank: coin    second blank: coins</button><div class="ans yes" id="s12-tool3-l4-c"><p><b>Yes.</b></p><pre class="py"><code><span class="ig">    </span><span class="hk">for</span> <span class="hv">coin</span> <span class="hs">in</span> <span class="hv">coins</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>):
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">x</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">WIDTH</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">y</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">HEIGHT</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">score</span> = <span class="hv">score</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"score </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq">"</span>)</code></pre><p>On each pass of the loop, <code>coin</code> is one of the three Rects in the list. The gate and its four lines are the same as before. Changing <code>coin.x</code> moves that Rect, and the list holds the same Rect, so the coin in the list has moved.</p><p>The gate and its four lines move one indentation level in, so they are inside the <code>for</code> loop.</p></div></div></div><div class="predict ladder"><p class="q"><b>Lines 52 to 55. What goes next?</b> After the win gate comes a third gate: has time run out? The frame counter is compared with 30 seconds of frames. How many frames is that?</p><pre class="py"><code><span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">frame</span> == <span class="hn">SECONDS</span> <span class="hv">____</span> <span class="hn">FPS</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">playing</span> = <span class="hd">0</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hv">background</span> = <span class="hv">____</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Time is up. You got </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq"> coins."</span>)</code></pre><p>Pick what goes in the two blanks.</p><div class="choices code"><button class="rev" data-target="s12-tool3-l5-a" aria-controls="s12-tool3-l5-a" aria-expanded="false" data-show="A.  first blank: *    second blank: WIN" data-hide="A.  first blank: *    second blank: WIN">A.  first blank: *    second blank: WIN</button><div class="ans no" id="s12-tool3-l5-a"><p><b>Not this one.</b> Then running out of time would turn the window green, the same as winning.</p></div><button class="rev" data-target="s12-tool3-l5-b" aria-controls="s12-tool3-l5-b" aria-expanded="false" data-show="B.  first blank: *    second blank: LOSE" data-hide="B.  first blank: *    second blank: LOSE">B.  first blank: *    second blank: LOSE</button><div class="ans yes" id="s12-tool3-l5-b"><p><b>Yes.</b></p><pre class="py"><code><span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">frame</span> == <span class="hn">SECONDS</span> * <span class="hn">FPS</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">playing</span> = <span class="hd">0</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hv">background</span> = <span class="hn">LOSE</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Time is up. You got </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq"> coins."</span>)</code></pre><p>There are 60 frames in each second, so 30 seconds is 30 times 60, which is 1800 frames. If the player has already won, <code>playing</code> is 0 and this gate stays False.</p><p>Under the win gate, lined up with its <code>if</code>.</p></div><button class="rev" data-target="s12-tool3-l5-c" aria-controls="s12-tool3-l5-c" aria-expanded="false" data-show="C.  first blank: +    second blank: LOSE" data-hide="C.  first blank: +    second blank: LOSE">C.  first blank: +    second blank: LOSE</button><div class="ans no" id="s12-tool3-l5-c"><p><b>Not this one.</b> 30 + 60 is 90 frames, which is a second and a half.</p></div></div></div><div class="predict ladder"><p class="q"><b>Lines 58 and 59. What goes next?</b> All three coins have to be drawn on every frame. What goes in the blank?</p><pre class="py"><code><span class="ig">    </span><span class="hk">for</span> <span class="hv">coin</span> <span class="hs">in</span> <span class="hv">coins</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">COIN</span>, <span class="hv">____</span>)</code></pre><p>Pick what goes in the blank.</p><div class="choices code"><button class="rev" data-target="s12-tool3-l6-a" aria-controls="s12-tool3-l6-a" aria-expanded="false" data-show="A.  coin" data-hide="A.  coin">A.  coin</button><div class="ans yes" id="s12-tool3-l6-a"><p><b>Yes.</b></p><pre class="py"><code><span class="ig">    </span><span class="hk">for</span> <span class="hv">coin</span> <span class="hs">in</span> <span class="hv">coins</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">COIN</span>, <span class="hv">coin</span>)</code></pre><p>It is the same loop as the one that asks the touching question: one pass for each coin. The draw line moves one indentation level in.</p></div><button class="rev" data-target="s12-tool3-l6-b" aria-controls="s12-tool3-l6-b" aria-expanded="false" data-show="B.  coins" data-hide="B.  coins">B.  coins</button><div class="ans no" id="s12-tool3-l6-b"><p><b>Not this one.</b> <code>coins</code> is the whole list. <code>draw.rect</code> needs one rectangle, so Python gives an error.</p></div><button class="rev" data-target="s12-tool3-l6-c" aria-controls="s12-tool3-l6-c" aria-expanded="false" data-show="C.  player" data-hide="C.  player">C.  player</button><div class="ans no" id="s12-tool3-l6-c"><p><b>Not this one.</b> That draws three gold squares on top of each other where the player is. The coins are never drawn.</p></div></div></div><div class="whole"><button class="rev" data-target="s12-tool3-whole" aria-controls="s12-tool3-whole" aria-expanded="false" data-show="Show the whole program" data-hide="Hide the whole program">Show the whole program</button><div class="ans" id="s12-tool3-whole"><pre class="py"><code><span class="hk">import</span> <span class="hc">random</span>
+<span class="hk">import</span> <span class="hc">pygame</span>
+
+<span class="hm"># ---- knob block: every number the game depends on ----</span>
+<span class="hn">WIDTH</span> = <span class="hd">600</span>
+<span class="hn">HEIGHT</span> = <span class="hd">400</span>
+<span class="hn">PLAYER_SIZE</span> = <span class="hd">50</span>
+<span class="hn">COIN_SIZE</span> = <span class="hd">30</span>
+<span class="hn">GOAL</span> = <span class="hd">10</span>
+<span class="hn">SECONDS</span> = <span class="hd">30</span>
+<span class="hn">BG</span> = (<span class="hd">27</span>, <span class="hd">41</span>, <span class="hd">81</span>)
+<span class="hn">PLAYER</span> = (<span class="hd">248</span>, <span class="hd">250</span>, <span class="hd">252</span>)
+<span class="hn">COIN</span> = (<span class="hd">252</span>, <span class="hd">211</span>, <span class="hd">77</span>)
+<span class="hn">WIN</span> = (<span class="hd">29</span>, <span class="hd">91</span>, <span class="hd">57</span>)
+<span class="hn">LOSE</span> = (<span class="hd">156</span>, <span class="hd">43</span>, <span class="hd">34</span>)
+<span class="hn">FPS</span> = <span class="hd">60</span>
+
+<span class="hc">pygame</span>.<span class="hf">init</span>()
+<span class="hv">screen</span> = <span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">set_mode</span>((<span class="hn">WIDTH</span>, <span class="hn">HEIGHT</span>))
+<span class="hv">clock</span> = <span class="hc">pygame</span>.<span class="hc">time</span>.<span class="hc">Clock</span>()
+
+<span class="hv">player</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">0</span>, <span class="hd">0</span>, <span class="hn">PLAYER_SIZE</span>, <span class="hn">PLAYER_SIZE</span>)
+<span class="hv">coins</span> = [
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">100</span>, <span class="hd">100</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>),
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">200</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>),
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">500</span>, <span class="hd">300</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>),
+]
+
+<span class="hv">score</span> = <span class="hd">0</span>
+<span class="hv">playing</span> = <span class="hd">1</span>
+<span class="hv">background</span> = <span class="hn">BG</span>
+<span class="hv">frame</span> = <span class="hd">0</span>
+
+<span class="hv">running</span> = <span class="hd">1</span>
+<span class="hk">while</span> <span class="hv">running</span>:
+<span class="ig">    </span><span class="hk">for</span> <span class="hv">event</span> <span class="hs">in</span> <span class="hc">pygame</span>.<span class="hc">event</span>.<span class="hf">get</span>():
+<span class="ig">    </span><span class="ig">    </span><span class="hk">if</span> <span class="hv">event</span>.<span class="hv">type</span> == <span class="hc">pygame</span>.<span class="hn">QUIT</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">running</span> = <span class="hd">0</span>
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">player</span>.<span class="hv">center</span> = <span class="hc">pygame</span>.<span class="hc">mouse</span>.<span class="hf">get_pos</span>()
+<span class="ig">    </span><span class="hv">frame</span> = <span class="hv">frame</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="hk">for</span> <span class="hv">coin</span> <span class="hs">in</span> <span class="hv">coins</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">player</span>.<span class="hf">colliderect</span>(<span class="hv">coin</span>):
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">x</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">WIDTH</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">coin</span>.<span class="hv">y</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">HEIGHT</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hv">score</span> = <span class="hv">score</span> + <span class="hd">1</span>
+<span class="ig">    </span><span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"score </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">score</span> &gt;= <span class="hn">GOAL</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">playing</span> = <span class="hd">0</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hv">background</span> = <span class="hn">WIN</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"You win with </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq"> coins."</span>)
+<span class="ig">    </span><span class="hk">if</span> <span class="hv">playing</span> == <span class="hd">1</span> <span class="hs">and</span> <span class="hv">frame</span> == <span class="hn">SECONDS</span> * <span class="hn">FPS</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hv">playing</span> = <span class="hd">0</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hv">background</span> = <span class="hn">LOSE</span>
+<span class="ig">    </span><span class="ig">    </span><span class="hf">print</span>(<span class="hs">f</span><span class="hq">"Time is up. You got </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq"> coins."</span>)
+<span class="ig"></span>
+<span class="ig">    </span><span class="hv">screen</span>.<span class="hf">fill</span>(<span class="hv">background</span>)
+<span class="ig">    </span><span class="hk">for</span> <span class="hv">coin</span> <span class="hs">in</span> <span class="hv">coins</span>:
+<span class="ig">    </span><span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">COIN</span>, <span class="hv">coin</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">draw</span>.<span class="hf">rect</span>(<span class="hv">screen</span>, <span class="hn">PLAYER</span>, <span class="hv">player</span>)
+<span class="ig">    </span><span class="hc">pygame</span>.<span class="hc">display</span>.<span class="hf">flip</span>()
+<span class="ig">    </span><span class="hv">clock</span>.<span class="hf">tick</span>(<span class="hn">FPS</span>)
+
+<span class="hf">print</span>(<span class="hs">f</span><span class="hq">"final score </span><span class="hs">{</span><span class="hv">score</span><span class="hs">}</span><span class="hq">"</span>)
+<span class="hc">pygame</span>.<span class="hf">quit</span>()</code></pre></div></div><div class="predict"><p class="q">Predict: In this run the mouse goes to a coin four times in the first quarter of a second. Then it stays where it is, not touching a coin, until the window closes on frame 1811. What are the last two lines the terminal prints?</p><button class="rev" data-target="s12-tool3" aria-controls="s12-tool3" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s12-tool3"><p class="outlabel">What it actually prints, on one run</p><pre class="out">score 1
+score 2
+score 3
+score 4
+Time is up. You got 4 coins.
+final score 4</pre><p><code>Time is up. You got 4 coins.</code> and then <code>final score 4</code>. The four visits print score 1 to score 4. After that the player is not touching a coin, so nothing prints for a long time. Frame 1800 is 30 seconds at 60 frames a second. On that frame the time gate is True: it sets <code>playing</code> to 0, turns the window red, and prints. The last line prints when the window closes. This is the stretch exit.</p></div></div><h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p><table><tr><th>Expected</th><th>Got</th></tr><tr><td>The square follows the mouse and its middle stays on the pointer</td><td class="fill"></td></tr><tr><td>Touching the coin makes it jump, and the whole coin is inside the window every time</td><td class="fill"></td></tr><tr><td>One coin adds 1 to the score, not 60 a second</td><td class="fill"></td></tr><tr><td>After ten coins the window is green, and touching a coin does nothing</td><td class="fill"></td></tr><tr><td>With three coins, any one of them can be grabbed</td><td class="fill"></td></tr><tr><td>After 30 seconds without a win the window is red and the terminal says how many coins you got</td><td class="fill"></td></tr></table></section><section><h2>Where you can stop</h2><p>All three are real places to stop. Nobody is behind for finishing at the floor.</p><div class="exits"><div class="exit floor"><p class="tag">Floor</p><p>Tool 1: the square follows the mouse, and the coin jumps to a random spot when the square touches it.</p></div><div class="exit middle"><p class="tag">Middle</p><p>Tool 2: the score is printed in the terminal, and at ten coins the window turns green and the game stops.</p></div><div class="exit stretch"><p class="tag">Stretch</p><p>Tool 3: three coins in a list, and a 30 second time limit that turns the window red.</p></div></div></section><section class="extension"><p class="chunk-no">Extension &middot; for after the stretch exit</p><h2>Give the jump a name</h2><p>The two <code>randint</code> lines move a coin to a random spot. A function can hold them, so the game can move a coin from more than one place. Then every game can start with its coins in different spots.</p><h3>move_coin changes the Rect it is given</h3><p>This function has one parameter, <code>coin</code>, and no <code>return</code> line. It does not work out a value. It changes the Rect that the call gives it. The program prints where the coin is, calls the function, and prints where the coin is again. The last line prints what the function returns.</p><pre class="py"><code><span class="hk">import</span> <span class="hc">random</span>
+<span class="hk">import</span> <span class="hc">pygame</span>
+
+<span class="hn">WIDTH</span> = <span class="hd">600</span>
+<span class="hn">HEIGHT</span> = <span class="hd">400</span>
+<span class="hn">COIN_SIZE</span> = <span class="hd">30</span>
+
+<span class="hs">def</span> <span class="hf">move_coin</span>(<span class="hv">coin</span>):
+<span class="ig">    </span><span class="hv">coin</span>.<span class="hv">x</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">WIDTH</span> - <span class="hn">COIN_SIZE</span>)
+<span class="ig">    </span><span class="hv">coin</span>.<span class="hv">y</span> = <span class="hc">random</span>.<span class="hf">randint</span>(<span class="hd">0</span>, <span class="hn">HEIGHT</span> - <span class="hn">COIN_SIZE</span>)
+
+<span class="hv">coin</span> = <span class="hc">pygame</span>.<span class="hc">Rect</span>(<span class="hd">300</span>, <span class="hd">200</span>, <span class="hn">COIN_SIZE</span>, <span class="hn">COIN_SIZE</span>)
+<span class="hf">print</span>(<span class="hv">coin</span>.<span class="hv">x</span>, <span class="hv">coin</span>.<span class="hv">y</span>)
+
+<span class="hf">move_coin</span>(<span class="hv">coin</span>)
+<span class="hf">print</span>(<span class="hv">coin</span>.<span class="hv">x</span>, <span class="hv">coin</span>.<span class="hv">y</span>)
+
+<span class="hf">print</span>(<span class="hf">move_coin</span>(<span class="hv">coin</span>))</code></pre><div class="predict"><p class="q">Predict: The function has no <code>return</code> line. What does the last line print? And does the coin move when the function is called?</p><button class="rev" data-target="s12-ext1" aria-controls="s12-ext1" aria-expanded="false" data-show="Run it first, then check here" data-hide="Hide">Run it first, then check here</button><div class="ans" id="s12-ext1"><p class="outlabel">What it actually prints, on one run</p><pre class="out">300 200
+57 46
+None</pre><p>The first one: the last line prints <code>None</code>. A function with no <code>return</code> line returns None, the same as in session 5. The second one: yes, the coin moves. The first print says 300 200 and the second says 57 46, so the call <code>move_coin(coin)</code> changed the Rect it was given. The last line calls the function a second time, so the coin moves once more before None is printed. The spots are picked at random, so your numbers will be different.</p></div></div><h3>Building it</h3><ol><li>Put <code>move_coin</code> in your tool 3 file. Functions go near the top, after the knob block and before <code>pygame.init()</code>, with an empty line above and below.</li><li>Inside the coin gate, replace the two <code>randint</code> lines with one call: <code>move_coin(coin)</code>.</li><li>Under the <code>coins</code> list, add a loop that calls <code>move_coin(coin)</code> once for each coin, so every game starts with the coins in new spots.</li><li>Change one knob, <code>COIN_SIZE</code>, <code>GOAL</code>, or <code>SECONDS</code>, to make the game harder. One change per run.</li></ol><h3>Expected and got</h3><p>Fill in the left column before you run. Fill in the right column after.</p><table><tr><th>Expected</th><th>Got</th></tr><tr><td>The game plays the same as before the function was added</td><td class="fill"></td></tr><tr><td>Run the game twice: the three coins start in different spots each time</td><td class="fill"></td></tr><tr><td>The knob you changed makes the game harder, and you can say why</td><td class="fill"></td></tr></table></section><section><h2>Ledger card</h2><p>Stamp 12: <code>pygame.Rect(x, y, w, h)</code> has <code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>, and <code>center</code>; <code>a.colliderect(b)</code> is True when two rectangles overlap; <code>pygame.mouse.get_pos()</code> is where the mouse is; move the coin inside the gate, so one grab counts once.</p><p><a href="semester_ledger_card.html?v=22">Open the semester ledger card</a></p></section><details class="teacher"><summary>Teacher panel</summary><h3>Timing, 90 minutes</h3><ul><li>0:00 retrieval opener, 10 min</li><li>0:10 chunk 1, a Rect and its edges, 8 min</li><li>0:18 chunk 2, the overlap test by hand, 12 min (project the figure; this is the mathematics of the day)</li><li>0:30 chunk 3, colliderect, 7 min</li><li>0:37 chunk 4, the mouse, 13 min (the first window file; most of the typing is here)</li><li>0:50 hinge question, 5 min</li><li>0:55 build, tools 1 and 2, 30 min (tool 3 is for students who are ahead)</li><li>1:25 exits, ledger stamp, 5 min</li></ul><p class="note">Pacing: most rooms will not reach the end of the build brief. The exits exist so that stopping there is a finish, not a failure.</p><h3>What you will see, and what to do</h3><table><tr><th>In the room</th><th>Redirect</th></tr><tr><td>Types <code>pygame.rect</code> with a small r, or <code>Rect</code> without <code>pygame.</code> in front.</td><td>Read the last line of the error together. The capital R is the difference between the Rect that holds numbers and <code>pygame.draw.rect</code>, which draws.</td></tr><tr><td>Puts the <code>coin = pygame.Rect(...)</code> line inside the frame loop. The coin flickers back to 300, 200.</td><td>Ask how many times that line should run. Once, so it goes above the loop.</td></tr><tr><td>Puts <code>score = 0</code> inside the loop and the score never passes 1.</td><td>It is session 3's counter. The starting value goes above the loop.</td></tr><tr><td>Expects two rectangles that share an edge to count as touching.</td><td>Go back to chunk 3's second print. 330 is not less than 330. One pixel of overlap is needed.</td></tr><tr><td>Runs the program and reports that the square will not move.</td><td>The mouse is outside the window, or the window is behind VS Code. <code>get_pos</code> only follows the mouse while it is over the window.</td></tr><tr><td>Draws the coin above <code>screen.fill</code> and the coin never appears.</td><td>It is session 11's draw order. The fill paints over everything drawn before it on that frame.</td></tr></table><h3>Mapped to</h3><table><tr><th>Code</th><th>Jurisdiction</th><th>Framework</th><th>Grade</th><th>Statement</th></tr><tr><td><code>NY-5.G.1</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>5</td><td>Use a pair of perpendicular number lines, called axes, to define a coordinate system, with the intersection of the lines (the origin) arranged to coincide with the 0 on each line and a given point in the plane located by using an ordered pair of numbers, called its coordinates. Understand that the first number indicates how far to travel from the origin in the direction of one axis, and the second number indicates how far to travel in the direction of the second axis, with the convention that the names of the two axes and the coordinates correspond.</td></tr><tr><td><code>NY-6.NS.8</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Solve real-world and mathematical problems by graphing points on a coordinate plane. Include use of coordinates and absolute value to find distances between points with the same first coordinate or the same second coordinate.</td></tr><tr><td><code>NY-6.EE.5</code></td><td>New York</td><td>NY Next Generation Mathematics Learning Standards</td><td>6</td><td>Understand solving an equation or inequality as a process of answering a question: which values from a specified set, if any, make the equation or inequality true? Use substitution to determine whether a given number in a specified set makes an equation or inequality true.</td></tr></table><h3>Learning components behind those codes</h3><ul><li><code>NY-6.EE.5</code> Use substitution to determine whether a number or a set of numbers makes an equation true</li><li><code>NY-6.EE.5</code> Use substitution to determine whether a number or a set of numbers makes an inequality true</li><li><code>NY-6.EE.5</code> Demonstrate that the solution of an equation or inequality is the value of the variable that will make the equation or inequality true</li></ul><h3>If time runs out</h3><p>Chunks 1 to 3 need no window. If time is short, run them once on the projector and have the room predict out loud, then go to chunk 4, where everyone types. Tool 1 is the floor exit and it adds nine lines to chunk 4's file. Tool 2 is the middle exit. Every tool has its finished program behind a button, so a student who falls behind can read it and run it. The extension is for a student who finishes tool 3. Nothing survives on the machines, so the game cannot be carried into session 13; session 13 starts from its own file.</p></details><section><h2>Running this in VS Code</h2><div class="grid2"><div class="card"><h3>Once, before the first run</h3><p>Open the terminal in VS Code and install the library: <code>pip install pygame</code>. Check it worked with <code>python -c "import pygame"</code>. It should print two lines of greeting from pygame and nothing else. A traceback here is an install problem, not a problem with your program. Those same two greeting lines appear at the top of the terminal every time you run a pygame program; the output boxes on this site leave them out.</p></div><div class="card"><h3>Every run after that</h3><p>The window often opens behind VS Code, so check the taskbar before deciding nothing happened. Close it with its own close button: these programs are written to end when the window closes, and stopping the terminal instead can leave the window stuck on screen. A window that will not close usually means the loop has no <code>pygame.event.get()</code> in it.</p></div></div><p class="note">There is no turtle anywhere in this course. Turtle needs a library our VS Code setup does not have, so pygame does all the drawing, starting in session 6.</p></section></div></main><nav class="pager"><a href="session11_the_pygame_window.html?v=22">&larr; The pygame window</a><a href="beginner_semester_hub.html?v=22">Course home</a><a href="session13_grids_keys_game_state.html?v=22">Grids, keys, and game state &rarr;</a></nav><footer><div class="wrap"><p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. 110 West End Avenue. The Monday and Friday sections cover the same fourteen sessions.</p><p>Mapped to NY Next Generation Learning Standards and the Standards for Mathematical Practice. Codes resolved through the Learning Commons Knowledge Graph (CASE Network) on 2026-09-12. <a href="standards_map.html?v=22">Full standards map</a> &middot; <a href="beginner_constraints.html?v=22">Code constraints, published 2026-11-22</a></p></div></footer>
+<script>
+document.addEventListener('click', function(e){
+  var b = e.target.closest('button.rev');
+  if(!b) return;
+  var t = document.getElementById(b.getAttribute('data-target'));
+  if(!t) return;
+  var open = t.classList.toggle('open');
+  b.setAttribute('aria-expanded', open ? 'true' : 'false');
+  b.textContent = open ? b.getAttribute('data-hide') : b.getAttribute('data-show');
+  var group = b.closest('.choices');
+  if(!group || !open) return;
+  group.querySelectorAll('button.rev').forEach(function(o){
+    if(o === b) return;
+    var ot = document.getElementById(o.getAttribute('data-target'));
+    if(ot){ ot.classList.remove('open'); }
+    o.setAttribute('aria-expanded', 'false');
+  });
+});
+</script>
+</body>
+</html>

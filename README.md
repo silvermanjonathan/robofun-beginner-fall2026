@@ -2,11 +2,12 @@
 
 Beyond Vibe Coding, beginner semester. Python for grades 5 to 8, Robofun Fall 2026,
 110 West End Avenue. Two beginner sections, Monday and Friday, working through the
-same thirteen required sessions. Session 6, the Mondrian, was added in October 2026,
-so the last Monday session has no date yet and the Friday bonus session is no longer
-scheduled; it stays on the site for anyone who wants it. Session 9 has been tic tac
-toe since November 2026; the cipher wheel, which had that date, is an extra page with
-no date.
+same fourteen required sessions. Session 6, the Mondrian, was added in October 2026,
+and session 12, the coin grab, in November 2026. Monday has twelve dates and Friday
+thirteen, so the last two Monday sessions and the last Friday session have no date
+yet, and the Friday bonus session is no longer scheduled; it stays on the site for
+anyone who wants it. Session 9 has been tic tac toe since November 2026; the cipher
+wheel, which had that date, is an extra page with no date.
 
 Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner_semester_hub.html
 (`beginner_semester_hub.html` at the repo root; there is no `index.html`)
@@ -16,9 +17,9 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | File | What it is |
 |---|---|
 | `beginner_semester_hub.html` | Course home. Session list, both calendars, how a session runs. |
-| `beginner_constraints.html` | The published code constraint list, dated 2026-09-12. One frame loop, one exclusion list. |
+| `beginner_constraints.html` | The published code constraint list, dated 2026-11-22. One frame loop, one exclusion list. |
 | `standards_map.html` | Every standard code used, with its full statement and CASE identifier. |
-| `semester_ledger_card.html` | The printable one-page card. Thirteen stamp boxes, a reference strip, an error-name table. |
+| `semester_ledger_card.html` | The printable one-page card. Fourteen stamp boxes, a reference strip, an error-name table. |
 | `session01_printing_names_input.html` | Printing, names, and input |
 | `session01_extra_cards.html` | Session 1 extra cards: silly story, age calculator, bug hunt. For a student who finishes the build early. |
 | `session01_extra_cards_key.html` | The session 1 extra cards' answer key. Linked from the session 1 teacher panel only. |
@@ -47,8 +48,9 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | `session09_worksheet_key.html` | The session 9 worksheet's answer key. Linked from the session 9 teacher panel only. |
 | `session10_dictionaries.html` | Dictionaries |
 | `session11_the_pygame_window.html` | The pygame window |
-| `session12_grids_keys_game_state.html` | Grids, keys, and game state |
-| `session13_commission_and_demo.html` | Commission and demo day |
+| `session12_coin_grab.html` | Coin grab. A square that follows the mouse, a coin that jumps when touched, a score, and a time limit. Added November 2026. |
+| `session13_grids_keys_game_state.html` | Grids, keys, and game state |
+| `session14_commission_and_demo.html` | Commission and demo day |
 | `friday_bonus_distance_and_bumpers.html` | Friday bonus: distance and bumpers |
 | `extra_remainders_cipher_wheel.html` | Extra, no date: remainders and the cipher wheel. Session 9 until November 2026. |
 
@@ -79,10 +81,12 @@ If an earlier build was already uploaded, delete `session05_turtle_and_angles.ht
 `session06_angles_and_shapes.html`, `session07_strings_as_data.html`,
 `session08_remainders_cipher_wheel.html`, `session09_dictionaries.html`,
 `session10_the_pygame_window.html`, `session11_grids_keys_game_state.html`,
-`session12_commission_and_demo.html`, and `session09_remainders_cipher_wheel.html`
+`session12_commission_and_demo.html`, `session09_remainders_cipher_wheel.html`,
+`session12_grids_keys_game_state.html`, and `session13_commission_and_demo.html`
 from the live repo. None of them exist here (seven were renumbered when the Mondrian
-session was added, and the cipher wheel page is now `extra_remainders_cipher_wheel.html`)
-and the hub no longer links to them.
+session was added, the cipher wheel page is now `extra_remainders_cipher_wheel.html`,
+and the last two were renumbered when the coin grab session was added) and the hub
+no longer links to them.
 
 ## Look and behaviour
 
@@ -202,7 +206,8 @@ build/sessions_a.py    sessions 1 to 4
 build/session06.py     session 6, the Mondrian (added October 2026)
 build/session09.py     session 9, tic tac toe (added November 2026), and its two figures
 build/sessions_b.py    sessions 5, 7, and 8, and the cipher wheel extra page
-build/sessions_c.py    sessions 10 to 13 and the Friday bonus
+build/session12.py     session 12, the coin grab (added November 2026): its programs, figures, build, and choices
+build/sessions_c.py    sessions 10, 11, 13, and 14, and the Friday bonus
 build/render.py        runs every snippet, then writes the site
 build/validate.py      checks the written site
 build/hl.py            colors Python code the way VS Code does; copied from the Advanced course
@@ -211,7 +216,7 @@ build/ws02.py          the session 2 worksheet and its answer key
 build/ws08.py          the session 8 worksheet (hangman trace tables) and its answer key
 build/ws09.py          the session 9 worksheet (tic tac toe trace tables) and its answer key
 build/picks.py         the three choices and the explanation for every What goes next? question
-build/session12_build.py  session 12's build as four programs written one line at a time
+build/session13_build.py  session 13's build as four programs written one line at a time
 build/builds.py        the other builds written one line at a time, with their questions and choices
 build/extras.py        the extra cards and their answer keys, sessions 1 to 3 and 5
 build/graphs.py        session 4's figures: the rules as arrows, and the tree of pairs
@@ -240,7 +245,12 @@ the page. No output box on this site was typed from expectation.
 - pygame snippets run headless with `SDL_VIDEODRIVER=dummy` and
   `SDL_AUDIODRIVER=dummy`. `pygame.event.get` is patched to inject a QUIT event
   after a set number of frames, and `pygame.key.get_pressed` is patched to simulate
-  held keys, so the printed probe lines on those pages are real.
+  held keys, so the printed probe lines on those pages are real. Since session 12,
+  `pygame.mouse.get_pos` is patched too: a snippet's `inject` list can hold
+  `[frame, "MOUSE", x, y]` items, and the mouse is at that position from that frame
+  on. A headless snippet can carry a `seed`, as a terminal snippet can, and
+  `"fast": True` swaps in a clock that does not wait, for a run of many frames
+  (session 12's tool 3 runs 1811 frames to reach its 30 second time limit).
 - Every snippet was executed. Nothing is syntax checked only. Where a chunk
   continues a program from an earlier chunk, the page says so on the page itself and
   the whole file was run together, with the earlier program supplied as a run prefix.
@@ -283,7 +293,7 @@ False on the sheet and key is Python's own comparison, and every printed line in
 key comes from running the program at build time; the build stops if a run disagrees
 with a row or with a number in a sentence.
 
-Build briefs may carry `cards`: verified code blocks inside the brief (session 12's
+Build briefs may carry `cards`: verified code blocks inside the brief (session 14's
 engine). They run through the same harness as chunks and their output sits behind
 the same reveal.
 
@@ -326,11 +336,11 @@ browser, one card to a sheet, with the clues printed and the answers left off.
 - The calendar assumes closures on Mon Sep 21, Mon Oct 12, and Fri Nov 27. Fri Oct 2
   falls in the intermediate days of Sukkot. Check the published Robofun closure list
   before committing a syllabus to families.
-- Session 11 is the fullest session of the term and will not finish in 90 minutes.
-  Nothing carries over between sessions; session 12 hands out a finished version
-  of the session 11 room as its engine, printed on the page and verified at build
+- Session 13 is the fullest session of the term and will not finish in 90 minutes.
+  Nothing carries over between sessions; session 14 hands out a finished version
+  of the session 13 room as its engine, printed on the page and verified at build
   time. The teacher copies it onto every machine, named in the house style
-  (`Ada_session12.py`), before class.
+  (`Ada_session14.py`), before class.
 
 ## Printing history
 
@@ -538,3 +548,49 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   teacher panels' minutes are unchanged. Checked in Chrome at 1280px and 390px
   with every answer open: no sideways scroll on the 14 pages that have questions,
   and no question's code is wider than its box. Version pin `?v=21`.
+- **2026-11-22, v22.** New session 12, Coin grab (`build/session12.py`), between the
+  pygame window and the room of tiles. A square follows the mouse, a coin jumps to a
+  random spot when the square touches it, and the terminal keeps the score. Four
+  chunks: a Rect and its edges, the overlap test written by hand, `colliderect` as
+  the reveal after it, and the square that follows the mouse. The build is one
+  program in three tools, 20 What goes next? questions, each a line with a blank and
+  three choices kept beside its step: the coin jumps (the floor exit, 33 lines of
+  code), a score and a win at ten coins (the middle exit), and three coins in a list
+  with a 30 second time limit (the stretch exit). An extension gives the two
+  `randint` lines a name, `move_coin`. Choices made to fit the course's rules: the
+  mouse moves the player, so no key handling is needed before session 13;
+  `playing` is 1 or 0, like `running`, and every gate is flat, joined with `and`;
+  the time limit counts frames and compares with `SECONDS * FPS`, so there is no
+  `//` and no `%` timer ahead of session 13; the score is printed in the terminal
+  and the window shows a win or a loss by its colour, so there is no `pygame.font`;
+  the three coins are a list written out in full, because `append` is not taught.
+  New on the constraints page: `pygame.Rect`, `colliderect`, and the mouse
+  position, first taught in session 12; KEYDOWN and frame timers are now session
+  13. The constraints page is republished with the date 2026-11-22. Three lines
+  are added to the ledger card's reference strip, and the card has fourteen stamp
+  boxes. The standards are three codes already in the registry (NY-5.G.1,
+  NY-6.NS.8, NY-6.EE.5); nothing new was resolved.
+  Renumbering: Grids, keys, and game state is session 13
+  (`session13_grids_keys_game_state.html`, `build/session13_build.py`) and
+  Commission and demo day is session 14 (`session14_commission_and_demo.html`,
+  engine file `Jonathan_session14.py`). Every cross-reference, stamp number, and
+  first-taught entry follows. Session 13's opener now retrieves from the coin grab
+  in place of the dictionary question, which moved to session 12's opener. The
+  Friday bonus and the cipher wheel are numbers 15 and 16 inside the build. The
+  course is fourteen sessions: session 12 has Mon Dec 14 and Fri Dec 11, session 13
+  has Fri Dec 18 and no Monday date, and session 14 has no date in either section.
+  Those three dates are still to be decided.
+  Harness: `pygame.mouse.get_pos` is patched so a run can be given mouse positions,
+  a headless run can be seeded, and a run of many frames can use a clock that does
+  not wait. The mouse positions for the three tools are worked out by
+  `session12.chase`, which plays the game's rule with the same seed and stops the
+  build if a visit to a coin is not exactly one grab. A seeded tool's output box is
+  now labelled "on one run", which also changes that label on session 4's build.
+  Checked in Chrome at 1280px and 390px with every answer open: no sideways scroll
+  on the session 12, 13, and 14 pages, the hub, the constraints page, the ledger
+  card, or the standards map, and no code on the session 12 page is wider than its
+  box at 1280px. The checking machine could not reach Google Fonts, so the three
+  fonts were installed on it first. The three worksheet PDFs
+  were rendered again with WeasyPrint, because each sheet's header now says "of
+  14"; the page counts are unchanged (4, 3, 3) and Bricolage Grotesque, DM Sans,
+  and JetBrains Mono are embedded. Version pin `?v=22`.

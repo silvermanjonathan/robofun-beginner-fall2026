@@ -1,0 +1,644 @@
+# Session 12: coin grab. Added November 2026 between the pygame window session and the
+# room of tiles, which became session 13. A square follows the mouse, a coin jumps to a
+# random spot when the square touches it, and the terminal keeps the score.
+#
+# Chunks 1 to 3 are short terminal programs about pygame.Rect: its edges, the overlap
+# test written by hand, and colliderect as the reveal after it. Chunk 4 is the first
+# window file. The build is one program in three tools, each a whole program that
+# grows out of the one before:
+#   tool 1  the coin jumps when the player touches it     (the floor exit)
+#   tool 2  a score, and a win at ten coins               (the middle exit)
+#   tool 3  three coins in a list, and a time limit       (the stretch exit)
+# Every new line is a What goes next? question with a blank and three choices, kept
+# here beside its step. Every program is run when the site is built. The window
+# programs run without a screen: the mouse positions are fed in by render.py's
+# harness, and the random numbers are seeded so the page is the same on every build.
+
+import random
+
+from builds import Q, swap
+
+WIDTH = 600
+HEIGHT = 400
+PLAYER_SIZE = 50
+COIN_SIZE = 30
+
+# ------------------------------------------------------------------ the programs
+
+RECT = '''import pygame
+
+coin = pygame.Rect(300, 200, 30, 30)
+print(coin.left, coin.right)
+print(coin.top, coin.bottom)
+print(coin.center)'''
+
+BY_HAND = '''import pygame
+
+player = pygame.Rect(280, 190, 50, 50)
+coin = pygame.Rect(300, 280, 30, 30)
+
+across = player.left < coin.right and coin.left < player.right
+down = player.top < coin.bottom and coin.top < player.bottom
+print(f"across {across}, down {down}, touching {across and down}")
+
+coin.y = 200
+down = player.top < coin.bottom and coin.top < player.bottom
+print(f"across {across}, down {down}, touching {across and down}")'''
+
+COLLIDE = '''import pygame
+
+player = pygame.Rect(280, 190, 50, 50)
+coin = pygame.Rect(300, 200, 30, 30)
+print(player.colliderect(coin))
+
+coin.x = 330
+print(player.colliderect(coin))
+
+coin.x = 329
+print(player.colliderect(coin))'''
+
+# chunk 4, and the file tool 1 starts from
+MOUSE = '''import pygame
+
+# ---- knob block: every number the game depends on ----
+WIDTH = 600
+HEIGHT = 400
+PLAYER_SIZE = 50
+BG = (27, 41, 81)
+PLAYER = (248, 250, 252)
+FPS = 60
+
+pygame.init()
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+clock = pygame.time.Clock()
+
+player = pygame.Rect(0, 0, PLAYER_SIZE, PLAYER_SIZE)
+
+running = 1
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = 0
+
+    player.center = pygame.mouse.get_pos()
+
+    screen.fill(BG)
+    pygame.draw.rect(screen, PLAYER, player)
+    pygame.display.flip()
+    clock.tick(FPS)
+
+print(f"centre {player.center}, left {player.left}, top {player.top}")
+pygame.quit()'''
+
+TOOL1 = MOUSE
+TOOL1 = swap(TOOL1, 'import pygame\n\n# ----', 'import random\nimport pygame\n\n# ----')
+TOOL1 = swap(TOOL1, 'PLAYER_SIZE = 50\n', 'PLAYER_SIZE = 50\nCOIN_SIZE = 30\n')
+TOOL1 = swap(TOOL1, 'PLAYER = (248, 250, 252)\n', 'PLAYER = (248, 250, 252)\nCOIN = (252, 211, 77)\n')
+TOOL1 = swap(TOOL1, 'player = pygame.Rect(0, 0, PLAYER_SIZE, PLAYER_SIZE)\n',
+             'player = pygame.Rect(0, 0, PLAYER_SIZE, PLAYER_SIZE)\n'
+             'coin = pygame.Rect(300, 200, COIN_SIZE, COIN_SIZE)\n')
+TOOL1 = swap(TOOL1, '    player.center = pygame.mouse.get_pos()\n', '''    player.center = pygame.mouse.get_pos()
+    if player.colliderect(coin):
+        coin.x = random.randint(0, WIDTH - COIN_SIZE)
+        coin.y = random.randint(0, HEIGHT - COIN_SIZE)
+        print(f"grabbed, the coin is now at {coin.x}, {coin.y}")
+''')
+TOOL1 = swap(TOOL1, '    screen.fill(BG)\n', '    screen.fill(BG)\n    pygame.draw.rect(screen, COIN, coin)\n')
+
+TOOL2 = TOOL1
+TOOL2 = swap(TOOL2, 'COIN_SIZE = 30\n', 'COIN_SIZE = 30\nGOAL = 10\n')
+TOOL2 = swap(TOOL2, 'COIN = (252, 211, 77)\n', 'COIN = (252, 211, 77)\nWIN = (29, 91, 57)\n')
+TOOL2 = swap(TOOL2, 'coin = pygame.Rect(300, 200, COIN_SIZE, COIN_SIZE)\n',
+             'coin = pygame.Rect(300, 200, COIN_SIZE, COIN_SIZE)\n\n'
+             'score = 0\nplaying = 1\nbackground = BG\n')
+TOOL2 = swap(TOOL2, '    if player.colliderect(coin):\n', '    if playing == 1 and player.colliderect(coin):\n')
+TOOL2 = swap(TOOL2, '        print(f"grabbed, the coin is now at {coin.x}, {coin.y}")\n',
+             '''        score = score + 1
+        print(f"score {score}")
+    if playing == 1 and score >= GOAL:
+        playing = 0
+        background = WIN
+        print(f"You win with {score} coins.")
+''')
+TOOL2 = swap(TOOL2, '    screen.fill(BG)\n', '    screen.fill(background)\n')
+TOOL2 = swap(TOOL2, 'print(f"centre {player.center}, left {player.left}, top {player.top}")\n',
+             'print(f"final score {score}")\n')
+
+TOOL3 = TOOL2
+TOOL3 = swap(TOOL3, 'GOAL = 10\n', 'GOAL = 10\nSECONDS = 30\n')
+TOOL3 = swap(TOOL3, 'WIN = (29, 91, 57)\n', 'WIN = (29, 91, 57)\nLOSE = (156, 43, 34)\n')
+TOOL3 = swap(TOOL3, 'coin = pygame.Rect(300, 200, COIN_SIZE, COIN_SIZE)\n', '''coins = [
+    pygame.Rect(100, 100, COIN_SIZE, COIN_SIZE),
+    pygame.Rect(300, 200, COIN_SIZE, COIN_SIZE),
+    pygame.Rect(500, 300, COIN_SIZE, COIN_SIZE),
+]
+''')
+TOOL3 = swap(TOOL3, 'background = BG\n', 'background = BG\nframe = 0\n')
+TOOL3 = swap(TOOL3, '''    player.center = pygame.mouse.get_pos()
+    if playing == 1 and player.colliderect(coin):
+        coin.x = random.randint(0, WIDTH - COIN_SIZE)
+        coin.y = random.randint(0, HEIGHT - COIN_SIZE)
+        score = score + 1
+        print(f"score {score}")
+''', '''    player.center = pygame.mouse.get_pos()
+    frame = frame + 1
+    for coin in coins:
+        if playing == 1 and player.colliderect(coin):
+            coin.x = random.randint(0, WIDTH - COIN_SIZE)
+            coin.y = random.randint(0, HEIGHT - COIN_SIZE)
+            score = score + 1
+            print(f"score {score}")
+''')
+TOOL3 = swap(TOOL3, '''        print(f"You win with {score} coins.")
+''', '''        print(f"You win with {score} coins.")
+    if playing == 1 and frame == SECONDS * FPS:
+        playing = 0
+        background = LOSE
+        print(f"Time is up. You got {score} coins.")
+''')
+TOOL3 = swap(TOOL3, '    pygame.draw.rect(screen, COIN, coin)\n',
+             '    for coin in coins:\n        pygame.draw.rect(screen, COIN, coin)\n')
+
+# the extension: the two randint lines get a name
+MOVE_COIN = '''import random
+import pygame
+
+WIDTH = 600
+HEIGHT = 400
+COIN_SIZE = 30
+
+def move_coin(coin):
+    coin.x = random.randint(0, WIDTH - COIN_SIZE)
+    coin.y = random.randint(0, HEIGHT - COIN_SIZE)
+
+coin = pygame.Rect(300, 200, COIN_SIZE, COIN_SIZE)
+print(coin.x, coin.y)
+
+move_coin(coin)
+print(coin.x, coin.y)
+
+print(move_coin(coin))'''
+
+HINGE = '''score = 0
+touching = True
+for frame in range(60):
+    if touching:
+        score = score + 1
+print(score)'''
+
+for _name, _prog in (("MOUSE", MOUSE), ("TOOL1", TOOL1), ("TOOL2", TOOL2), ("TOOL3", TOOL3)):
+    for _ln in _prog.split("\n"):
+        assert len(_ln) <= 72, _name + ": a line is wider than the code box: " + _ln
+
+
+# ------------------------------------------------------------------ the mouse, for the build runs
+
+def chase(seed, starts, visits, goal=None, first=3, gap=3):
+    """Mouse positions that put the player on a coin `visits` times, for a headless run.
+
+    The window programs pick each new coin spot at random, so where the mouse has to go
+    next depends on the random numbers. This plays the game's own rule with the same
+    seed and the same two randint calls in the same order, and writes down where the
+    mouse went. Visit k happens on frame first + k * gap: the mouse goes to the middle
+    of a coin and stays there until the next visit. It returns the harness's inject
+    list and the number of frames played, or None if a coin ever landed under a player
+    that was standing still, because the page says how many times the mouse went to a
+    coin and each visit has to be exactly one grab.
+    """
+    rng = random.Random(seed)
+    coins = [[x, y] for x, y in starts]
+    inject = []
+    mouse = (0, 0)
+    grabs = 0
+    total = first + visits * gap
+    for frame in range(1, total + 1):
+        k = (frame - first) // gap
+        if frame >= first and (frame - first) % gap == 0 and k < visits:
+            target = coins[k % len(coins)]
+            mouse = (target[0] + COIN_SIZE // 2, target[1] + COIN_SIZE // 2)
+            inject.append([frame, "MOUSE", mouse[0], mouse[1]])
+        left = mouse[0] - PLAYER_SIZE // 2
+        top = mouse[1] - PLAYER_SIZE // 2
+        for c in coins:
+            across = left < c[0] + COIN_SIZE and c[0] < left + PLAYER_SIZE
+            down = top < c[1] + COIN_SIZE and c[1] < top + PLAYER_SIZE
+            if across and down and (goal is None or grabs < goal):
+                c[0] = rng.randint(0, WIDTH - COIN_SIZE)
+                c[1] = rng.randint(0, HEIGHT - COIN_SIZE)
+                grabs = grabs + 1
+    wanted = visits if goal is None else min(visits, goal)
+    if grabs != wanted:
+        return None
+    return inject, total
+
+
+def chase_or_stop(seed, *args, **kwargs):
+    got = chase(seed, *args, **kwargs)
+    assert got, "seed %d gives an extra grab in this run; pick another seed" % seed
+    return got
+
+
+SEED1, SEED2, SEED3 = 2, 2, 2
+# tool 1: the mouse goes to the coin once and stays there for half a second
+INJECT1, TOTAL1 = chase_or_stop(SEED1, [(300, 200)], 1, gap=30)
+# tool 2: the mouse goes to the coin eleven times; the game is won at ten
+INJECT2, TOTAL2 = chase_or_stop(SEED2, [(300, 200)], 11, goal=10)
+# tool 3: the mouse goes to a coin four times, then stays where it is until time is up
+INJECT3, TOTAL3 = chase_or_stop(SEED3, [(100, 100), (300, 200), (500, 300)], 4)
+# the harness plays one more frame than it is asked for: the frame that carries the QUIT
+FRAMES1 = TOTAL1 - 1
+FRAMES2 = TOTAL2 - 1
+FRAMES3 = 30 * 60 + 10
+
+
+# ------------------------------------------------------------------ the figures
+
+def rect_figure():
+    """The coin Rect(300, 200, 30, 30) drawn six times its size, with every edge named."""
+    return ('<svg viewBox="0 0 660 300" width="100%" role="img" aria-label="A square coin '
+            'that starts at x = 300, y = 200 and is 30 wide and 30 tall. Its left edge is at '
+            '300, its right edge at 330, its top edge at 200, its bottom edge at 230, and its '
+            'centre at 315, 215" '
+            'style="max-width:660px;display:block;margin:0 0 16px;font-family:JetBrains Mono,'
+            'monospace;font-size:13px">'
+            '<rect x="150" y="70" width="180" height="180" fill="#FCD34D" stroke="#17181B" stroke-width="5"/>'
+            '<circle cx="150" cy="70" r="5" fill="#17181B"/>'
+            '<text x="20" y="34" fill="#17181B" font-weight="700">starts at x = 300, y = 200</text>'
+            '<circle cx="240" cy="160" r="5" fill="#17181B"/>'
+            '<text x="170" y="184" fill="#17181B" font-weight="700">center (315, 215)</text>'
+            '<text x="196" y="56" fill="#9C2B22" font-weight="700">top 200</text>'
+            '<text x="182" y="272" fill="#9C2B22" font-weight="700">bottom 230</text>'
+            '<text x="64" y="164" fill="#1D5B39" font-weight="700">left 300</text>'
+            '<text x="342" y="164" fill="#1D5B39" font-weight="700">right 330</text>'
+            '<text x="450" y="80" fill="#17181B" font-weight="700">Rect(x, y, w, h)</text>'
+            '<text x="450" y="110" fill="#4A4D53">left = x</text>'
+            '<text x="450" y="132" fill="#4A4D53">right = x + w</text>'
+            '<text x="450" y="154" fill="#4A4D53">top = y</text>'
+            '<text x="450" y="176" fill="#4A4D53">bottom = y + h</text>'
+            '<text x="450" y="216" fill="#4A4D53">the picture is six</text>'
+            '<text x="450" y="238" fill="#4A4D53">times the real size</text>'
+            '</svg>')
+
+
+def overlap_figure():
+    """Chunk 2's player and its coin in both places, at twice their size."""
+    k = 2
+
+    def sx(x):
+        return 40 + (x - 260) * k
+
+    def sy(y):
+        return 30 + (y - 180) * k
+
+    out = ['<svg viewBox="0 0 660 330" width="100%" role="img" aria-label="The player is a '
+           'square from 280 to 330 across and from 190 to 240 down. A coin from 300 to 330 '
+           'across is drawn twice: at y = 280, below the player, where the two do not '
+           'touch, and at y = 200, inside the player, where they overlap" '
+           'style="max-width:660px;display:block;margin:0 0 16px;font-family:JetBrains Mono,'
+           'monospace;font-size:13px">']
+    # the player
+    out.append('<rect x="%d" y="%d" width="%d" height="%d" fill="#F8FAFC" stroke="#17181B" stroke-width="5"/>'
+               % (sx(280), sy(190), 50 * k, 50 * k))
+    out.append('<text x="%d" y="%d" fill="#17181B" font-weight="700">player</text>' % (sx(280), sy(190) - 10))
+    # the coin at y = 200, overlapping
+    out.append('<rect x="%d" y="%d" width="%d" height="%d" fill="#FCD34D" stroke="#17181B" stroke-width="3"/>'
+               % (sx(300), sy(200), 30 * k, 30 * k))
+    # the coin at y = 280, apart
+    out.append('<rect x="%d" y="%d" width="%d" height="%d" fill="#FCD34D" stroke="#17181B" stroke-width="3"/>'
+               % (sx(300), sy(280), 30 * k, 30 * k))
+    # labels to the right of each thing
+    tx = sx(330) + 24
+    out.append('<text x="%d" y="%d" fill="#17181B" font-weight="700">player: 280 to 330 across, 190 to 240 down</text>' % (tx, sy(190) + 14))
+    out.append('<text x="%d" y="%d" fill="#1D5B39" font-weight="700">coin at y = 200: 200 to 230 down</text>' % (tx, sy(190) + 50))
+    out.append('<text x="%d" y="%d" fill="#1D5B39">inside 190 to 240, so they overlap</text>' % (tx, sy(190) + 70))
+    out.append('<text x="%d" y="%d" fill="#9C2B22" font-weight="700">coin at y = 280: 280 to 310 down</text>' % (tx, sy(280) + 24))
+    out.append('<text x="%d" y="%d" fill="#9C2B22">it starts after 240, so they do not touch</text>' % (tx, sy(280) + 44))
+    out.append('<text x="40" y="316" fill="#4A4D53">both coins: 300 to 330 across. The picture is twice the real size.</text>')
+    out.append('</svg>')
+    return "".join(out)
+
+
+# ------------------------------------------------------------------ the build
+
+HOW12 = ("Each new line is a question for the room before it goes on the screen. Each question "
+         "shows the line with a blank and three choices. Ask the room to pick before you click. "
+         "A wrong choice says why it does not fit, and the right choice shows the finished line "
+         "and why it is right.")
+
+TOOLS12 = [
+    {"title": "Tool 1: the coin jumps when you touch it",
+     "intro": "The starting file is chunk 4's program, the square that follows the mouse. It is behind the button below. Now the window gets a coin: a gold square that stays still until the player touches it, then jumps to a spot picked at random. The terminal says where it went. " + HOW12,
+     "start": MOUSE,
+     "whole": "Show the whole program",
+     "code": TOOL1,
+     "run": "headless", "frames": FRAMES1, "seed": SEED1, "inject": INJECT1,
+     "steps": [
+         Q(TOOL1, "The coin will jump to a spot picked at random. Which line lets the program pick random numbers?",
+           'import random',
+           'import ____', 'random',
+           ('randint', "Python has no library called <code>randint</code>. <code>randint</code> is a function inside the <code>random</code> library."),
+           ('pygame', "<code>pygame</code> is already imported, on the next line. The random numbers come from a different library."),
+           "<code>random</code> is the library from session 3. Importing it lets the program call <code>random.randint</code> further down.",
+           note="This is the new first line of the file, above <code>import pygame</code>."),
+         Q(TOOL1, "The coin is a square 30 across, and it is gold. Both get a name in the knob block. Which name holds the size, and which holds the colour?",
+           'COIN_SIZE = 30',
+           '____ = 30\n____ = (252, 211, 77)', ('COIN_SIZE', 'COIN'),
+           (('COIN', 'COIN_SIZE'), "Those are swapped. The size is one number, and the colour is three."),
+           (('coin_size', 'coin'), "Knob names are written in capitals, so they stand out from the variables that change. The small name <code>coin</code> is needed for the coin's Rect."),
+           "<code>COIN_SIZE</code> is how wide and how tall the coin is. <code>COIN</code> is its colour: a lot of red, a lot of green, and a little blue make gold.",
+           part2='COIN = (252, 211, 77)',
+           note="<code>COIN_SIZE</code> goes under <code>PLAYER_SIZE</code>, and <code>COIN</code> goes under <code>PLAYER</code>."),
+         Q(TOOL1, "The coin is a Rect, like the player. It starts at x = 300, y = 200. What are its width and its height?",
+           'coin = pygame.Rect(300, 200, COIN_SIZE, COIN_SIZE)',
+           'coin = pygame.Rect(300, 200, ____, ____)', ('COIN_SIZE', 'COIN_SIZE'),
+           (('PLAYER_SIZE', 'PLAYER_SIZE'), "Then the coin would be 50 across, as big as the player."),
+           (('330', '230'), "The last two numbers are the width and the height, not the right edge and the bottom edge. That coin would be 330 wide."),
+           "The four numbers are x, y, width, and height. The coin is a square, so its width and its height are the same knob.",
+           note="Under the <code>player</code> line, above the loop. Above the loop, it runs once. Inside the loop, the coin would be put back at 300, 200 on every frame."),
+         Q(TOOL1, "On every frame, after the player has moved, the program asks one question: is the player touching the coin? Which gate asks it?",
+           '    if player.colliderect(coin):',
+           '    if ____.colliderect(____):', ('player', 'coin'),
+           (('player', 'player'), "A rectangle overlaps itself, so this is True on every frame."),
+           (('screen', 'coin'), "<code>screen</code> is the window, not a Rect. It has no <code>colliderect</code>, so Python gives an error."),
+           "<code>colliderect</code> is the test from chunk 3. It gives True when the two rectangles overlap. The gate is inside the frame loop, so the question is asked 60 times a second.",
+           note="Under <code>player.center = pygame.mouse.get_pos()</code>, lined up with it."),
+         Q(TOOL1, "The player is touching the coin. The coin jumps to a new spot. The window is 600 wide and 400 tall. Which knob limits x, and which limits y?",
+           '        coin.x = random.randint(0, WIDTH - COIN_SIZE)\n        coin.y = random.randint(0, HEIGHT - COIN_SIZE)',
+           '        coin.x = random.randint(0, ____ - COIN_SIZE)\n        coin.y = random.randint(0, ____ - COIN_SIZE)', ('WIDTH', 'HEIGHT'),
+           (('HEIGHT', 'WIDTH'), "Those are swapped. x goes across, so the width limits it. With y as large as 570, the coin could land below the bottom of the window, which is at 400."),
+           (('COIN_SIZE', 'COIN_SIZE'), "<code>COIN_SIZE - COIN_SIZE</code> is 0. <code>random.randint(0, 0)</code> gives 0 every time, so the coin would go to the top left corner and stay there."),
+           "<code>WIDTH - COIN_SIZE</code> is 570. A coin whose left edge is at 570 has its right edge at 600, the right edge of the window. A larger x would put part of the coin outside. The same goes for y: <code>HEIGHT - COIN_SIZE</code> is 370."),
+         Q(TOOL1, "Words go in the terminal. Which line says where the coin went?",
+           '        print(f"grabbed, the coin is now at {coin.x}, {coin.y}")',
+           '        print(f"grabbed, the coin is now at {____}, {____}")', ('coin.x', 'coin.y'),
+           (('player.x', 'player.y'), "That prints where the player's top left corner is, not where the coin went."),
+           (('x', 'y'), "This program has no variables called <code>x</code> and <code>y</code>. Python gives a NameError."),
+           "The print is inside the gate, after the two lines that move the coin, so it prints the new spot, once for each grab."),
+         Q(TOOL1, "The coin has to be drawn on every frame. Which line draws it?",
+           '    pygame.draw.rect(screen, COIN, coin)',
+           '    pygame.draw.rect(screen, ____, ____)', ('COIN', 'coin'),
+           (('coin', 'COIN'), "Those are swapped. The colour goes second and the rectangle goes third. Swapped, Python gives an error."),
+           (('COIN', 'player'), "That draws a gold square where the player is. The coin itself is never drawn."),
+           "<code>COIN</code> in capitals is the colour, and <code>coin</code> in small letters is the Rect. Python treats them as two different names.",
+           note="Under <code>screen.fill(BG)</code> and above the line that draws the player. The player is drawn after the coin, so the player is on top."),
+     ],
+     "predict": "In this run the mouse goes to the middle of the coin, at (315, 215), and stays there, without moving, for about half a second, until the window closes. How many times does the terminal print grabbed?",
+     "reveal": "Once. On the frame the mouse arrives, the gate is True and the coin jumps to 57, 46. On every frame after that the player is in the same place and the coin is somewhere else, so the gate is False. The last line shows that the player did not move: its centre is (315, 215) when the window closes.</p><p>The spot is picked at random, so on your machine the numbers after grabbed will be different. A new spot can land under the player. When that happens, the coin jumps again on the next frame. This is the floor exit.",
+     },
+    {"title": "Tool 2: a score, and a win at ten coins",
+     "intro": "The game needs a score and a way to end. Every grab adds 1 to the score, and the terminal prints it. At ten coins the game is won: the window turns green, and touching the coin does nothing any more.",
+     "start": TOOL1,
+     "whole": "Show the whole program",
+     "code": TOOL2,
+     "run": "headless", "frames": FRAMES2, "seed": SEED2, "inject": INJECT2,
+     "steps": [
+         Q(TOOL2, "Ten coins wins the game. That number gets a name in the knob block, and so does the colour of the window after a win. What does <code>GOAL</code> hold?",
+           'GOAL = 10',
+           'GOAL = ____\nWIN = (29, 91, 57)', '10',
+           ('0', "The score starts at 0, so with a goal of 0 the game would be won on the first frame, before any coin is grabbed."),
+           ('"10"', "With quote marks it is text. Comparing the score with text gives an error."),
+           "The goal has a name, so it can be changed in one place. <code>WIN</code> is a dark green.",
+           part2='WIN = (29, 91, 57)',
+           note="<code>GOAL</code> goes under <code>COIN_SIZE</code>, and <code>WIN</code> goes under <code>COIN</code>."),
+         Q(TOOL2, "Three variables start the game. <code>score</code> counts coins. <code>playing</code> is 1 while the game is being played and 0 when it is over. <code>background</code> is the colour the window is filled with. What do the first two start as?",
+           'score = 0\nplaying = 1\nbackground = BG',
+           'score = ____\nplaying = ____\nbackground = BG', ('0', '1'),
+           (('1', '1'), "No coin has been grabbed yet, so the score cannot start at 1."),
+           (('0', '0'), "<code>playing = 0</code> means the game is over. No coin could be grabbed."),
+           "The three lines are above the frame loop, so they run once. Inside the loop, the score would go back to 0 on every frame. <code>playing</code> works the way <code>running</code> does: 1 for yes, 0 for no.",
+           note="Under the <code>coin</code> line, with an empty line above."),
+         Q(TOOL2, "After a win, touching the coin must do nothing. So the gate needs two tests: the game is being played, and the player is touching the coin. Which word joins two tests on one line?",
+           '    if playing == 1 and player.colliderect(coin):',
+           '    if playing == 1 ____ player.colliderect(coin):', 'and',
+           ('or', "With <code>or</code>, one True test is enough. The gate would be True on every frame of the game, touching or not, and the coin would jump 60 times a second."),
+           ('if', "One gate has one <code>if</code>. Two tests on the same line are joined with <code>and</code>."),
+           "Both tests have to be True. When <code>playing</code> is 0 the first test is False, so the coin stays where it is. This is one flat gate, not a gate inside a gate."),
+         Q(TOOL2, "The print that said grabbed is replaced by two lines. What happens to the score, and what does the terminal print?",
+           '        score = score + 1\n        print(f"score {score}")',
+           '        score = score ____ 1\n        print(f"score {____}")', ('+', 'score'),
+           (('+', 'GOAL'), "<code>GOAL</code> is 10, so the terminal would say 10 after every grab."),
+           (('*', 'score'), "The score starts at 0, and 0 times 1 is 0. The score would stay at 0."),
+           "It is the counter from session 3, inside a gate. The two lines are inside the gate, after the lines that move the coin. The coin has jumped away, so the gate is False on the next frame, and one grab adds one point."),
+         Q(TOOL2, "After the coin gate comes a second gate: has the player won? What is the test, and what does <code>playing</code> become?",
+           '    if playing == 1 and score >= GOAL:\n        playing = 0\n        background = WIN\n        print(f"You win with {score} coins.")',
+           '    if playing == 1 and score ____ GOAL:\n        playing = ____\n        background = WIN\n        print(f"You win with {score} coins.")', ('>=', '0'),
+           (('<', '0'), "The score starts below the goal, so the game would be won on the first frame."),
+           (('>=', '1'), "<code>playing</code> is already 1. Nothing would stop, and the message would print on every frame."),
+           "<code>&gt;=</code> means is greater than or equal to: the score is 10 or more. The gate sets <code>playing</code> to 0, so it runs once. After that its own first test is False.",
+           note="Under the coin gate, lined up with its <code>if</code>. It is a second flat gate, not inside the first one."),
+         Q(TOOL2, "The window should change colour when the game is won. Which name does <code>fill</code> use now?",
+           '    screen.fill(background)',
+           '    screen.fill(____)', 'background',
+           ('BG', "<code>BG</code> never changes, so the window would stay dark blue after a win."),
+           ('WIN', "Then the window would be green from the first frame."),
+           "<code>background</code> starts as <code>BG</code>, and the win gate changes it to <code>WIN</code>. The fill uses whatever colour the variable holds on that frame."),
+         Q(TOOL2, "When the window closes, the terminal should say the score. The last print is replaced. What goes in the braces?",
+           'print(f"final score {score}")',
+           'print(f"final score {____}")', 'score',
+           ('GOAL', "That prints 10 every time, even if the player grabbed two coins."),
+           ('playing', "That prints 1 or 0, not the number of coins."),
+           "The line is after the loop, at the left edge, so it runs once, when the window is closed."),
+     ],
+     "predict": "In this run the mouse goes to the middle of the coin eleven times, and each time the coin has jumped somewhere new. How many score lines does the terminal print, and what happens on the eleventh touch?",
+     "reveal": "The first one: ten score lines, from score 1 to score 10, and then <code>You win with 10 coins.</code> On the tenth grab the win gate sets <code>playing</code> to 0.</p><p>The second one: nothing happens on the eleventh touch. The coin gate's first test, <code>playing == 1</code>, is False, so the coin does not jump and the score stays at 10. The last line prints when the window closes. This is the middle exit.",
+     },
+    {"title": "Tool 3: three coins in a list, and a time limit",
+     "intro": "One coin is slow. Now there are three, kept in a list, and a loop asks the touching question once for each coin. There is also a time limit. The frame loop runs 60 times a second, so counting frames is counting time: when the counter reaches 30 seconds of frames and the player has not won, the window turns red and the game is over.",
+     "start": TOOL2,
+     "whole": "Show the whole program",
+     "code": TOOL3,
+     "run": "headless", "frames": FRAMES3, "seed": SEED3, "inject": INJECT3, "fast": True,
+     "steps": [
+         Q(TOOL3, "The time limit is 30 seconds. It gets a name in the knob block, and so does the colour of the window when time runs out. What is the name for the 30?",
+           'SECONDS = 30',
+           '____ = 30\nLOSE = (156, 43, 34)', 'SECONDS',
+           ('seconds', "Knob names are written in capitals, so they stand out from the variables that change."),
+           ('FPS', "<code>FPS</code> is set to 60 at the end of the knob block, so this line would do nothing, and the time limit would have no name."),
+           "<code>SECONDS</code> is the time limit, in seconds. <code>LOSE</code> is a dark red.",
+           part2='LOSE = (156, 43, 34)',
+           note="<code>SECONDS</code> goes under <code>GOAL</code>, and <code>LOSE</code> goes under <code>WIN</code>."),
+         Q(TOOL3, "The one coin becomes a list of three coins. Each item in the list is a Rect. What goes in the blank?",
+           'coins = [\n    pygame.Rect(100, 100, COIN_SIZE, COIN_SIZE),\n    pygame.Rect(300, 200, COIN_SIZE, COIN_SIZE),\n    pygame.Rect(500, 300, COIN_SIZE, COIN_SIZE),\n]',
+           'coins = [\n    pygame.Rect(100, 100, COIN_SIZE, COIN_SIZE),\n    pygame.Rect(300, 200, COIN_SIZE, COIN_SIZE),\n    pygame.____(500, 300, COIN_SIZE, COIN_SIZE),\n]', 'Rect',
+           ('rect', "The name has a capital R. <code>pygame.rect</code> with a small r is something else, and calling it gives an error."),
+           ('draw', "<code>pygame.draw</code> draws shapes. It does not make a Rect."),
+           "A list holds many values under one name, and here the values are three Rects. The list is written over five lines so each coin can be read by itself. The square brackets open on the first line and close on the last.",
+           note="These five lines replace the <code>coin = pygame.Rect(...)</code> line."),
+         Q(TOOL3, "Time is counted in frames. Where does the frame counter start, and what is added to it on every frame?",
+           'frame = 0',
+           'frame = ____\n    frame = frame + ____', ('0', '1'),
+           (('1', '1'), "Then the first frame would be counted as frame 2."),
+           (('0', '0'), "Adding 0 changes nothing, so the counter would stay at 0 and time would never run out."),
+           "The counter starts at 0 above the loop and goes up by 1 on every frame. After one second it is 60.",
+           part2='    frame = frame + 1',
+           note="<code>frame = 0</code> goes under <code>background = BG</code>. <code>frame = frame + 1</code> goes inside the loop, under the line that moves the player."),
+         Q(TOOL3, "The touching question now has to be asked for every coin in the list. Which loop does that?",
+           '    for coin in coins:\n        if playing == 1 and player.colliderect(coin):\n            coin.x = random.randint(0, WIDTH - COIN_SIZE)\n            coin.y = random.randint(0, HEIGHT - COIN_SIZE)\n            score = score + 1\n            print(f"score {score}")',
+           '    for ____ in ____:\n        if playing == 1 and player.colliderect(coin):\n            coin.x = random.randint(0, WIDTH - COIN_SIZE)\n            coin.y = random.randint(0, HEIGHT - COIN_SIZE)\n            score = score + 1\n            print(f"score {score}")', ('coin', 'coins'),
+           (('coins', 'coin'), "Those are swapped. The list is called <code>coins</code>, and the program no longer has a variable called <code>coin</code> to loop over, so Python gives a NameError."),
+           (('coin', 'range(3)'), "Then <code>coin</code> would be the numbers 0, 1, and 2. A number is not a Rect, so <code>colliderect</code> gives an error."),
+           "On each pass of the loop, <code>coin</code> is one of the three Rects in the list. The gate and its four lines are the same as before. Changing <code>coin.x</code> moves that Rect, and the list holds the same Rect, so the coin in the list has moved.",
+           note="The gate and its four lines move one indentation level in, so they are inside the <code>for</code> loop."),
+         Q(TOOL3, "After the win gate comes a third gate: has time run out? The frame counter is compared with 30 seconds of frames. How many frames is that?",
+           '    if playing == 1 and frame == SECONDS * FPS:\n        playing = 0\n        background = LOSE\n        print(f"Time is up. You got {score} coins.")',
+           '    if playing == 1 and frame == SECONDS ____ FPS:\n        playing = 0\n        background = ____\n        print(f"Time is up. You got {score} coins.")', ('*', 'LOSE'),
+           (('+', 'LOSE'), "30 + 60 is 90 frames, which is a second and a half."),
+           (('*', 'WIN'), "Then running out of time would turn the window green, the same as winning."),
+           "There are 60 frames in each second, so 30 seconds is 30 times 60, which is 1800 frames. If the player has already won, <code>playing</code> is 0 and this gate stays False.",
+           note="Under the win gate, lined up with its <code>if</code>."),
+         Q(TOOL3, "All three coins have to be drawn on every frame. What goes in the blank?",
+           '    for coin in coins:\n        pygame.draw.rect(screen, COIN, coin)',
+           '    for coin in coins:\n        pygame.draw.rect(screen, COIN, ____)', 'coin',
+           ('coins', "<code>coins</code> is the whole list. <code>draw.rect</code> needs one rectangle, so Python gives an error."),
+           ('player', "That draws three gold squares on top of each other where the player is. The coins are never drawn."),
+           "It is the same loop as the one that asks the touching question: one pass for each coin. The draw line moves one indentation level in."),
+     ],
+     "predict": "In this run the mouse goes to a coin four times in the first quarter of a second. Then it stays where it is, not touching a coin, until the window closes on frame 1811. What are the last two lines the terminal prints?",
+     "reveal": "<code>Time is up. You got 4 coins.</code> and then <code>final score 4</code>. The four visits print score 1 to score 4. After that the player is not touching a coin, so nothing prints for a long time. Frame 1800 is 30 seconds at 60 frames a second. On that frame the time gate is True: it sets <code>playing</code> to 0, turns the window red, and prints. The last line prints when the window closes. This is the stretch exit.",
+     },
+]
+
+
+# ------------------------------------------------------------------ the session
+
+SESSION12 = {
+ "num": 12,
+ "slug": "session12_coin_grab",
+ "title": "Coin grab",
+ "subtitle": "A square that follows the mouse, a coin that jumps when you touch it, and a score",
+ "mon": "Mon Dec 14",
+ "fri": "Fri Dec 11",
+ "new": ["pygame.Rect", "left, right, top, and bottom", "the overlap test written by hand", "colliderect",
+         "the mouse position", "a random spot inside the window", "a score that counts each coin once"],
+ "reuse": "Session 11's frame loop and knob block, session 3's counter and randint, and session 2's two tests joined with and",
+ "reuse_note": "Today is the first whole game in a window, and it is short on purpose: the floor program is 33 lines of code. Chunk 4's file is 24 of them, and most of those are the knob block and the frame loop from session 11. Tool 1 adds nine. Chunks 1 to 3 run in the terminal and are a few lines each, so they can be typed by everyone or run once on the projector while the room predicts. The typing starts at chunk 4. Nothing here needs the keyboard during play: the mouse moves the player.",
+ "env_note": True,
+ "opener": {
+   "title": "Retrieval: the frame loop, and a gate on a dictionary",
+   "minutes": 10,
+   "body": "Paper first.",
+   "questions": [
+     {"q": "Inside the frame loop, three things happen to the picture on every frame, in this order: <code>screen.fill</code>, the drawing, <code>pygame.display.flip</code>. A ball is moving. What do you see if the <code>fill</code> line is deleted?",
+      "a": "A trail. The fill paints over the last frame. Without it every old ball stays on the screen, and the new ball is drawn beside them."},
+     {"q": "<code>scores = {\"Ada\": 15}</code>. What does <code>\"Grace\" in scores</code> give? What happens on the line <code>print(scores[\"Grace\"])</code> if no gate checks first?",
+      "a": "The first one: False, because <code>in</code> checks the keys and Grace is not a key. The second one: a KeyError. A gate with <code>in</code> in front of the lookup stops that."},
+   ],
+ },
+ "chunks": [
+  {"title": "A Rect is four numbers with names",
+   "teach": "In session 6 a rectangle was four numbers in parentheses: x, y, width, and height. <b><code>pygame.Rect</code></b> keeps those four numbers together under one name. It is written with a capital R. A Rect also works out its own edges. <code>left</code> is x, and <code>right</code> is x plus the width. <code>top</code> is y, and <code>bottom</code> is y plus the height. <code>center</code> is the pair of numbers in the middle of the rectangle; pygame spells it with <code>er</code> at the end.</p><p>This program opens no window. A Rect is only numbers, so the terminal can print them.",
+   "figure": rect_figure(),
+   "code": RECT,
+   "run": "py",
+   "predict": "The coin starts 300 across and is 30 wide. What does <code>coin.right</code> print? The coin starts 200 down and is 30 tall. What does <code>coin.bottom</code> print?",
+   "reveal": "The first one: 330, because 300 + 30 is 330. The second one: 230, because 200 + 30 is 230. The last line prints the middle of the coin. Half of 30 is 15, and 15 across and 15 down from the corner at 300, 200 is <code>(315, 215)</code>."},
+
+  {"title": "Are two rectangles touching? The test, written by hand",
+   "teach": "Two rectangles are <b>touching</b> when they overlap: part of one is on top of part of the other. Checking that takes two tests. Across: each rectangle starts before the other one ends, so its <code>left</code> is less than the other one's <code>right</code>. Down: the same test with <code>top</code> and <code>bottom</code>. Both tests have to be True, and <code>and</code> joins them.</p><p>The player here is a square from 280 to 330 across and from 190 to 240 down. The coin starts below it. Then <code>coin.y = 200</code> moves the coin up, and the down test is worked out again.",
+   "figure": overlap_figure(),
+   "code": BY_HAND,
+   "run": "py",
+   "predict": "The first print runs with the coin at y = 280. Will <code>across</code> be True or False, and will <code>down</code> be True or False? Then say what changes in the second print, after the coin has moved to y = 200.",
+   "reveal": "The first one: <code>across</code> is True. The player goes from 280 to 330 and the coin from 300 to 330, so each one starts before the other ends. <code>down</code> is False. The player ends at 240 and the coin starts at 280, so <code>coin.top &lt; player.bottom</code> is False. Being lined up across is not enough, so touching is False.</p><p>The second one: at y = 200 the coin goes from 200 to 230 down, which is inside the player's 190 to 240. Now <code>down</code> is True, and touching is True."},
+
+  {"title": "colliderect asks the same question in one call",
+   "teach": "A Rect can make that whole test itself. <b><code>player.colliderect(coin)</code></b> gives True when the two rectangles overlap and False when they do not. It is chunk 2's test, already written for you. The name is two words joined: collide, which means to bump into something, and rect.</p><p>This program asks the question three times. The first time, the coin is where chunk 2 left it, inside the player. Before the second and third times, it moves the coin by changing <code>coin.x</code>.",
+   "code": COLLIDE,
+   "run": "py",
+   "predict": "The player's right edge is at 330. The line <code>coin.x = 330</code> puts the coin's left edge at 330 too, so the two rectangles share an edge. Will the second print say True or False? And the third print, with the coin one pixel further left?",
+   "reveal": "The first one: False. Chunk 2's test is <code>coin.left &lt; player.right</code>, and 330 is not less than 330. Sharing an edge is not overlapping. The second one: True. At 329 the coin's left edge is one pixel inside the player, and one pixel is enough."},
+
+  {"title": "A square that follows the mouse",
+   "teach": "This is the first window of the day. Most of it is the knob block and the frame loop from session 11, and three lines are new.</p><p>The line <code>player = pygame.Rect(0, 0, PLAYER_SIZE, PLAYER_SIZE)</code> makes the player, a Rect 50 across and 50 down. It is above the loop, so it runs once.</p><p>The line <code>player.center = pygame.mouse.get_pos()</code> is inside the loop, so it runs on every frame. <b><code>pygame.mouse.get_pos()</code></b> gives the position of the mouse in the window as a pair of numbers, across and then down. Storing that pair in <code>player.center</code> moves the whole square, so that its middle is on the mouse.</p><p>The line <code>pygame.draw.rect(screen, PLAYER, player)</code> draws the square. In session 6 the third thing given to <code>draw.rect</code> was four numbers in parentheses. A Rect works in the same place.</p><p>The last print runs when you close the window.",
+   "code": MOUSE,
+   "run": "headless",
+   "frames": 6,
+   "inject": [[2, "MOUSE", 300, 200]],
+   "predict": "Suppose the mouse is at (300, 200) when you close the window. The player is 50 across and 50 down, and its middle is on the mouse. What will the last line print for <code>left</code> and for <code>top</code>?",
+   "reveal": "<code>left</code> is 275 and <code>top</code> is 175. Half of 50 is 25, so the left edge is 25 to the left of the mouse and the top edge is 25 above it.</p><p>The run on this page had no real mouse. It was given a mouse position of (300, 200). Your numbers depend on where your mouse is when you close the window, so they will be different. If your square sits in the top left corner and does not move, the mouse is outside the window."},
+ ],
+ "hinge": {"q": "This is one second of a frame loop, 60 frames, without the window. The player is on the coin, so <code>touching</code> is True, and no line in the gate moves the coin. What does the program print? Then say which one line, added inside the gate, would make it print 1.",
+           "code": HINGE,
+           "run": "py",
+           "code_a": '    if touching:\n        score = score + 1\n        touching = False',
+           "a": "The first one: 60. The gate is asked on every frame and it is True on every frame, so the score goes up 60 times in one second. The second one: <code>touching = False</code>, inside the gate. After the first frame the test is False, and the score stays at 1. In the game, moving the coin does that job. Once the coin has jumped away, <code>player.colliderect(coin)</code> is False on the next frame."},
+ "brief": {
+   "title": "Build: coin grab",
+   "minutes": 30,
+   "intro": "You are making a small game called coin grab. A white square follows the mouse. A gold coin sits in the window. When the square touches the coin, the coin jumps to a new spot picked at random, and the terminal counts it. Ten coins wins the game. The build is one program, written in three tools. Each tool starts from the program the tool before it finished.",
+   "tools": TOOLS12,
+   "steps": [
+     "Start from chunk 4's file, <code>Jonathan_session12.py</code> with your first name in place of Jonathan: the square that follows the mouse.",
+     "Add a coin, and make it jump to a random spot when the player touches it.",
+     "Add a score that goes up by 1 for each coin, printed in the terminal.",
+     "End the game at ten coins: the window turns green and the coin stops jumping.",
+     "Put three coins in a list, and add a 30 second time limit that turns the window red.",
+   ],
+   "expected_got": [
+     ["The square follows the mouse and its middle stays on the pointer", ""],
+     ["Touching the coin makes it jump, and the whole coin is inside the window every time", ""],
+     ["One coin adds 1 to the score, not 60 a second", ""],
+     ["After ten coins the window is green, and touching a coin does nothing", ""],
+     ["With three coins, any one of them can be grabbed", ""],
+     ["After 30 seconds without a win the window is red and the terminal says how many coins you got", ""],
+   ],
+ },
+ "exits": {
+   "floor": "Tool 1: the square follows the mouse, and the coin jumps to a random spot when the square touches it.",
+   "middle": "Tool 2: the score is printed in the terminal, and at ten coins the window turns green and the game stops.",
+   "stretch": "Tool 3: three coins in a list, and a 30 second time limit that turns the window red.",
+ },
+ "extension": {
+   "title": "Give the jump a name",
+   "intro": "<p>The two <code>randint</code> lines move a coin to a random spot. A function can hold them, so the game can move a coin from more than one place. Then every game can start with its coins in different spots.</p>",
+   "cards": [
+     {"title": "move_coin changes the Rect it is given",
+      "teach": "This function has one parameter, <code>coin</code>, and no <code>return</code> line. It does not work out a value. It changes the Rect that the call gives it. The program prints where the coin is, calls the function, and prints where the coin is again. The last line prints what the function returns.",
+      "code": MOVE_COIN,
+      "run": "py",
+      "seed": 2,
+      "predict": "The function has no <code>return</code> line. What does the last line print? And does the coin move when the function is called?",
+      "reveal": "The first one: the last line prints <code>None</code>. A function with no <code>return</code> line returns None, the same as in session 5. The second one: yes, the coin moves. The first print says 300 200 and the second says 57 46, so the call <code>move_coin(coin)</code> changed the Rect it was given. The last line calls the function a second time, so the coin moves once more before None is printed. The spots are picked at random, so your numbers will be different."},
+   ],
+   "steps": [
+     "Put <code>move_coin</code> in your tool 3 file. Functions go near the top, after the knob block and before <code>pygame.init()</code>, with an empty line above and below.",
+     "Inside the coin gate, replace the two <code>randint</code> lines with one call: <code>move_coin(coin)</code>.",
+     "Under the <code>coins</code> list, add a loop that calls <code>move_coin(coin)</code> once for each coin, so every game starts with the coins in new spots.",
+     "Change one knob, <code>COIN_SIZE</code>, <code>GOAL</code>, or <code>SECONDS</code>, to make the game harder. One change per run.",
+   ],
+   "checks": [
+     "The game plays the same as before the function was added",
+     "Run the game twice: the three coins start in different spots each time",
+     "The knob you changed makes the game harder, and you can say why",
+   ],
+ },
+ "ledger": "Stamp 12: <code>pygame.Rect(x, y, w, h)</code> has <code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>, and <code>center</code>; <code>a.colliderect(b)</code> is True when two rectangles overlap; <code>pygame.mouse.get_pos()</code> is where the mouse is; move the coin inside the gate, so one grab counts once.",
+ "teacher": {
+   "timing": [
+     "0:00 retrieval opener, 10 min",
+     "0:10 chunk 1, a Rect and its edges, 8 min",
+     "0:18 chunk 2, the overlap test by hand, 12 min (project the figure; this is the mathematics of the day)",
+     "0:30 chunk 3, colliderect, 7 min",
+     "0:37 chunk 4, the mouse, 13 min (the first window file; most of the typing is here)",
+     "0:50 hinge question, 5 min",
+     "0:55 build, tools 1 and 2, 30 min (tool 3 is for students who are ahead)",
+     "1:25 exits, ledger stamp, 5 min",
+   ],
+   "misconceptions": [
+     ["Types <code>pygame.rect</code> with a small r, or <code>Rect</code> without <code>pygame.</code> in front.",
+      "Read the last line of the error together. The capital R is the difference between the Rect that holds numbers and <code>pygame.draw.rect</code>, which draws."],
+     ["Puts the <code>coin = pygame.Rect(...)</code> line inside the frame loop. The coin flickers back to 300, 200.",
+      "Ask how many times that line should run. Once, so it goes above the loop."],
+     ["Puts <code>score = 0</code> inside the loop and the score never passes 1.",
+      "It is session 3's counter. The starting value goes above the loop."],
+     ["Expects two rectangles that share an edge to count as touching.",
+      "Go back to chunk 3's second print. 330 is not less than 330. One pixel of overlap is needed."],
+     ["Runs the program and reports that the square will not move.",
+      "The mouse is outside the window, or the window is behind VS Code. <code>get_pos</code> only follows the mouse while it is over the window."],
+     ["Draws the coin above <code>screen.fill</code> and the coin never appears.",
+      "It is session 11's draw order. The fill paints over everything drawn before it on that frame."],
+   ],
+   "standards": ["NY-5.G.1", "NY-6.NS.8", "NY-6.EE.5"],
+   "routing": "Chunks 1 to 3 need no window. If time is short, run them once on the projector and have the room predict out loud, then go to chunk 4, where everyone types. Tool 1 is the floor exit and it adds nine lines to chunk 4's file. Tool 2 is the middle exit. Every tool has its finished program behind a button, so a student who falls behind can read it and run it. The extension is for a student who finishes tool 3. Nothing survives on the machines, so the game cannot be carried into session 13; session 13 starts from its own file.",
+ },
+}

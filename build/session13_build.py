@@ -1,4 +1,5 @@
-# Session 12's build, written out one line at a time (added November 2026).
+# Session 13's build, written out one line at a time (added November 2026; it was
+# session 12 until the coin grab session took that number).
 # Four tools, each a whole program that grows out of the one before:
 #   tool 1  the level printed in the terminal            (the floor exit)
 #   tool 2  the room in a window and a player that walls stop
@@ -217,7 +218,7 @@ def presses(*names):
 
 TRIP = ["RIGHT", "RIGHT", "RIGHT", "RIGHT", "DOWN", "DOWN"]
 
-TOOLS12 = [
+TOOLS13 = [
     {"title": "Tool 1: the level in the terminal",
      "intro": "Before the window, print the room in the terminal: one line of text for each row of the level, with <code>#</code> for a wall and <code>.</code> for floor. The two knobs and the level are given. Copy them from the button below, then write the loop under them.",
      "start": START1,

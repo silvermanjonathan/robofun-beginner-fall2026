@@ -566,9 +566,9 @@ PICKS = {
    "why": "<code>random.choice(board)</code> picks one item from the list at random. If the item is X or O, that square is taken, so the <code>while</code> loop picks again. The loop stops when the pick is a number, which is a free square."},
  ],
 
- # ------------------------------------------------------------ session 12, the room build
+ # ------------------------------------------------------------ session 13, the room build
 
- "s12-tool1": [
+ "s13-tool1": [
   {"blank": 'for row in range(____):',
    "right": 'ROWS',
    "wrong": [('COLS', "<code>COLS</code> is the number of columns. This loop goes down the rows."),
@@ -601,7 +601,7 @@ PICKS = {
    "why": "The line is one indentation level in, so it is inside the row loop and after the column loop. It prints once for each row, when all seven characters are in <code>line</code>."},
  ],
 
- "s12-tool2": [
+ "s13-tool2": [
   {"blank": 'player_row = ____\nplayer_col = ____',
    "right": ('1', '1'),
    "wrong": [(('0', '0'), "Row 0, column 0 is the top left corner, and that tile is a wall."),
@@ -654,7 +654,7 @@ PICKS = {
    "why": "Words go in the terminal. The braces are replaced by the player's tile row and column, so you can check the moves without counting squares in the window."},
  ],
 
- "s12-tool3": [
+ "s13-tool3": [
   {"blank": '____ = (252, 211, 77)',
    "right": 'COIN',
    "wrong": [('coin', "Knob names are written in capitals, so they stand out from the variables that change."),
@@ -692,7 +692,7 @@ PICKS = {
    "why": "<code>col * TILE</code> and <code>row * TILE</code> give the top left corner of the tile. Half a tile across and half a tile down from there is the middle. The circle's radius is <code>TILE / 4</code>, so the coin is half as wide as the tile."},
  ],
 
- "s12-tool4": [
+ "s13-tool4": [
   {"blank": 'TRAP = (220, 38, 38)\nLIVES = ____',
    "right": '3',
    "wrong": [('0', "With 0 lives the game would be over before the first move."),

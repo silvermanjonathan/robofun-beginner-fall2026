@@ -13,7 +13,7 @@ SESSIONS_B = [
  "fri": "Fri Oct 16",
  "new": ["def with no parameters", "parameters", "return", "the value None", "a function calling a function", "several returns behind flat gates"],
  "reuse": "Session 3: the accumulator becomes a function you can reuse",
- "reuse_note": "This is the highest-value session in the semester. Everything downstream, including dictionaries in session 10 and the grid in session 12, gets easier once return exists.",
+ "reuse_note": "This is the highest-value session in the semester. Everything downstream, including dictionaries in session 10 and the grid in session 13, gets easier once return exists.",
  "opener": {
    "title": "Retrieval: two patterns from session 3",
    "minutes": 10,
@@ -679,7 +679,7 @@ SESSIONS_B = [
 # The cipher wheel was session 9 until November 2026, when tic tac toe (session09.py)
 # took its date. It is an extra page now, with no date, for the end of the course.
 {
- "num": 15,
+ "num": 16,
  "slug": "extra_remainders_cipher_wheel",
  "title": "Remainders and the cipher wheel",
  "subtitle": "Clock arithmetic, a 26-slot rack, and a message that comes back",
@@ -689,7 +689,7 @@ SESSIONS_B = [
  "tag": "Extra",
  "new": ["the remainder operator", "wrapping a counter with %", "scanning a rack with a loop", "find as the reveal", "encode then decode", "negative numbers under %"],
  "reuse": "Session 8: the string index, and session 3: the loop scan",
- "reuse_note": "This is an extra page with no date of its own since tic tac toe took session 9 in November. Nothing in sessions 10 to 13 depends on it. It can be taught at the end of the course if there is a free date, or a student who wants it can read it alone. The rack scan is a loop over a string looking for a slot. It is session 3's pattern applied to session 8's data type, which makes this session mostly assembly rather than new material.",
+ "reuse_note": "This is an extra page with no date of its own since tic tac toe took session 9 in November. Nothing in sessions 10 to 14 depends on it. It can be taught at the end of the course if there is a free date, or a student who wants it can read it alone. The rack scan is a loop over a string looking for a slot. It is session 3's pattern applied to session 8's data type, which makes this session mostly assembly rather than new material.",
  "opener": {
    "title": "Retrieval: slots and a remainder",
    "minutes": 10,

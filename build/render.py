@@ -14,15 +14,17 @@ from hl import highlight
 from sessions_a import SESSIONS_A
 from session06 import SESSION06
 from session09 import SESSION09
+from session12 import SESSION12
 from sessions_b import SESSIONS_B
 from sessions_c import SESSIONS_C
 from picks import PICKS
 from builds import BUILD_TOOLS
 
 # session 6, the Mondrian, was added in October 2026 and lives in its own file; so
-# does session 9, tic tac toe, added in November 2026
-SESSIONS = sorted(SESSIONS_A + [SESSION06, SESSION09] + SESSIONS_B + SESSIONS_C, key=lambda s: s["num"])
-# the builds written out one line at a time (builds.py); sessions 5, 8 and 12 carry their own
+# does session 9, tic tac toe, added in November 2026, and session 12, the coin grab,
+# added later the same month
+SESSIONS = sorted(SESSIONS_A + [SESSION06, SESSION09, SESSION12] + SESSIONS_B + SESSIONS_C, key=lambda s: s["num"])
+# the builds written out one line at a time (builds.py); sessions 5, 8, 12 and 13 carry their own
 for _s in SESSIONS:
     if _s["num"] in BUILD_TOOLS:
         assert "tools" not in _s["brief"], _s["num"]
@@ -37,9 +39,9 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "21"
+VERSION = "22"
 REPO = "robofun-beginner-fall2026"
-PUBLISHED = "2026-09-12"
+PUBLISHED = "2026-11-22"
 TMP = os.environ.get("BVC_TMP",
                      os.path.join(tempfile.gettempdir(), "bvc_beginner_build"))
 
@@ -99,6 +101,7 @@ os.environ["SDL_AUDIODRIVER"] = "dummy"
 import pygame
 _MAXF = {maxf}
 _INJ = {inj}
+_FAST = {fast}
 _state = {{"f": 0}}
 
 def _get(*a, **k):
@@ -129,6 +132,25 @@ def _gp(*a, **k):
     return _Keys(held)
 
 pygame.key.get_pressed = _gp
+
+def _mouse(*a, **k):
+    # the newest [frame, "MOUSE", x, y] item at or before this frame; (0, 0) until the first
+    f = _state["f"]
+    pos = (0, 0)
+    for item in _INJ:
+        if item[1] == "MOUSE" and item[0] <= f:
+            pos = (item[2], item[3])
+    return pos
+
+pygame.mouse.get_pos = _mouse
+
+class _FastClock:
+    # a clock that does not wait, for a run of many frames; nothing printed depends on the wait
+    def tick(self, *a, **k):
+        return 0
+
+if _FAST:
+    pygame.time.Clock = _FastClock
 '''
 
 VERIFY_LOG = []
@@ -213,9 +235,9 @@ def verify(chunk, tag):
     if mode is None:
         return None, None
     num = tag.split("-")[0].replace("s", "")
-    if num == "14":
+    if num == "15":
         fname = "Jonathan_friday_bonus.py"
-    elif num == "15":
+    elif num == "16":
         fname = "Jonathan_cipher_wheel.py"
     else:
         fname = "Jonathan_session%02d.py" % int(num)
@@ -236,9 +258,11 @@ def verify(chunk, tag):
         pre = HEADLESS_PREAMBLE.format(
             maxf=chunk.get("frames", 5),
             inj=json.dumps(chunk.get("inject", [])),
+            fast=bool(chunk.get("fast")),
         )
         pre = pre + chunk.get("prefix", "")
-        out, rc = run_snippet(chunk["code"], preamble=pre, timeout=90, fname=fname)
+        out, rc = run_snippet(chunk["code"], preamble=pre, timeout=90, fname=fname,
+                              seed=chunk.get("seed"))
     else:
         out, rc = run_snippet(chunk["code"], preamble=chunk.get("prefix", ""),
                               stdin=chunk.get("stdin"), timeout=30, fname=fname,
@@ -880,7 +904,7 @@ def standards_table(codes):
 def render_session(s, prev_s, next_s):
     n = s["num"]
     bonus = s.get("bonus", False)
-    label = short(s) + " session" if bonus else "Session " + str(n) + " of 13"
+    label = short(s) + " session" if bonus else "Session " + str(n) + " of 14"
 
     b = ['<header class="top"><div class="wrap">']
     b.append('<p class="eyebrow">Beyond Vibe Coding &middot; Beginner &middot; ' + label + '</p>')
@@ -1036,8 +1060,11 @@ def render_session(s, prev_s, next_s):
             b.append('<p>' + tool["trace"] + ' <a href="' + link(ws["slug"])
                      + '">Open the worksheet</a></p>')
         if out:
+            lbl = "What it actually prints"
+            if tool.get("seed") is not None:
+                lbl = "What it actually prints, on one run"
             b.append(reveal(tag, tool["predict"], tool["reveal"], "Predict",
-                            out_block(out, "What it actually prints"),
+                            out_block(out, lbl),
                             "Run it first, then check here", "Hide", tool.get("hint")))
         if plan:
             b.append(reveal(tag + "-plan", 'Scroll until the plan is off the screen. Say the '
@@ -1216,7 +1243,7 @@ def render_session(s, prev_s, next_s):
 
     b.append('<footer><div class="wrap">'
              '<p>Beyond Vibe Coding, beginner semester, Robofun Fall 2026. '
-             '110 West End Avenue. The Monday and Friday sections cover the same thirteen sessions.</p>'
+             '110 West End Avenue. The Monday and Friday sections cover the same fourteen sessions.</p>'
              '<p>Mapped to NY Next Generation Learning Standards and the Standards for '
              'Mathematical Practice. Codes resolved through the ' + CONNECTOR + ' on '
              + RESOLVED_ON + '. <a href="' + link("standards_map") + '">Full standards map</a> '
@@ -1233,12 +1260,12 @@ def render_hub():
     b = ['<header class="top"><div class="wrap">']
     b.append('<p class="eyebrow">Robofun &middot; Fall 2026 &middot; 110 West End Avenue</p>')
     b.append('<h1>Beyond Vibe Coding: Python, beginner</h1>')
-    b.append('<p class="sub">Thirteen sessions of ninety minutes. You read the code, '
+    b.append('<p class="sub">Fourteen sessions of ninety minutes. You read the code, '
              'trace it out loud, and then run it. Monday and Friday are separate classes '
-             'working through the same thirteen sessions.</p>')
+             'working through the same fourteen sessions.</p>')
     b.append('<div class="dates">'
-             '<span class="pill"><b>Monday</b> Sep 14 to Dec 14, 13 sessions, last date to be decided</span>'
-             '<span class="pill"><b>Friday</b> Sep 18 to Dec 18, 13 sessions</span>'
+             '<span class="pill"><b>Monday</b> Sep 14 to Dec 14, 14 sessions, last two dates to be decided</span>'
+             '<span class="pill"><b>Friday</b> Sep 18 to Dec 18, 14 sessions, last date to be decided</span>'
              '<span class="pill"><b>Grades</b> 5 to 8</span>'
              '<span class="pill"><b>Demo day</b> the last session of each section</span>'
              '</div></div></header>')
@@ -1262,7 +1289,7 @@ def render_hub():
              'all real places to stop. One stamp goes on the semester card.</li>'
              '</ol></section>')
 
-    b.append('<section><h2>The thirteen sessions</h2><ul class="sessionlist">')
+    b.append('<section><h2>The fourteen sessions</h2><ul class="sessionlist">')
     for s in SESSIONS:
         cls = ' class="bonus"' if s.get("bonus") else ''
         num = short(s)[0] if s.get("bonus") else str(s["num"])
@@ -1301,7 +1328,7 @@ def render_hub():
              'Fri Oct 2 falls in the intermediate days of Sukkot, which some Upper West Side '
              'programs skip. Check the published closure list and adjust.</div>')
     b.append('<div class="grid2">')
-    b.append('<div class="card"><h3>Monday, 13 sessions</h3><table>'
+    b.append('<div class="card"><h3>Monday, 14 sessions</h3><table>'
              '<tr><th>Date</th><th>Session</th></tr>')
     for s in SESSIONS:
         if s.get("bonus"):
@@ -1309,10 +1336,10 @@ def render_hub():
         b.append('<tr><td>' + s["mon"] + '</td><td>' + str(s["num"]) + '. '
                  + html.escape(s["title"]) + '</td></tr>')
     b.append('</table></div>')
-    b.append('<div class="card"><h3>Friday, 13 sessions</h3><table>'
+    b.append('<div class="card"><h3>Friday, 14 sessions</h3><table>'
              '<tr><th>Date</th><th>Session</th></tr>')
     fri = sorted(SESSIONS, key=lambda s: ("Dec" in s["fri"], s["fri"]))
-    order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
     by_num = {s["num"]: s for s in SESSIONS}
     for num in order:
         s = by_num[num]
@@ -1320,11 +1347,13 @@ def render_hub():
         b.append('<tr><td>' + s["fri"] + '</td><td>' + tag + html.escape(s["title"])
                  + '</td></tr>')
     b.append('</table></div></div>')
-    b.append('<p class="note">The course is thirteen sessions since session 6, the Mondrian, was '
-             'added in October. Monday has twelve dates between Sep 14 and Dec 14, so the last '
-             'Monday session, the demo, needs a date after Dec 14 or a session merged into '
-             'another; that date is still to be decided. Friday has thirteen dates, so every '
-             'Friday session has one, and the bonus session is no longer scheduled. It stays on '
+    b.append('<p class="note">The course is fourteen sessions. Session 6, the Mondrian, was '
+             'added in October, and session 12, the coin grab, in November. Monday has twelve '
+             'dates between Sep 14 and Dec 14, so the last two Monday sessions, the room of '
+             'tiles and the demo, need dates after Dec 14 or a session merged into another; '
+             'those dates are still to be decided. Friday has thirteen dates, so the last '
+             'Friday session, the demo, needs a date after Dec 18 or a merge, and that date is '
+             'still to be decided too. The bonus session is no longer scheduled. It stays on '
              'the site for anyone who wants it. Session 9 is tic tac toe since November; the '
              'cipher wheel, which had that date, is now an extra page with no date, for the '
              'end of the course if there is time. If a parent compares the two classes, the '
@@ -1399,7 +1428,11 @@ def render_constraints():
              '<tr><td><code>.find()</code></td><td>Extra: the cipher wheel</td><td>Revealed after the '
              'hand-written rack scan.</td></tr>'
              '<tr><td>pygame from session 6 onward</td><td>Session 6</td><td>The only graphics library in the course. It replaces the turtle drawing session, which does not run in VS Code.</td></tr>'
-             '<tr><td>KEYDOWN, mouse, frame timers</td><td>Session 12</td><td>Without them a '
+             '<tr><td><code>pygame.Rect</code>, <code>colliderect</code>, the mouse position</td>'
+             '<td>Session 12</td><td>A Rect names the four numbers of a rectangle. '
+             '<code>colliderect</code> is taught as the reveal after the overlap test written '
+             'by hand, never before it.</td></tr>'
+             '<tr><td>KEYDOWN, frame timers</td><td>Session 13</td><td>Without them a '
              'game reads as a demo. A held key and a single press are different '
              'questions.</td></tr>'
              '<tr><td><code>random.seed</code>, <code>randint</code></td><td>Session 3</td>'
@@ -1407,7 +1440,7 @@ def render_constraints():
              'unpredictable.</td></tr>'
              '</table></section>')
 
-    b.append('<section><h2>Still excluded, all thirteen sessions</h2>'
+    b.append('<section><h2>Still excluded, all fourteen sessions</h2>'
              '<ul>'
              '<li><b>Nested gates.</b> Flat <code>if</code>, <code>elif</code>, '
              '<code>else</code> only. If a student reaches for an if inside an if, hand them '
@@ -1422,7 +1455,7 @@ def render_constraints():
              '<li><b>Recursion, list comprehensions, lambda, <code>global</code>.</b></li>'
              '<li><b>Multi-file programs and importing your own module.</b> Advanced '
              'course.</li>'
-             '<li><b>File input and output.</b> Held as a float, not one of the thirteen sessions.</li>'
+             '<li><b>File input and output.</b> Held as a float, not one of the fourteen sessions.</li>'
              '<li><b><code>pygame.font</code>.</b> Words go in the terminal and visuals go '
              'in the window. That split holds all term.</li>'
              '<li><b>turtle.</b> Not used anywhere in this course. It needs a library our '
@@ -1570,7 +1603,7 @@ def render_ledger():
              '<li>One stamp per session, in the box for that session number.</li>'
              '<li>At least one error message per term, copied out by hand.</li>'
              '<li>The card comes out again in the retrieval opener the following week.</li>'
-             '<li>Session 13 reads the card out loud. If a stamp is unreadable, that is the '
+             '<li>Session 14 reads the card out loud. If a stamp is unreadable, that is the '
              'first thing fixed that day.</li></ul></section>')
     b.append('<section><h2>Stamps</h2><div class="stampgrid">')
     for s in SESSIONS:
@@ -1611,6 +1644,9 @@ def render_ledger():
         'while running:          pygame frame loop, QUIT sets running = 0\n'
         'x = x + vx              move once per frame\n'
         'v = -v                  bounce\n'
+        'pygame.Rect(x, y, w, h) a rectangle with a name: left, right, top, bottom\n'
+        'a.colliderect(b)        True when the two rectangles overlap\n'
+        'mouse.get_pos()         where the mouse is in the window: (x, y)\n'
         'level[row][col]         row first, then column'))
     b.append('<p class="note">Read the last line of an error first. One change per run.</p>')
     b.append('</section>')

@@ -1,6 +1,6 @@
 # The builds of sessions 1, 2, 3, 4, 6, 7, 9, 10, 11 and the two extra pages, written
-# out one line at a time (added November 2026). Sessions 5, 8 and 12 have theirs in
-# their own generators. Session 13 is a commission on a finished program, so it has none.
+# out one line at a time (added November 2026). Sessions 5, 8, 12 and 13 have theirs in
+# their own generators. Session 14 is a commission on a finished program, so it has none.
 #
 # Each build is one or two tools. A tool is a whole program; every new line is a
 # What goes next? question with a blank and three choices, kept here beside the step.
@@ -448,8 +448,8 @@ RUNS = {
     10: [dict(code=P10A, run="py", stdin="see you at the gate at ten\n"),
          dict(code=P10B, run="py", stdin="see you at the gate at ten\n")],
     11: [dict(code=P11, run="headless", frames=60)],
-    14: [dict(code=P14, run="headless", frames=400)],
-    15: [dict(code=P15, run="py", stdin="meet at noon\n3\n")],
+    15: [dict(code=P14, run="headless", frames=400)],
+    16: [dict(code=P15, run="py", stdin="meet at noon\n3\n")],
 }
 
 
@@ -1188,5 +1188,5 @@ T15 = tool(
     run="py", stdin="meet at noon\n3\n")
 
 BUILD_TOOLS = {1: [T1], 2: [T2], 3: [T3], 4: [T4], 6: [T6], 7: [T7], 9: [T9],
-               10: [T10A, T10B], 11: [T11], 14: [T14], 15: [T15]}
+               10: [T10A, T10B], 11: [T11], 15: [T14], 16: [T15]}
 del RUNS
