@@ -39,7 +39,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "25"
+VERSION = "26"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-11-22"
 TMP = os.environ.get("BVC_TMP",
@@ -890,7 +890,12 @@ def line_ladders(tag, program, steps, start=None, whole="Show the whole program"
 
 
 def reveal(idx, question, answer, qlabel="Predict", extra="",
-           show="Show the answer", hide="Hide the answer", hints=None):
+           show="Show the answer", hide="Hide the answer", hints=None, pick=None):
+    if pick:
+        # a predict or hinge question with three choices: the right one opens the
+        # explanation and then the real output
+        return pick_block(idx, {"q": question}, dict(pick, text=True, why=answer), None,
+                          qlabel + ".", after=extra)
     inner = toggle(idx, show, hide, extra + '<p>' + answer + '</p>')
     return ('<div class="predict"><p class="q">' + qlabel + ': ' + question + '</p>'
             + nest_hints(idx, hints, inner) + '</div>')
@@ -1026,7 +1031,7 @@ def render_session(s, prev_s, next_s):
         if ch.get("figure_a"):
             extra = extra + ch["figure_a"]
         b.append(reveal(tag, ch["predict"], ch["reveal"], "Predict", extra,
-                        "Run it first, then check here", "Hide", ch.get("hint")))
+                        "Run it first, then check here", "Hide", ch.get("hint"), pick=ch.get("pick")))
         if mode == "compile":
             b.append('<p class="note">Checked for syntax here, but it needs a real '
                      'screen to draw on. Run it on a machine with a display.</p>')
@@ -1050,7 +1055,7 @@ def render_session(s, prev_s, next_s):
             extra = out_block(out, "What it actually prints")
     if h.get("code_a"):
         extra = extra + code_block(h["code_a"])
-    b.append(reveal("s%d-hinge" % n, h["q"], h["a"], "Question", extra))
+    b.append(reveal("s%d-hinge" % n, h["q"], h["a"], "Question", extra, pick=h.get("pick")))
     b.append('</section>')
 
     br = s["brief"]
@@ -1086,7 +1091,7 @@ def render_session(s, prev_s, next_s):
                 lbl = "What it actually prints, on one run"
             b.append(reveal(tag, tool["predict"], tool["reveal"], "Predict",
                             out_block(out, lbl),
-                            "Run it first, then check here", "Hide", tool.get("hint")))
+                            "Run it first, then check here", "Hide", tool.get("hint"), pick=tool.get("pick")))
         if plan:
             b.append(reveal(tag + "-plan", 'Scroll until the plan is off the screen. Say the '
                             + NUMBER_WORDS[len(plan)] + ' parts of this program to your neighbour, '
@@ -1154,7 +1159,7 @@ def render_session(s, prev_s, next_s):
                     lbl = "What it actually prints, on one run"
                 extra = out_block(out, lbl)
             b.append(reveal(tag, card["predict"], card["reveal"], "Predict", extra,
-                            "Run it first, then check here", "Hide", card.get("hint")))
+                            "Run it first, then check here", "Hide", card.get("hint"), pick=card.get("pick")))
         if xt.get("steps"):
             b.append('<h3>Building it</h3><ol>')
             for st in xt["steps"]:

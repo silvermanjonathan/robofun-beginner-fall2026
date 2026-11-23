@@ -634,3 +634,10 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   frame 1. Timing: chunks 1 and 3 are 5 minutes, chunk 6 is 7, the build is 20.
   `collidepoint` and the mouse click are on the constraints page and the reference
   strip. Version pin `?v=25`.
+- **2026-11-23, v26.** Every Predict question on session 12, and its hinge question,
+  is now multiple choice with three answers, in the style of the What goes next?
+  questions: each wrong answer says why, and the right answer opens the explanation
+  and then the real output. The questions are shorter. `reveal` in `render.py`
+  takes a `pick` (right answer and two wrong ones, each with its reason) on a
+  chunk, tool, card, or hinge; without one it is the old show-the-answer button, so
+  no other page changes. Version pin `?v=26`.
