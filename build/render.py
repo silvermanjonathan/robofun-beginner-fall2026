@@ -40,7 +40,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "33"
+VERSION = "34"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-11-22"
 TMP = os.environ.get("BVC_TMP",
@@ -346,6 +346,13 @@ section{
   padding:22px 24px; margin:0 0 20px;
 }
 section.opener{border-left:8px solid var(--green)}
+.banner{margin:28px 0 18px; padding:22px 26px; border-radius:6px; color:#FFFDF7;
+  font-family:'Bricolage Grotesque','DM Sans',sans-serif; font-weight:800;
+  font-size:clamp(26px,4.2vw,40px); line-height:1.15; text-align:center}
+.banner small{display:block; margin-top:6px; font-family:'DM Sans',sans-serif;
+  font-weight:600; font-size:clamp(16px,2.2vw,20px)}
+.banner.think{background:var(--teal-deep)}
+.banner.type{background:var(--green)}
 section.objectives p, section.objectives li{font-size:24px; line-height:1.45}
 section.objectives li{margin-bottom:10px}
 section.chunk{border-left:8px solid var(--ochre-line)}
@@ -1005,6 +1012,9 @@ def render_session(s, prev_s, next_s):
             b.append('<p><b>Deliberately re-used:</b> ' + html.escape(s["reuse"]) + '.</p>')
         b.append('<p class="note">' + s["reuse_note"] + '</p></section>')
 
+    if s.get("banners"):
+        b.append('<div class="banner think" role="note">No typing. Just thinking.'
+                 '<small>Keep your hands off the keyboard. Watch the projector and pick your answers.</small></div>')
     op = s["opener"]
     b.append('<section class="opener"><p class="chunk-no">Opener &middot; '
              + str(op["minutes"]) + ' minutes</p><h2>' + html.escape(op["title"]) + '</h2>')
@@ -1119,6 +1129,9 @@ def render_session(s, prev_s, next_s):
     b.append('</section>')
 
     br = s["brief"]
+    if s.get("banners"):
+        b.append('<div class="banner type" role="note">Typing starts here.'
+                 '<small>Open a new file and type the game from line 1 to the end.</small></div>')
     b.append('<section class="brief"><p class="chunk-no">Build &middot; '
              + str(br["minutes"]) + ' minutes</p><h2>' + html.escape(br["title"]) + '</h2>')
     if br.get("intro"):

@@ -685,3 +685,6 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   early", which goes back into the file. Chunk 6 shows its code whole, with no
   questions. Timing (in the hidden teacher notes): typing starts at 0:45 and runs
   40 minutes. Version pin `?v=33`.
+- **2026-11-23, v34.** Session 12 has two banners: "No typing. Just thinking." above
+  the opener, and "Typing starts here." above the build. Set by `"banners": True`.
+  Version pin `?v=34`.
