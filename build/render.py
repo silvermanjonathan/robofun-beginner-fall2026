@@ -40,7 +40,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "29"
+VERSION = "30"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-11-22"
 TMP = os.environ.get("BVC_TMP",
@@ -960,6 +960,9 @@ def render_session(s, prev_s, next_s):
                  + '">Open the worksheet</a><a class="btn quiet" href="' + ws["slug"]
                  + '.pdf?v=' + VERSION + '" download>Download the worksheet (PDF)</a></div>')
 
+    if s.get("objectives"):
+        b.append('<section><h2>Learning objectives</h2><p>By the end of today, you can:</p><ol>'
+                 + "".join('<li>' + o + '</li>' for o in s["objectives"]) + '</ol></section>')
     if s.get("no_new_section"):
         pass  # the page starts at the opener; the note on the session is in the teacher panel
     elif s["new"]:

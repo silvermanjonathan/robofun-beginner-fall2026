@@ -660,3 +660,8 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   "About this session", and "If time runs out" are no longer on the page; they stay
   in `build/session12.py` (`"teacher_standards_only": True` hides them). Other
   sessions are unchanged. Version pin `?v=29`.
+- **2026-11-23, v30.** Session 12 starts with "Learning objectives": six things a
+  student can do by the end of the session, from finding a spot by its (x, y) to a
+  score that counts each coin once. Set by `"objectives"` in `build/session12.py`;
+  `render.py` shows the list above the opener on any session that has one. Version
+  pin `?v=30`.
