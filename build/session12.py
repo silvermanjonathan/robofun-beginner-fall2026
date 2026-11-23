@@ -1004,14 +1004,13 @@ SESSION12 = {
  "brief": {
    "title": "Build: coin grab",
    "minutes": 30,
-   "intro": "You are making a small game called coin grab. You click the stick figure to pick it up, and it follows the mouse until you click again. A gold coin sits in the window. When the figure touches the coin, the coin jumps to a new spot picked at random, and the terminal counts it. Ten coins wins the game. The build is one program, written in three tools. Each tool starts from the program the tool before it finished.",
+   "intro": "Until now the code was on the projector. Now you type. You are making a small game called coin grab. You click the stick figure to pick it up, and it follows the mouse until you click again. A gold coin sits in the window. When the figure touches the coin, the coin jumps to a new spot picked at random, and the score goes up. Ten coins wins the game. You type the whole game in one go, from line 1 to the last line, in order. You never go back up the file.",
    "tools": TOOLS12,
    "steps": [
-     "Start from chunk 6's file, <code>Jonathan_session12.py</code> with your first name in place of Jonathan: the stick figure you pick up with a click.",
-     "Add a coin, and make it jump to a random spot when the player touches it.",
-     "Add a score that goes up by 1 for each coin, printed in the terminal.",
-     "End the game at ten coins: the window turns green and the coin stops jumping.",
-     "Put three coins in a list, and add a 30 second time limit that turns the window red.",
+     "Make a new file, <code>Jonathan_session12.py</code> with your first name in place of Jonathan.",
+     "Type the game from line 1 to the last line, in order. When you reach a question, the room picks an answer first, then you type that line.",
+     "Run it. Click the figure, move it onto the coin, and grab ten coins.",
+     "If you finish early: put three coins in a list, and add a 30 second time limit that turns the window red.",
    ],
    "expected_got": [
      ["Clicking the stick figure picks it up, and it follows the mouse with the pointer in the middle of its body", ""],
@@ -1024,9 +1023,9 @@ SESSION12 = {
    ],
  },
  "exits": {
-   "floor": "Tool 1: a click picks up the stick figure and the next click puts it down, and the coin jumps to a random spot when the figure touches it.",
-   "middle": "Tool 2: the score is printed in the terminal, and at ten coins the window turns green and the game stops.",
-   "stretch": "Tool 3: three coins in a list, and a 30 second time limit that turns the window red.",
+   "floor": "The game is typed to the end and runs: a click picks up the stick figure, the next click puts it down, and the coin jumps when the figure touches it.",
+   "middle": "The score counts each coin once, and at ten coins the window turns green and the game stops.",
+   "stretch": "The extra part: three coins in a list, and a 30 second time limit that turns the window red.",
  },
  "extension": {
    "title": "Give the jump a name",
@@ -1057,14 +1056,14 @@ SESSION12 = {
  "teacher": {
    "timing": [
      "0:00 opener, a review of where things are in the window, 15 min (nine checks; everyone picks before you click)",
-     "0:15 chunk 1, a Rect and its edges, 5 min (the opener already did x + width)",
-     "0:20 chunk 2, the overlap test by hand, 10 min (project the figure; this is the mathematics of the day)",
-     "0:30 chunk 3, colliderect, 5 min",
-     "0:35 chunk 4, the mouse, 12 min (the first window file; most of the typing is here)",
-     "0:47 chunk 5, the stick figure, 8 min",
-     "0:55 chunk 6, click to pick up and put down, 7 min",
-     "1:02 hinge question, 3 min",
-     "1:05 build, tools 1 and 2, 20 min (tool 3 is for students who are ahead)",
+     "0:15 chunk 1, a Rect and its edges, 4 min (projector; no typing in chunks 1 to 6)",
+     "0:19 chunk 2, the overlap test by hand, 6 min (project the figure; this is the mathematics of the day)",
+     "0:25 chunk 3, colliderect, 4 min",
+     "0:29 chunk 4, the mouse, 5 min",
+     "0:34 chunk 5, the stick figure, 4 min",
+     "0:38 chunk 6, click to pick up and put down, 4 min",
+     "0:42 hinge question, 3 min",
+     "0:45 build, the whole game typed from line 1 to the end, 40 min (the extra part is for students who are ahead)",
      "1:25 exits, ledger stamp, 5 min",
    ],
    "misconceptions": [
@@ -1087,3 +1086,76 @@ SESSION12 = {
    "routing": "Chunks 1 to 3 need no window. If time is short, run them once on the projector and have the room predict out loud, then go to chunk 4, where everyone types. Tool 1 is the floor exit and it adds nine lines to chunk 6's file. If chunk 5 has to be skipped, the build works the same with chunk 4's white square as the player: the only difference is the one line that draws it. If chunk 6 has to be skipped, the build also works from chunk 5's file, with the figure following the mouse all the time; put the coin lines under <code>player.center = pygame.mouse.get_pos()</code>. Tool 2 is the middle exit. Every tool has its finished program behind a button, so a student who falls behind can read it and run it. The extension is for a student who finishes tool 3. Nothing survives on the machines, so the game cannot be carried into session 13; session 13 starts from its own file.",
  },
 }
+
+
+# ------------------------------------------------------------------ the build, typed top down
+# Chunks 1 to 6 are on the projector. The typing starts at the build, and the build is one
+# program, the game with a score and a win (TOOL2), typed from line 1 to the last line in
+# order. The questions are the ones chunk 6 and tools 1 and 2 asked, each put before the
+# line it asks about; the lines between them are typed as they are. Tool 3 stays as the
+# extra part for a student who finishes, and it goes back into the file.
+
+def _relabel(step, program, q=None, why=None):
+    lines = program.split("\n")
+    want = step["line"].split("\n")
+    starts = [i for i in range(len(lines)) if lines[i:i + len(want)] == want]
+    assert len(starts) == 1, step["line"]
+    first = starts[0] + 1
+    last = first + len(want) - 1
+    if first == last:
+        label = "Line %d" % first
+    elif last == first + 1:
+        label = "Lines %d and %d" % (first, last)
+    else:
+        label = "Lines %d to %d" % (first, last)
+    pick = dict(step["pick"])
+    if why:
+        pick["why"] = why
+    return first, {"label": label, "q": q or step["q"], "line": step["line"], "pick": pick}
+
+
+_REWORD = {
+    '        score = score + 1\n        print(f"score {score}")':
+        ("The player has grabbed the coin. What happens to the score, and what does the terminal print?", None),
+    '    screen.fill(background)':
+        ("The window should change colour when the game is won. Which name does <code>fill</code> use?", None),
+    'print(f"final score {score}")':
+        ("When the window closes, the terminal should say the score. What goes in the braces?", None),
+    '    mouse = pygame.mouse.get_pos()':
+        (None, "<code>get_pos</code> gives where the mouse is, as (x, y). The player moves to it further down, in a gate, only while it is held."),
+    'import random':
+        (None, "<code>random</code> is the library from session 3. Importing it lets the program call <code>random.randint</code> further down."),
+}
+
+_C6 = SESSION12["chunks"][5]
+_found = {}
+for _st in _C6["steps"] + TOOLS12[0]["steps"] + TOOLS12[1]["steps"]:
+    _block = _st["line"].split("\n")
+    _lines = TOOL2.split("\n")
+    if not any(_lines[k:k + len(_block)] == _block for k in range(len(_lines))):
+        continue  # a line the finished game does not have, such as the print of chunk 6
+    if _st["line"] in _found:
+        continue
+    _q, _why = _REWORD.get(_st["line"], (None, None))
+    _found[_st["line"]] = _relabel(_st, TOOL2, _q, _why)
+GAME_STEPS = [st for _, st in sorted(_found.values(), key=lambda pair: pair[0])]
+
+GAME = {
+    "title": "Type the game, from line 1 to the end",
+    "intro": "Type every line, in order, from the top of the file to the bottom. The questions come right before the lines they ask about: the room picks an answer, the right answer shows the line, and everyone types it. Between the questions are the lines to type as they are. Do not run the program until you reach the end. " + HOW12,
+    "whole": "Show the whole game",
+    "code": TOOL2,
+    "run": "headless", "frames": FRAMES2, "seed": SEED2, "inject": INJECT2,
+    "type_between": True,
+    "steps": GAME_STEPS,
+    "predict": TOOLS12[1]["predict"],
+    "reveal": TOOLS12[1]["reveal"],
+    "pick": TOOLS12[1]["pick"],
+}
+_EXTRA = dict(TOOLS12[2])
+_EXTRA["title"] = "If you finish early: three coins in a list, and a time limit"
+SESSION12["brief"]["tools"] = [GAME, _EXTRA]
+
+# chunk 6 is on the projector now: its code is shown whole, and its questions are in the build
+_C6.pop("steps")
+_C6.pop("start")

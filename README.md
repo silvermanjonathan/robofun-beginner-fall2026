@@ -674,3 +674,14 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   three questions that asked for two names far apart (COIN_SIZE and COIN, GOAL and
   WIN, SECONDS and LOSE) are now two questions each, so no question skips over
   lines. Version pin `?v=32`.
+- **2026-11-23, v33.** Session 12: no typing until the build, and then one program
+  typed from line 1 to the last line in order. Chunks 1 to 6 are on the projector,
+  with the room answering. The build is the game with a score and a win at ten
+  coins (70 lines with blanks, 61 without), with 22 What goes next? questions, each
+  placed right before the line it asks about; the lines between them say "type these
+  lines as they are". The questions are chunk 6's and tools 1 and 2's, relabelled
+  against the finished game (`GAME_STEPS` at the end of `build/session12.py`).
+  Tool 1 and tool 2 are no longer separate parts; tool 3 stays as "If you finish
+  early", which goes back into the file. Chunk 6 shows its code whole, with no
+  questions. Timing (in the hidden teacher notes): typing starts at 0:45 and runs
+  40 minutes. Version pin `?v=33`.

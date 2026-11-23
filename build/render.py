@@ -40,7 +40,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "32"
+VERSION = "33"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-11-22"
 TMP = os.environ.get("BVC_TMP",
@@ -863,7 +863,7 @@ def pick_block(sid, step, pick, program, label, after=""):
             + "".join(buttons) + '</div></div>')
 
 
-def kept_lines(program, a, b):
+def kept_lines(program, a, b, typed=False):
     """Lines a to b of the program (counted from 1), already in the file, as a code block."""
     lines = program.split("\n")[a - 1:b]
     while lines and not lines[0].strip():
@@ -873,7 +873,9 @@ def kept_lines(program, a, b):
     if not lines:
         return ""
     where = "Line %d" % a if a == b else "Lines %d to %d" % (a, b)
-    return ('<p class="note">' + where + ', already in your file. Nothing to type here.</p>'
+    says = (', type these lines as they are.' if typed
+            else ', already in your file. Nothing to type here.')
+    return ('<p class="note">' + where + says + '</p>'
             + code_block("\n".join(lines), context=program))
 
 
@@ -902,7 +904,7 @@ def line_ladders(tag, program, steps, start=None, whole="Show the whole program"
             # the lines between the last question and this one, so the file reads top down
             nums = [int(x) for x in re.findall(r"\d+", st["label"])]
             if min(nums) > done + 1:
-                out.append(kept_lines(program, done + 1, min(nums) - 1))
+                out.append(kept_lines(program, done + 1, min(nums) - 1, between == "type"))
             done = max(done, max(nums))
         if plan and (j == 0 or steps[j - 1]["part"] != st["part"]):
             # the part's label sits above the first question that belongs to it
@@ -911,7 +913,7 @@ def line_ladders(tag, program, steps, start=None, whole="Show the whole program"
         sid = tag + "-l" + str(j + 1)
         out.append(pick_block(sid, st, picks[j], program, st["label"] + ". What goes next?"))
     if between and done < total:
-        out.append(kept_lines(program, done + 1, total))
+        out.append(kept_lines(program, done + 1, total, between == "type"))
     out.append('<div class="whole">' + toggle(tag + "-whole", whole,
                whole.replace("Show", "Hide", 1), code_block(program)) + '</div>')
     return "".join(out)
@@ -1142,7 +1144,8 @@ def render_session(s, prev_s, next_s):
                      + ' parts. Each question below is labelled with its part.</p>' + plan_list(plan))
         b.append(line_ladders(tag, tool["code"], tool["steps"], tool.get("start"),
                               whole=tool.get("whole", "Show the whole function and its test"),
-                              plan=plan, between=bool(tool.get("places"))))
+                              plan=plan,
+                              between="type" if tool.get("type_between") else bool(tool.get("places"))))
         if tool.get("trace"):
             b.append('<p>' + tool["trace"] + ' <a href="' + link(ws["slug"])
                      + '">Open the worksheet</a></p>')
