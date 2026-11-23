@@ -650,3 +650,8 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   Chunk 5 has a list and no questions. Tool 1's "program so far" button now shows
   chunk 6's file; it had shown chunk 5's. `render.py` stops the build if a part
   with a list has a new line with no question (`check_cover`). Version pin `?v=27`.
+- **2026-11-23, v28.** Session 12 has no "What is new today" section, and no "New"
+  count in its header; the page starts at the opener. The note on how the session
+  is built (line counts, what it needs from earlier sessions) moved to the teacher
+  panel as "About this session". Set by `"no_new_section": True` in
+  `build/session12.py`; other sessions are unchanged. Version pin `?v=28`.

@@ -40,7 +40,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "27"
+VERSION = "28"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-11-22"
 TMP = os.environ.get("BVC_TMP",
@@ -948,7 +948,7 @@ def render_session(s, prev_s, next_s):
     b.append('<span class="pill"><b>Monday section</b> ' + s["mon"] + '</span>')
     b.append('<span class="pill"><b>Friday section</b> ' + s["fri"] + '</span>')
     b.append('<span class="pill"><b>Length</b> 90 minutes</span>')
-    if s["new"]:
+    if s["new"] and not s.get("no_new_section"):
         b.append('<span class="pill"><b>New</b> ' + str(len(s["new"])) + ' items</span>')
     b.append('</div></div></header>')
 
@@ -960,15 +960,18 @@ def render_session(s, prev_s, next_s):
                  + '">Open the worksheet</a><a class="btn quiet" href="' + ws["slug"]
                  + '.pdf?v=' + VERSION + '" download>Download the worksheet (PDF)</a></div>')
 
-    if s["new"]:
+    if s.get("no_new_section"):
+        pass  # the page starts at the opener; the note on the session is in the teacher panel
+    elif s["new"]:
         b.append('<section><h2>What is new today</h2><p>'
                  + ", ".join(html.escape(x) for x in s["new"]) + '.</p>')
     else:
         b.append('<section><h2>What is new today</h2><p>No new syntax. '
                  'Everything today uses what is already on your ledger card.</p>')
-    if s["reuse"]:
-        b.append('<p><b>Deliberately re-used:</b> ' + html.escape(s["reuse"]) + '.</p>')
-    b.append('<p class="note">' + s["reuse_note"] + '</p></section>')
+    if not s.get("no_new_section"):
+        if s["reuse"]:
+            b.append('<p><b>Deliberately re-used:</b> ' + html.escape(s["reuse"]) + '.</p>')
+        b.append('<p class="note">' + s["reuse_note"] + '</p></section>')
 
     op = s["opener"]
     b.append('<section class="opener"><p class="chunk-no">Opener &middot; '
@@ -1239,6 +1242,8 @@ def render_session(s, prev_s, next_s):
         for c, l in lcs:
             b.append('<li><code>' + c + '</code> ' + html.escape(l) + '</li>')
         b.append('</ul>')
+    if s.get("no_new_section"):
+        b.append('<h3>About this session</h3><p>' + s["reuse_note"] + '</p>')
     b.append('<h3>If time runs out</h3><p>' + t["routing"] + '</p>')
     if ws:
         b.append('<h3>Files</h3><p>The worksheet covers ' + ws["covers"] + '. Print one per '
