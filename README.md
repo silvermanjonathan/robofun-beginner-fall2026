@@ -641,3 +641,12 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   takes a `pick` (right answer and two wrong ones, each with its reason) on a
   chunk, tool, card, or hinge; without one it is the old show-the-answer button, so
   no other page changes. Version pin `?v=26`.
+- **2026-11-23, v27.** Session 12: every line that a part adds or changes now has a
+  question of its own, and each part opens with "Where the new lines go", a list
+  of the places it changes in the file, from the top down, in the order the
+  questions take them. Chunk 6 gains four questions (the player's new starting
+  spot, `click = 0`, `mouse = pygame.mouse.get_pos()`, the last print), which had
+  been only in notes. Tool 3's frame counter is two questions, one for each line.
+  Chunk 5 has a list and no questions. Tool 1's "program so far" button now shows
+  chunk 6's file; it had shown chunk 5's. `render.py` stops the build if a part
+  with a list has a new line with no question (`check_cover`). Version pin `?v=27`.

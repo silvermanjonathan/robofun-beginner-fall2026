@@ -1,3 +1,4 @@
+import difflib
 import html
 import importlib
 import json
@@ -39,7 +40,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "26"
+VERSION = "27"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-11-22"
 TMP = os.environ.get("BVC_TMP",
@@ -889,6 +890,26 @@ def line_ladders(tag, program, steps, start=None, whole="Show the whole program"
     return "".join(out)
 
 
+def where_list(where, asked=True):
+    """The places a part changes in the file, from the top down, before its questions."""
+    words = {2: "two", 3: "three", 4: "four", 5: "five", 6: "six"}[len(where)]
+    head = ('<p><b>Where the new lines go.</b> This part changes the file in ' + words
+            + ' places, from the top down.'
+            + (' The questions below go through them in this order.' if asked else '') + '</p>')
+    return head + '<ol class="plan">' + "".join(
+        '<li><b>' + place + '.</b> ' + what + '</li>' for place, what in where) + '</ol>'
+
+
+def check_cover(tag, start, code, steps):
+    """Every line a part adds or changes has a question of its own; none hides in a note."""
+    asked = set()
+    for st in steps:
+        asked.update(ln for ln in st["line"].split("\n"))
+    for ln in difflib.ndiff(start.split("\n"), code.split("\n")):
+        if ln.startswith("+ ") and ln[2:].strip():
+            assert ln[2:] in asked, tag + ": a new line has no question: " + ln[2:]
+
+
 def reveal(idx, question, answer, qlabel="Predict", extra="",
            show="Show the answer", hide="Hide the answer", hints=None, pick=None):
     if pick:
@@ -982,6 +1003,8 @@ def render_session(s, prev_s, next_s):
         b.append('<p>' + ch["teach"] + '</p>')
         if ch.get("figure"):
             b.append(ch["figure"])
+        if ch.get("places"):
+            b.append(where_list(ch["places"], bool(ch.get("steps"))))
         nx = ch.get("next")
         shown = [code_block(ch["code"], (ch.get("prefix", "") + ch["code"]) if ch.get("prefix") else None)]
         if ch.get("prefix"):
@@ -1000,6 +1023,8 @@ def render_session(s, prev_s, next_s):
         steps = ch.get("steps")
         if steps:
             start = ch["start"] if "start" in ch else s["chunks"][i - 1]["code"]
+            if ch.get("places"):
+                check_cover(tag, start, ch["code"], steps)
             b.append(line_ladders(tag, ch["code"], steps, start))
             b.extend(shown[1:])  # the note saying where the lines go, when there is one
         elif nx:
@@ -1075,6 +1100,9 @@ def render_session(s, prev_s, next_s):
         b.append('<h3>' + html.escape(tool["title"]) + '</h3>')
         if tool.get("intro"):
             b.append('<p>' + tool["intro"] + '</p>')
+        if tool.get("places"):
+            check_cover(tag, tool["start"], tool["code"], tool["steps"])
+            b.append(where_list(tool["places"]))
         plan = tool.get("plan")
         if plan:
             b.append('<p><b>The plan.</b> This program has ' + NUMBER_WORDS[len(plan)]
