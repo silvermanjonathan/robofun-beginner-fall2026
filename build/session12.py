@@ -1,10 +1,10 @@
 # Session 12: coin grab. Added November 2026 between the pygame window session and the
-# room of tiles, which became session 13. A square follows the mouse, a coin jumps to a
-# random spot when the square touches it, and the terminal keeps the score.
+# room of tiles, which became session 13. A stick figure follows the mouse, a coin jumps to a
+# random spot when the figure touches it, and the terminal keeps the score.
 #
 # Chunks 1 to 3 are short terminal programs about pygame.Rect: its edges, the overlap
 # test written by hand, and colliderect as the reveal after it. Chunk 4 is the first
-# window file. The build is one program in three tools, each a whole program that
+# window file, and chunk 5 draws a stick figure inside the player's Rect. The build is one program in three tools, each a whole program that
 # grows out of the one before:
 #   tool 1  the coin jumps when the player touches it     (the floor exit)
 #   tool 2  a score, and a win at ten coins               (the middle exit)
@@ -57,7 +57,7 @@ print(player.colliderect(coin))
 coin.x = 329
 print(player.colliderect(coin))'''
 
-# chunk 4, and the file tool 1 starts from
+# chunk 4: the first window file
 MOUSE = '''import pygame
 
 # ---- knob block: every number the game depends on ----
@@ -90,7 +90,22 @@ while running:
 print(f"centre {player.center}, left {player.left}, top {player.top}")
 pygame.quit()'''
 
-TOOL1 = MOUSE
+# chunk 5, and the file tool 1 starts from: the player is drawn as a stick figure
+# that fits inside its Rect, 50 across and 50 down
+STICK = MOUSE
+STICK = swap(STICK, 'FPS = 60\n', '''FPS = 60
+
+def draw_player(x, y):
+    pygame.draw.circle(screen, PLAYER, (x, y + 10), 10, 3)
+    pygame.draw.line(screen, PLAYER, (x, y + 20), (x, y + 35), 3)
+    pygame.draw.rect(screen, PLAYER, (x - 20, y + 25, 40, 3))
+    pygame.draw.line(screen, PLAYER, (x, y + 35), (x - 15, y + 50), 3)
+    pygame.draw.line(screen, PLAYER, (x, y + 35), (x + 15, y + 50), 3)
+''')
+STICK = swap(STICK, '    pygame.draw.rect(screen, PLAYER, player)\n',
+             '    draw_player(player.centerx, player.top)\n')
+
+TOOL1 = STICK
 TOOL1 = swap(TOOL1, 'import pygame\n\n# ----', 'import random\nimport pygame\n\n# ----')
 TOOL1 = swap(TOOL1, 'PLAYER_SIZE = 50\n', 'PLAYER_SIZE = 50\nCOIN_SIZE = 30\n')
 TOOL1 = swap(TOOL1, 'PLAYER = (248, 250, 252)\n', 'PLAYER = (248, 250, 252)\nCOIN = (252, 211, 77)\n')
@@ -186,7 +201,7 @@ for frame in range(60):
         score = score + 1
 print(score)'''
 
-for _name, _prog in (("MOUSE", MOUSE), ("TOOL1", TOOL1), ("TOOL2", TOOL2), ("TOOL3", TOOL3)):
+for _name, _prog in (("MOUSE", MOUSE), ("STICK", STICK), ("TOOL1", TOOL1), ("TOOL2", TOOL2), ("TOOL3", TOOL3)):
     for _ln in _prog.split("\n"):
         assert len(_ln) <= 72, _name + ": a line is wider than the code box: " + _ln
 
@@ -327,8 +342,8 @@ HOW12 = ("Each new line is a question for the room before it goes on the screen.
 
 TOOLS12 = [
     {"title": "Tool 1: the coin jumps when you touch it",
-     "intro": "The starting file is chunk 4's program, the square that follows the mouse. It is behind the button below. Now the window gets a coin: a gold square that stays still until the player touches it, then jumps to a spot picked at random. The terminal says where it went. " + HOW12,
-     "start": MOUSE,
+     "intro": "The starting file is chunk 5's program, the stick figure that follows the mouse. It is behind the button below. Now the window gets a coin: a gold square that stays still until the player touches it, then jumps to a spot picked at random. The terminal says where it went. " + HOW12,
+     "start": STICK,
      "whole": "Show the whole program",
      "code": TOOL1,
      "run": "headless", "frames": FRAMES1, "seed": SEED1, "inject": INJECT1,
@@ -380,7 +395,7 @@ TOOLS12 = [
            (('coin', 'COIN'), "Those are swapped. The colour goes second and the rectangle goes third. Swapped, Python gives an error."),
            (('COIN', 'player'), "That draws a gold square where the player is. The coin itself is never drawn."),
            "<code>COIN</code> in capitals is the colour, and <code>coin</code> in small letters is the Rect. Python treats them as two different names.",
-           note="Under <code>screen.fill(BG)</code> and above the line that draws the player. The player is drawn after the coin, so the player is on top."),
+           note="Under <code>screen.fill(BG)</code> and above the line <code>draw_player(player.centerx, player.top)</code>. The player is drawn after the coin, so the player is on top."),
      ],
      "predict": "In this run the mouse goes to the middle of the coin, at (315, 215), and stays there, without moving, for about half a second, until the window closes. How many times does the terminal print grabbed?",
      "reveal": "Once. On the frame the mouse arrives, the gate is True and the coin jumps to 57, 46. On every frame after that the player is in the same place and the coin is somewhere else, so the gate is False. The last line shows that the player did not move: its centre is (315, 215) when the window closes.</p><p>The spot is picked at random, so on your machine the numbers after grabbed will be different. A new spot can land under the player. When that happens, the coin jumps again on the next frame. This is the floor exit.",
@@ -505,13 +520,13 @@ SESSION12 = {
  "num": 12,
  "slug": "session12_coin_grab",
  "title": "Coin grab",
- "subtitle": "A square that follows the mouse, a coin that jumps when you touch it, and a score",
+ "subtitle": "A stick figure that follows the mouse, a coin that jumps when you touch it, and a score",
  "mon": "Mon Nov 23",
  "fri": "Fri Dec 11",
  "new": ["pygame.Rect", "left, right, top, and bottom", "the overlap test written by hand", "colliderect",
-         "the mouse position", "a random spot inside the window", "a score that counts each coin once"],
+         "the mouse position", "a picture drawn inside a Rect", "a random spot inside the window", "a score that counts each coin once"],
  "reuse": "The window loop you copied in sessions 6 and 7, session 6's four numbers for a rectangle, session 3's counter and randint, and session 2's two tests joined with and",
- "reuse_note": "Today is the first whole game in a window, and it is short on purpose: the floor program is 33 lines of code. Chunk 4's file is 24 of them, and most of those are the window loop the students copied in sessions 6 and 7. Tool 1 adds nine. The page does not need session 11: chunk 4 says what the loop does on every frame, and why the fill and the drawing are inside it. So this session can be taught any time after session 8. Chunks 1 to 3 run in the terminal and are a few lines each, so they can be typed by everyone or run once on the projector while the room predicts. The typing starts at chunk 4. Nothing here needs the keyboard during play: the mouse moves the player.",
+ "reuse_note": "Today is the first whole game in a window, and it is short on purpose: the floor program is 39 lines of code. Chunk 4's file is 24 of them, and most of those are the window loop the students copied in sessions 6 and 7. Chunk 5 adds the six lines of the stick figure's function, and tool 1 adds nine. The page does not need session 11: chunk 4 says what the loop does on every frame, and why the fill and the drawing are inside it. So this session can be taught any time after session 8. Chunks 1 to 3 run in the terminal and are a few lines each, so they can be typed by everyone or run once on the projector while the room predicts. The typing starts at chunk 4. Nothing here needs the keyboard during play: the mouse moves the player.",
  "env_note": True,
  "opener": {
    "title": "Retrieval: a rectangle's four numbers, and a counter",
@@ -557,6 +572,15 @@ SESSION12 = {
    "inject": [[2, "MOUSE", 300, 200]],
    "predict": "Suppose the mouse is at (300, 200) when you close the window. The player is 50 across and 50 down, and its middle is on the mouse. What will the last line print for <code>left</code> and for <code>top</code>?",
    "reveal": "<code>left</code> is 275 and <code>top</code> is 175. Half of 50 is 25, so the left edge is 25 to the left of the mouse and the top edge is 25 above it.</p><p>The run on this page had no real mouse. It was given a mouse position of (300, 200). Your numbers depend on where your mouse is when you close the window, so they will be different. If your square sits in the top left corner and does not move, the mouse is outside the window."},
+
+  {"title": "The player becomes a stick figure",
+   "teach": "The white square is the player's Rect, drawn so you can see it. The game does not have to draw the Rect. It can draw any picture in the same place, and the Rect goes on doing its job: it follows the mouse, and later it is what touches the coin.</p><p>The new function, <code>draw_player</code>, draws a stick figure: a circle for the head, a line for the body, a thin rectangle for the arms, and two lines for the legs. It is a function that draws, like <code>tile</code> in session 6. Its two parameters are <code>x</code>, the middle of the player across, and <code>y</code>, the top of the player. Every number in it is measured from those two. <code>pygame.draw.circle</code> takes the middle of the circle and then its radius, which is how far the edge is from the middle. <code>pygame.draw.line</code> takes where the line starts and where it ends. The 3 at the end of the circle and of each line is how thick it is drawn. The arms are a rectangle 40 wide and 3 tall, which looks like a line lying flat.</p><p>Two things change in chunk 4's file. The function goes near the top, after the knob block and before <code>pygame.init()</code>, with an empty line above and below. Inside the loop, the line <code>pygame.draw.rect(screen, PLAYER, player)</code> is replaced by the call <code>draw_player(player.centerx, player.top)</code>. <code>player.centerx</code> is the first number of <code>player.center</code>.</p><p>The figure is 50 tall, from the top of the head to the feet, and its arms are 40 across, so it fits inside the Rect. A coin is grabbed when it touches the Rect, not when it touches a line of the figure.",
+   "code": STICK,
+   "run": "headless",
+   "frames": 6,
+   "inject": [[2, "MOUSE", 300, 200]],
+   "predict": "Suppose the mouse is at (300, 200) when you close the window, as in chunk 4. The call is <code>draw_player(player.centerx, player.top)</code>. What are <code>x</code> and <code>y</code> inside the function? Then work out where the middle of the head is.",
+   "reveal": "The first one: <code>x</code> is 300 and <code>y</code> is 175. <code>player.centerx</code> is where the mouse is across, and the last line of the output says the top of the player is 175. The second one: the middle of the head is at (300, 185), because the circle is drawn at <code>(x, y + 10)</code> and 175 + 10 is 185. Its radius is 10, so the top of the head is at 175, the top of the Rect. The feet are at <code>y + 50</code>, which is 225, the bottom of the Rect.</p><p>The run on this page was given a mouse position of (300, 200). Your numbers depend on where your mouse is."},
  ],
  "hinge": {"q": "This is one second of a frame loop, 60 frames, without the window. The player is on the coin, so <code>touching</code> is True, and no line in the gate moves the coin. What does the program print? Then say which one line, added inside the gate, would make it print 1.",
            "code": HINGE,
@@ -566,17 +590,17 @@ SESSION12 = {
  "brief": {
    "title": "Build: coin grab",
    "minutes": 30,
-   "intro": "You are making a small game called coin grab. A white square follows the mouse. A gold coin sits in the window. When the square touches the coin, the coin jumps to a new spot picked at random, and the terminal counts it. Ten coins wins the game. The build is one program, written in three tools. Each tool starts from the program the tool before it finished.",
+   "intro": "You are making a small game called coin grab. A stick figure follows the mouse. A gold coin sits in the window. When the figure touches the coin, the coin jumps to a new spot picked at random, and the terminal counts it. Ten coins wins the game. The build is one program, written in three tools. Each tool starts from the program the tool before it finished.",
    "tools": TOOLS12,
    "steps": [
-     "Start from chunk 4's file, <code>Jonathan_session12.py</code> with your first name in place of Jonathan: the square that follows the mouse.",
+     "Start from chunk 5's file, <code>Jonathan_session12.py</code> with your first name in place of Jonathan: the stick figure that follows the mouse.",
      "Add a coin, and make it jump to a random spot when the player touches it.",
      "Add a score that goes up by 1 for each coin, printed in the terminal.",
      "End the game at ten coins: the window turns green and the coin stops jumping.",
      "Put three coins in a list, and add a 30 second time limit that turns the window red.",
    ],
    "expected_got": [
-     ["The square follows the mouse and its middle stays on the pointer", ""],
+     ["The stick figure follows the mouse, with the pointer in the middle of its body", ""],
      ["Touching the coin makes it jump, and the whole coin is inside the window every time", ""],
      ["One coin adds 1 to the score, not 60 a second", ""],
      ["After ten coins the window is green, and touching a coin does nothing", ""],
@@ -585,7 +609,7 @@ SESSION12 = {
    ],
  },
  "exits": {
-   "floor": "Tool 1: the square follows the mouse, and the coin jumps to a random spot when the square touches it.",
+   "floor": "Tool 1: the stick figure follows the mouse, and the coin jumps to a random spot when the figure touches it.",
    "middle": "Tool 2: the score is printed in the terminal, and at ten coins the window turns green and the game stops.",
    "stretch": "Tool 3: three coins in a list, and a 30 second time limit that turns the window red.",
  },
@@ -618,11 +642,12 @@ SESSION12 = {
    "timing": [
      "0:00 retrieval opener, 10 min",
      "0:10 chunk 1, a Rect and its edges, 8 min",
-     "0:18 chunk 2, the overlap test by hand, 12 min (project the figure; this is the mathematics of the day)",
-     "0:30 chunk 3, colliderect, 7 min",
-     "0:37 chunk 4, the mouse, 13 min (the first window file; most of the typing is here)",
-     "0:50 hinge question, 5 min",
-     "0:55 build, tools 1 and 2, 30 min (tool 3 is for students who are ahead)",
+     "0:18 chunk 2, the overlap test by hand, 10 min (project the figure; this is the mathematics of the day)",
+     "0:28 chunk 3, colliderect, 6 min",
+     "0:34 chunk 4, the mouse, 12 min (the first window file; most of the typing is here)",
+     "0:46 chunk 5, the stick figure, 8 min",
+     "0:54 hinge question, 4 min",
+     "0:58 build, tools 1 and 2, 27 min (tool 3 is for students who are ahead)",
      "1:25 exits, ledger stamp, 5 min",
    ],
    "misconceptions": [
@@ -634,12 +659,12 @@ SESSION12 = {
       "It is session 3's counter. The starting value goes above the loop."],
      ["Expects two rectangles that share an edge to count as touching.",
       "Go back to chunk 3's second print. 330 is not less than 330. One pixel of overlap is needed."],
-     ["Runs the program and reports that the square will not move.",
+     ["Runs the program and reports that the player will not move.",
       "The mouse is outside the window, or the window is behind VS Code. <code>get_pos</code> only follows the mouse while it is over the window."],
      ["Draws the coin above <code>screen.fill</code> and the coin never appears.",
       "The fill paints over everything drawn before it on that frame. Whatever is drawn last is on top."],
    ],
    "standards": ["NY-5.G.1", "NY-6.NS.8", "NY-6.EE.5"],
-   "routing": "Chunks 1 to 3 need no window. If time is short, run them once on the projector and have the room predict out loud, then go to chunk 4, where everyone types. Tool 1 is the floor exit and it adds nine lines to chunk 4's file. Tool 2 is the middle exit. Every tool has its finished program behind a button, so a student who falls behind can read it and run it. The extension is for a student who finishes tool 3. Nothing survives on the machines, so the game cannot be carried into session 13; session 13 starts from its own file.",
+   "routing": "Chunks 1 to 3 need no window. If time is short, run them once on the projector and have the room predict out loud, then go to chunk 4, where everyone types. Tool 1 is the floor exit and it adds nine lines to chunk 5's file. If chunk 5 has to be skipped, the build works the same with chunk 4's white square as the player: the only difference is the one line that draws it. Tool 2 is the middle exit. Every tool has its finished program behind a button, so a student who falls behind can read it and run it. The extension is for a student who finishes tool 3. Nothing survives on the machines, so the game cannot be carried into session 13; session 13 starts from its own file.",
  },
 }

@@ -48,7 +48,7 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | `session09_worksheet_key.html` | The session 9 worksheet's answer key. Linked from the session 9 teacher panel only. |
 | `session10_dictionaries.html` | Dictionaries |
 | `session11_the_pygame_window.html` | The pygame window |
-| `session12_coin_grab.html` | Coin grab. A square that follows the mouse, a coin that jumps when touched, a score, and a time limit. Added November 2026. |
+| `session12_coin_grab.html` | Coin grab. A stick figure that follows the mouse, a coin that jumps when touched, a score, and a time limit. Added November 2026. |
 | `session13_grids_keys_game_state.html` | Grids, keys, and game state |
 | `session14_commission_and_demo.html` | Commission and demo day |
 | `friday_bonus_distance_and_bumpers.html` | Friday bonus: distance and bumpers |
@@ -549,12 +549,14 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   with every answer open: no sideways scroll on the 14 pages that have questions,
   and no question's code is wider than its box. Version pin `?v=21`.
 - **2026-11-22, v22.** New session 12, Coin grab (`build/session12.py`), between the
-  pygame window and the room of tiles. A square follows the mouse, a coin jumps to a
-  random spot when the square touches it, and the terminal keeps the score. Four
+  pygame window and the room of tiles. A stick figure follows the mouse, a coin jumps to a
+  random spot when the figure touches it, and the terminal keeps the score. Five
   chunks: a Rect and its edges, the overlap test written by hand, `colliderect` as
-  the reveal after it, and the square that follows the mouse. The build is one
+  the reveal after it, a square that follows the mouse, and `draw_player`, a
+  function that draws a stick figure inside the player's Rect in place of the
+  square (its arms are a thin rectangle so every line fits the code box). The build is one
   program in three tools, 20 What goes next? questions, each a line with a blank and
-  three choices kept beside its step: the coin jumps (the floor exit, 33 lines of
+  three choices kept beside its step: the coin jumps (the floor exit, 39 lines of
   code), a score and a win at ten coins (the middle exit), and three coins in a list
   with a 30 second time limit (the stretch exit). An extension gives the two
   `randint` lines a name, `move_coin`. Choices made to fit the course's rules: the
