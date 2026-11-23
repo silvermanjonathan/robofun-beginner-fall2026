@@ -667,3 +667,10 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   pin `?v=30`.
 - **2026-11-23, v31.** Session 12's learning objectives are set larger: 24px, against
   18px for the rest of the page. Version pin `?v=31`.
+- **2026-11-23, v32.** In session 12's chunk 6 and three build tools, the lines that
+  are already in the file now sit between the questions ("Lines 2 to 7, already in
+  your file. Nothing to type here."), so the file reads from the top down as the
+  questions go. `line_ladders` does this for any part with a `places` list. The
+  three questions that asked for two names far apart (COIN_SIZE and COIN, GOAL and
+  WIN, SECONDS and LOSE) are now two questions each, so no question skips over
+  lines. Version pin `?v=32`.
