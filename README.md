@@ -575,11 +575,16 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   Commission and demo day is session 14 (`session14_commission_and_demo.html`,
   engine file `Jonathan_session14.py`). Every cross-reference, stamp number, and
   first-taught entry follows. Session 13's opener now retrieves from the coin grab
-  in place of the dictionary question, which moved to session 12's opener. The
+  in place of the dictionary question. The
   Friday bonus and the cipher wheel are numbers 15 and 16 inside the build. The
-  course is fourteen sessions: session 12 has Mon Dec 14 and Fri Dec 11, session 13
-  has Fri Dec 18 and no Monday date, and session 14 has no date in either section.
-  Those three dates are still to be decided.
+  course is fourteen sessions. Monday takes session 12 on Nov 23, before sessions
+  9 to 11, which each move one Monday later (Nov 30, Dec 7, Dec 14); Friday takes it
+  on Dec 11, in number order. So the page is written to need only sessions 1 to 8:
+  its opener retrieves session 6's four numbers and session 3's counter, and chunk 4
+  says what the loop does on every frame and what the knob block is, without leaning
+  on session 11. The hub's Monday calendar is in date order. Session 13 has Fri
+  Dec 18 and no Monday date, and session 14 has no date in either section; those
+  three dates are still to be decided.
   Harness: `pygame.mouse.get_pos` is patched so a run can be given mouse positions,
   a headless run can be seeded, and a run of many frames can use a clock that does
   not wait. The mouse positions for the three tools are worked out by
@@ -592,5 +597,5 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   box at 1280px. The checking machine could not reach Google Fonts, so the three
   fonts were installed on it first. The three worksheet PDFs
   were rendered again with WeasyPrint, because each sheet's header now says "of
-  14"; the page counts are unchanged (4, 3, 3) and Bricolage Grotesque, DM Sans,
+  14" and session 9's sheet has a new Monday date; the page counts are unchanged (4, 3, 3) and Bricolage Grotesque, DM Sans,
   and JetBrains Mono are embedded. Version pin `?v=22`.

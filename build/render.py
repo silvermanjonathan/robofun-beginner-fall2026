@@ -1330,7 +1330,17 @@ def render_hub():
     b.append('<div class="grid2">')
     b.append('<div class="card"><h3>Monday, 14 sessions</h3><table>'
              '<tr><th>Date</th><th>Session</th></tr>')
-    for s in SESSIONS:
+    # in date order: Monday takes session 12 before sessions 9 to 11; a session with no
+    # date yet goes at the end, in number order
+    months = {"Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12}
+
+    def monday_key(s):
+        parts = s["mon"].split()
+        if len(parts) == 3 and parts[1] in months:
+            return (0, months[parts[1]], int(parts[2]), s["num"])
+        return (1, 0, 0, s["num"])
+
+    for s in sorted(SESSIONS, key=monday_key):
         if s.get("bonus"):
             continue
         b.append('<tr><td>' + s["mon"] + '</td><td>' + str(s["num"]) + '. '
@@ -1353,14 +1363,17 @@ def render_hub():
              'tiles and the demo, need dates after Dec 14 or a session merged into another; '
              'those dates are still to be decided. Friday has thirteen dates, so the last '
              'Friday session, the demo, needs a date after Dec 18 or a merge, and that date is '
-             'still to be decided too. The bonus session is no longer scheduled. It stays on '
+             'still to be decided too. Monday takes session 12, the coin grab, on Nov 23, '
+             'before sessions 9 to 11, which each move one Monday later. The coin grab page '
+             'is written to work in either place: it needs only sessions 1 to 8. The bonus session is no longer scheduled. It stays on '
              'the site for anyone who wants it. Session 9 is tic tac toe since November; the '
              'cipher wheel, which had that date, is now an extra page with no date, for the '
              'end of the course if there is time. If a parent compares the two classes, the '
              'required content is identical.</p>'
              '<p class="note">From session 4 on, Friday runs one to two sessions ahead of '
              'Monday, so in most weeks the two sections are on different pages. Each page '
-             'shows both dates in its header.</p>')
+             'shows both dates in its header. The session list above is in number order; '
+             'the Monday calendar is in date order.</p>')
     b.append('</section>')
 
     b.append('<section><h2>Machines and libraries</h2>'
