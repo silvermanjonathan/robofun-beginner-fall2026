@@ -665,3 +665,5 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   score that counts each coin once. Set by `"objectives"` in `build/session12.py`;
   `render.py` shows the list above the opener on any session that has one. Version
   pin `?v=30`.
+- **2026-11-23, v31.** Session 12's learning objectives are set larger: 24px, against
+  18px for the rest of the page. Version pin `?v=31`.
