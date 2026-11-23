@@ -615,3 +615,9 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   so chunk 1 is 6 minutes, the hinge 3, and the build 25; the timing still sums to
   90. Checked in Chrome at 1280px and 390px with every answer open: no sideways
   scroll. Version pin `?v=23`.
+- **2026-11-23, v24.** "Knob block" is gone from the course: the capital names at
+  the top of a game file are now called the main variables, in the code comments
+  (`# ---- main variables: every number the game depends on ----`), in the prose and
+  choices of sessions 11 to 14 and the Friday bonus, and on the constraints page.
+  Session 11's chunk 6 is now "Main variables at the top". No program changed except
+  that comment line. Version pin `?v=24`.

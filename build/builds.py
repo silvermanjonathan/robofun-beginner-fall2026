@@ -277,7 +277,7 @@ print(f"Encoded:  {encode(message)}")'''
 
 START11 = '''import pygame
 
-# ---- knob block: every number the program depends on ----
+# ---- main variables: every number the program depends on ----
 WIDTH = 640
 HEIGHT = 480
 R = 20
@@ -971,7 +971,7 @@ T10B = tool(
 
 T11 = tool(
     "The bouncing cabinet, one line at a time",
-    "The starting file is behind the button below: the knob block, and the frame loop from chunk 2. Run it and check that an empty window opens. Then add the lines.",
+    "The starting file is behind the button below: the main variables, and the frame loop from chunk 2. Run it and check that an empty window opens. Then add the lines.",
     P11,
     [
         Q(P11, "The ball starts in the middle of the window. The window is 640 wide and 480 tall. What are the two lines?",
@@ -984,9 +984,9 @@ T11 = tool(
         Q(P11, "Velocity is two numbers: how far the ball moves across and how far it moves down on each frame. Where do the starting values come from?",
           'vx = SPEED_X\nvy = SPEED_Y',
           'vx = ____\nvy = ____', ('SPEED_X', 'SPEED_Y'),
-          (('12', '7'), "That works today, but with raw numbers here, changing the knobs would do nothing."),
+          (('12', '7'), "That works today, but with raw numbers here, changing the main variables would do nothing."),
           (('SPEED_Y', 'SPEED_X'), "Those are swapped. <code>vx</code> is the speed across."),
-          "The speeds have names in the knob block. Using the names means the speed can be changed in one place, at the top of the file."),
+          "The speeds are main variables. Using the names means the speed can be changed in one place, at the top of the file."),
         Q(P11, "On every frame the ball moves. Which two lines move it?",
           '    x = x + vx\n    y = y + vy',
           '    x = x ____ vx\n    y = y + ____', ('+', 'vy'),
@@ -1044,7 +1044,7 @@ T11 = tool(
 
 T14 = tool(
     "The three-bumper table, one line at a time",
-    "The starting file is behind the button below: the knob block, <code>distance</code> from chunk 2, and a ball that bounces off the four walls. Run it first. Then add the bumpers.",
+    "The starting file is behind the button below: the main variables, <code>distance</code> from chunk 2, and a ball that bounces off the four walls. Run it first. Then add the bumpers.",
     P14,
     [
         Q(P14, "<code>hits</code> returns True when the ball touches a bumper. The bumpers are not all the same size, so the bumper's radius is a parameter. When do two circles touch?",

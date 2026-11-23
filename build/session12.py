@@ -60,7 +60,7 @@ print(player.colliderect(coin))'''
 # chunk 4: the first window file
 MOUSE = '''import pygame
 
-# ---- knob block: every number the game depends on ----
+# ---- main variables: every number the game depends on ----
 WIDTH = 600
 HEIGHT = 400
 PLAYER_SIZE = 50
@@ -545,11 +545,11 @@ TOOLS12 = [
            ('pygame', "<code>pygame</code> is already imported, on the next line. The random numbers come from a different library."),
            "<code>random</code> is the library from session 3. Importing it lets the program call <code>random.randint</code> further down.",
            note="This is the new first line of the file, above <code>import pygame</code>."),
-         Q(TOOL1, "The coin is a square 30 across, and it is gold. Both get a name in the knob block. Which name holds the size, and which holds the colour?",
+         Q(TOOL1, "The coin is a square 30 across, and it is gold. Both are added to the main variables. Which name holds the size, and which holds the colour?",
            'COIN_SIZE = 30',
            '____ = 30\n____ = (252, 211, 77)', ('COIN_SIZE', 'COIN'),
            (('COIN', 'COIN_SIZE'), "Those are swapped. The size is one number, and the colour is three."),
-           (('coin_size', 'coin'), "Knob names are written in capitals, so they stand out from the variables that change. The small name <code>coin</code> is needed for the coin's Rect."),
+           (('coin_size', 'coin'), "The main variables have names in capitals, so they stand out from the variables that change while the game runs. The small name <code>coin</code> is needed for the coin's Rect."),
            "<code>COIN_SIZE</code> is how wide and how tall the coin is. <code>COIN</code> is its colour: a lot of red, a lot of green, and a little blue make gold.",
            part2='COIN = (252, 211, 77)',
            note="<code>COIN_SIZE</code> goes under <code>PLAYER_SIZE</code>, and <code>COIN</code> goes under <code>PLAYER</code>."),
@@ -558,7 +558,7 @@ TOOLS12 = [
            'coin = pygame.Rect(300, 200, ____, ____)', ('COIN_SIZE', 'COIN_SIZE'),
            (('PLAYER_SIZE', 'PLAYER_SIZE'), "Then the coin would be 50 across, as big as the player."),
            (('330', '230'), "The last two numbers are the width and the height, not the right edge and the bottom edge. That coin would be 330 wide."),
-           "The four numbers are x, y, width, and height. The coin is a square, so its width and its height are the same knob.",
+           "The four numbers are x, y, width, and height. The coin is a square, so its width and its height are the same variable.",
            note="Under the <code>player</code> line, above the loop. Above the loop, it runs once. Inside the loop, the coin would be put back at 300, 200 on every frame."),
          Q(TOOL1, "On every frame, after the player has moved, the program asks one question: is the player touching the coin? Which gate asks it?",
            '    if player.colliderect(coin):',
@@ -567,7 +567,7 @@ TOOLS12 = [
            (('screen', 'coin'), "<code>screen</code> is the window, not a Rect. It has no <code>colliderect</code>, so Python gives an error."),
            "<code>colliderect</code> is the test from chunk 3. It gives True when the two rectangles overlap. The gate is inside the frame loop, so the question is asked 60 times a second.",
            note="Under <code>player.center = pygame.mouse.get_pos()</code>, lined up with it."),
-         Q(TOOL1, "The player is touching the coin. The coin jumps to a new spot. The window is 600 wide and 400 tall. Which knob limits x, and which limits y?",
+         Q(TOOL1, "The player is touching the coin. The coin jumps to a new spot. The window is 600 wide and 400 tall. Which variable limits x, and which limits y?",
            '        coin.x = random.randint(0, WIDTH - COIN_SIZE)\n        coin.y = random.randint(0, HEIGHT - COIN_SIZE)',
            '        coin.x = random.randint(0, ____ - COIN_SIZE)\n        coin.y = random.randint(0, ____ - COIN_SIZE)', ('WIDTH', 'HEIGHT'),
            (('HEIGHT', 'WIDTH'), "Those are swapped. x goes across, so the width limits it. With y as large as 570, the coin could land below the bottom of the window, which is at 400."),
@@ -597,7 +597,7 @@ TOOLS12 = [
      "code": TOOL2,
      "run": "headless", "frames": FRAMES2, "seed": SEED2, "inject": INJECT2,
      "steps": [
-         Q(TOOL2, "Ten coins wins the game. That number gets a name in the knob block, and so does the colour of the window after a win. What does <code>GOAL</code> hold?",
+         Q(TOOL2, "Ten coins wins the game. That number is added to the main variables, and so is the colour of the window after a win. What does <code>GOAL</code> hold?",
            'GOAL = 10',
            'GOAL = ____\nWIN = (29, 91, 57)', '10',
            ('0', "The score starts at 0, so with a goal of 0 the game would be won on the first frame, before any coin is grabbed."),
@@ -654,11 +654,11 @@ TOOLS12 = [
      "code": TOOL3,
      "run": "headless", "frames": FRAMES3, "seed": SEED3, "inject": INJECT3, "fast": True,
      "steps": [
-         Q(TOOL3, "The time limit is 30 seconds. It gets a name in the knob block, and so does the colour of the window when time runs out. What is the name for the 30?",
+         Q(TOOL3, "The time limit is 30 seconds. It is added to the main variables, and so is the colour of the window when time runs out. What is the name for the 30?",
            'SECONDS = 30',
            '____ = 30\nLOSE = (156, 43, 34)', 'SECONDS',
-           ('seconds', "Knob names are written in capitals, so they stand out from the variables that change."),
-           ('FPS', "<code>FPS</code> is set to 60 at the end of the knob block, so this line would do nothing, and the time limit would have no name."),
+           ('seconds', "The main variables have names in capitals, so they stand out from the variables that change while the game runs."),
+           ('FPS', "<code>FPS</code> is set to 60 at the end of the main variables, so this line would do nothing, and the time limit would have no name."),
            "<code>SECONDS</code> is the time limit, in seconds. <code>LOSE</code> is a dark red.",
            part2='LOSE = (156, 43, 34)',
            note="<code>SECONDS</code> goes under <code>GOAL</code>, and <code>LOSE</code> goes under <code>WIN</code>."),
@@ -817,7 +817,7 @@ SESSION12 = {
    "reveal": "The first one: False. Chunk 2's test is <code>coin.left &lt; player.right</code>, and 330 is not less than 330. Sharing an edge is not overlapping. The second one: True. At 329 the coin's left edge is one pixel inside the player, and one pixel is enough."},
 
   {"title": "A square that follows the mouse",
-   "teach": "This is the first window of the day. You copied most of this file in sessions 6 and 7: the lines that open the window, and the loop that keeps it open until you close it.</p><p>The capital names at the top are the <b>knob block</b>. Every number the game depends on gets a name there, so it can be changed in one place. <code>FPS</code> is 60, and <code>clock.tick(FPS)</code> makes the loop run 60 times a second. One pass of the loop is called a <b>frame</b>.</p><p>In sessions 6 and 7 the picture was drawn once, above the loop, because it never changed. Today the picture changes, so the drawing is inside the loop and happens on every frame. <code>screen.fill(BG)</code> paints the whole window dark blue, which covers the last frame. Then the square is drawn, and <code>pygame.display.flip()</code> puts the new picture on the screen.</p><p>Three lines are new.</p><p>The line <code>player = pygame.Rect(0, 0, PLAYER_SIZE, PLAYER_SIZE)</code> makes the player, a Rect 50 across and 50 down. It is above the loop, so it runs once.</p><p>The line <code>player.center = pygame.mouse.get_pos()</code> is inside the loop, so it runs on every frame. <b><code>pygame.mouse.get_pos()</code></b> gives the position of the mouse in the window as a pair of numbers, across and then down. Storing that pair in <code>player.center</code> moves the whole square, so that its middle is on the mouse.</p><p>The line <code>pygame.draw.rect(screen, PLAYER, player)</code> draws the square. In session 6 the third thing given to <code>draw.rect</code> was four numbers in parentheses. A Rect works in the same place.</p><p>The last print runs when you close the window.",
+   "teach": "This is the first window of the day. You copied most of this file in sessions 6 and 7: the lines that open the window, and the loop that keeps it open until you close it.</p><p>The names in capitals at the top are the <b>main variables</b>. Every number the game uses gets a name there, so it can be changed in one place. <code>FPS</code> is 60, and <code>clock.tick(FPS)</code> makes the loop run 60 times a second. One pass of the loop is called a <b>frame</b>.</p><p>In sessions 6 and 7 the picture was drawn once, above the loop, because it never changed. Today the picture changes, so the drawing is inside the loop and happens on every frame. <code>screen.fill(BG)</code> paints the whole window dark blue, which covers the last frame. Then the square is drawn, and <code>pygame.display.flip()</code> puts the new picture on the screen.</p><p>Three lines are new.</p><p>The line <code>player = pygame.Rect(0, 0, PLAYER_SIZE, PLAYER_SIZE)</code> makes the player, a Rect 50 across and 50 down. It is above the loop, so it runs once.</p><p>The line <code>player.center = pygame.mouse.get_pos()</code> is inside the loop, so it runs on every frame. <b><code>pygame.mouse.get_pos()</code></b> gives the position of the mouse in the window as a pair of numbers, across and then down. Storing that pair in <code>player.center</code> moves the whole square, so that its middle is on the mouse.</p><p>The line <code>pygame.draw.rect(screen, PLAYER, player)</code> draws the square. In session 6 the third thing given to <code>draw.rect</code> was four numbers in parentheses. A Rect works in the same place.</p><p>The last print runs when you close the window.",
    "code": MOUSE,
    "run": "headless",
    "frames": 6,
@@ -826,7 +826,7 @@ SESSION12 = {
    "reveal": "<code>left</code> is 275 and <code>top</code> is 175. Half of 50 is 25, so the left edge is 25 to the left of the mouse and the top edge is 25 above it.</p><p>The run on this page had no real mouse. It was given a mouse position of (300, 200). Your numbers depend on where your mouse is when you close the window, so they will be different. If your square sits in the top left corner and does not move, the mouse is outside the window."},
 
   {"title": "The player becomes a stick figure",
-   "teach": "The white square is the player's Rect, drawn so you can see it. The game does not have to draw the Rect. It can draw any picture in the same place, and the Rect goes on doing its job: it follows the mouse, and later it is what touches the coin.</p><p>The new function, <code>draw_player</code>, draws a stick figure: a circle for the head, a line for the body, a thin rectangle for the arms, and two lines for the legs. It is a function that draws, like <code>tile</code> in session 6. Its two parameters are <code>x</code>, the middle of the player across, and <code>y</code>, the top of the player. Every number in it is measured from those two. <code>pygame.draw.circle</code> takes the middle of the circle and then its radius, which is how far the edge is from the middle. <code>pygame.draw.line</code> takes where the line starts and where it ends. The 3 at the end of the circle and of each line is how thick it is drawn. The arms are a rectangle 40 wide and 3 tall, which looks like a line lying flat.</p><p>Two things change in chunk 4's file. The function goes near the top, after the knob block and before <code>pygame.init()</code>, with an empty line above and below. Inside the loop, the line <code>pygame.draw.rect(screen, PLAYER, player)</code> is replaced by the call <code>draw_player(player.centerx, player.top)</code>. <code>player.centerx</code> is the first number of <code>player.center</code>.</p><p>The figure is 50 tall, from the top of the head to the feet, and its arms are 40 across, so it fits inside the Rect. A coin is grabbed when it touches the Rect, not when it touches a line of the figure.",
+   "teach": "The white square is the player's Rect, drawn so you can see it. The game does not have to draw the Rect. It can draw any picture in the same place, and the Rect goes on doing its job: it follows the mouse, and later it is what touches the coin.</p><p>The new function, <code>draw_player</code>, draws a stick figure: a circle for the head, a line for the body, a thin rectangle for the arms, and two lines for the legs. It is a function that draws, like <code>tile</code> in session 6. Its two parameters are <code>x</code>, the middle of the player across, and <code>y</code>, the top of the player. Every number in it is measured from those two. <code>pygame.draw.circle</code> takes the middle of the circle and then its radius, which is how far the edge is from the middle. <code>pygame.draw.line</code> takes where the line starts and where it ends. The 3 at the end of the circle and of each line is how thick it is drawn. The arms are a rectangle 40 wide and 3 tall, which looks like a line lying flat.</p><p>Two things change in chunk 4's file. The function goes near the top, after the main variables and before <code>pygame.init()</code>, with an empty line above and below. Inside the loop, the line <code>pygame.draw.rect(screen, PLAYER, player)</code> is replaced by the call <code>draw_player(player.centerx, player.top)</code>. <code>player.centerx</code> is the first number of <code>player.center</code>.</p><p>The figure is 50 tall, from the top of the head to the feet, and its arms are 40 across, so it fits inside the Rect. A coin is grabbed when it touches the Rect, not when it touches a line of the figure.",
    "code": STICK,
    "run": "headless",
    "frames": 6,
@@ -878,15 +878,15 @@ SESSION12 = {
       "reveal": "The first one: the last line prints <code>None</code>. A function with no <code>return</code> line returns None, the same as in session 5. The second one: yes, the coin moves. The first print says 300 200 and the second says 57 46, so the call <code>move_coin(coin)</code> changed the Rect it was given. The last line calls the function a second time, so the coin moves once more before None is printed. The spots are picked at random, so your numbers will be different."},
    ],
    "steps": [
-     "Put <code>move_coin</code> in your tool 3 file. Functions go near the top, after the knob block and before <code>pygame.init()</code>, with an empty line above and below.",
+     "Put <code>move_coin</code> in your tool 3 file. Functions go near the top, after the main variables and before <code>pygame.init()</code>, with an empty line above and below.",
      "Inside the coin gate, replace the two <code>randint</code> lines with one call: <code>move_coin(coin)</code>.",
      "Under the <code>coins</code> list, add a loop that calls <code>move_coin(coin)</code> once for each coin, so every game starts with the coins in new spots.",
-     "Change one knob, <code>COIN_SIZE</code>, <code>GOAL</code>, or <code>SECONDS</code>, to make the game harder. One change per run.",
+     "Change one main variable, <code>COIN_SIZE</code>, <code>GOAL</code>, or <code>SECONDS</code>, to make the game harder. One change per run.",
    ],
    "checks": [
      "The game plays the same as before the function was added",
      "Run the game twice: the three coins start in different spots each time",
-     "The knob you changed makes the game harder, and you can say why",
+     "The variable you changed makes the game harder, and you can say why",
    ],
  },
  "ledger": "Stamp 12: <code>pygame.Rect(x, y, w, h)</code> has <code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>, and <code>center</code>; <code>a.colliderect(b)</code> is True when two rectangles overlap; <code>pygame.mouse.get_pos()</code> is where the mouse is; move the coin inside the gate, so one grab counts once.",

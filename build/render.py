@@ -39,7 +39,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "23"
+VERSION = "24"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-11-22"
 TMP = os.environ.get("BVC_TMP",
@@ -1522,8 +1522,8 @@ def render_constraints():
              'life gets renamed. This is an exit criterion, not a style preference.</li>'
              '<li><b>Words in the terminal, visuals in the window.</b></li>'
              '<li><b>Functions at the top.</b> Every <code>def</code> goes together near the top of the file, after the imports and before any line that does work. Python must read a function before the line that calls it.</li>'
-             '<li><b>Knob block at the top.</b> Every number the behaviour depends on gets a '
-             'capitalised name above the code that uses it.</li>'
+             '<li><b>Main variables at the top.</b> Every number the behaviour depends on gets a '
+             'name in capitals above the code that uses it.</li>'
              '</ul></section>')
 
     b.append('<section><h2>Verification</h2>'

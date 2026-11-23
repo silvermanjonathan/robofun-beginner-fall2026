@@ -45,7 +45,7 @@ IS_OPEN = '''def is_open(row, col):
 
 TOP2 = '''import pygame
 
-# ---- knob block: every number the game depends on ----
+# ---- main variables: every number the game depends on ----
 TILE = 64
 ROWS = 5
 COLS = 7
@@ -220,7 +220,7 @@ TRIP = ["RIGHT", "RIGHT", "RIGHT", "RIGHT", "DOWN", "DOWN"]
 
 TOOLS13 = [
     {"title": "Tool 1: the level in the terminal",
-     "intro": "Before the window, print the room in the terminal: one line of text for each row of the level, with <code>#</code> for a wall and <code>.</code> for floor. The two knobs and the level are given. Copy them from the button below, then write the loop under them.",
+     "intro": "Before the window, print the room in the terminal: one line of text for each row of the level, with <code>#</code> for a wall and <code>.</code> for floor. The two main variables and the level are given. Copy them from the button below, then write the loop under them.",
      "start": START1,
      "whole": "Show the whole program",
      "code": TOOL1,
@@ -243,7 +243,7 @@ TOOLS13 = [
      "reveal": "Five lines, one for each row of the level. The middle line is <code>#.#.#.#</code>, because row 2 has a wall in columns 0, 2, 4, and 6. This is the floor exit.",
      },
     {"title": "Tool 2: the room and the player",
-     "intro": "Now the window. Keep <code>ROWS</code>, <code>COLS</code>, and the level, and delete tool 1's printing loop. Then make your file match the program behind the button below. It has the knob block, the level, <code>is_open</code> from chunk 3, and the frame loop from session 11. Run it and check that an empty window opens. Then add the lines below, one question at a time.",
+     "intro": "Now the window. Keep <code>ROWS</code>, <code>COLS</code>, and the level, and delete tool 1's printing loop. Then make your file match the program behind the button below. It has the main variables, the level, <code>is_open</code> from chunk 3, and the frame loop from session 11. Run it and check that an empty window opens. Then add the lines below, one question at a time.",
      "start": START2,
      "whole": "Show the whole program",
      "code": TOOL2,
@@ -286,7 +286,7 @@ TOOLS13 = [
      "run": "headless", "frames": 40,
      "inject": presses("RIGHT", "RIGHT", "RIGHT", "RIGHT", "RIGHT", "LEFT", "RIGHT"),
      "steps": [
-         step(TOOL3, "A coin needs a colour, and the colour needs a name in the knob block. Which line adds it?",
+         step(TOOL3, "A coin needs a colour, and the colour is added to the main variables. Which line adds it?",
               'COIN = (252, 211, 77)', note="Under the <code>PLAYER</code> line."),
          step(TOOL3, "A coin is tile value 2. Put one coin at row 1, column 5 and one at row 3, column 1. What do the two rows look like?",
               '    [1, 0, 0, 0, 0, 2, 1],', part2='    [1, 2, 0, 0, 0, 0, 1],'),
@@ -314,7 +314,7 @@ TOOLS13 = [
      "run": "headless", "frames": 80,
      "inject": presses(*(TRIP + TRIP + TRIP + ["RIGHT", "r", "RIGHT"])),
      "steps": [
-         step(TOOL4, "The trap needs a colour and the lives need a starting number. Both get a name in the knob block. What number does <code>LIVES</code> hold?",
+         step(TOOL4, "The trap needs a colour and the lives need a starting number. Both are added to the main variables. What number does <code>LIVES</code> hold?",
               'TRAP = (220, 38, 38)\nLIVES = 3', note="Under the <code>COIN</code> line."),
          step(TOOL4, "A trap is tile value 3. Put one at row 3, column 5. What does row 3 look like?",
               '    [1, 2, 0, 0, 0, 3, 1],'),
