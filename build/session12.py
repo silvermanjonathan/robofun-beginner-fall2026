@@ -764,6 +764,7 @@ SESSION12 = {
          "the mouse position", "a picture drawn inside a Rect", "a mouse click", "collidepoint", "a random spot inside the window", "a score that counts each coin once"],
  "reuse": "The window loop you copied in sessions 6 and 7, session 6's four numbers for a rectangle, session 3's counter and randint, and session 2's two tests joined with and",
  "no_new_section": True,
+ "teacher_standards_only": True,
  "reuse_note": "Today is the first whole game in a window, and it is short on purpose: the floor program is 51 lines of code. Chunk 4's file is 24 of them, and most of those are the window loop the students copied in sessions 6 and 7. Chunk 5 adds the six lines of the stick figure's function, chunk 6 adds twelve lines for picking the figure up and putting it down, and tool 1 adds nine. The page does not need session 11: chunk 4 says what the loop does on every frame, and why the fill and the drawing are inside it. So this session can be taught any time after session 8. Chunks 1 to 3 run in the terminal and are a few lines each, so they can be typed by everyone or run once on the projector while the room predicts. The typing starts at chunk 4. Nothing here needs the keyboard during play: a click picks the player up, the mouse moves it, and a second click puts it down.",
  "env_note": True,
  "opener": {

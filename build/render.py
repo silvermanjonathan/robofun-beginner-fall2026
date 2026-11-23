@@ -40,7 +40,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "28"
+VERSION = "29"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-11-22"
 TMP = os.environ.get("BVC_TMP",
@@ -1221,16 +1221,18 @@ def render_session(s, prev_s, next_s):
 
     t = s["teacher"]
     b.append('<details class="teacher"><summary>Teacher panel</summary>')
-    b.append('<h3>Timing, 90 minutes</h3><ul>')
-    for x in t["timing"]:
-        b.append('<li>' + html.escape(x) + '</li>')
-    b.append('</ul><p class="note">Pacing: most rooms will not reach the end of '
-             'the build brief. The exits exist so that stopping there is a finish, not a failure.</p>')
-    b.append('<h3>What you will see, and what to do</h3>'
-             '<table><tr><th>In the room</th><th>Redirect</th></tr>')
-    for m in t["misconceptions"]:
-        b.append('<tr><td>' + m[0] + '</td><td>' + m[1] + '</td></tr>')
-    b.append('</table>')
+    brief_panel = s.get("teacher_standards_only")  # only the standards and their components
+    if not brief_panel:
+        b.append('<h3>Timing, 90 minutes</h3><ul>')
+        for x in t["timing"]:
+            b.append('<li>' + html.escape(x) + '</li>')
+        b.append('</ul><p class="note">Pacing: most rooms will not reach the end of '
+                 'the build brief. The exits exist so that stopping there is a finish, not a failure.</p>')
+        b.append('<h3>What you will see, and what to do</h3>'
+                 '<table><tr><th>In the room</th><th>Redirect</th></tr>')
+        for m in t["misconceptions"]:
+            b.append('<tr><td>' + m[0] + '</td><td>' + m[1] + '</td></tr>')
+        b.append('</table>')
     b.append('<h3>Mapped to</h3>')
     b.append(standards_table(t["standards"]))
     lcs = []
@@ -1242,9 +1244,10 @@ def render_session(s, prev_s, next_s):
         for c, l in lcs:
             b.append('<li><code>' + c + '</code> ' + html.escape(l) + '</li>')
         b.append('</ul>')
-    if s.get("no_new_section"):
+    if s.get("no_new_section") and not brief_panel:
         b.append('<h3>About this session</h3><p>' + s["reuse_note"] + '</p>')
-    b.append('<h3>If time runs out</h3><p>' + t["routing"] + '</p>')
+    if not brief_panel:
+        b.append('<h3>If time runs out</h3><p>' + t["routing"] + '</p>')
     if ws:
         b.append('<h3>Files</h3><p>The worksheet covers ' + ws["covers"] + '. Print one per '
                  'student from the PDF, double-sided, US letter. <a href="' + link(ws["slug"])

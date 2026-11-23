@@ -655,3 +655,8 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   is built (line counts, what it needs from earlier sessions) moved to the teacher
   panel as "About this session". Set by `"no_new_section": True` in
   `build/session12.py`; other sessions are unchanged. Version pin `?v=28`.
+- **2026-11-23, v29.** Session 12's teacher panel holds only "Mapped to" and
+  "Learning components behind those codes". The timing, the misconceptions table,
+  "About this session", and "If time runs out" are no longer on the page; they stay
+  in `build/session12.py` (`"teacher_standards_only": True` hides them). Other
+  sessions are unchanged. Version pin `?v=29`.
