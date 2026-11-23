@@ -3,9 +3,9 @@
 Beyond Vibe Coding, beginner semester. Python for grades 5 to 8, Robofun Fall 2026,
 110 West End Avenue. Two beginner sections, Monday and Friday, working through the
 same fourteen required sessions. Session 6, the Mondrian, was added in October 2026,
-and session 12, the coin grab, in November 2026. Monday has twelve dates and Friday
-thirteen, so the last two Monday sessions and the last Friday session have no date
-yet, and the Friday bonus session is no longer scheduled; it stays on the site for
+and session 12, the coin grab, in November 2026. Monday has twelve dates and took
+sessions 8 and 9 together on Nov 16; Friday has thirteen dates. So the last session,
+the demo, has no date yet in either section, and the Friday bonus session is no longer scheduled; it stays on the site for
 anyone who wants it. Session 9 has been tic tac toe since November 2026; the cipher
 wheel, which had that date, is an extra page with no date.
 
@@ -577,14 +577,14 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   first-taught entry follows. Session 13's opener now retrieves from the coin grab
   in place of the dictionary question. The
   Friday bonus and the cipher wheel are numbers 15 and 16 inside the build. The
-  course is fourteen sessions. Monday takes session 12 on Nov 23, before sessions
-  9 to 11, which each move one Monday later (Nov 30, Dec 7, Dec 14); Friday takes it
-  on Dec 11, in number order. So the page is written to need only sessions 1 to 8:
+  course is fourteen sessions. Monday took sessions 8 and 9 together on
+  Nov 16 and takes session 12 on Nov 23, before sessions 10 and 11 (Nov 30, Dec 7);
+  session 13 is Mon Dec 14. Friday takes session 12 on Dec 11, in number order. So the page is written to need only sessions 1 to 8:
   its opener retrieves session 6's four numbers and session 3's counter, and chunk 4
   says what the loop does on every frame and what the knob block is, without leaning
-  on session 11. The hub's Monday calendar is in date order. Session 13 has Fri
-  Dec 18 and no Monday date, and session 14 has no date in either section; those
-  three dates are still to be decided.
+  on session 11. The hub's Monday calendar is in date order. Session 13 has Mon
+  Dec 14 and Fri Dec 18, and session 14 has no date in either section; those two
+  dates are still to be decided.
   Harness: `pygame.mouse.get_pos` is patched so a run can be given mouse positions,
   a headless run can be seeded, and a run of many frames can use a clock that does
   not wait. The mouse positions for the three tools are worked out by

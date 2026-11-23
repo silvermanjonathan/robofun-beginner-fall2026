@@ -236,7 +236,7 @@ SESSION09 = {
  "worksheet": {"slug": "session09_worksheet", "covers": "chunks 5 and 9"},
  "title": "Tic tac toe",
  "subtitle": "A two-player game in the terminal, one line at a time",
- "mon": "Mon Nov 30",
+ "mon": "Mon Nov 16",
  "fri": "Fri Nov 13",
  "new": ["changing one slot of a list", "a board stored as a list", "a function that prints a picture",
          "a square number changed into an index", "a test board", "an eight-way gate",
