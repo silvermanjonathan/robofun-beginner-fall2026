@@ -39,7 +39,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "24"
+VERSION = "25"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-11-22"
 TMP = os.environ.get("BVC_TMP",
@@ -113,6 +113,8 @@ def _get(*a, **k):
     for item in _INJ:
         if item[0] == f and item[1] == "KEYDOWN":
             evs.append(pygame.event.Event(pygame.KEYDOWN, {{"key": getattr(pygame, item[2])}}))
+        if item[0] == f and item[1] == "CLICK":
+            evs.append(pygame.event.Event(pygame.MOUSEBUTTONDOWN, {{"pos": (item[2], item[3]), "button": 1}}))
     return evs
 
 pygame.event.get = _get
@@ -134,11 +136,12 @@ def _gp(*a, **k):
 pygame.key.get_pressed = _gp
 
 def _mouse(*a, **k):
-    # the newest [frame, "MOUSE", x, y] item at or before this frame; (0, 0) until the first
+    # the newest [frame, "MOUSE", x, y] or [frame, "CLICK", x, y] item at or before this
+    # frame; (0, 0) until the first. A CLICK also puts the mouse where it clicked.
     f = _state["f"]
     pos = (0, 0)
     for item in _INJ:
-        if item[1] == "MOUSE" and item[0] <= f:
+        if item[1] in ("MOUSE", "CLICK") and item[0] <= f:
             pos = (item[2], item[3])
     return pos
 
@@ -1460,7 +1463,7 @@ def render_constraints():
              '<tr><td><code>.find()</code></td><td>Extra: the cipher wheel</td><td>Revealed after the '
              'hand-written rack scan.</td></tr>'
              '<tr><td>pygame from session 6 onward</td><td>Session 6</td><td>The only graphics library in the course. It replaces the turtle drawing session, which does not run in VS Code.</td></tr>'
-             '<tr><td><code>pygame.Rect</code>, <code>colliderect</code>, the mouse position</td>'
+             '<tr><td><code>pygame.Rect</code>, <code>colliderect</code>, <code>collidepoint</code>, the mouse position, a mouse click (<code>MOUSEBUTTONDOWN</code>)</td>'
              '<td>Session 12</td><td>A Rect names the four numbers of a rectangle. '
              '<code>colliderect</code> is taught as the reveal after the overlap test written '
              'by hand, never before it.</td></tr>'
@@ -1679,6 +1682,7 @@ def render_ledger():
         'pygame.Rect(x, y, w, h) a rectangle with a name: left, right, top, bottom\n'
         'a.colliderect(b)        True when the two rectangles overlap\n'
         'mouse.get_pos()         where the mouse is in the window: (x, y)\n'
+        'a.collidepoint(spot)    True when the spot is inside the rectangle\n'
         'level[row][col]         row first, then column'))
     b.append('<p class="note">Read the last line of an error first. One change per run.</p>')
     b.append('</section>')

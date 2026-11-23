@@ -1,10 +1,12 @@
 # Session 12: coin grab. Added November 2026 between the pygame window session and the
-# room of tiles, which became session 13. A stick figure follows the mouse, a coin jumps to a
-# random spot when the figure touches it, and the terminal keeps the score.
+# room of tiles, which became session 13. A click picks up a stick figure and it follows the
+# mouse until the next click puts it down; a coin jumps to a random spot when the figure
+# touches it, and the terminal keeps the score.
 #
 # Chunks 1 to 3 are short terminal programs about pygame.Rect: its edges, the overlap
 # test written by hand, and colliderect as the reveal after it. Chunk 4 is the first
-# window file, and chunk 5 draws a stick figure inside the player's Rect. The build is one program in three tools, each a whole program that
+# window file, chunk 5 draws a stick figure inside the player's Rect, and chunk 6 makes
+# one click pick the figure up and the next click put it down. The build is one program in three tools, each a whole program that
 # grows out of the one before:
 #   tool 1  the coin jumps when the player touches it     (the floor exit)
 #   tool 2  a score, and a win at ten coins               (the middle exit)
@@ -105,14 +107,46 @@ def draw_player(x, y):
 STICK = swap(STICK, '    pygame.draw.rect(screen, PLAYER, player)\n',
              '    draw_player(player.centerx, player.top)\n')
 
-TOOL1 = STICK
+# chunk 6, and the file tool 1 starts from: one click picks the figure up, and the
+# next click puts it down, so a click is free for something else while it is down
+CLICK = STICK
+CLICK = swap(CLICK, 'player = pygame.Rect(0, 0, PLAYER_SIZE, PLAYER_SIZE)\n',
+             'player = pygame.Rect(75, 175, PLAYER_SIZE, PLAYER_SIZE)\nholding = 0\n')
+CLICK = swap(CLICK, '''while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = 0
+
+    player.center = pygame.mouse.get_pos()
+''', '''while running:
+    click = 0
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = 0
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            click = 1
+
+    mouse = pygame.mouse.get_pos()
+    if click == 1 and holding == 1:
+        holding = 0
+        print("put down")
+    elif click == 1 and player.collidepoint(mouse):
+        holding = 1
+        print("picked up")
+    if holding == 1:
+        player.center = mouse
+''')
+CLICK = swap(CLICK, 'print(f"centre {player.center}, left {player.left}, top {player.top}")\n',
+             'print(f"centre {player.center}, holding {holding}")\n')
+
+TOOL1 = CLICK
 TOOL1 = swap(TOOL1, 'import pygame\n\n# ----', 'import random\nimport pygame\n\n# ----')
 TOOL1 = swap(TOOL1, 'PLAYER_SIZE = 50\n', 'PLAYER_SIZE = 50\nCOIN_SIZE = 30\n')
 TOOL1 = swap(TOOL1, 'PLAYER = (248, 250, 252)\n', 'PLAYER = (248, 250, 252)\nCOIN = (252, 211, 77)\n')
-TOOL1 = swap(TOOL1, 'player = pygame.Rect(0, 0, PLAYER_SIZE, PLAYER_SIZE)\n',
-             'player = pygame.Rect(0, 0, PLAYER_SIZE, PLAYER_SIZE)\n'
+TOOL1 = swap(TOOL1, 'PLAYER_SIZE)\nholding = 0\n',
+             'PLAYER_SIZE)\nholding = 0\n'
              'coin = pygame.Rect(300, 200, COIN_SIZE, COIN_SIZE)\n')
-TOOL1 = swap(TOOL1, '    player.center = pygame.mouse.get_pos()\n', '''    player.center = pygame.mouse.get_pos()
+TOOL1 = swap(TOOL1, '        player.center = mouse\n', '''        player.center = mouse
     if player.colliderect(coin):
         coin.x = random.randint(0, WIDTH - COIN_SIZE)
         coin.y = random.randint(0, HEIGHT - COIN_SIZE)
@@ -136,7 +170,7 @@ TOOL2 = swap(TOOL2, '        print(f"grabbed, the coin is now at {coin.x}, {coin
         print(f"You win with {score} coins.")
 ''')
 TOOL2 = swap(TOOL2, '    screen.fill(BG)\n', '    screen.fill(background)\n')
-TOOL2 = swap(TOOL2, 'print(f"centre {player.center}, left {player.left}, top {player.top}")\n',
+TOOL2 = swap(TOOL2, 'print(f"centre {player.center}, holding {holding}")\n',
              'print(f"final score {score}")\n')
 
 TOOL3 = TOOL2
@@ -149,13 +183,13 @@ TOOL3 = swap(TOOL3, 'coin = pygame.Rect(300, 200, COIN_SIZE, COIN_SIZE)\n', '''c
 ]
 ''')
 TOOL3 = swap(TOOL3, 'background = BG\n', 'background = BG\nframe = 0\n')
-TOOL3 = swap(TOOL3, '''    player.center = pygame.mouse.get_pos()
+TOOL3 = swap(TOOL3, '''        player.center = mouse
     if playing == 1 and player.colliderect(coin):
         coin.x = random.randint(0, WIDTH - COIN_SIZE)
         coin.y = random.randint(0, HEIGHT - COIN_SIZE)
         score = score + 1
         print(f"score {score}")
-''', '''    player.center = pygame.mouse.get_pos()
+''', '''        player.center = mouse
     frame = frame + 1
     for coin in coins:
         if playing == 1 and player.colliderect(coin):
@@ -201,7 +235,7 @@ for frame in range(60):
         score = score + 1
 print(score)'''
 
-for _name, _prog in (("MOUSE", MOUSE), ("STICK", STICK), ("TOOL1", TOOL1), ("TOOL2", TOOL2), ("TOOL3", TOOL3)):
+for _name, _prog in (("MOUSE", MOUSE), ("STICK", STICK), ("CLICK", CLICK), ("TOOL1", TOOL1), ("TOOL2", TOOL2), ("TOOL3", TOOL3)):
     for _ln in _prog.split("\n"):
         assert len(_ln) <= 72, _name + ": a line is wider than the code box: " + _ln
 
@@ -222,8 +256,9 @@ def chase(seed, starts, visits, goal=None, first=3, gap=3):
     """
     rng = random.Random(seed)
     coins = [[x, y] for x, y in starts]
-    inject = []
-    mouse = (0, 0)
+    # frame 1: a click on the figure where it starts, centre (100, 200), picks it up
+    inject = [[1, "CLICK", 100, 200]]
+    mouse = (100, 200)
     grabs = 0
     total = first + visits * gap
     for frame in range(1, total + 1):
@@ -532,7 +567,7 @@ HOW12 = ("Each new line is a question for the room before it goes on the screen.
 
 TOOLS12 = [
     {"title": "Tool 1: the coin jumps when you touch it",
-     "intro": "The starting file is chunk 5's program, the stick figure that follows the mouse. It is behind the button below. Now the window gets a coin: a gold square that stays still until the player touches it, then jumps to a spot picked at random. The terminal says where it went. " + HOW12,
+     "intro": "The starting file is chunk 6's program: the stick figure you pick up with one click and put down with the next. It is behind the button below. Now the window gets a coin: a gold square that stays still until the player touches it, then jumps to a spot picked at random. The terminal says where it went. " + HOW12,
      "start": STICK,
      "whole": "Show the whole program",
      "code": TOOL1,
@@ -566,7 +601,7 @@ TOOLS12 = [
            (('player', 'player'), "A rectangle overlaps itself, so this is True on every frame."),
            (('screen', 'coin'), "<code>screen</code> is the window, not a Rect. It has no <code>colliderect</code>, so Python gives an error."),
            "<code>colliderect</code> is the test from chunk 3. It gives True when the two rectangles overlap. The gate is inside the frame loop, so the question is asked 60 times a second.",
-           note="Under <code>player.center = pygame.mouse.get_pos()</code>, lined up with it."),
+           note="Under the gate <code>if holding == 1:</code> and its line, lined up with its <code>if</code>."),
          Q(TOOL1, "The player is touching the coin. The coin jumps to a new spot. The window is 600 wide and 400 tall. Which variable limits x, and which limits y?",
            '        coin.x = random.randint(0, WIDTH - COIN_SIZE)\n        coin.y = random.randint(0, HEIGHT - COIN_SIZE)',
            '        coin.x = random.randint(0, ____ - COIN_SIZE)\n        coin.y = random.randint(0, ____ - COIN_SIZE)', ('WIDTH', 'HEIGHT'),
@@ -587,7 +622,7 @@ TOOLS12 = [
            "<code>COIN</code> in capitals is the colour, and <code>coin</code> in small letters is the Rect. Python treats them as two different names.",
            note="Under <code>screen.fill(BG)</code> and above the line <code>draw_player(player.centerx, player.top)</code>. The player is drawn after the coin, so the player is on top."),
      ],
-     "predict": "In this run the mouse goes to the middle of the coin, at (315, 215), and stays there, without moving, for about half a second, until the window closes. How many times does the terminal print grabbed?",
+     "predict": "In this run the figure is clicked where it starts, to pick it up. Then the mouse goes to the middle of the coin, at (315, 215), and stays there, without moving, for about half a second, until the window closes. How many times does the terminal print grabbed?",
      "reveal": "Once. On the frame the mouse arrives, the gate is True and the coin jumps to 57, 46. On every frame after that the player is in the same place and the coin is somewhere else, so the gate is False. The last line shows that the player did not move: its centre is (315, 215) when the window closes.</p><p>The spot is picked at random, so on your machine the numbers after grabbed will be different. A new spot can land under the player. When that happens, the coin jumps again on the next frame. This is the floor exit.",
      },
     {"title": "Tool 2: a score, and a win at ten coins",
@@ -644,7 +679,7 @@ TOOLS12 = [
            ('playing', "That prints 1 or 0, not the number of coins."),
            "The line is after the loop, at the left edge, so it runs once, when the window is closed."),
      ],
-     "predict": "In this run the mouse goes to the middle of the coin eleven times, and each time the coin has jumped somewhere new. How many score lines does the terminal print, and what happens on the eleventh touch?",
+     "predict": "In this run the figure is picked up first. Then the mouse goes to the middle of the coin eleven times, and each time the coin has jumped somewhere new. How many score lines does the terminal print, and what happens on the eleventh touch?",
      "reveal": "The first one: ten score lines, from score 1 to score 10, and then <code>You win with 10 coins.</code> On the tenth grab the win gate sets <code>playing</code> to 0.</p><p>The second one: nothing happens on the eleventh touch. The coin gate's first test, <code>playing == 1</code>, is False, so the coin does not jump and the score stays at 10. The last line prints when the window closes. This is the middle exit.",
      },
     {"title": "Tool 3: three coins in a list, and a time limit",
@@ -676,7 +711,7 @@ TOOLS12 = [
            (('0', '0'), "Adding 0 changes nothing, so the counter would stay at 0 and time would never run out."),
            "The counter starts at 0 above the loop and goes up by 1 on every frame. After one second it is 60.",
            part2='    frame = frame + 1',
-           note="<code>frame = 0</code> goes under <code>background = BG</code>. <code>frame = frame + 1</code> goes inside the loop, under the line that moves the player."),
+           note="<code>frame = 0</code> goes under <code>background = BG</code>. <code>frame = frame + 1</code> goes inside the loop, under the gate <code>if holding == 1:</code> and its line, lined up with its <code>if</code>."),
          Q(TOOL3, "The touching question now has to be asked for every coin in the list. Which loop does that?",
            '    for coin in coins:\n        if playing == 1 and player.colliderect(coin):\n            coin.x = random.randint(0, WIDTH - COIN_SIZE)\n            coin.y = random.randint(0, HEIGHT - COIN_SIZE)\n            score = score + 1\n            print(f"score {score}")',
            '    for ____ in ____:\n        if playing == 1 and player.colliderect(coin):\n            coin.x = random.randint(0, WIDTH - COIN_SIZE)\n            coin.y = random.randint(0, HEIGHT - COIN_SIZE)\n            score = score + 1\n            print(f"score {score}")', ('coin', 'coins'),
@@ -698,7 +733,7 @@ TOOLS12 = [
            ('player', "That draws three gold squares on top of each other where the player is. The coins are never drawn."),
            "It is the same loop as the one that asks the touching question: one pass for each coin. The draw line moves one indentation level in."),
      ],
-     "predict": "In this run the mouse goes to a coin four times in the first quarter of a second. Then it stays where it is, not touching a coin, until the window closes on frame 1811. What are the last two lines the terminal prints?",
+     "predict": "In this run the figure is picked up first. Then the mouse goes to a coin four times in the first quarter of a second. Then it stays where it is, not touching a coin, until the window closes on frame 1811. What are the last two lines the terminal prints?",
      "reveal": "<code>Time is up. You got 4 coins.</code> and then <code>final score 4</code>. The four visits print score 1 to score 4. After that the player is not touching a coin, so nothing prints for a long time. Frame 1800 is 30 seconds at 60 frames a second. On that frame the time gate is True: it sets <code>playing</code> to 0, turns the window red, and prints. The last line prints when the window closes. This is the stretch exit.",
      },
 ]
@@ -710,13 +745,13 @@ SESSION12 = {
  "num": 12,
  "slug": "session12_coin_grab",
  "title": "Coin grab",
- "subtitle": "A stick figure that follows the mouse, a coin that jumps when you touch it, and a score",
+ "subtitle": "A stick figure you pick up with a click, a coin that jumps when you touch it, and a score",
  "mon": "Mon Nov 23",
  "fri": "Fri Dec 11",
  "new": ["pygame.Rect", "left, right, top, and bottom", "the overlap test written by hand", "colliderect",
-         "the mouse position", "a picture drawn inside a Rect", "a random spot inside the window", "a score that counts each coin once"],
+         "the mouse position", "a picture drawn inside a Rect", "a mouse click", "collidepoint", "a random spot inside the window", "a score that counts each coin once"],
  "reuse": "The window loop you copied in sessions 6 and 7, session 6's four numbers for a rectangle, session 3's counter and randint, and session 2's two tests joined with and",
- "reuse_note": "Today is the first whole game in a window, and it is short on purpose: the floor program is 39 lines of code. Chunk 4's file is 24 of them, and most of those are the window loop the students copied in sessions 6 and 7. Chunk 5 adds the six lines of the stick figure's function, and tool 1 adds nine. The page does not need session 11: chunk 4 says what the loop does on every frame, and why the fill and the drawing are inside it. So this session can be taught any time after session 8. Chunks 1 to 3 run in the terminal and are a few lines each, so they can be typed by everyone or run once on the projector while the room predicts. The typing starts at chunk 4. Nothing here needs the keyboard during play: the mouse moves the player.",
+ "reuse_note": "Today is the first whole game in a window, and it is short on purpose: the floor program is 51 lines of code. Chunk 4's file is 24 of them, and most of those are the window loop the students copied in sessions 6 and 7. Chunk 5 adds the six lines of the stick figure's function, chunk 6 adds twelve lines for picking the figure up and putting it down, and tool 1 adds nine. The page does not need session 11: chunk 4 says what the loop does on every frame, and why the fill and the drawing are inside it. So this session can be taught any time after session 8. Chunks 1 to 3 run in the terminal and are a few lines each, so they can be typed by everyone or run once on the projector while the room predicts. The typing starts at chunk 4. Nothing here needs the keyboard during play: a click picks the player up, the mouse moves it, and a second click puts it down.",
  "env_note": True,
  "opener": {
    "title": "Review: where things are in a pygame window",
@@ -833,6 +868,51 @@ SESSION12 = {
    "inject": [[2, "MOUSE", 300, 200]],
    "predict": "Suppose the mouse is at (300, 200) when you close the window, as in chunk 4. The call is <code>draw_player(player.centerx, player.top)</code>. What are <code>x</code> and <code>y</code> inside the function? Then work out where the middle of the head is.",
    "reveal": "The first one: <code>x</code> is 300 and <code>y</code> is 175. <code>player.centerx</code> is where the mouse is across, and the last line of the output says the top of the player is 175. The second one: the middle of the head is at (300, 185), because the circle is drawn at <code>(x, y + 10)</code> and 175 + 10 is 185. Its radius is 10, so the top of the head is at 175, the top of the Rect. The feet are at <code>y + 50</code>, which is 225, the bottom of the Rect.</p><p>The run on this page was given a mouse position of (300, 200). Your numbers depend on where your mouse is."},
+
+  {"title": "Click to pick it up, click to put it down",
+   "teach": "Right now the figure follows the mouse all the time, so the mouse cannot do anything else. In this chunk the first click on the figure picks it up, and it follows the mouse. The next click, anywhere, puts it down where it is. While the figure is down, the mouse is free to click on something else in the window.</p><p>A click is an <b>event</b>, like closing the window. When the mouse button is pressed, <code>pygame.event.get()</code> gives an event whose type is <code>pygame.MOUSEBUTTONDOWN</code>. Inside the event loop the program only writes down that there was a click: <code>click = 1</code>. The line <code>click = 0</code> at the top of the frame loop puts it back to 0 on every frame, so one click counts on one frame only.</p><p><code>holding</code> says whether the figure is picked up: 1 for yes, 0 for no. It starts at 0, above the loop.</p><p><b><code>player.collidepoint(mouse)</code></b> is True when the spot <code>mouse</code> is inside the player's Rect. So a click picks the figure up only if it lands on the figure.</p><p>The player now starts with its top left corner at (75, 175), so its middle is at (100, 200), where you can see it and click it. The last print says where the player is and whether it is held.",
+   "code": CLICK,
+   "start": STICK,
+   "steps": [
+       Q(CLICK, "The program needs to know, on every frame, whether the figure is picked up. Where does <code>holding</code> start?",
+         'holding = 0',
+         'holding = ____', '0',
+         ('1', "Then the figure would follow the mouse from the first frame, before anyone clicks it."),
+         ('"no"', "With quote marks it is text. The gates below compare <code>holding</code> with the numbers 1 and 0."),
+         "Nobody has clicked yet, so the figure is not picked up. The line is above the frame loop, so it runs once.",
+         note="Under the <code>player</code> line. That line changes too: the player starts at <code>pygame.Rect(75, 175, PLAYER_SIZE, PLAYER_SIZE)</code>."),
+       Q(CLICK, "A click is an event. Which event type means the mouse button was pressed?",
+         '        if event.type == pygame.MOUSEBUTTONDOWN:\n            click = 1',
+         '        if event.type == pygame.____:\n            click = 1', 'MOUSEBUTTONDOWN',
+         ('QUIT', "<code>QUIT</code> is closing the window. That gate is already the one above."),
+         ('mouse.get_pos()', "<code>get_pos</code> gives where the mouse is, not whether it was clicked. It is not an event type."),
+         "Pressing the mouse button makes one <code>MOUSEBUTTONDOWN</code> event. The gate writes down that there was a click this frame.",
+         note="Inside the <code>for event</code> loop, under the QUIT gate and lined up with its <code>if</code>. <code>click = 0</code> goes at the top of the frame loop, the first line under <code>while running:</code>."),
+       Q(CLICK, "The figure is held and the player clicks. The figure is put down. Which two tests go in this gate?",
+         '    if click == 1 and holding == 1:\n        holding = 0\n        print("put down")',
+         '    if click == 1 and holding == ____:\n        holding = ____\n        print("put down")', ('1', '0'),
+         (('0', '1'), "Those are swapped. That gate would pick the figure up, with a click anywhere in the window."),
+         (('1', '1'), "<code>holding</code> is already 1. Nothing would change, so the figure could never be put down."),
+         "When there is a click and the figure is held, <code>holding</code> becomes 0. The terminal says what happened.",
+         note="Under the line <code>mouse = pygame.mouse.get_pos()</code>, which replaces the line that moved the player."),
+       Q(CLICK, "The figure is down and the player clicks. The click should pick it up only if it lands on the figure. Which word starts this gate?",
+         '    elif click == 1 and player.collidepoint(mouse):\n        holding = 1\n        print("picked up")',
+         '    ____ click == 1 and player.collidepoint(mouse):\n        holding = 1\n        print("picked up")', 'elif',
+         ('if', "With a second <code>if</code>, the click that puts the figure down is also on the figure. The gate above sets <code>holding</code> to 0, then this gate sets it straight back to 1 on the same frame, so the figure can never be put down."),
+         ('else', "<code>else</code> takes no test. Every frame without a click would pick the figure up."),
+         "<code>elif</code> runs only when the gate above it was False. So one click does one thing: it puts the figure down, or it picks it up, never both. <code>collidepoint(mouse)</code> is True when the mouse is inside the player's Rect."),
+       Q(CLICK, "The figure follows the mouse only while it is held. What goes in the blank?",
+         '    if holding == 1:\n        player.center = mouse',
+         '    if holding == ____:\n        player.center = mouse', '1',
+         ('0', "Then the figure would follow the mouse while it is put down, and stop while it is held."),
+         ('click', "<code>click</code> is 1 on one frame only, so the figure would jump to the mouse once and stop."),
+         "<code>player.center = mouse</code> is the line from chunk 4, now inside a gate. While <code>holding</code> is 0 the line does not run, so the figure stays where it was put down."),
+   ],
+   "run": "headless",
+   "frames": 10,
+   "inject": [[2, "CLICK", 100, 200], [4, "MOUSE", 400, 300], [6, "CLICK", 400, 300], [8, "MOUSE", 500, 100]],
+   "predict": "In this run the mouse clicks the figure at (100, 200), moves to (400, 300), clicks again, and then moves to (500, 100). What does the terminal print, and where is the figure when the window closes?",
+   "reveal": "<code>picked up</code>, then <code>put down</code>, then <code>centre (400, 300), holding 0</code>. The first click lands on the figure, so the second gate picks it up. The figure follows the mouse to (400, 300). The second click finds <code>holding</code> at 1, so the first gate puts it down there. After that <code>holding</code> is 0, so the figure stays at (400, 300) when the mouse moves on to (500, 100).</p><p>On your machine, click the figure, move it, and click again. Then move the mouse away: the figure stays. Click somewhere empty: nothing happens, because that click is not on the figure."},
  ],
  "hinge": {"q": "This is one second of a frame loop, 60 frames, without the window. The player is on the coin, so <code>touching</code> is True, and no line in the gate moves the coin. What does the program print? Then say which one line, added inside the gate, would make it print 1.",
            "code": HINGE,
@@ -842,17 +922,18 @@ SESSION12 = {
  "brief": {
    "title": "Build: coin grab",
    "minutes": 30,
-   "intro": "You are making a small game called coin grab. A stick figure follows the mouse. A gold coin sits in the window. When the figure touches the coin, the coin jumps to a new spot picked at random, and the terminal counts it. Ten coins wins the game. The build is one program, written in three tools. Each tool starts from the program the tool before it finished.",
+   "intro": "You are making a small game called coin grab. You click the stick figure to pick it up, and it follows the mouse until you click again. A gold coin sits in the window. When the figure touches the coin, the coin jumps to a new spot picked at random, and the terminal counts it. Ten coins wins the game. The build is one program, written in three tools. Each tool starts from the program the tool before it finished.",
    "tools": TOOLS12,
    "steps": [
-     "Start from chunk 5's file, <code>Jonathan_session12.py</code> with your first name in place of Jonathan: the stick figure that follows the mouse.",
+     "Start from chunk 6's file, <code>Jonathan_session12.py</code> with your first name in place of Jonathan: the stick figure you pick up with a click.",
      "Add a coin, and make it jump to a random spot when the player touches it.",
      "Add a score that goes up by 1 for each coin, printed in the terminal.",
      "End the game at ten coins: the window turns green and the coin stops jumping.",
      "Put three coins in a list, and add a 30 second time limit that turns the window red.",
    ],
    "expected_got": [
-     ["The stick figure follows the mouse, with the pointer in the middle of its body", ""],
+     ["Clicking the stick figure picks it up, and it follows the mouse with the pointer in the middle of its body", ""],
+     ["A second click puts the figure down, and it stays there when the mouse moves", ""],
      ["Touching the coin makes it jump, and the whole coin is inside the window every time", ""],
      ["One coin adds 1 to the score, not 60 a second", ""],
      ["After ten coins the window is green, and touching a coin does nothing", ""],
@@ -861,7 +942,7 @@ SESSION12 = {
    ],
  },
  "exits": {
-   "floor": "Tool 1: the stick figure follows the mouse, and the coin jumps to a random spot when the figure touches it.",
+   "floor": "Tool 1: a click picks up the stick figure and the next click puts it down, and the coin jumps to a random spot when the figure touches it.",
    "middle": "Tool 2: the score is printed in the terminal, and at ten coins the window turns green and the game stops.",
    "stretch": "Tool 3: three coins in a list, and a 30 second time limit that turns the window red.",
  },
@@ -889,17 +970,18 @@ SESSION12 = {
      "The variable you changed makes the game harder, and you can say why",
    ],
  },
- "ledger": "Stamp 12: <code>pygame.Rect(x, y, w, h)</code> has <code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>, and <code>center</code>; <code>a.colliderect(b)</code> is True when two rectangles overlap; <code>pygame.mouse.get_pos()</code> is where the mouse is; move the coin inside the gate, so one grab counts once.",
+ "ledger": "Stamp 12: <code>pygame.Rect(x, y, w, h)</code> has <code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>, and <code>center</code>; <code>a.colliderect(b)</code> is True when two rectangles overlap; <code>pygame.mouse.get_pos()</code> is where the mouse is; <code>a.collidepoint(spot)</code> is True when the spot is inside the rectangle; a click is a <code>MOUSEBUTTONDOWN</code> event; move the coin inside the gate, so one grab counts once.",
  "teacher": {
    "timing": [
      "0:00 opener, a review of where things are in the window, 15 min (nine checks; everyone picks before you click)",
-     "0:15 chunk 1, a Rect and its edges, 6 min (the opener already did x + width)",
-     "0:21 chunk 2, the overlap test by hand, 10 min (project the figure; this is the mathematics of the day)",
-     "0:31 chunk 3, colliderect, 6 min",
-     "0:37 chunk 4, the mouse, 12 min (the first window file; most of the typing is here)",
-     "0:49 chunk 5, the stick figure, 8 min",
-     "0:57 hinge question, 3 min",
-     "1:00 build, tools 1 and 2, 25 min (tool 3 is for students who are ahead)",
+     "0:15 chunk 1, a Rect and its edges, 5 min (the opener already did x + width)",
+     "0:20 chunk 2, the overlap test by hand, 10 min (project the figure; this is the mathematics of the day)",
+     "0:30 chunk 3, colliderect, 5 min",
+     "0:35 chunk 4, the mouse, 12 min (the first window file; most of the typing is here)",
+     "0:47 chunk 5, the stick figure, 8 min",
+     "0:55 chunk 6, click to pick up and put down, 7 min",
+     "1:02 hinge question, 3 min",
+     "1:05 build, tools 1 and 2, 20 min (tool 3 is for students who are ahead)",
      "1:25 exits, ledger stamp, 5 min",
    ],
    "misconceptions": [
@@ -912,11 +994,13 @@ SESSION12 = {
      ["Expects two rectangles that share an edge to count as touching.",
       "Go back to chunk 3's second print. 330 is not less than 330. One pixel of overlap is needed."],
      ["Runs the program and reports that the player will not move.",
-      "The mouse is outside the window, or the window is behind VS Code. <code>get_pos</code> only follows the mouse while it is over the window."],
+      "From chunk 6 on, the figure moves only after a click on it. If it was clicked, the mouse may be outside the window, or the window may be behind VS Code. <code>get_pos</code> only follows the mouse while it is over the window."],
+     ["Writes the second gate of chunk 6 as <code>if</code>, not <code>elif</code>. The figure can be picked up but never put down.",
+      "The click that puts it down is on the figure, so with a second <code>if</code> the next gate picks it straight back up on the same frame. With <code>elif</code>, only one of the two gates runs for a click."],
      ["Draws the coin above <code>screen.fill</code> and the coin never appears.",
       "The fill paints over everything drawn before it on that frame. Whatever is drawn last is on top."],
    ],
    "standards": ["NY-5.G.1", "NY-6.NS.8", "NY-6.EE.5"],
-   "routing": "Chunks 1 to 3 need no window. If time is short, run them once on the projector and have the room predict out loud, then go to chunk 4, where everyone types. Tool 1 is the floor exit and it adds nine lines to chunk 5's file. If chunk 5 has to be skipped, the build works the same with chunk 4's white square as the player: the only difference is the one line that draws it. Tool 2 is the middle exit. Every tool has its finished program behind a button, so a student who falls behind can read it and run it. The extension is for a student who finishes tool 3. Nothing survives on the machines, so the game cannot be carried into session 13; session 13 starts from its own file.",
+   "routing": "Chunks 1 to 3 need no window. If time is short, run them once on the projector and have the room predict out loud, then go to chunk 4, where everyone types. Tool 1 is the floor exit and it adds nine lines to chunk 6's file. If chunk 5 has to be skipped, the build works the same with chunk 4's white square as the player: the only difference is the one line that draws it. If chunk 6 has to be skipped, the build also works from chunk 5's file, with the figure following the mouse all the time; put the coin lines under <code>player.center = pygame.mouse.get_pos()</code>. Tool 2 is the middle exit. Every tool has its finished program behind a button, so a student who falls behind can read it and run it. The extension is for a student who finishes tool 3. Nothing survives on the machines, so the game cannot be carried into session 13; session 13 starts from its own file.",
  },
 }

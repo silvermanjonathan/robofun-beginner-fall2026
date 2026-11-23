@@ -48,7 +48,7 @@ Homepage: https://silvermanjonathan.github.io/robofun-beginner-fall2026/beginner
 | `session09_worksheet_key.html` | The session 9 worksheet's answer key. Linked from the session 9 teacher panel only. |
 | `session10_dictionaries.html` | Dictionaries |
 | `session11_the_pygame_window.html` | The pygame window |
-| `session12_coin_grab.html` | Coin grab. A stick figure that follows the mouse, a coin that jumps when touched, a score, and a time limit. Added November 2026. |
+| `session12_coin_grab.html` | Coin grab. A stick figure you pick up with one click and put down with the next, a coin that jumps when touched, a score, and a time limit. Added November 2026. |
 | `session13_grids_keys_game_state.html` | Grids, keys, and game state |
 | `session14_commission_and_demo.html` | Commission and demo day |
 | `friday_bonus_distance_and_bumpers.html` | Friday bonus: distance and bumpers |
@@ -621,3 +621,16 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   choices of sessions 11 to 14 and the Friday bonus, and on the constraints page.
   Session 11's chunk 6 is now "Main variables at the top". No program changed except
   that comment line. Version pin `?v=24`.
+- **2026-11-23, v25.** Session 12 has a new chunk 6, "Click to pick it up, click to
+  put it down". The player starts at (100, 200) and follows the mouse only while it
+  is held: a click on the figure (`MOUSEBUTTONDOWN`, then `player.collidepoint(mouse)`)
+  picks it up, and the next click anywhere puts it down, so a click is free for
+  something else while the figure is down. The click is noted in the event loop as
+  `click = 1` and handled by two flat gates joined with `elif`; the wrong choice
+  `if` explains why the figure could then never be put down. Five What goes next?
+  questions. Tools 1 to 3 start from chunk 6's file, so the floor program is 51
+  lines. The harness takes `[frame, "CLICK", x, y]`, which sends a
+  MOUSEBUTTONDOWN and moves the mouse there; `session12.chase` clicks the figure on
+  frame 1. Timing: chunks 1 and 3 are 5 minutes, chunk 6 is 7, the build is 20.
+  `collidepoint` and the mouse click are on the constraints page and the reference
+  strip. Version pin `?v=25`.
