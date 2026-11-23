@@ -39,7 +39,7 @@ def short(s):
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.environ.get("BVC_OUT", ROOT)
-VERSION = "22"
+VERSION = "23"
 REPO = "robofun-beginner-fall2026"
 PUBLISHED = "2026-11-22"
 TMP = os.environ.get("BVC_TMP",
@@ -829,7 +829,12 @@ def pick_block(sid, step, pick, program, label, after=""):
         head = code_block(blank, context=program)
         how = ("Pick what goes in the blank." if n == 1
                else "Pick what goes in the two blanks.")
-    yes = '<p><b>Yes.</b></p>' + code_block(step["line"], context=program) + '<p>' + pick["why"] + '</p>'
+    yes = '<p><b>Yes.</b></p>'
+    if step.get("line"):
+        yes += code_block(step["line"], context=program)
+    yes += '<p>' + pick["why"] + '</p>'
+    if pick.get("figure"):
+        yes += pick["figure"]
     if step.get("note"):
         yes += '<p>' + step["note"] + '</p>'
     yes += after
@@ -940,7 +945,20 @@ def render_session(s, prev_s, next_s):
     b.append('<section class="opener"><p class="chunk-no">Opener &middot; '
              + str(op["minutes"]) + ' minutes</p><h2>' + html.escape(op["title"]) + '</h2>')
     b.append('<p>' + op["body"] + '</p>')
-    for i, q in enumerate(op["questions"]):
+    # an opener can be a review: short teach parts, each with a picture, and
+    # multiple-choice checks in the same style as the What goes next? questions
+    check_no = 0
+    for i, item in enumerate(op.get("flow", [])):
+        if "teach" in item:
+            b.append('<h3>' + html.escape(item["heading"]) + '</h3><p>' + item["teach"] + '</p>')
+            if item.get("figure"):
+                b.append(item["figure"])
+        else:
+            check_no += 1
+            pick = dict(item["pick"], text=True)
+            b.append(pick_block("s%d-op-check%d" % (n, check_no), {"q": item["q"]}, pick, None,
+                                "Check " + str(check_no) + "."))
+    for i, q in enumerate(op.get("questions", [])):
         if q.get("code"):
             b.append(code_block(q["code"]))
         extra = code_block(q["code_a"]) if q.get("code_a") else ""

@@ -601,3 +601,17 @@ browser, one card to a sheet, with the clues printed and the answers left off.
   were rendered again with WeasyPrint, because each sheet's header now says "of
   14" and session 9's sheet has a new Monday date; the page counts are unchanged (4, 3, 3) and Bricolage Grotesque, DM Sans,
   and JetBrains Mono are embedded. Version pin `?v=22`.
+- **2026-11-23, v23.** Session 12's opener is now a review of where things are in a
+  pygame window, in place of the retrieval questions on session 6's four numbers and
+  session 3's counter. Four short parts, each with a picture of the 600 by 400
+  window drawn on a grid (two numbers for every spot, y goes down, finding a spot,
+  a rectangle starts at its top left corner), and nine multiple-choice checks in the
+  same style as the What goes next? questions: every wrong choice says why, and the
+  right choice explains, with a picture on four of them. The pictures are drawn by
+  `window_figure` and its helpers in `build/session12.py`. `render.py` renders an
+  opener's `flow` list (teach parts and checks) before any `questions`, and
+  `pick_block` now skips the code line when a choice has none and can show a
+  picture after the explanation; no other page changes. The opener is 15 minutes,
+  so chunk 1 is 6 minutes, the hinge 3, and the build 25; the timing still sums to
+  90. Checked in Chrome at 1280px and 390px with every answer open: no sideways
+  scroll. Version pin `?v=23`.

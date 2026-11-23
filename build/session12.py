@@ -333,6 +333,196 @@ def overlap_figure():
     return "".join(out)
 
 
+
+# ------------------------------------------------------------------ the opener's pictures
+# The opener reviews where things are in a pygame window. Every picture is the game's
+# window, 600 wide and 400 tall, drawn at three quarters of its size with a grid line
+# every 100 pixels, so a spot can be read off the picture.
+
+INK, SOFT, GRID, GREEN, CLAY, GOLD = "#17181B", "#4A4D53", "#D3CBB8", "#1D5B39", "#9C2B22", "#FCD34D"
+K = 0.75
+OX, OY = 80, 60
+
+
+def _px(x):
+    return OX + x * K
+
+
+def _py(y):
+    return OY + y * K
+
+
+def _arrow(x1, y1, x2, y2, color, dashed=False, width=3):
+    """A line with a head at its end, in picture coordinates."""
+    dx, dy = x2 - x1, y2 - y1
+    n = (dx * dx + dy * dy) ** 0.5
+    ux, uy = dx / n, dy / n
+    bx, by = x2 - ux * 12, y2 - uy * 12
+    dash = ' stroke-dasharray="8 6"' if dashed else ''
+    return ('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="%d"%s/>'
+            '<polygon points="%.1f,%.1f %.1f,%.1f %.1f,%.1f" fill="%s"/>'
+            % (x1, y1, bx, by, color, width, dash, x2, y2, bx - uy * 7, by + ux * 7,
+               bx + uy * 7, by - ux * 7, color))
+
+
+def _text(x, y, words, color=INK, anchor="start", bold=True):
+    return ('<text x="%.1f" y="%.1f" fill="%s" text-anchor="%s"%s>%s</text>'
+            % (x, y, color, anchor, ' font-weight="700"' if bold else '', words))
+
+
+def window_figure(aria, marks, axes=False):
+    """The 600 by 400 window with its grid and numbers, and marks drawn on it.
+
+    marks are pieces of SVG already placed with _px and _py.
+    """
+    out = ['<svg viewBox="0 0 680 400" width="100%" role="img" aria-label="' + aria + '" '
+           'style="max-width:680px;display:block;margin:0 0 16px;font-family:JetBrains Mono,'
+           'monospace;font-size:14px">']
+    out.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="#FFFDF7"/>'
+               % (_px(0), _py(0), 600 * K, 400 * K))
+    for x in range(100, 600, 100):
+        out.append('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="1.5"/>'
+                   % (_px(x), _py(0), _px(x), _py(400), GRID))
+    for y in range(100, 400, 100):
+        out.append('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="1.5"/>'
+                   % (_px(0), _py(y), _px(600), _py(y), GRID))
+    out.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="none" stroke="%s" stroke-width="4"/>'
+               % (_px(0), _py(0), 600 * K, 400 * K, INK))
+    for x in range(0, 601, 100):
+        out.append(_text(_px(x), _py(0) - 10, str(x), SOFT, "middle", False))
+    for y in range(0, 401, 100):
+        out.append(_text(_px(0) - 10, _py(y) + 5, str(y), SOFT, "end", False))
+    if axes:
+        out.append(_arrow(_px(0), 18, _px(600) + 40, 18, GREEN))
+        out.append(_text(_px(600) + 50, 23, "x", GREEN))
+        out.append(_text(_px(300), 13, "x gets bigger going right", GREEN, "middle"))
+        out.append(_arrow(24, _py(0), 24, _py(400) + 30, CLAY))
+        out.append(_text(24, _py(400) + 48, "y", CLAY, "middle"))
+        out.append('<text x="14" y="%.1f" fill="%s" font-weight="700" text-anchor="middle" '
+                   'transform="rotate(90 14 %.1f)">y gets bigger going down</text>'
+                   % (_py(200), CLAY, _py(200)))
+    out.extend(marks)
+    out.append('</svg>')
+    return "".join(out)
+
+
+def _dot(x, y, color=INK):
+    return '<circle cx="%.1f" cy="%.1f" r="7" fill="%s"/>' % (_px(x), _py(y), color)
+
+
+def map_figure():
+    """The window, its two arrows, its four corners, and its middle."""
+    marks = [_dot(0, 0), _text(_px(0) + 12, _py(0) + 24, "(0, 0)"),
+             _dot(600, 0), _text(_px(600) - 12, _py(0) + 24, "(600, 0)", anchor="end"),
+             _dot(0, 400), _text(_px(0) + 12, _py(400) - 12, "(0, 400)"),
+             _dot(600, 400), _text(_px(600) - 12, _py(400) - 12, "(600, 400)", anchor="end"),
+             _dot(300, 200, GREEN), _text(_px(300) + 12, _py(200) - 10, "(300, 200), the middle", GREEN)]
+    return window_figure("A pygame window 600 wide and 400 tall. The top left corner is (0, 0). "
+                         "The top right corner is (600, 0), the bottom left corner is (0, 400), and "
+                         "the bottom right corner is (600, 400). The middle is (300, 200). x gets "
+                         "bigger going right, and y gets bigger going down", marks, axes=True)
+
+
+def two_ways_figure():
+    """Maths class and a pygame window side by side: y goes up in one and down in the other."""
+    out = ['<svg viewBox="0 0 680 290" width="100%" role="img" aria-label="Two pictures side by '
+           'side. In maths class, (0, 0) is the bottom left corner, x goes right and y goes up. In '
+           'a pygame window, (0, 0) is the top left corner, x goes right and y goes down" '
+           'style="max-width:680px;display:block;margin:0 0 16px;font-family:JetBrains Mono,'
+           'monospace;font-size:14px">']
+    # maths class
+    out.append(_text(150, 24, "In maths class", INK, "middle"))
+    out.append('<rect x="40" y="50" width="220" height="180" fill="#FFFDF7" stroke="%s" stroke-width="3"/>' % GRID)
+    out.append(_arrow(40, 230, 250, 230, GREEN))
+    out.append(_text(256, 250, "x", GREEN))
+    out.append(_arrow(40, 230, 40, 58, CLAY))
+    out.append(_text(32, 52, "y", CLAY, "end"))
+    out.append('<circle cx="40" cy="230" r="7" fill="%s"/>' % INK)
+    out.append(_text(40, 256, "(0, 0)", INK, "middle"))
+    out.append(_text(150, 284, "y gets bigger going up", CLAY, "middle"))
+    # pygame
+    out.append(_text(510, 24, "In a pygame window", INK, "middle"))
+    out.append('<rect x="400" y="50" width="220" height="180" fill="#FFFDF7" stroke="%s" stroke-width="4"/>' % INK)
+    out.append(_arrow(400, 50, 610, 50, GREEN))
+    out.append(_text(616, 46, "x", GREEN))
+    out.append(_arrow(400, 50, 400, 222, CLAY))
+    out.append(_text(392, 238, "y", CLAY, "end"))
+    out.append('<circle cx="400" cy="50" r="7" fill="%s"/>' % INK)
+    out.append(_text(408, 74, "(0, 0)"))
+    out.append(_text(510, 284, "y gets bigger going down", CLAY, "middle"))
+    out.append('</svg>')
+    return "".join(out)
+
+
+def find_figure():
+    """How to find (450, 100): across from the corner, then down."""
+    marks = [_arrow(_px(0), _py(0), _px(450), _py(0), GREEN, dashed=True, width=4),
+             _text(_px(225), _py(0) + 24, "1. go 450 across", GREEN, "middle"),
+             _arrow(_px(450), _py(0), _px(450), _py(100), CLAY, dashed=True, width=4),
+             _text(_px(450) - 12, _py(50) + 5, "2. go 100 down", CLAY, "end"),
+             _dot(0, 0), _dot(450, 100),
+             _text(_px(450) + 12, _py(100) + 24, "(450, 100)")]
+    return window_figure("To find (450, 100), start at the top left corner, go 450 across to the "
+                         "right, then go 100 down. The spot is near the top right of the window",
+                         marks)
+
+
+def tile_figure():
+    """Session 6's tile (40, 40, 200, 120): its corner, its size, and its edges."""
+    x, y, w, h = 40, 40, 200, 120
+    marks = ['<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="#F2B8B5" stroke="%s" stroke-width="3"/>'
+             % (_px(x), _py(y), w * K, h * K, INK),
+             _dot(x, y),
+             _text(_px(x) + 12, _py(y) + 24, "(40, 40)"),
+             _text(_px(x + w / 2), _py(y + h / 2) + 12, "200 wide", INK, "middle", False),
+             _text(_px(x + w / 2), _py(y + h / 2) + 32, "120 tall", INK, "middle", False),
+             _arrow(_px(x + w) + 50, _py(y + h / 2), _px(x + w) + 6, _py(y + h / 2), GREEN),
+             _text(_px(x + w) + 56, _py(y + h / 2) - 4, "right edge 240", GREEN),
+             _text(_px(x + w) + 56, _py(y + h / 2) + 16, "(40 + 200)", GREEN, bold=False),
+             _arrow(_px(x + w / 2), _py(y + h) + 44, _px(x + w / 2), _py(y + h) + 6, CLAY),
+             _text(_px(x + w / 2), _py(y + h) + 62, "bottom edge 160", CLAY, "middle"),
+             _text(_px(x + w / 2), _py(y + h) + 82, "(40 + 120)", CLAY, "middle", False)]
+    return window_figure("The tile (40, 40, 200, 120). Its top left corner is at (40, 40). It is "
+                         "200 wide and 120 tall. Its right edge is at 40 + 200, which is 240, and "
+                         "its bottom edge is at 40 + 120, which is 160", marks)
+
+
+def move_figure(before, after, words, aria):
+    """A dot before and after it moves, with an arrow between them."""
+    (x1, y1), (x2, y2) = before, after
+    dx, dy = x2 - x1, y2 - y1
+    n = (dx * dx + dy * dy) ** 0.5
+    marks = [_dot(x1, y1, SOFT), _dot(x2, y2, GREEN),
+             _arrow(_px(x1), _py(y1), _px(x2) - dx / n * 10, _py(y2) - dy / n * 10, GREEN),
+             _text(_px(x1) + 14, _py(y1) + 5, "before (%d, %d)" % before, SOFT),
+             _text(_px(x2) + 14, _py(y2) + 5, "after (%d, %d)" % after, GREEN),
+             _text(_px(x1) - 14, _py((y1 + y2) / 2) + 5, words, GREEN, "end", False)]
+    return window_figure(aria, marks)
+
+
+def spots_figure(spots, aria):
+    """Named dots on the window: (x, y, label, color)."""
+    marks = []
+    for x, y, words, color in spots:
+        marks.append(_dot(x, y, color))
+        if x > 400:
+            marks.append(_text(_px(x) - 14, _py(y) + 5, words, color, "end"))
+        else:
+            marks.append(_text(_px(x) + 14, _py(y) + 5, words, color))
+    return window_figure(aria, marks)
+
+
+def strip_figure():
+    """The rectangle (0, 300, 600, 100) along the bottom of the window."""
+    marks = ['<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s" stroke="%s" stroke-width="3"/>'
+             % (_px(0), _py(300), 600 * K, 100 * K, GOLD, INK),
+             _dot(0, 300),
+             _text(_px(0) + 12, _py(300) - 10, "(0, 300), its top left corner"),
+             _text(_px(300), _py(350) + 5, "300 + 100 = 400, the bottom of the window", INK, "middle")]
+    return window_figure("The rectangle (0, 300, 600, 100) is a strip along the bottom of the "
+                         "window. It starts 300 down and is 100 tall, so its bottom edge is at "
+                         "400, the bottom of the window", marks)
+
 # ------------------------------------------------------------------ the build
 
 HOW12 = ("Each new line is a question for the room before it goes on the screen. Each question "
@@ -529,15 +719,77 @@ SESSION12 = {
  "reuse_note": "Today is the first whole game in a window, and it is short on purpose: the floor program is 39 lines of code. Chunk 4's file is 24 of them, and most of those are the window loop the students copied in sessions 6 and 7. Chunk 5 adds the six lines of the stick figure's function, and tool 1 adds nine. The page does not need session 11: chunk 4 says what the loop does on every frame, and why the fill and the drawing are inside it. So this session can be taught any time after session 8. Chunks 1 to 3 run in the terminal and are a few lines each, so they can be typed by everyone or run once on the projector while the room predicts. The typing starts at chunk 4. Nothing here needs the keyboard during play: the mouse moves the player.",
  "env_note": True,
  "opener": {
-   "title": "Retrieval: a rectangle's four numbers, and a counter",
-   "minutes": 10,
-   "body": "Paper first.",
-   "questions": [
-     {"q": "In session 6 you drew a tile with <code>pygame.draw.rect(canvas, RED, (40, 40, 200, 120))</code>. Say what each of the four numbers in the parentheses means. Then work out where the tile's right edge is.",
-      "a": "The first one: x, y, width, and height. The tile starts 40 across and 40 down, and it is 200 wide and 120 tall. The second one: the right edge is at 240, because 40 + 200 is 240. Today those four numbers get a name."},
-     {"q": "Write the two lines of a counter called <code>score</code>: the line that starts it, and the line that adds 1 to it. Which of the two goes above the loop, and why?",
-      "code_a": 'score = 0\nscore = score + 1',
-      "a": "<code>score = 0</code> goes above the loop, so it runs once. Inside the loop it would put the score back to 0 on every pass. <code>score = score + 1</code> goes inside the loop, in the place where something should be counted."},
+   "title": "Review: where things are in a pygame window",
+   "minutes": 15,
+   "body": "Every picture in a pygame window, and every coin in today's game, is put in its place with two numbers. This review goes over how those numbers work. Read each part together on the projector. At each check, everyone picks an answer, out loud or on paper, before anyone clicks.",
+   "flow": [
+     {"heading": "Two numbers for every spot",
+      "teach": "A pygame window is made of <b>pixels</b>, the tiny dots that make up the screen. Every spot in the window has two numbers, written in parentheses like this: <code>(x, y)</code>. <b>x</b> is how far across the spot is from the left edge. <b>y</b> is how far down it is from the top edge. Across always comes first, then down.</p><p>The top left corner is <code>(0, 0)</code>, because it is 0 across and 0 down. Today's window is 600 wide and 400 tall, so its right edge is at x = 600 and its bottom edge is at y = 400. In the picture, the grey lines are 100 pixels apart.",
+      "figure": map_figure()},
+     {"q": "Where is <code>(0, 0)</code> in a pygame window?",
+      "pick": {"right": "The top left corner",
+               "wrong": [("The bottom left corner", "In maths class, (0, 0) is at the bottom left. In a pygame window, y counts down from the top, so 0 down is the top edge."),
+                         ("The middle of the window", "0 across is the left edge, and 0 down is the top edge. The middle is (300, 200).")],
+               "why": "x = 0 is the left edge and y = 0 is the top edge. The corner where those two edges meet is the top left corner."}},
+     {"q": "The window is 600 wide and 400 tall. Which spot is its bottom left corner?",
+      "pick": {"right": "(0, 400)",
+               "wrong": [("(400, 0)", "Across comes first. (400, 0) is 400 across and 0 down, which is on the top edge."),
+                         ("(0, 0)", "(0, 0) is the top left corner. The bottom edge is 400 down.")],
+               "why": "The left edge is 0 across, and the bottom edge is 400 down. Across comes first, so the corner is (0, 400)."}},
+     {"heading": "y goes down",
+      "teach": "In maths class, y gets bigger as you go <b>up</b> the page. In a pygame window it is the other way round: y gets bigger as you go <b>down</b>. x is the same in both: it gets bigger as you go right.</p><p>So in a pygame window, adding to y moves something down, and taking away from y moves it up.",
+      "figure": two_ways_figure()},
+     {"q": "A dot is at <code>(200, 150)</code>. The program moves it to <code>(200, 250)</code>. Which way did the dot move?",
+      "pick": {"right": "Down, by 100 pixels",
+               "wrong": [("Up, by 100 pixels", "That is how y works in maths class. In a pygame window, a bigger y is further down."),
+                         ("Right, by 100 pixels", "x is the first number, and it stayed at 200. Only y changed, so the dot moved up or down, not across.")],
+               "why": "y went from 150 to 250, which is 100 more. A bigger y is further down the window.",
+               "figure": move_figure((200, 150), (200, 250), "y + 100: down 100",
+                                     "A dot moves from (200, 150) down to (200, 250)")}},
+     {"q": "Dot P is at <code>(100, 300)</code> and dot Q is at <code>(100, 50)</code>. Which dot is higher on the screen?",
+      "pick": {"right": "Dot Q",
+               "wrong": [("Dot P", "P has the bigger y, 300, and a bigger y is further down. P is the lower dot."),
+                         ("They are at the same height", "They have the same x, 100, so one is straight above the other. Their y numbers are different, so they are at different heights.")],
+               "why": "Q is 50 down from the top edge, and P is 300 down. Q is closer to the top, so Q is higher.",
+               "figure": spots_figure([(100, 300, "P (100, 300)", SOFT), (100, 50, "Q (100, 50)", GREEN)],
+                                      "Dot Q at (100, 50) is near the top of the window. Dot P at "
+                                      "(100, 300) is straight below it, near the bottom")}},
+     {"q": "A coin is at <code>(300, 200)</code>. Which change moves it 50 pixels up?",
+      "pick": {"right": "Change its y to 150",
+               "wrong": [("Change its y to 250", "A bigger y is further down, so 250 moves the coin 50 pixels down."),
+                         ("Change its x to 250", "x is across. Changing x to 250 moves the coin 50 pixels to the left.")],
+               "why": "Up means a smaller y. 200 take away 50 is 150.",
+               "figure": move_figure((300, 200), (300, 150), "y - 50: up 50",
+                                     "A coin moves from (300, 200) up to (300, 150)")}},
+     {"heading": "Finding a spot",
+      "teach": "To find a spot such as <code>(450, 100)</code>, start at the top left corner. Go 450 across to the right. Then go 100 down. That is the spot.</p><p>The middle of the window is half of the width across and half of the height down. Half of 600 is 300 and half of 400 is 200, so the middle is <code>(300, 200)</code>. Today's coin starts there.",
+      "figure": find_figure()},
+     {"q": "Where is the middle of a window that is 600 wide and 400 tall?",
+      "pick": {"right": "(300, 200)",
+               "wrong": [("(200, 300)", "Across comes first. 200 across and 300 down is to the left of the middle and below it."),
+                         ("(600, 400)", "That is the bottom right corner. The middle is half of each number.")],
+               "why": "Half of 600 is 300, and half of 400 is 200. Across comes first, so the middle is (300, 200)."}},
+     {"q": "In which part of the window is <code>(500, 80)</code>?",
+      "pick": {"right": "Near the top right corner",
+               "wrong": [("Near the bottom right corner", "80 down is close to the top, because the window is 400 tall. A spot near the bottom would have a y close to 400."),
+                         ("Near the top left corner", "500 across is close to the right edge, because the window is 600 wide. Spots on the left have small x numbers.")],
+               "why": "500 of the 600 pixels across is near the right edge, and 80 of the 400 pixels down is near the top edge.",
+               "figure": spots_figure([(500, 80, "(500, 80)", GREEN)],
+                                      "The spot (500, 80) is near the top right corner of the window")}},
+     {"heading": "A rectangle starts at its top left corner",
+      "teach": "In session 6 you drew rectangles with four numbers: <code>(x, y, width, height)</code>. The first two numbers are the spot where the rectangle's <b>top left corner</b> goes. From there the rectangle is drawn to the right by its width and down by its height.</p><p>So the right edge is x plus the width, and the bottom edge is y plus the height. Here is the tile <code>(40, 40, 200, 120)</code>.",
+      "figure": tile_figure()},
+     {"q": "The tile is <code>(40, 40, 200, 120)</code>. Where is its right edge?",
+      "pick": {"right": "x = 240",
+               "wrong": [("x = 200", "200 is the width, not where the tile ends. The tile starts at 40 across, so it ends 200 later, at 240."),
+                         ("x = 160", "160 is the bottom edge: 40 down plus 120 tall. The right edge uses x and the width.")],
+               "why": "The tile starts 40 across and is 200 wide. 40 + 200 is 240."}},
+     {"q": "The window is 600 wide and 400 tall. Which rectangle is a strip along the bottom of the window?",
+      "pick": {"right": "(0, 300, 600, 100)",
+               "wrong": [("(0, 0, 600, 100)", "It starts at y = 0, so it runs along the top edge. Its bottom edge is at 100."),
+                         ("(0, 400, 600, 100)", "Its top left corner is at y = 400, the bottom edge of the window, and it is drawn down from there. The whole strip is below the window, so it cannot be seen.")],
+               "why": "It starts 300 down and is 100 tall, so its bottom edge is at 300 + 100, which is 400, the bottom of the window.",
+               "figure": strip_figure()}},
    ],
  },
  "chunks": [
@@ -640,14 +892,14 @@ SESSION12 = {
  "ledger": "Stamp 12: <code>pygame.Rect(x, y, w, h)</code> has <code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>, and <code>center</code>; <code>a.colliderect(b)</code> is True when two rectangles overlap; <code>pygame.mouse.get_pos()</code> is where the mouse is; move the coin inside the gate, so one grab counts once.",
  "teacher": {
    "timing": [
-     "0:00 retrieval opener, 10 min",
-     "0:10 chunk 1, a Rect and its edges, 8 min",
-     "0:18 chunk 2, the overlap test by hand, 10 min (project the figure; this is the mathematics of the day)",
-     "0:28 chunk 3, colliderect, 6 min",
-     "0:34 chunk 4, the mouse, 12 min (the first window file; most of the typing is here)",
-     "0:46 chunk 5, the stick figure, 8 min",
-     "0:54 hinge question, 4 min",
-     "0:58 build, tools 1 and 2, 27 min (tool 3 is for students who are ahead)",
+     "0:00 opener, a review of where things are in the window, 15 min (nine checks; everyone picks before you click)",
+     "0:15 chunk 1, a Rect and its edges, 6 min (the opener already did x + width)",
+     "0:21 chunk 2, the overlap test by hand, 10 min (project the figure; this is the mathematics of the day)",
+     "0:31 chunk 3, colliderect, 6 min",
+     "0:37 chunk 4, the mouse, 12 min (the first window file; most of the typing is here)",
+     "0:49 chunk 5, the stick figure, 8 min",
+     "0:57 hinge question, 3 min",
+     "1:00 build, tools 1 and 2, 25 min (tool 3 is for students who are ahead)",
      "1:25 exits, ledger stamp, 5 min",
    ],
    "misconceptions": [
